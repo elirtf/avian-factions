@@ -4,8 +4,8 @@ Minecraft Java Edition competitive Factions server (Paper). Product spec: `docs/
 
 ## Locked foundations (see docs/adr/ and the wayfinder map issue for why)
 
-- Server: **Paper** (not Purpur), latest stable the plugin stack supports; pinned in `gradle.properties`, never floating.
-- Language/build: Java 21+, **Gradle Kotlin DSL, multi-module, ONE shaded plugin jar** (`avian-api`, `avian-core`, `avian-factions`, …).
+- Server: **Paper 26.1.2 build 74** (not Purpur); pinned in `gradle.properties`, never floating. Re-evaluate 26.2 when EssentialsX cuts a stable release. Pins for the whole plugin stack: `docs/research/mc-version-and-plugin-stack.md`.
+- Language/build: **Java 25** (Paper 26.1.2 minimum; this dev box has only 21 — use Gradle toolchain auto-provisioning or install openjdk25), **Gradle Kotlin DSL, multi-module, ONE shaded plugin jar** (`avian-api`, `avian-core`, `avian-factions`, …).
 - Base package: `club.avian.factions`.
 - Database: **MariaDB everywhere** (Docker Compose locally), HikariCP + Flyway, portable SQL, all DB access behind per-module repository interfaces. No SQLite path.
 - Factions: custom `avian-factions` module, informed by (not copied from) open-source factions plugins.
