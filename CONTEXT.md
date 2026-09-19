@@ -47,3 +47,14 @@ _Avoid_: plugin (reserved for the single shipped jar and for third-party plugins
 
 **Plugin Stack**:
 The third-party plugins installed alongside the Avian jar (EssentialsX, LuckPerms, WorldGuard, …).
+
+**Config Spec**:
+A Module's declaration of its one config file: file name, config class, version, migrations, invariants. Core collects every Config Spec and loads them all before any Module enables (ADR-0003).
+
+**Config Handle**:
+The object a Module reads its configuration through; `get()` returns the current immutable config, `onReload` rebuilds derived state. Read on use, never cache.
+_Avoid_: config singleton, static config
+
+**Message Key**:
+A dotted string (`factions.claim.success`) naming one MiniMessage template in `messages.conf`. Modules hold Message Keys as constants and ship default bundles; core owns the file and the style tokens.
+_Avoid_: lang key, translation key (no locales in V1)
