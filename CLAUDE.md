@@ -13,6 +13,10 @@ Minecraft Java Edition competitive Factions server (Paper). Product spec: `docs/
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
 - V1 world border: 5,000 blocks diameter.
 
+## Dev loop
+
+`./gradlew build` (JDK 25 toolchain auto-provisioned), `./gradlew runServer` (Paper pinned in `gradle.properties`, type `stop` to exit), `./gradlew downloadPlugins` (pinned stack → `run/plugins/`). Pins: `gradle.properties` + `gradle/libs.versions.toml`. Details in `README.md`.
+
 ## Development rules
 
 Follow `docs/SPEC.md` §2 (Development Rules), §65 (async/sync), §74 (security), §81 (Definition of Done). In particular: never block the main thread on DB I/O; identify custom items by PersistentDataContainer, never display name; UUIDs internally; every gameplay value configurable.

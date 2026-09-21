@@ -1,21 +1,18 @@
 # Gradle
 .gradle/
 build/
-!gradle/wrapper/gradle-wrapper.jar
+buildSrc/.gradle/
+buildSrc/build/
+.kotlin/
 
-# Local dev server (run-paper) — config is tracked separately under run/config
+# Dev server (run-paper): Paper jar, worlds, plugin data, downloaded third-party plugins
 run/
-!run/config/
 
-# IDE
+# IDEs
 .idea/
 *.iml
 .vscode/
-*.swp
-
-# OS
-.DS_Store
-
-# Env / secrets
-.env
-*.local.yml
+.settings/
+.project
+.classpath
+bin/

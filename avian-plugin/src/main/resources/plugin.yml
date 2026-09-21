@@ -1,0 +1,7 @@
+name: AvianFactions
+version: '${version}'
+main: club.avian.factions.AvianFactionsPlugin
+api-version: '${mcVersion}'
+author: elirtf
+description: Avian Factions — competitive Factions for Paper.
+website: https://avian.club
