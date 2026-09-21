@@ -1,0 +1,125 @@
+# CI matrix from ADR-0005: build (every push/PR) → smoke (main + tags) → release (tags).
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+jobs:
+  build:
+    name: Build, test, shade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25          # Paper 26.1.2 minimum; matches gradle.properties javaVersion
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Resolve version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      # Unit + MockBukkit tests, Testcontainers integration tests (Docker is on ubuntu-latest), shadowJar.
+      - run: ./gradlew build --console=plain $VERSION_FLAG
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/'
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v7
+        with:
+          name: AvianFactions
+          path: avian-plugin/build/libs/AvianFactions-*.jar
+          if-no-files-found: error
+
+  smoke:
+    name: Boot the shaded jar on Paper
+    needs: build
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:11.8.9       # keep in sync with gradle.properties mariadbImage
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: avian
+          MARIADB_USER: avian
+          MARIADB_PASSWORD: avian
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd "healthcheck.sh --connect --innodb_initialized"
+          --health-interval 5s --health-timeout 3s --health-retries 20
+    env:
+      AVIAN_DB_PASSWORD: avian
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+      - name: Resolve version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      - name: Boot Paper with the plugin, wait for it to enable, stop it
+        run: |
+          set -euo pipefail
+          mkfifo stdin.pipe
+          # Keep the pipe's write end open so the server's console reader does not see EOF.
+          exec 3> stdin.pipe
+          ./gradlew runServer --console=plain $VERSION_FLAG < stdin.pipe > server.log 2>&1 &
+          for i in $(seq 1 120); do
+            if grep -qE 'Done \(|refused to start|BUILD FAILED' server.log 2>/dev/null; then break; fi
+            sleep 5
+          done
+          echo stop >&3
+          for i in $(seq 1 24); do grep -q 'BUILD ' server.log && break; sleep 5; done
+          exec 3>&-
+          grep -E '\[AvianFactions' server.log || true
+          grep -q 'Enabled [0-9]+ modules' server.log || { echo '::error::plugin did not enable'; exit 1; }
+          grep -q 'Done (' server.log            || { echo '::error::server never reached Done'; exit 1; }
+          grep -q 'Disabled module' server.log   || { echo '::error::plugin did not disable cleanly'; exit 1; }
+          if grep -E 'ERROR\]: \[AvianFactions' server.log; then echo '::error::plugin logged errors'; exit 1; fi
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: smoke-server-log
+          path: server.log
+
+  release:
+    name: Attach jar to the GitHub Release
+    needs: smoke
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/download-artifact@v8
+        with:
+          name: AvianFactions
+          path: dist
+      - name: Create or update the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          ls -la dist
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" dist/*.jar --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" dist/*.jar --title "Avian Factions $GITHUB_REF_NAME" --generate-notes
+          fi
