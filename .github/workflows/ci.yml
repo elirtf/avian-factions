@@ -90,7 +90,7 @@ jobs:
           for i in $(seq 1 24); do grep -q 'BUILD ' server.log && break; sleep 5; done
           exec 3>&-
           grep -E '\[AvianFactions' server.log || true
-          grep -q 'Enabled [0-9]+ modules' server.log || { echo '::error::plugin did not enable'; exit 1; }
+          grep -qE 'Enabled [0-9]+ modules' server.log || { echo '::error::plugin did not enable'; exit 1; }
           grep -q 'Done (' server.log            || { echo '::error::server never reached Done'; exit 1; }
           grep -q 'Disabled module' server.log   || { echo '::error::plugin did not disable cleanly'; exit 1; }
           if grep -E 'ERROR\]: \[AvianFactions' server.log; then echo '::error::plugin logged errors'; exit 1; fi
