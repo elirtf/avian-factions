@@ -16,3 +16,6 @@ run/
 .project
 .classpath
 bin/
+
+# Local secrets
+.env

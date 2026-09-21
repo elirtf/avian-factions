@@ -25,10 +25,25 @@ tasks.processResources {
 tasks.shadowJar {
     archiveBaseName = "AvianFactions"
     archiveClassifier = ""
-    mergeServiceFiles()
+    // Shadow 9.6 drops duplicate service files before merging unless duplicates are INCLUDEd.
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mergeServiceFiles()               // Flyway + JDBC driver register via META-INF/services
     // Everything third-party lives under one prefix so other plugins' copies can never collide.
-    // Relocations for Configurate/Hikari/Flyway/driver are added as those dependencies land (#10).
     // Never relocate org.slf4j, net.kyori, com.google.gson, com.google.common: Paper provides them.
+    val libs = "club.avian.factions.libs"
+    relocate("org.spongepowered.configurate", "$libs.configurate")
+    relocate("io.leangen.geantyref", "$libs.geantyref")
+    relocate("com.zaxxer.hikari", "$libs.hikari")
+    relocate("org.mariadb.jdbc", "$libs.mariadb")
+    relocate("org.flywaydb", "$libs.flyway")
+    relocate("com.fasterxml.jackson", "$libs.jackson")
+    relocate("org.jetbrains.annotations", "$libs.jetbrains")
+    relocate("org.intellij.lang.annotations", "$libs.intellij")
+    relocate("net.kyori.option", "$libs.kyori.option")   // Configurate dep; Paper ships its own via Adventure
+    dependencies {
+        exclude(dependency("org.slf4j:.*"))               // Paper provides slf4j-api
+    }
+    exclude("META-INF/maven/**")
 }
 
 tasks.build {

@@ -1,0 +1,26 @@
+# Local MariaDB for the dev server and manual testing (ADR-0002). Testcontainers uses the same
+# image tag (see gradle.properties `mariadbImage`) so tests and dev never drift.
+#   docker compose up -d      # start
+#   docker compose down -v    # stop and wipe data
+services:
+  mariadb:
+    image: mariadb:11.8.9
+    container_name: avian-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${AVIAN_DB_ROOT_PASSWORD:-root}
+      MARIADB_DATABASE: ${AVIAN_DB_NAME:-avian}
+      MARIADB_USER: ${AVIAN_DB_USER:-avian}
+      MARIADB_PASSWORD: ${AVIAN_DB_PASSWORD:-avian}
+    ports:
+      - "${AVIAN_DB_PORT:-3306}:3306"
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  mariadb-data:

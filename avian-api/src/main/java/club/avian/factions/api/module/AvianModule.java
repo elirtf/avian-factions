@@ -1,5 +1,8 @@
 package club.avian.factions.api.module;
 
+import club.avian.factions.api.config.ConfigSpec;
+
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,6 +20,11 @@ public interface AvianModule {
     /** Modules whose services this module may require. Enforced at boot. */
     default Set<Class<? extends AvianModule>> dependsOn() {
         return Set.of();
+    }
+
+    /** Config files this module owns; loaded and validated by core before any module enables (ADR-0003). */
+    default List<ConfigSpec<?>> configs() {
+        return List.of();
     }
 
     /**

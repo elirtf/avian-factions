@@ -1,12 +1,20 @@
 package club.avian.factions;
 
+import club.avian.factions.api.config.ConfigHandle;
+import club.avian.factions.api.config.ConfigSpec;
+import club.avian.factions.api.database.Database;
 import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.api.module.Services;
+import club.avian.factions.api.player.Players;
 import club.avian.factions.core.CoreModule;
+import club.avian.factions.core.CoreRuntime;
+import club.avian.factions.core.config.ConfigLoadException;
+import club.avian.factions.core.config.ConfigService;
 import club.avian.factions.core.module.ModuleBootstrap;
 import club.avian.factions.core.module.ServiceRegistry;
 import club.avian.factions.factions.FactionsModule;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,16 +29,24 @@ public final class AvianFactionsPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        var configs = new ConfigService(getDataFolder().toPath(), getLogger());
+        var core = new CoreRuntime(configs, Bukkit::isPrimaryThread);
         var registry = new ServiceRegistry();
-        bootstrap = new ModuleBootstrap(
-                List.of(
-                        new CoreModule(),
-                        new FactionsModule()
-                ),
-                module -> new PluginModuleContext(this, module, registry.viewFor(module)),
+        List<AvianModule> modules = List.of(
+                new CoreModule(core),
+                new FactionsModule()
+        );
+        bootstrap = new ModuleBootstrap(modules,
+                module -> new PluginModuleContext(this, module, core, registry.viewFor(module)),
                 getLogger());
         try {
+            configs.loadAll(modules);          // ADR-0003: all files, all errors, before any enable
             bootstrap.enableAll();
+        } catch (ConfigLoadException e) {
+            getLogger().severe("Configuration errors — refusing to start:");
+            e.errors().forEach(err -> getLogger().severe("  " + err));
+            getLogger().severe("Fix the above and restart. Nothing has been loaded.");
+            getServer().getPluginManager().disablePlugin(this);
         } catch (RuntimeException e) {
             getLogger().severe("Avian Factions refused to start; see above. Disabling.");
             getServer().getPluginManager().disablePlugin(this);
@@ -44,8 +60,8 @@ public final class AvianFactionsPlugin extends JavaPlugin {
         }
     }
 
-    private record PluginModuleContext(AvianFactionsPlugin plugin, AvianModule module, Services services)
-            implements ModuleContext {
+    private record PluginModuleContext(AvianFactionsPlugin plugin, AvianModule module, CoreRuntime core,
+                                       Services services) implements ModuleContext {
 
         @Override
         public Logger logger() {
@@ -57,6 +73,24 @@ public final class AvianFactionsPlugin extends JavaPlugin {
         @Override
         public void registerListener(Listener listener) {
             plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        }
+
+        @Override
+        public <T> ConfigHandle<T> config(ConfigSpec<T> spec) {
+            if (!module.configs().contains(spec)) {
+                throw new IllegalStateException("module '" + module.id() + "' did not declare " + spec.fileName() + " in configs()");
+            }
+            return core.configs().handle(spec);
+        }
+
+        @Override
+        public Database database() {
+            return core.database();
+        }
+
+        @Override
+        public Players players() {
+            return core.players();
         }
     }
 }

@@ -2,9 +2,7 @@ package club.avian.factions.core.module;
 
 import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
-import club.avian.factions.api.module.Services;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
+import club.avian.factions.core.testing.FakeModuleContext;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -30,13 +28,7 @@ class ModuleBootstrapTest {
     }
 
     private ModuleContext context(AvianModule module) {
-        var services = registry.viewFor(module);
-        return new ModuleContext() {
-            @Override public Plugin plugin() { return null; }
-            @Override public Logger logger() { return Logger.getLogger("test/" + module.id()); }
-            @Override public void registerListener(Listener listener) { }
-            @Override public Services services() { return services; }
-        };
+        return new FakeModuleContext(module, registry.viewFor(module));
     }
 
     final class Provider implements AvianModule {

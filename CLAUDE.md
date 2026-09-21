@@ -15,7 +15,7 @@ Minecraft Java Edition competitive Factions server (Paper). Product spec: `docs/
 
 ## Dev loop
 
-`./gradlew build` (JDK 25 toolchain auto-provisioned), `./gradlew runServer` (Paper pinned in `gradle.properties`, type `stop` to exit), `./gradlew downloadPlugins` (pinned stack → `run/plugins/`). Pins: `gradle.properties` + `gradle/libs.versions.toml`. Details in `README.md`.
+`docker compose up -d` (MariaDB), `./gradlew build` (JDK 25 toolchain auto-provisioned; unit + MockBukkit + Testcontainers), `./gradlew runServer` (Paper pinned in `gradle.properties`; needs `AVIAN_DB_PASSWORD` exported; type `stop` to exit), `./gradlew downloadPlugins` (pinned stack → `run/plugins/`). Pins: `gradle.properties` + `gradle/libs.versions.toml`. Details in `README.md`.
 
 ## Development rules
 
