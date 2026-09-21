@@ -30,7 +30,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
       # Unit + MockBukkit tests, Testcontainers integration tests (Docker is on ubuntu-latest), shadowJar.
-      - run: ./gradlew build --console=plain $VERSION_FLAG
+      - run: ./gradlew build --console=plain ${VERSION_FLAG:-}
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -79,10 +79,9 @@ jobs:
         run: |
           set -euo pipefail
           mkfifo stdin.pipe
-          # Start the reader first: opening a FIFO for writing blocks until something opens it for reading.
-          ./gradlew runServer --console=plain $VERSION_FLAG < stdin.pipe > server.log 2>&1 &
-          # Keep the write end open so the server's console reader never sees EOF.
-          exec 3> stdin.pipe
+          # Open read-write so this never blocks waiting for the other end; the server reads its console from it.
+          exec 3<> stdin.pipe
+          ./gradlew runServer --console=plain ${VERSION_FLAG:-} < stdin.pipe > server.log 2>&1 &
           for i in $(seq 1 120); do
             if grep -qE 'Done \(|refused to start|BUILD FAILED' server.log 2>/dev/null; then break; fi
             sleep 5
