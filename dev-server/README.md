@@ -37,3 +37,7 @@ sets rather than appends.
 
 To back up what is live: `lp export <name>` writes `run/plugins/LuckPerms/<name>.json.gz`. That is
 a snapshot, not the source of truth; if the two ever disagree, fix `ranks.lp` and reapply.
+
+`plugins/RoseStacker/config.yml` — stacking for mobs, items, blocks and spawners. Tracked at its
+defaults for now; `global-spawner-settings.max-stack-size` (32) is the number most likely to need
+raising for an OP economy, and that is a balance decision (see `docs/research/mob-stacking.md`).

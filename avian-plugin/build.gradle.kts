@@ -109,6 +109,12 @@ val pluginStack = listOf(
     PinnedPlugin("EconomyShopGUI-7.3.1.jar",
         "https://cdn.spiget.org/file/spiget-resources/69927.jar",
         "SHA-256", "51e19e014e1ea545d13f6094b554a072fedb93ae0681a45bffff27a8728bd869"),
+    // RoseStacker 1.5.42 — mobs, items, blocks and spawners. Licence is MIT-Non-Distribution:
+    // use, copy and modify are granted, redistribution and resale are not. Fine to run on our own
+    // server; it could never be bundled into anything we hand out.
+    PinnedPlugin("RoseStacker-1.5.42.jar",
+        "https://cdn.modrinth.com/data/Bt25s2nb/versions/d0YeeOKd/RoseStacker-1.5.42.jar",
+        "SHA-256", "b125525c64a0cdd1814d65de4f1fa360a05613e29998ceec5386a526fe064396"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
