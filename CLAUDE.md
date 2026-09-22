@@ -2,6 +2,24 @@
 
 Minecraft Java Edition competitive Factions server (Paper). Product spec: `docs/SPEC.md` — authoritative for gameplay; it still uses the old code name "Legacy" — read `Legacy*` as `Avian*`.
 
+## The goal
+
+**A fully functional server we can run, manage and enjoy — not a custom plugin.** The plugin is a
+means to that end, nothing more. So:
+
+- **Prefer an existing plugin** whenever one does the job. Already bought rather than built:
+  EssentialsX, LuckPerms, Vault, WorldEdit/WorldGuard, PlaceholderAPI, CoreProtect, Chunky, spark,
+  EconomyShopGUI (`/shop` + sell prices), and a stacking plugin for mobs and spawners (#19).
+- **Build only what is Avian-specific** and what nothing off the shelf provides: factions, claims,
+  power, protection, the token/gem side of the economy, the Harvester Hoe, F-Top valuation, seasons.
+- When a feature could go either way, the question is "what gets us a working, fun server soonest
+  and leaves us able to change it later" — not "what would be cleanest to own".
+- **Take inspiration from popular servers** for events, crates, ranks and progression. Copy the
+  *patterns* that are proven to be fun; never copy assets, configs or branding (spec §2).
+
+Brand: bird-themed throughout — ranks, crates, events and kits all lean on the raven/hawk sigil
+and the `mc.avian.club` identity.
+
 ## Locked foundations (see docs/adr/ and the wayfinder map issue for why)
 
 - Server: **Paper 26.1.2 build 74** (not Purpur); pinned in `gradle.properties`, never floating. Re-evaluate 26.2 when EssentialsX cuts a stable release. Pins for the whole plugin stack: `docs/research/mc-version-and-plugin-stack.md`.
