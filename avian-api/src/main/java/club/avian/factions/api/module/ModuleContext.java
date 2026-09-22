@@ -2,6 +2,7 @@ package club.avian.factions.api.module;
 
 import club.avian.factions.api.config.ConfigHandle;
 import club.avian.factions.api.config.ConfigSpec;
+import club.avian.factions.api.command.Commands;
 import club.avian.factions.api.database.Database;
 import club.avian.factions.api.player.Players;
 import org.bukkit.event.Listener;
@@ -29,6 +30,9 @@ public interface ModuleContext {
 
     /** Pooled, off-main database access for this module's repositories. */
     Database database();
+
+    /** Brigadier command registration. */
+    Commands commands();
 
     /** Avian Player cache and lookup. */
     Players players();

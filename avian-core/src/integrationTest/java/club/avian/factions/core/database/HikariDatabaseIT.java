@@ -1,6 +1,7 @@
 package club.avian.factions.core.database;
 
 import org.junit.jupiter.api.Test;
+import club.avian.factions.testing.MariaDbExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.util.logging.Logger;

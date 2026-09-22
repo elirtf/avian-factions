@@ -26,4 +26,13 @@ public interface Database {
 
     /** Like {@link #query} for work with no result. */
     CompletableFuture<Void> execute(SqlAction work);
+
+    /**
+     * Runs {@code work} on the calling thread, bypassing the main-thread guard.
+     *
+     * <p>Only legitimate during module enable, when no player can be online and nothing is
+     * ticking yet: loading an index the module needs before it will answer any command. Calling
+     * it after boot blocks the server for the duration of the query.
+     */
+    <R> R queryDuringBoot(SqlFunction<R> work);
 }

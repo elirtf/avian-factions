@@ -2,6 +2,7 @@ package club.avian.factions;
 
 import club.avian.factions.api.config.ConfigHandle;
 import club.avian.factions.api.config.ConfigSpec;
+import club.avian.factions.api.command.Commands;
 import club.avian.factions.api.database.Database;
 import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 public final class AvianFactionsPlugin extends JavaPlugin {
 
     private ModuleBootstrap bootstrap;
+    private final PluginCommands commands = new PluginCommands(this);
 
     @Override
     public void onEnable() {
@@ -91,6 +93,11 @@ public final class AvianFactionsPlugin extends JavaPlugin {
         @Override
         public Players players() {
             return core.players();
+        }
+
+        @Override
+        public Commands commands() {
+            return plugin.commands;
         }
     }
 }

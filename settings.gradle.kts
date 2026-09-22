@@ -12,4 +12,4 @@ dependencyResolutionManagement {
     }
 }
 
-include("avian-api", "avian-core", "avian-factions", "avian-plugin")
+include("avian-api", "avian-core", "avian-factions", "avian-plugin", "avian-testing")

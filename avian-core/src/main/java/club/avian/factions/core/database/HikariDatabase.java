@@ -88,6 +88,15 @@ public final class HikariDatabase implements Database, AutoCloseable {
         });
     }
 
+    @Override
+    public <R> R queryDuringBoot(SqlFunction<R> work) {
+        try (var connection = pool.getConnection()) {
+            return work.apply(connection);
+        } catch (SQLException e) {
+            throw new DatabaseException(e);
+        }
+    }
+
     private void guard() {
         if (isMainThread.getAsBoolean()) {
             throw new IllegalStateException("Database access from the main thread (spec §65); "

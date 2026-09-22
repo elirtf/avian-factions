@@ -7,6 +7,8 @@ dependencies {
     implementation(libs.configurate.hocon)
     implementation(libs.hikari)
     implementation(libs.flyway.core)
-    runtimeOnly(libs.flyway.mysql)
     implementation(libs.mariadb)   // referenced by class literal so shadow relocation follows it
+    runtimeOnly(libs.flyway.mysql)
+
+    "integrationTestImplementation"(project(":avian-testing"))
 }

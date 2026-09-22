@@ -1,4 +1,6 @@
-package club.avian.factions.core.database;
+package club.avian.factions.testing;
+
+import club.avian.factions.core.database.HikariDatabase;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;

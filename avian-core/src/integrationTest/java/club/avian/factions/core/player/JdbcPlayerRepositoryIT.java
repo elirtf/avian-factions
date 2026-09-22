@@ -1,6 +1,6 @@
 package club.avian.factions.core.player;
 
-import club.avian.factions.core.database.MariaDbExtension;
+import club.avian.factions.testing.MariaDbExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

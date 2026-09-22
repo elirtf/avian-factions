@@ -2,6 +2,7 @@ package club.avian.factions.core.testing;
 
 import club.avian.factions.api.config.ConfigHandle;
 import club.avian.factions.api.config.ConfigSpec;
+import club.avian.factions.api.command.Commands;
 import club.avian.factions.api.database.Database;
 import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
@@ -20,6 +21,7 @@ public final class FakeModuleContext implements ModuleContext {
     private final AvianModule module;
     private final Services services;
     public final List<Listener> listeners = new ArrayList<>();
+    public final List<com.mojang.brigadier.tree.LiteralCommandNode<io.papermc.paper.command.brigadier.CommandSourceStack>> commands = new ArrayList<>();
     public Database database;
     public Players players;
 
@@ -51,6 +53,11 @@ public final class FakeModuleContext implements ModuleContext {
     @Override
     public Database database() {
         return database;
+    }
+
+    @Override
+    public Commands commands() {
+        return (node, description, aliases) -> commands.add(node);
     }
 
     @Override

@@ -66,7 +66,8 @@ portable SQL with a `-- Dialect note` comment on anything MariaDB-specific (ADR-
 |---|---|---|
 | `avian-api` | `club.avian.factions.api` | interfaces other modules compile against (`AvianModule`, `ModuleContext`, `Services`, …) |
 | `avian-core` | `club.avian.factions.core` | bootstrap (`ModuleBootstrap`, `ServiceRegistry`), config (`ConfigService`), database (`HikariDatabase` + Flyway), Avian Player profiles (`PlayerService`, `PlayerRepository`) |
-| `avian-factions` | `club.avian.factions.factions` | the factions module (skeleton) |
+| `avian-factions` | `club.avian.factions.factions` | factions: name rules, in-memory `FactionIndex`, `FactionRepository`, `/f` command |
+| `avian-testing` | `club.avian.factions.testing` | test-only helpers shared by integration suites (`MariaDbExtension`) |
 | `avian-plugin` | `club.avian.factions` | the one `JavaPlugin`, `plugin.yml`, the ordered module list, shadow + run-paper |
 | `buildSrc` | — | `avian.java-conventions` (toolchain, Paper API, JUnit, `-Werror` on deprecation) |
 
