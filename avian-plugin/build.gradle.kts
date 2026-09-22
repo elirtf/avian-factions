@@ -101,13 +101,14 @@ val pluginStack = listOf(
     PinnedPlugin("Chunky-Bukkit-1.5.3.jar",
         "https://cdn.modrinth.com/data/fALzjamp/versions/MdY6JATr/Chunky-Bukkit-1.5.3.jar",
         "SHA-256", "530d2c7430a96a39957391b7088be144daa3108f7665896d1c23aa8dd4af32f3"),
-    // EconomyShopGUI 7.3.0. SpigotMC's versioned download is behind Cloudflare, so this URL is
-    // spiget's "always latest" mirror — the hash is what pins it. If upstream publishes a new
-    // build the download fails loudly and someone re-pins deliberately, which is the behaviour we
-    // want from a floating source.
-    PinnedPlugin("EconomyShopGUI-7.3.0.jar",
+    // EconomyShopGUI 7.3.1, for the dev server. SpigotMC's versioned download is Cloudflare-gated so
+    // this is spiget's "always latest" mirror and the hash is the pin. Upstream ships often, so
+    // expect to re-pin: check the new jar, update the hash, commit. The *compile* dependency does
+    // not come from here — that is the versioned EconomyShopGUI-API artifact on JitPack, so an
+    // upstream plugin release can never break the build.
+    PinnedPlugin("EconomyShopGUI-7.3.1.jar",
         "https://cdn.spiget.org/file/spiget-resources/69927.jar",
-        "SHA-256", "424fada37f0183836d339ed6afbd485b0bea799a1961dbbc37a500e0b8a93335"),
+        "SHA-256", "51e19e014e1ea545d13f6094b554a072fedb93ae0681a45bffff27a8728bd869"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
