@@ -36,6 +36,12 @@ The shaded jar is `avian-plugin/build/libs/AvianFactions-<version>.jar`.
 Pins live in `gradle.properties` (Minecraft/Paper build, Java, MariaDB image) and `gradle/libs.versions.toml`
 (every library and Gradle plugin). Nothing floats.
 
+## CI
+
+`.github/workflows/ci.yml`: **build** (every push and PR — unit + MockBukkit + Testcontainers, uploads the jar and test reports) → **smoke** (`main` and `v*` tags — boots the shaded jar on the pinned Paper against a MariaDB service, asserts the plugin enabled, reached `Done`, and disabled cleanly) → **release** (`v*` tags — attaches `AvianFactions-<version>.jar` to the GitHub Release).
+
+Cutting a release: `git tag -a v1.2.3 -m "..." && git push origin v1.2.3`. The tag name minus the leading `v` becomes the jar version (`-Pversion=`), so `v0.1.0` ships `AvianFactions-0.1.0.jar`.
+
 ## Configuration
 
 One HOCON file per module in `run/plugins/AvianFactions/` (ADR-0003), written with commented
