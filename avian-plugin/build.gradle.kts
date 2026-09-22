@@ -115,6 +115,12 @@ val pluginStack = listOf(
     PinnedPlugin("RoseStacker-1.5.42.jar",
         "https://cdn.modrinth.com/data/Bt25s2nb/versions/d0YeeOKd/RoseStacker-1.5.42.jar",
         "SHA-256", "b125525c64a0cdd1814d65de4f1fa360a05613e29998ceec5386a526fe064396"),
+    // CrazyCrates, build named for our exact Minecraft version. MIT — the most permissive licence
+    // in the stack. Reward tables stay free of Avian-specific prizes until the token and gem
+    // commands exist; see docs/research/crates.md.
+    PinnedPlugin("CrazyCrates-26.1.2-3726eba.jar",
+        "https://cdn.modrinth.com/data/r3BBZyf3/versions/d4FEchgk/CrazyCrates-26.1.2-3726eba.jar",
+        "SHA-256", "f7dcf465213c24451e7ff4b56c8047a33b424155a77dacc8a39e7757e8aa06d2"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

@@ -9,6 +9,7 @@ website: https://avian.club
 # want to enable *after* them so hooks (Vault economy, PAPI expansions, WorldGuard flags) can
 # register during our enable rather than needing deferred wiring.
 softdepend:
+  - CrazyCrates
   - RoseStacker
   - EconomyShopGUI
   - LuckPerms
