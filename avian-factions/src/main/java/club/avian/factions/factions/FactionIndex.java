@@ -27,11 +27,18 @@ public final class FactionIndex implements Factions {
     private final FactionRepository repository;
     private final Clock clock;
     private final int seasonId;
+    /** Run when a Faction disbands, so claims (and later relations) can release what it held. */
+    private final java.util.List<java.util.function.Consumer<UUID>> disbandListeners = new java.util.ArrayList<>();
 
     public FactionIndex(FactionRepository repository, Clock clock, int seasonId) {
         this.repository = repository;
         this.clock = clock;
         this.seasonId = seasonId;
+    }
+
+    /** Registers a callback run when any Faction disbands. */
+    public void onDisband(java.util.function.Consumer<UUID> listener) {
+        disbandListeners.add(listener);
     }
 
     /** Loads the Season into memory. Called once at enable, before the command is registered. */
@@ -93,6 +100,7 @@ public final class FactionIndex implements Factions {
         }
         byNameKey.remove(FactionName.key(faction.name()));
         faction.members().keySet().forEach(factionOfPlayer::remove);
+        disbandListeners.forEach(listener -> listener.accept(factionId));
         return repository.delete(factionId);
     }
 

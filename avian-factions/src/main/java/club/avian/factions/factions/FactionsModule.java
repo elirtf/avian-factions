@@ -6,6 +6,9 @@ import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.core.CoreModule;
 import club.avian.factions.factions.command.FactionCommand;
+import club.avian.factions.api.faction.Claims;
+import club.avian.factions.factions.claim.ClaimIndex;
+import club.avian.factions.factions.claim.JdbcClaimRepository;
 import club.avian.factions.factions.power.JdbcPowerRepository;
 import club.avian.factions.factions.power.PowerListener;
 import club.avian.factions.factions.power.PowerService;
@@ -49,8 +52,19 @@ public final class FactionsModule implements AvianModule {
         // plugs in here once claims land.
         ctx.registerListener(new PowerListener(power, player -> true, ctx.logger()));
 
+        var claimableWorlds = new java.util.HashSet<>(config.get().claims().worlds());
+        var claims = new ClaimIndex(new JdbcClaimRepository(ctx.database()), index, Clock.systemUTC(),
+                config.get().seasonId(), claimableWorlds::contains);
+        ctx.logger().info("Loaded " + claims.load() + " claim(s)");
+        index.onDisband(factionId -> claims.unclaimAll(factionId)
+                .exceptionally(t -> {
+                    ctx.logger().log(java.util.logging.Level.SEVERE, "Could not release claims of a disbanded faction", t);
+                    return null;
+                }));
+
         ctx.services().provide(Factions.class, index);
-        ctx.commands().register(new FactionCommand(index, power, config, ctx.logger()).build(),
+        ctx.services().provide(Claims.class, claims);
+        ctx.commands().register(new FactionCommand(index, claims, power, config, ctx.logger()).build(),
                 "Faction commands", List.of("faction", "factions"));
     }
 }
