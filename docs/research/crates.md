@@ -63,18 +63,19 @@ command form proves awkward.
 Yes — crates are one config file each, so the count is ours to choose. Feather, Plume, Talon,
 Pinion, Raven, Phoenix, Flock is seven files.
 
-## 4. The earned-versus-store split (ADR-0006) — the one real gap
+## 4. The earned-versus-store split — no longer a problem
 
-CrazyCrates does **not** enforce a distinction between keys a player earned and keys they bought.
-Both are just keys. That means the rule "purchased keys contain cosmetics only" is enforced by
-**how we write the config**, not by the plugin, and the research warned this is exactly the kind of
-rule that gets broken in a rush.
+CrazyCrates does not distinguish a key a player earned from one they bought. That was flagged here
+as a gap while ADR-0006 required store keys to be cosmetic-only. **It is not a gap any more.**
 
-Mitigation: make the split structural rather than remembered. Two clearly separated sets of crate
-files with the cosmetic-only ones named so nobody edits the wrong file by accident, and a note at
-the top of each store crate saying why its reward table may not contain gameplay items. A test is
-not possible here — this is a documentation-and-discipline control, which is weaker, and worth
-saying out loud rather than pretending otherwise.
+The ADR was revised: nothing sold may be *exclusive*, but the same Talon key may drop from a boss
+and sell in the store, because what money buys is the shortcut rather than the contents. One key,
+one reward table, either route. The plugin's inability to tell them apart is now irrelevant, and a
+rule that would have lived on discipline alone has disappeared instead of being mitigated.
+
+What remains is lighter and checkable: for every key sold, **write down the in-game route and its
+rate**. If the free rate turns out to be nominal, raise the drop rate rather than pulling the key
+from the store.
 
 ## Recommendation
 

@@ -58,9 +58,12 @@ lp track free append fledgling
 # Paid ranks: Finch -> Cardinal -> Falcon -> Hawk -> Raven.
 #
 # Nothing sold may be EXCLUSIVE (ADR-0006): money may buy something sooner, never something a free
-# player cannot reach. A gameplay perk may go on a paid rank once its in-game route and rate are
-# written down. None are today, so these tiers are cosmetic: /fly, gear kits, sell multipliers,
-# keep-inventory, extra claims and godmode all remain absent.
+# player cannot reach. Kits and gear ARE allowed here, because the same kits are winnable from
+# crates and events — it just takes a free player longer. Each gameplay perk needs its in-game
+# route and rate written down first.
+#
+# These tiers are thin today only because no kit system exists yet and EssentialsX is all we have.
+# That is a gap to fill (#18, crate tables), not a rule.
 #
 # Each tier inherits the one below, so a Raven has everything.
 # Particles, pets and hats beyond Essentials' need a cosmetics plugin we have not chosen yet —
@@ -70,8 +73,6 @@ lp track free append fledgling
 lp creategroup finch
 lp group finch setweight 100
 lp group finch meta setprefix 100 "&#E0B44A[Finch] "
-# Paid ranks are cosmetic here because EssentialsX is all we have, not because the rule demands it
-# (ADR-0006). A gameplay perk may be added if its in-game route and rate are written down first.
 lp group finch permission set essentials.nick true
 lp group finch permission set essentials.nick.color true
 lp group finch permission set essentials.chat.color true

@@ -217,11 +217,12 @@ To change ranks, edit that file, then run:
 
 and paste the output into the server console. Editing the file alone does nothing until you do that.
 
-> **Important rule:** nothing sold for money may be *exclusive*. Buying something is allowed if a
-> player who never pays can also get it — buying just makes it faster. So crate keys can be sold,
-> because the same keys drop from bosses and voting. What is never allowed is selling something
-> with no way to earn it. Whenever something goes in the store, write down how a free player gets
-> it and how often. See `docs/adr/0006-nothing-sold-is-exclusive.md`.
+> **Important rule:** nothing sold for money may be *exclusive*. Selling something is fine as long
+> as a player who never pays can also get it — paying just makes it faster. So paid ranks can
+> include kits and gear, and crate keys can be sold, because the same kits and keys are winnable
+> from crates, bosses and voting; it simply takes longer. What is never allowed is selling
+> something with no way to earn it at all. Whenever something goes in the store, write down how a
+> free player gets it and how often. See `docs/adr/0006-nothing-sold-is-exclusive.md`.
 
 ---
 

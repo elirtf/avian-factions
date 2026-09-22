@@ -47,9 +47,9 @@ config values, none are hardcoded (spec §2 rule 9).
 
 ### Ranks
 
-Mojang's rules forbid selling competitive advantage, and factions is the genre where that bites
-hardest. Paid ranks lean cosmetic, and anything gameplay-relevant on them must be obtainable in
-game too — see `docs/adr/0006-nothing-sold-is-exclusive.md`.
+Mojang forbids selling advantage that is *designed* to be exclusive. Paid ranks may carry kits and
+gear, because the same kits are winnable in game — paying buys time, not access. See
+`docs/adr/0006-nothing-sold-is-exclusive.md`.
 
 #### Paid ladder — five tiers
 

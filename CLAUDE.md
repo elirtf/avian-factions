@@ -19,8 +19,8 @@ means to that end, nothing more. So:
 
 **Nothing sold is exclusive** (ADR-0006): Mojang forbids selling advantage that is *designed* to be
 exclusive. Money may buy something sooner, never something a free player cannot get. So:
-paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) lean cosmetic, and anything gameplay-relevant —
-on a rank or in the store, crate keys included — needs a written-down in-game route at a rate a
+paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) may carry kits and gear, and anything
+gameplay-relevant — rank perks, kits, crate keys — needs a written-down in-game route at a rate a
 real player reaches. Free ranks are just Hatchling and Fledgling.
 
 Brand: bird-themed throughout — ranks, crates, events and kits all lean on the raven/hawk sigil
