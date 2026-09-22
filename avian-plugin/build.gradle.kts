@@ -125,3 +125,18 @@ tasks.register("downloadPlugins") {
         }
     }
 }
+
+// Copies the tracked third-party plugin config (dev-server/) into the git-ignored run/ directory.
+// Without this a fresh clone boots the stack on defaults: SQLite/H2 storage and vanilla enchant caps.
+val syncDevConfig = tasks.register<Copy>("syncDevConfig") {
+    description = "Copies tracked dev-server config into run/."
+    group = "avian"
+    from(layout.projectDirectory.dir("../dev-server")) {
+        exclude("README.md")
+    }
+    into(layout.projectDirectory.dir("../run"))
+}
+
+tasks.runServer {
+    dependsOn(syncDevConfig)
+}

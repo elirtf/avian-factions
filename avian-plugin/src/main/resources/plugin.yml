@@ -5,3 +5,14 @@ api-version: '${mcVersion}'
 author: elirtf
 description: Avian Factions — competitive Factions for Paper.
 website: https://avian.club
+# Soft, not hard (spec §4): the plugin boots without any of these, but when they are present we
+# want to enable *after* them so hooks (Vault economy, PAPI expansions, WorldGuard flags) can
+# register during our enable rather than needing deferred wiring.
+softdepend:
+  - LuckPerms
+  - Vault
+  - PlaceholderAPI
+  - WorldEdit
+  - WorldGuard
+  - CoreProtect
+  - Essentials

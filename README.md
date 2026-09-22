@@ -42,6 +42,13 @@ Pins live in `gradle.properties` (Minecraft/Paper build, Java, MariaDB image) an
 
 Cutting a release: `git tag -a v1.2.3 -m "..." && git push origin v1.2.3`. The tag name minus the leading `v` becomes the jar version (`-Pversion=`), so `v0.1.0` ships `AvianFactions-0.1.0.jar`.
 
+## Dev server plugin stack
+
+`./gradlew downloadPlugins` fetches the pinned third-party jars (hash-verified) into `run/plugins/`.
+The settings we changed are tracked in `dev-server/` and copied into `run/` by `syncDevConfig`,
+which `runServer` depends on — see `dev-server/README.md`. A fresh world needs
+`worldborder set 5000` once on the console (it persists in `level.dat`).
+
 ## Configuration
 
 One HOCON file per module in `run/plugins/AvianFactions/` (ADR-0003), written with commented
