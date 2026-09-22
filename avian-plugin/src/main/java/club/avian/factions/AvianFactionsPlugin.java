@@ -8,6 +8,7 @@ import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.api.module.Services;
 import club.avian.factions.api.player.Players;
+import club.avian.factions.combat.CombatModule;
 import club.avian.factions.core.CoreModule;
 import club.avian.factions.core.CoreRuntime;
 import club.avian.factions.core.config.ConfigLoadException;
@@ -36,6 +37,7 @@ public final class AvianFactionsPlugin extends JavaPlugin {
         var registry = new ServiceRegistry();
         List<AvianModule> modules = List.of(
                 new CoreModule(core),
+                new CombatModule(),
                 new FactionsModule()
         );
         bootstrap = new ModuleBootstrap(modules,

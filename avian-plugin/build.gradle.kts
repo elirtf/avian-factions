@@ -13,6 +13,7 @@ val paperBuild = providers.gradleProperty("paperBuild").get().toInt()
 dependencies {
     implementation(project(":avian-api"))
     implementation(project(":avian-core"))
+    implementation(project(":avian-combat"))
     implementation(project(":avian-factions"))
 }
 
