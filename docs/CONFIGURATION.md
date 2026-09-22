@@ -217,10 +217,11 @@ To change ranks, edit that file, then run:
 
 and paste the output into the server console. Editing the file alone does nothing until you do that.
 
-> **Important rule:** paid ranks must **never** give an advantage in the game — no flying, no free
-> gear, no faster money. Minecraft's rules forbid selling advantages, and breaking that gets a
-> server blocked entirely. Paid ranks get looks: colours, nicknames, hats. See
-> `docs/adr/0006-cosmetic-only-monetisation.md`.
+> **Important rule:** nothing sold for money may be *exclusive*. Buying something is allowed if a
+> player who never pays can also get it — buying just makes it faster. So crate keys can be sold,
+> because the same keys drop from bosses and voting. What is never allowed is selling something
+> with no way to earn it. Whenever something goes in the store, write down how a free player gets
+> it and how often. See `docs/adr/0006-nothing-sold-is-exclusive.md`.
 
 ---
 

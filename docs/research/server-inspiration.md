@@ -49,7 +49,7 @@ config values, none are hardcoded (spec §2 rule 9).
 
 Mojang's rules forbid selling competitive advantage, and factions is the genre where that bites
 hardest. Paid ranks lean cosmetic, and anything gameplay-relevant on them must be obtainable in
-game too — see `docs/adr/0006-cosmetic-only-monetisation.md`.
+game too — see `docs/adr/0006-nothing-sold-is-exclusive.md`.
 
 #### Paid ladder — five tiers
 
@@ -98,11 +98,10 @@ concession: staff prefixes use the brand's gold/purple rather than the usual gen
 
 Keys take the crate's name (`Talon Key`). Spec §19's four key types become one per crate tier.
 
-**Crates split by how the key is obtained, not by rarity alone** (ADR-0006). An **earned** key —
-voting, bosses, KOTH, the Aerie — may contain anything, including gameplay rewards. A **purchased**
-key may contain cosmetics only; paid crate keys with gameplay-relevant loot are named explicitly in
-the guidance as a violation. Voting is the interesting case and it is fine: it earns the server
-something real and costs the player nothing, so a Feather key can hold gameplay rewards.
+**One set of crates, not two** (ADR-0006). The same Talon key drops from a boss and sells in the
+store, and its table may hold gameplay rewards either way. What money buys is the key sooner, not
+a reward a free player cannot reach — which is why the in-game route and its rate get written down
+for anything sold.
 
 ### Events and places
 

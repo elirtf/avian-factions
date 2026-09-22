@@ -17,11 +17,11 @@ means to that end, nothing more. So:
 - **Take inspiration from popular servers** for events, crates, ranks and progression. Copy the
   *patterns* that are proven to be fun; never copy assets, configs or branding (spec §2).
 
-**Monetisation is cosmetic-only** (ADR-0006): Mojang forbids selling competitive advantage, and
-factions is the genre where that bites hardest. So:
-paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) lean cosmetic, and any gameplay-relevant perk on
-them must be genuinely obtainable in game — via crates, events and achievement rather than a long
-free rank ladder. Free ranks are just Hatchling and Fledgling.
+**Nothing sold is exclusive** (ADR-0006): Mojang forbids selling advantage that is *designed* to be
+exclusive. Money may buy something sooner, never something a free player cannot get. So:
+paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) lean cosmetic, and anything gameplay-relevant —
+on a rank or in the store, crate keys included — needs a written-down in-game route at a rate a
+real player reaches. Free ranks are just Hatchling and Fledgling.
 
 Brand: bird-themed throughout — ranks, crates, events and kits all lean on the raven/hawk sigil
 and the `mc.avian.club` identity.

@@ -6,7 +6,9 @@
 # every other command sets rather than appends.
 #
 # Naming and the reasoning behind it: docs/research/server-inspiration.md §2.
-# Monetisation rule these permissions must respect: docs/adr/0006-cosmetic-only-monetisation.md.
+# Monetisation rule these permissions must respect: docs/adr/0006-nothing-sold-is-exclusive.md.
+# In short: nothing sold may be exclusive. Money may buy something sooner, never something a free
+# player cannot reach.
 #
 # Palette (brand: stone / gold / red / purple, dark premium arcane):
 #   stone  #9E9E9E   light stone #C9C9C9
@@ -55,10 +57,10 @@ lp track free append fledgling
 # ---------------------------------------------------------------------------------------------
 # Paid ranks: Finch -> Cardinal -> Falcon -> Hawk -> Raven.
 #
-# COSMETIC AND SOCIAL ONLY. Nothing here may affect who wins a fight or who earns faster — see
-# ADR-0006. If a perk is ever added that touches gameplay, it must first be obtainable in game at
-# a rate a real player reaches. Deliberately absent: /fly, kits with gear, sell multipliers,
-# keep-inventory, extra claims, godmode.
+# Nothing sold may be EXCLUSIVE (ADR-0006): money may buy something sooner, never something a free
+# player cannot reach. A gameplay perk may go on a paid rank once its in-game route and rate are
+# written down. None are today, so these tiers are cosmetic: /fly, gear kits, sell multipliers,
+# keep-inventory, extra claims and godmode all remain absent.
 #
 # Each tier inherits the one below, so a Raven has everything.
 # Particles, pets and hats beyond Essentials' need a cosmetics plugin we have not chosen yet —
@@ -68,6 +70,8 @@ lp track free append fledgling
 lp creategroup finch
 lp group finch setweight 100
 lp group finch meta setprefix 100 "&#E0B44A[Finch] "
+# Paid ranks are cosmetic here because EssentialsX is all we have, not because the rule demands it
+# (ADR-0006). A gameplay perk may be added if its in-game route and rate are written down first.
 lp group finch permission set essentials.nick true
 lp group finch permission set essentials.nick.color true
 lp group finch permission set essentials.chat.color true
