@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface SellValues {
 
-    /** Price of one {@code material} in minor units, or 0 when it cannot be sold. */
+    /** Price of one {@code material} in whole dollars, or 0 when it cannot be sold. */
     long unitPrice(Material material);
 
     default boolean sellable(Material material) {

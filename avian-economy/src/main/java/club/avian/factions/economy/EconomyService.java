@@ -92,7 +92,7 @@ public final class EconomyService implements Economy {
     /** Gives a new player their starting balances (spec §12). */
     public CompletableFuture<Void> grantStartingBalances(UUID player) {
         var cfg = config.get();
-        var money = Math.round(cfg.startingMoney() * Currency.MONEY.minorPerUnit());
+        var money = cfg.startingMoney();
         CompletableFuture<?> all = CompletableFuture.completedFuture(null);
         if (money > 0) {
             all = deposit(player, Currency.MONEY, money, "starting-balance");
@@ -107,12 +107,12 @@ public final class EconomyService implements Economy {
     }
 
     @Override
-    public String format(Currency currency, long minorUnits) {
-        if (currency.decimals() == 0) {
-            return new DecimalFormat("#,##0").format(minorUnits) + " " + currency.label();
-        }
-        var whole = minorUnits / (double) currency.minorPerUnit();
-        return currency.label() + new DecimalFormat("#,##0.00").format(whole);
+    public String format(Currency currency, long amount) {
+        var formatted = new DecimalFormat("#,##0").format(amount);
+        // Money leads with its symbol ($1,640); tokens and gems trail with their name.
+        return currency == Currency.MONEY
+                ? currency.label() + formatted
+                : formatted + " " + currency.label();
     }
 
     /** Amount validation lives here so every path refuses the same things (#4, spec §74). */

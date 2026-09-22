@@ -1,7 +1,7 @@
 package club.avian.factions.economy;
 
 import club.avian.factions.api.config.ConfigHandle;
-import club.avian.factions.api.economy.Currency;
+
 import club.avian.factions.api.economy.SellValues;
 import org.bukkit.Material;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * The sell table from {@code economy.conf}, parsed once into an {@link EnumMap} and rebuilt on
- * reload. Config holds whole dollars; everything downstream works in minor units.
+ * reload. Prices are whole dollars throughout — config, memory and database agree.
  */
 public final class ConfiguredSellValues implements SellValues {
 
@@ -39,7 +39,7 @@ public final class ConfiguredSellValues implements SellValues {
             if (material == null) {
                 continue;   // startup validation already reported it; skip rather than crash here
             }
-            parsed.put(material, Math.round(entry.getValue() * Currency.MONEY.minorPerUnit()));
+            parsed.put(material, entry.getValue());
         }
         return parsed;
     }

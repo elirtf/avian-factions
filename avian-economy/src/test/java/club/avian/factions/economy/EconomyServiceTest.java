@@ -169,24 +169,24 @@ class EconomyServiceTest {
     }
 
     @Test
-    void moneyFormatsWithTwoDecimalsAndTokensWithNone() {
-        assertEquals("$1,640.00", economy.format(Currency.MONEY, 164_000));
-        assertEquals("$0.05", economy.format(Currency.MONEY, 5));
+    void moneyLeadsWithItsSymbolAndOtherCurrenciesTrailWithTheirName() {
+        assertEquals("$1,640", economy.format(Currency.MONEY, 1_640));
+        assertEquals("$5", economy.format(Currency.MONEY, 5));
         assertEquals("1,250 tokens", economy.format(Currency.TOKENS, 1_250));
         assertEquals("3 gems", economy.format(Currency.GEMS, 3));
     }
 
     @Test
     void startingBalancesAreGrantedOnceAndOnlyWhenConfigured() throws Exception {
-        setStarting(100.0, 5, 0);
+        setStarting(100, 5, 0);
         economy.grantStartingBalances(ALICE).join();
-        assertEquals(10_000, economy.balance(ALICE, Currency.MONEY), "100 dollars is 10000 cents");
+        assertEquals(100, economy.balance(ALICE, Currency.MONEY));
         assertEquals(5, economy.balance(ALICE, Currency.TOKENS));
         assertEquals(0, economy.balance(ALICE, Currency.GEMS), "gems were zero, so nothing was written");
         assertEquals(2, repo.audit.size());
     }
 
-    private void setStarting(double money, long tokens, long gems) throws Exception {
+    private void setStarting(long money, long tokens, long gems) throws Exception {
         set("startingMoney", money);
         set("startingTokens", tokens);
         set("startingGems", gems);

@@ -22,8 +22,8 @@ public final class EconomyConfig {
     @Comment("Season these balances belong to. Must match factions.conf's season-id.")
     private int seasonId = 1;
 
-    @Comment("Money a player starts with, in whole dollars.")
-    private double startingMoney = 0;
+    @Comment("Money a player starts with.")
+    private long startingMoney = 0;
 
     @Comment("Tokens a player starts with.")
     private long startingTokens = 0;
@@ -40,26 +40,26 @@ public final class EconomyConfig {
             What items sell for, in whole dollars per item. Anything not listed cannot be sold.
             This one table is read by /shop sell, sell-all and the Harvester Hoe's autosell, so a
             price can never disagree with itself between features.""")
-    private Map<String, Double> sellValues = defaultSellValues();
+    private Map<String, Long> sellValues = defaultSellValues();
 
-    private static Map<String, Double> defaultSellValues() {
-        var values = new LinkedHashMap<String, Double>();
+    private static Map<String, Long> defaultSellValues() {
+        var values = new LinkedHashMap<String, Long>();
         // Farming (spec §30's main crops) — sugar cane is the headline farming economy.
-        values.put("SUGAR_CANE", 5.0);
-        values.put("CACTUS", 5.0);
-        values.put("WHEAT", 4.0);
-        values.put("CARROT", 4.0);
-        values.put("POTATO", 4.0);
-        values.put("MELON_SLICE", 2.0);
-        values.put("PUMPKIN", 6.0);
+        values.put("SUGAR_CANE", 5L);
+        values.put("CACTUS", 5L);
+        values.put("WHEAT", 4L);
+        values.put("CARROT", 4L);
+        values.put("POTATO", 4L);
+        values.put("MELON_SLICE", 2L);
+        values.put("PUMPKIN", 6L);
         // Mob drops (§29).
-        values.put("ROTTEN_FLESH", 2.0);
-        values.put("BONE", 4.0);
-        values.put("STRING", 4.0);
-        values.put("SPIDER_EYE", 6.0);
-        values.put("GUNPOWDER", 10.0);
-        values.put("ENDER_PEARL", 25.0);
-        values.put("BLAZE_ROD", 30.0);
+        values.put("ROTTEN_FLESH", 2L);
+        values.put("BONE", 4L);
+        values.put("STRING", 4L);
+        values.put("SPIDER_EYE", 6L);
+        values.put("GUNPOWDER", 10L);
+        values.put("ENDER_PEARL", 25L);
+        values.put("BLAZE_ROD", 30L);
         return values;
     }
 
@@ -67,7 +67,7 @@ public final class EconomyConfig {
         return seasonId;
     }
 
-    public double startingMoney() {
+    public long startingMoney() {
         return startingMoney;
     }
 
@@ -83,7 +83,7 @@ public final class EconomyConfig {
         return provideVault;
     }
 
-    public Map<String, Double> sellValues() {
+    public Map<String, Long> sellValues() {
         return sellValues;
     }
 

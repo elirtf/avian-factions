@@ -55,12 +55,12 @@ public final class VaultEconomyBridge extends AbstractEconomy {
 
     @Override
     public int fractionalDigits() {
-        return Currency.MONEY.decimals();
+        return 0;   // whole dollars, no cents
     }
 
     @Override
     public String format(double amount) {
-        return economy.format(Currency.MONEY, toMinor(amount));
+        return economy.format(Currency.MONEY, toWhole(amount));
     }
 
     @Override
@@ -86,7 +86,7 @@ public final class VaultEconomyBridge extends AbstractEconomy {
     @Override
     public double getBalance(String playerName) {
         var uuid = resolve(playerName);
-        return uuid == null ? 0 : toMajor(economy.balance(uuid, Currency.MONEY));
+        return uuid == null ? 0 : toDouble(economy.balance(uuid, Currency.MONEY));
     }
 
     @Override
@@ -110,7 +110,7 @@ public final class VaultEconomyBridge extends AbstractEconomy {
         if (uuid == null) {
             return failure(0, "Unknown player " + playerName);
         }
-        return await(economy.withdraw(uuid, Currency.MONEY, toMinor(amount), "vault"), amount, uuid);
+        return await(economy.withdraw(uuid, Currency.MONEY, toWhole(amount), "vault"), amount, uuid);
     }
 
     @Override
@@ -124,7 +124,7 @@ public final class VaultEconomyBridge extends AbstractEconomy {
         if (uuid == null) {
             return failure(0, "Unknown player " + playerName);
         }
-        return await(economy.deposit(uuid, Currency.MONEY, toMinor(amount), "vault"), amount, uuid);
+        return await(economy.deposit(uuid, Currency.MONEY, toWhole(amount), "vault"), amount, uuid);
     }
 
     @Override
@@ -191,12 +191,13 @@ public final class VaultEconomyBridge extends AbstractEconomy {
 
     // --- helpers ------------------------------------------------------------------------------
 
-    private static long toMinor(double amount) {
-        return Math.round(amount * Currency.MONEY.minorPerUnit());
+    /** Vault speaks doubles; our money is whole dollars, so rounding is the whole conversion. */
+    private static long toWhole(double amount) {
+        return Math.round(amount);
     }
 
-    private static double toMajor(long minor) {
-        return minor / (double) Currency.MONEY.minorPerUnit();
+    private static double toDouble(long minor) {
+        return minor;
     }
 
     private static UUID resolve(String playerName) {
@@ -208,14 +209,14 @@ public final class VaultEconomyBridge extends AbstractEconomy {
                                   double amount, UUID player) {
         try {
             var result = future.get(WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS);
-            double balance = toMajor(result.balanceAfter());
+            double balance = toDouble(result.balanceAfter());
             if (result.ok()) {
                 return new EconomyResponse(amount, balance, EconomyResponse.ResponseType.SUCCESS, null);
             }
             return new EconomyResponse(0, balance, EconomyResponse.ResponseType.FAILURE, result.status().name());
         } catch (Exception e) {
             Thread.currentThread().interrupt();
-            return failure(toMajor(economy.balance(player, Currency.MONEY)), e.getMessage());
+            return failure(toDouble(economy.balance(player, Currency.MONEY)), e.getMessage());
         }
     }
 
