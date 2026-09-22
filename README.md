@@ -4,6 +4,7 @@ A modern, original competitive Factions server for Minecraft Java Edition (Paper
 
 - Product spec: [`docs/SPEC.md`](docs/SPEC.md)
 - Glossary: [`CONTEXT.md`](CONTEXT.md)
+- **Changing settings: [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md)** — plain-language guide to every option and which file it lives in
 - Decisions: [`docs/adr/`](docs/adr/)
 - Planning map: the GitHub issue labelled `wayfinder:map`
 
@@ -50,6 +51,9 @@ which `runServer` depends on — see `dev-server/README.md`. A fresh world needs
 `worldborder set 5000` once on the console (it persists in `level.dat`).
 
 ## Configuration
+
+Plain-language guide to every setting and where it lives: **[`docs/CONFIGURATION.md`](docs/CONFIGURATION.md)**.
+
 
 One HOCON file per module in `run/plugins/AvianFactions/` (ADR-0003), written with commented
 defaults on first boot. `core.conf` holds the database connection; `database.password` has no
