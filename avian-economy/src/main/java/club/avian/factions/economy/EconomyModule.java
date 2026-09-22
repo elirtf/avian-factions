@@ -45,8 +45,16 @@ public final class EconomyModule implements AvianModule {
                 config, config.get().seasonId());
         ctx.logger().info("Loaded balances for " + economy.load() + " player(s)");
 
-        var sellValues = new ConfiguredSellValues(config);
-        ctx.logger().info(sellValues.size() + " sellable material(s)");
+        var configured = new ConfiguredSellValues(config);
+        // EconomyShopGUI owns prices when it is installed: an admin edits them there and players
+        // see them there, and two price lists would be an exploit rather than an inconsistency.
+        SellValues sellValues = configured;
+        if (Bukkit.getPluginManager().getPlugin("EconomyShopGUI") != null) {
+            sellValues = new ShopSellValues(configured, ctx.logger());
+            ctx.logger().info("Sell prices come from EconomyShopGUI; economy.conf is the fallback");
+        } else {
+            ctx.logger().info(configured.size() + " sellable material(s) from economy.conf");
+        }
 
         ctx.services().provide(Economy.class, economy);
         ctx.services().provide(SellValues.class, sellValues);

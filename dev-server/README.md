@@ -15,3 +15,7 @@ Credentials here are the local dev ones from `.env.example`. A real deployment s
 The 5,000-block world border is world state, not config: it lives in `run/world/level.dat` after
 `worldborder set 5000` on the console. A fresh world needs that command once (or Chunky's
 `/chunky worldborder`); the README's dev-loop section says so.
+
+`plugins/EconomyShopGUI/config.yml` — EconomyShopGUI owns sell prices when installed (see
+`ShopSellValues`); this tracks the settings we changed from its defaults. Its `/shops` and
+`/sections` directories are left at their defaults and are not tracked.
