@@ -9,7 +9,8 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/") { name = "papermc" }
+        maven("https://jitpack.io") { name = "jitpack" }   // VaultAPI is published here only
     }
 }
 
-include("avian-api", "avian-core", "avian-combat", "avian-factions", "avian-plugin", "avian-testing")
+include("avian-api", "avian-core", "avian-combat", "avian-economy", "avian-factions", "avian-plugin", "avian-testing")

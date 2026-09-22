@@ -14,6 +14,7 @@ dependencies {
     implementation(project(":avian-api"))
     implementation(project(":avian-core"))
     implementation(project(":avian-combat"))
+    implementation(project(":avian-economy"))
     implementation(project(":avian-factions"))
 }
 
@@ -33,6 +34,7 @@ tasks.shadowJar {
     // Never relocate org.slf4j, net.kyori, com.google.gson, com.google.common: Paper provides them.
     val libs = "club.avian.factions.libs"
     relocate("org.spongepowered.configurate", "$libs.configurate")
+    // VaultAPI is compileOnly: the Vault plugin provides it at runtime, so it is not shaded.
     relocate("io.leangen.geantyref", "$libs.geantyref")
     relocate("com.zaxxer.hikari", "$libs.hikari")
     relocate("org.mariadb.jdbc", "$libs.mariadb")
