@@ -17,6 +17,10 @@ means to that end, nothing more. So:
 - **Take inspiration from popular servers** for events, crates, ranks and progression. Copy the
   *patterns* that are proven to be fun; never copy assets, configs or branding (spec §2).
 
+**Monetisation is cosmetic-only** (ADR-0006): Mojang forbids selling competitive advantage, and
+factions is the genre where that bites hardest. Every gameplay perk is earned on a free ladder;
+paid ranks and store crates carry cosmetics only.
+
 Brand: bird-themed throughout — ranks, crates, events and kits all lean on the raven/hawk sigil
 and the `mc.avian.club` identity.
 

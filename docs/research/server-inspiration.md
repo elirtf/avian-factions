@@ -45,19 +45,42 @@ The brand is a raven/hawk sigil, dark premium arcane, stone/gold/red/purple, at 
 Everything player-facing should read as birds without becoming twee. Proposals below; all are
 config values, none are hardcoded (spec §2 rule 9).
 
-### Donor ranks — six tiers, ascending
+### Ranks — two ladders
+
+Mojang's rules forbid selling competitive advantage, and factions is the genre where that bites
+hardest. So gameplay progression is free and paid ranks are cosmetic — see
+`docs/adr/0006-cosmetic-only-monetisation.md`.
+
+The two ladders are named on **different axes** so a player can tell instantly which is which:
+**free ranks are life stages, paid ranks are raptor species.**
+
+#### Free ladder — earned, and where every gameplay perk lives
+
+| Tier | Name | Earned by |
+|---|---|---|
+| 1 | **Hatchling** | Joining |
+| 2 | **Fledgling** | Early playtime, first quests |
+| 3 | **Flier** | Sustained play |
+| 4 | **Soarer** | Significant achievement |
+| 5 | **Skyborne** | Long-term mastery |
+
+Perks: sell-multiplier steps, kit access, home slots, claim bonuses.
+
+#### Paid ladder — cosmetic and social only
 
 | Tier | Name | Why |
 |---|---|---|
-| 1 | **Fledgling** | First rank; a bird that has just left the nest |
-| 2 | **Kestrel** | Small falcon, common, unmistakably a bird of prey |
-| 3 | **Osprey** | Bigger, a specialist hunter |
-| 4 | **Falcon** | The fast one; widely recognised as elite |
-| 5 | **Hawk** | Half the sigil |
-| 6 | **Raven** | The other half, and the apex — the server's own emblem |
+| 1 | **Kestrel** | Small falcon, common, unmistakably a bird of prey |
+| 2 | **Osprey** | Bigger, a specialist hunter |
+| 3 | **Falcon** | The fast one; widely recognised as elite |
+| 4 | **Hawk** | Half the sigil |
+| 5 | **Raven** | The other half, and the apex — the server's own emblem |
 
-Optional seventh, **Phoenix**, if a mythic tier above Raven is ever wanted. Held back for now so
-Raven stays the summit and the theme stays real birds.
+Perks: prefix, chat colour, particles, pets, join message, nickname, Discord role. **Nothing that
+affects who wins.** The two ladders stack, because they are orthogonal.
+
+Optional sixth paid tier, **Phoenix**, if a mythic rank above Raven is ever wanted. Held back for
+now so Raven stays the summit and the theme stays real birds.
 
 ### Staff ranks — deliberately not bird-themed
 
@@ -79,6 +102,12 @@ concession: staff prefixes use the brand's gold/purple rather than the usual gen
 
 Keys take the crate's name (`Talon Key`). Spec §19's four key types become one per crate tier.
 
+**Crates split by how the key is obtained, not by rarity alone** (ADR-0006). An **earned** key —
+voting, bosses, KOTH, the Aerie — may contain anything, including gameplay rewards. A **purchased**
+key may contain cosmetics only; paid crate keys with gameplay-relevant loot are named explicitly in
+the guidance as a violation. Voting is the interesting case and it is fine: it earns the server
+something real and costs the player nothing, so a Feather key can hold gameplay rewards.
+
 ### Events and places
 
 | Thing | Avian name | Note |
@@ -97,8 +126,9 @@ new words for mechanics they already know. Theme the *proper nouns*, not the mec
 
 - **The Aerie needs a spec section.** It is not in `docs/SPEC.md` and it is the strongest idea the
   survey turned up. Filed separately.
-- **Ranks are a LuckPerms configuration job, not code.** A track with six groups, prefixes, and the
-  permissions each tier grants. That belongs in `dev-server/` alongside the other tracked config.
+- **Ranks are two LuckPerms tracks, not code.** A free track (Hatchling→Skyborne) carrying the
+  gameplay permissions and a paid track (Kestrel→Raven) carrying cosmetics, both tracked in
+  `dev-server/`. The free track is the one that needs design effort — it is the real progression.
 - **Crates are probably bought, not built.** Spec §19's requirements (weighted rewards, animations,
   sounds, particles, key consumption) describe every crate plugin on the market. Evaluate before
   writing one — the same call we made for shops and stacking.
@@ -116,3 +146,12 @@ new words for mechanics they already know. Theme the *proper nouns*, not the mec
 - [OPBlocks OP Factions release notes](https://opblocks.com/threads/opblocks-op-factions-release.28689/)
 - [Nyx OP Factions feature list](https://www.minecraftforum.net/forums/servers-java-edition/pc-servers/2947699-nyx-op-factions-mcmmo-custom-enchants-quests)
 - Commercial factions setup feature lists (envoys / bosses / crates / outpost / KOTH), e.g. [BuiltByBit listing](https://builtbybit.com/resources/hq-factions-setup-75-off-sale-envoys-bosses-crates-outpost-koth-coinflip.9151/) — read for feature inventory only
+
+## Sources — monetisation rules
+
+- [Minecraft Usage Guidelines for Fans and Creators](https://www.minecraft.net/en-us/usage-guidelines)
+- [Commercial usage guidelines updated — Minecraft.net](https://www.minecraft.net/en-us/article/commercial-usage-guidelines-updated)
+- [Minecraft EULA and Commercial Usage Guidelines Updates — Minecraft.net](https://www.minecraft.net/en-us/article/minecraft-eula-and-commercial-usage-guidelines-updates)
+- [Server ranks, stores and pay-to-win — minecraftservers wiki](https://minecraftserve.rs/wiki/ranks-and-pay-to-win) — the concrete list of unsafe perks
+- [Can You Charge for a Minecraft Server? EULA and Monetization Rules (2026)](https://space-node.net/blog/minecraft-eula-monetization-rules-2026)
+- [How to Monetize Your Minecraft Server (Legally and Effectively) — GGServers](https://ggservers.com/blog/how-to-monetize-your-minecraft-server-legally-and-effectively/)
