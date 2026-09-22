@@ -151,3 +151,18 @@ val syncDevConfig = tasks.register<Copy>("syncDevConfig") {
 tasks.runServer {
     dependsOn(syncDevConfig)
 }
+
+// Prints the rank setup as console commands. LuckPerms has no "apply a file" command, so this
+// exists to make the tracked script easy to paste in one go:
+//   ./gradlew -q printRanks
+// Then paste into the server console. The file itself is the source of truth, not the database.
+tasks.register("printRanks") {
+    description = "Prints dev-server/luckperms/ranks.lp as console commands, comments stripped."
+    group = "avian"
+    val script = layout.projectDirectory.file("../dev-server/luckperms/ranks.lp")
+    doLast {
+        script.asFile.readLines()
+            .filterNot { it.isBlank() || it.trimStart().startsWith("#") }
+            .forEach { println(it) }
+    }
+}
