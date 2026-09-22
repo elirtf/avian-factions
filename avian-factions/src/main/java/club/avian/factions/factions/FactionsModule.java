@@ -6,6 +6,9 @@ import club.avian.factions.api.module.AvianModule;
 import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.core.CoreModule;
 import club.avian.factions.factions.command.FactionCommand;
+import club.avian.factions.factions.power.JdbcPowerRepository;
+import club.avian.factions.factions.power.PowerListener;
+import club.avian.factions.factions.power.PowerService;
 
 import java.time.Clock;
 import java.util.List;
@@ -39,8 +42,15 @@ public final class FactionsModule implements AvianModule {
         int loaded = index.load();
         ctx.logger().info("Loaded " + loaded + " faction(s) for season " + config.get().seasonId());
 
+        var power = new PowerService(new JdbcPowerRepository(ctx.database()), config, Clock.systemUTC(),
+                config.get().seasonId());
+        ctx.logger().info("Loaded power for " + power.load() + " player(s)");
+        // Every death costs power for now. The territory check (no loss in safezone, spec §9)
+        // plugs in here once claims land.
+        ctx.registerListener(new PowerListener(power, player -> true, ctx.logger()));
+
         ctx.services().provide(Factions.class, index);
-        ctx.commands().register(new FactionCommand(index, config, ctx.logger()).build(),
+        ctx.commands().register(new FactionCommand(index, power, config, ctx.logger()).build(),
                 "Faction commands", List.of("faction", "factions"));
     }
 }

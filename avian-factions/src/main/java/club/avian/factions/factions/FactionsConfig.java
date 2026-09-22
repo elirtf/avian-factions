@@ -22,6 +22,7 @@ public final class FactionsConfig {
     private int seasonId = 1;
 
     private Names names = new Names();
+    private club.avian.factions.factions.power.PowerConfig power = new club.avian.factions.factions.power.PowerConfig();
 
     public int seasonId() {
         return seasonId;
@@ -31,6 +32,10 @@ public final class FactionsConfig {
         return names;
     }
 
+    public club.avian.factions.factions.power.PowerConfig power() {
+        return power;
+    }
+
     static void validate(FactionsConfig cfg, ConfigErrors e) {
         e.check(cfg.seasonId >= 1, "season-id", "must be >= 1 (got %d)", cfg.seasonId);
         e.check(cfg.names.minLength >= 1, "names.min-length", "must be >= 1");
@@ -38,6 +43,7 @@ public final class FactionsConfig {
                 "must be >= names.min-length (%d)", cfg.names.minLength);
         e.check(cfg.names.maxLength <= 16, "names.max-length",
                 "must be <= 16 (the database column width)");
+        cfg.power.validate(e);
     }
 
     @ConfigSerializable

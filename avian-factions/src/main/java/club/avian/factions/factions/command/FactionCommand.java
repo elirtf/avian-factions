@@ -6,6 +6,7 @@ import club.avian.factions.api.faction.FactionRank;
 import club.avian.factions.factions.FactionIndex;
 import club.avian.factions.factions.FactionName;
 import club.avian.factions.factions.FactionsConfig;
+import club.avian.factions.factions.power.PowerService;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -31,11 +32,13 @@ import java.util.stream.Collectors;
 public final class FactionCommand {
 
     private final FactionIndex factions;
+    private final PowerService power;
     private final ConfigHandle<FactionsConfig> config;
     private final Logger log;
 
-    public FactionCommand(FactionIndex factions, ConfigHandle<FactionsConfig> config, Logger log) {
+    public FactionCommand(FactionIndex factions, PowerService power, ConfigHandle<FactionsConfig> config, Logger log) {
         this.factions = factions;
+        this.power = power;
         this.config = config;
         this.log = log;
     }
@@ -46,6 +49,10 @@ public final class FactionCommand {
                         .then(Commands.argument("name", StringArgumentType.word())
                                 .executes(this::create)))
                 .then(Commands.literal("disband").executes(this::disband))
+                .then(Commands.literal("power")
+                        .executes(ctx -> power(ctx, null))
+                        .then(Commands.argument("faction", StringArgumentType.word())
+                                .executes(ctx -> power(ctx, StringArgumentType.getString(ctx, "faction")))))
                 .then(Commands.literal("who")
                         .executes(ctx -> who(ctx, null))
                         .then(Commands.argument("faction", StringArgumentType.word())
@@ -55,7 +62,7 @@ public final class FactionCommand {
     }
 
     private int usage(CommandContext<CommandSourceStack> ctx) {
-        send(ctx, Component.text("/f create <name> · /f disband · /f who [faction]", NamedTextColor.GRAY));
+        send(ctx, Component.text("/f create <name> · /f disband · /f who [faction] · /f power [faction]", NamedTextColor.GRAY));
         return 1;
     }
 
@@ -125,28 +132,51 @@ public final class FactionCommand {
     }
 
     private int who(CommandContext<CommandSourceStack> ctx, String name) {
-        Faction faction;
-        if (name != null) {
-            faction = factions.byName(name).orElse(null);
-            if (faction == null) {
-                send(ctx, error("No faction called " + name + "."));
-                return 0;
-            }
-        } else {
-            var player = player(ctx);
-            if (player == null) {
-                return 0;
-            }
-            faction = factions.ofPlayer(player.getUniqueId()).orElse(null);
-            if (faction == null) {
-                send(ctx, error("You are not in a faction. Try /f who <faction>."));
-                return 0;
-            }
+        var faction = resolve(ctx, name);
+        if (faction == null) {
+            return 0;
         }
         send(ctx, Component.text(faction.name(), NamedTextColor.GOLD)
                 .append(Component.text(" — " + faction.members().size() + " member(s)", NamedTextColor.GRAY)));
         send(ctx, Component.text(describeMembers(faction), NamedTextColor.GRAY));
         return 1;
+    }
+
+    private int power(CommandContext<CommandSourceStack> ctx, String name) {
+        var faction = resolve(ctx, name);
+        if (faction == null) {
+            return 0;
+        }
+        double total = power.powerOf(faction);
+        int capacity = power.claimCapacity(faction);
+        send(ctx, Component.text(faction.name(), NamedTextColor.GOLD)
+                .append(Component.text(String.format(" — power %.1f, claims up to %d", total, capacity),
+                        NamedTextColor.GRAY)));
+        if (ctx.getSource().getSender() instanceof Player self && faction.hasMember(self.getUniqueId())) {
+            send(ctx, Component.text(String.format("Your power: %.1f / %.1f",
+                    power.powerOf(self.getUniqueId()), power.maximumOf(self.getUniqueId())), NamedTextColor.GRAY));
+        }
+        return 1;
+    }
+
+    /** The named Faction, or the sender's own; sends the error and returns null when neither resolves. */
+    private Faction resolve(CommandContext<CommandSourceStack> ctx, String name) {
+        if (name != null) {
+            var faction = factions.byName(name).orElse(null);
+            if (faction == null) {
+                send(ctx, error("No faction called " + name + "."));
+            }
+            return faction;
+        }
+        var player = player(ctx);
+        if (player == null) {
+            return null;
+        }
+        var faction = factions.ofPlayer(player.getUniqueId()).orElse(null);
+        if (faction == null) {
+            send(ctx, error("You are not in a faction. Try naming one."));
+        }
+        return faction;
     }
 
     private String describeMembers(Faction faction) {
