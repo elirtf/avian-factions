@@ -18,7 +18,7 @@ means to that end, nothing more. So:
   *patterns* that are proven to be fun; never copy assets, configs or branding (spec §2).
 
 **Monetisation is cosmetic-only** (ADR-0006): Mojang forbids selling competitive advantage, and
-factions is the genre where that bites hardest. Selling competitive advantage is forbidden;
+factions is the genre where that bites hardest. So:
 paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) lean cosmetic, and any gameplay-relevant perk on
 them must be genuinely obtainable in game — via crates, events and achievement rather than a long
 free rank ladder. Free ranks are just Hatchling and Fledgling.
