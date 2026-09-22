@@ -23,6 +23,8 @@ public final class FactionsConfig {
 
     private Names names = new Names();
     private Claims claims = new Claims();
+    private club.avian.factions.factions.protection.ProtectionConfig protection =
+            new club.avian.factions.factions.protection.ProtectionConfig();
     private club.avian.factions.factions.power.PowerConfig power = new club.avian.factions.factions.power.PowerConfig();
 
     public int seasonId() {
@@ -35,6 +37,10 @@ public final class FactionsConfig {
 
     public Claims claims() {
         return claims;
+    }
+
+    public club.avian.factions.factions.protection.ProtectionConfig protection() {
+        return protection;
     }
 
     public club.avian.factions.factions.power.PowerConfig power() {
@@ -50,6 +56,7 @@ public final class FactionsConfig {
                 "must be <= 16 (the database column width)");
         cfg.power.validate(e);
         e.check(!cfg.claims.worlds.isEmpty(), "claims.worlds", "must list at least one world");
+        cfg.protection.validate(e);
     }
 
     @ConfigSerializable
