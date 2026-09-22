@@ -45,42 +45,38 @@ The brand is a raven/hawk sigil, dark premium arcane, stone/gold/red/purple, at 
 Everything player-facing should read as birds without becoming twee. Proposals below; all are
 config values, none are hardcoded (spec §2 rule 9).
 
-### Ranks — two ladders
+### Ranks
 
 Mojang's rules forbid selling competitive advantage, and factions is the genre where that bites
-hardest. So gameplay progression is free and paid ranks are cosmetic — see
-`docs/adr/0006-cosmetic-only-monetisation.md`.
+hardest. Paid ranks lean cosmetic, and anything gameplay-relevant on them must be obtainable in
+game too — see `docs/adr/0006-cosmetic-only-monetisation.md`.
 
-The two ladders are named on **different axes** so a player can tell instantly which is which:
-**free ranks are life stages, paid ranks are raptor species.**
-
-#### Free ladder — earned, and where every gameplay perk lives
-
-| Tier | Name | Earned by |
-|---|---|---|
-| 1 | **Hatchling** | Joining |
-| 2 | **Fledgling** | Early playtime, first quests |
-| 3 | **Flier** | Sustained play |
-| 4 | **Soarer** | Significant achievement |
-| 5 | **Skyborne** | Long-term mastery |
-
-Perks: sell-multiplier steps, kit access, home slots, claim bonuses.
-
-#### Paid ladder — cosmetic and social only
+#### Paid ladder — five tiers
 
 | Tier | Name | Why |
 |---|---|---|
-| 1 | **Kestrel** | Small falcon, common, unmistakably a bird of prey |
-| 2 | **Osprey** | Bigger, a specialist hunter |
-| 3 | **Falcon** | The fast one; widely recognised as elite |
+| 1 | **Finch** | A small songbird — an unpretentious first rung |
+| 2 | **Cardinal** | Bright red, unmistakable, and already in the brand palette |
+| 3 | **Falcon** | The first bird of prey; the fast one, widely read as elite |
 | 4 | **Hawk** | Half the sigil |
 | 5 | **Raven** | The other half, and the apex — the server's own emblem |
 
-Perks: prefix, chat colour, particles, pets, join message, nickname, Discord role. **Nothing that
-affects who wins.** The two ladders stack, because they are orthogonal.
+The shape is small bird → bright bird → birds of prey, so the ladder escalates in a way players
+feel without reading a list.
 
-Optional sixth paid tier, **Phoenix**, if a mythic rank above Raven is ever wanted. Held back for
-now so Raven stays the summit and the theme stays real birds.
+Optional sixth tier, **Phoenix**, if a mythic rank above Raven is ever wanted. Held back for now so
+Raven stays the summit and the theme stays real birds.
+
+#### Free ranks — deliberately short
+
+**Hatchling** on joining, **Fledgling** after early play. That is all. There is no long free ladder
+mirroring the paid one, because the compliance mechanism is not a parallel ladder — it is that
+**the perks themselves are obtainable in game**: ranks, kits and sets can be won from crates,
+events and achievement, so nothing a paying player has is closed to a free one.
+
+The condition that comes with that (ADR-0006): any gameplay-relevant perk on a paid rank must be
+**genuinely obtainable free, at a rate a real player would reach**. A token drop rate that exists
+only to win the argument is not enough. Perks that cannot meet that bar do not go on a paid rank.
 
 ### Staff ranks — deliberately not bird-themed
 
@@ -126,9 +122,9 @@ new words for mechanics they already know. Theme the *proper nouns*, not the mec
 
 - **The Aerie needs a spec section.** It is not in `docs/SPEC.md` and it is the strongest idea the
   survey turned up. Filed separately.
-- **Ranks are two LuckPerms tracks, not code.** A free track (Hatchling→Skyborne) carrying the
-  gameplay permissions and a paid track (Kestrel→Raven) carrying cosmetics, both tracked in
-  `dev-server/`. The free track is the one that needs design effort — it is the real progression.
+- **Ranks are LuckPerms tracks, not code.** A paid track (Finch→Raven) and two free groups
+  (Hatchling, Fledgling), tracked in `dev-server/`. The design effort goes into the *routes* by
+  which a free player obtains rank perks — crates, events, achievement — not into a free ladder.
 - **Crates are probably bought, not built.** Spec §19's requirements (weighted rewards, animations,
   sounds, particles, key consumption) describe every crate plugin on the market. Evaluate before
   writing one — the same call we made for shops and stacking.

@@ -33,23 +33,25 @@ progression. Crates split by how the key is obtained, not by rarity alone — an
 contain anything, a purchased key may contain only cosmetics. Priority queue on a full server is
 arguably access rather than advantage; it stays undecided until we ever have a queue.
 
-## The two ladders
+## The ladders
 
-Named on different axes so a player can tell instantly which is which: **free ranks are life
-stages, paid ranks are raptor species.**
+**Paid — five tiers**, escalating from small bird to bird of prey:
 
-| | Free — earned | Paid — cosmetic |
-|---|---|---|
-| 1 | Hatchling | Kestrel |
-| 2 | Fledgling | Osprey |
-| 3 | Flier | Falcon |
-| 4 | Soarer | Hawk |
-| 5 | Skyborne | Raven |
+**Finch → Cardinal → Falcon → Hawk → Raven.**
 
-Free ranks are earned by playtime, quests and in-game achievement, and carry the gameplay perks:
-sell-multiplier steps, kit access, home slots, claim bonuses. Paid ranks carry prefix, colour,
-particles, pets, join message, nickname and Discord role — and stack with any free rank, because
-they are orthogonal.
+**Free — two tiers only**: **Hatchling** (on joining) and **Fledgling** (early play). There is
+deliberately no long free rank ladder mirroring the paid one.
+
+The compliance mechanism is not a parallel ladder — it is that **the perks themselves are
+obtainable in game**. Ranks, their kits and their sets can be won from crates, events and
+in-game achievement, so nothing a paying player has is closed to a free one. That is simpler than
+two ladders and it is how the perks stay honest.
+
+This puts a condition on the design rather than removing one: **any gameplay-relevant perk attached
+to a paid rank must be genuinely obtainable free, at a rate a real player would reach** — not a
+token drop rate that exists to argue the point. Where a perk cannot meet that bar, it does not go
+on a paid rank at all. Purely cosmetic perks (prefix, colour, particles, pets, join message,
+nickname, Discord role) carry no such condition and are the safest thing to sell.
 
 **Earned keys** (Feather, Plume, Talon, Pinion, Raven) come from voting, bosses, KOTH and the Aerie,
 and may contain gameplay rewards. **Store keys** are a separate cosmetic-only line. Voting is the
