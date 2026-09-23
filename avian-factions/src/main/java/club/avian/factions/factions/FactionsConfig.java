@@ -56,6 +56,8 @@ public final class FactionsConfig {
                 "must be <= 16 (the database column width)");
         cfg.power.validate(e);
         e.check(!cfg.claims.worlds.isEmpty(), "claims.worlds", "must list at least one world");
+        e.check(cfg.claims.maxRadius >= 1 && cfg.claims.maxRadius <= 16, "claims.max-radius",
+                "must be 1-16 (got %d)", cfg.claims.maxRadius);
         cfg.protection.validate(e);
     }
 
@@ -68,12 +70,19 @@ public final class FactionsConfig {
         @Comment("Radius in chunks drawn by /f map, so the output fits a chat window.")
         private int mapRadius = 4;
 
+        @Comment("Largest radius /f claim <radius> accepts. 1 is one chunk, 2 is 3x3, 5 is 9x9.")
+        private int maxRadius = 5;
+
         public List<String> worlds() {
             return worlds;
         }
 
         public int mapRadius() {
             return mapRadius;
+        }
+
+        public int maxRadius() {
+            return maxRadius;
         }
     }
 

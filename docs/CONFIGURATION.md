@@ -90,6 +90,7 @@ and you lose some — drop below what you have claimed, and enemies can raid you
 |---|---|---|
 | `claims.worlds` | Which worlds allow claiming. Anywhere else is unprotected | `world` |
 | `claims.map-radius` | How big `/f map` draws | `4` |
+| `claims.max-radius` | Biggest `/f claim <radius>` allowed. 1 = one chunk, 2 = 3x3, 5 = 9x9 | `5` |
 
 **Protection — who can touch what inside a claim**
 

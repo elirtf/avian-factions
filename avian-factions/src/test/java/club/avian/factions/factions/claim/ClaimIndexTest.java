@@ -139,6 +139,48 @@ class ClaimIndexTest {
     }
 
     @Test
+    void squareRadiusFollowsTheFactionsUuidConvention() {
+        assertEquals(1, claims.claimSquare(WORLD, 0, 0, 1, ravens, leader, 100).claimed(), "1 = the chunk you stand on");
+        assertEquals(8, claims.claimSquare(WORLD, 0, 0, 2, ravens, leader, 100).claimed(), "2 = 3x3, centre already held");
+        var fiveByFive = claims.claimSquare(WORLD, 0, 0, 3, ravens, leader, 100);
+        assertEquals(16, fiveByFive.claimed());
+        assertEquals(9, fiveByFive.alreadyYours());
+        assertEquals(25, claims.countOf(ravens));
+        assertTrue(claims.at(WORLD, -2, 2).faction().isPresent());
+        assertTrue(claims.at(WORLD, 3, 0).isWilderness());
+        assertTrue(claims.indexesAgree());
+    }
+
+    @Test
+    void squareClaimStopsAtCapacityKeepingTheNearestChunks() {
+        var result = claims.claimSquare(WORLD, 10, 10, 3, ravens, leader, 5);
+        assertEquals(5, result.claimed());
+        assertEquals(20, result.overCapacity());
+        assertEquals(ravens, claims.ownerOf(WORLD, 10, 10).orElseThrow(), "the centre is claimed first");
+        for (var key : List.of(new int[]{8, 8}, new int[]{12, 12}, new int[]{8, 12})) {
+            assertTrue(claims.at(WORLD, key[0], key[1]).isWilderness(), "outer ring is not reached");
+        }
+        assertTrue(claims.indexesAgree());
+    }
+
+    @Test
+    void squareClaimSkipsOtherFactionsLand() {
+        claims.claim(WORLD, 1, 0, hawks, leader, 100);
+        var result = claims.claimSquare(WORLD, 0, 0, 2, ravens, leader, 100);
+        assertEquals(8, result.claimed());
+        assertEquals(1, result.ownedByOther());
+        assertEquals(hawks, claims.ownerOf(WORLD, 1, 0).orElseThrow());
+    }
+
+    @Test
+    void squareClaimInADisabledWorldClaimsNothing() {
+        var result = claims.claimSquare("nether", 0, 0, 3, ravens, leader, 100);
+        assertTrue(result.worldDisabled());
+        assertEquals(0, claims.total());
+        assertTrue(repo.calls.isEmpty());
+    }
+
+    @Test
     void unclaimClearsBothIndexes() {
         claim(0, 0, ravens);
         claim(1, 0, ravens);

@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 import org.bukkit.World;
 
 import java.time.Clock;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -146,6 +147,52 @@ public final class ClaimIndex implements Claims {
         put(world, ChunkKey.of(chunkX, chunkZ), factionId);
         var claim = new Claim(world, chunkX, chunkZ, factionId, claimedBy, clock.instant());
         return new Result(null, repository.save(claim, seasonId));
+    }
+
+    /** What a square claim did: counts per outcome, plus every write it made. */
+    public record SquareResult(int claimed, int alreadyYours, int ownedByOther, int overCapacity,
+                               boolean worldDisabled, CompletableFuture<Void> persisted) {
+    }
+
+    /**
+     * Claims the square of side {@code 2 * radius - 1} centred on a chunk ({@code /f claim <radius>},
+     * the FactionsUUID convention: radius 1 is the chunk you stand on, 2 is 3x3, 3 is 5x5).
+     * Chunks are tried nearest-ring first, so when power runs out the land kept is the land around
+     * the player. Chunks another Faction holds are skipped, never taken.
+     */
+    public SquareResult claimSquare(String world, int centreX, int centreZ, int radius,
+                                    UUID factionId, UUID claimedBy, int capacity) {
+        if (!claimableWorld.test(world)) {
+            return new SquareResult(0, 0, 0, 0, true, CompletableFuture.completedFuture(null));
+        }
+        int claimed = 0;
+        int alreadyYours = 0;
+        int ownedByOther = 0;
+        int overCapacity = 0;
+        var writes = new ArrayList<CompletableFuture<Void>>();
+        for (int ring = 0; ring < radius; ring++) {
+            for (int dx = -ring; dx <= ring; dx++) {
+                for (int dz = -ring; dz <= ring; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) != ring) {
+                        continue;
+                    }
+                    var result = claim(world, centreX + dx, centreZ + dz, factionId, claimedBy, capacity);
+                    if (result.ok()) {
+                        claimed++;
+                        writes.add(result.persisted());
+                    } else {
+                        switch (result.refusal()) {
+                            case ALREADY_OWNED_BY_YOU -> alreadyYours++;
+                            case OWNED_BY_OTHER -> ownedByOther++;
+                            case OVER_CAPACITY -> overCapacity++;
+                            case WORLD_DISABLED -> throw new IllegalStateException("world checked above");
+                        }
+                    }
+                }
+            }
+        }
+        return new SquareResult(claimed, alreadyYours, ownedByOther, overCapacity, false,
+                CompletableFuture.allOf(writes.toArray(CompletableFuture[]::new)));
     }
 
     /** Releases one chunk. Returns empty when the Faction did not hold it. */

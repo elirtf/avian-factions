@@ -8,18 +8,27 @@ import club.avian.factions.factions.FactionName;
 import club.avian.factions.factions.FactionsConfig;
 import club.avian.factions.factions.claim.ClaimIndex;
 import club.avian.factions.factions.power.PowerService;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -53,26 +62,31 @@ public final class FactionCommand {
                         .then(Commands.argument("name", StringArgumentType.word())
                                 .executes(this::create)))
                 .then(Commands.literal("disband").executes(this::disband))
-                .then(Commands.literal("claim").executes(this::claim))
+                .then(Commands.literal("claim")
+                        .executes(ctx -> claim(ctx, 1))
+                        .then(Commands.argument("radius", IntegerArgumentType.integer(1))
+                                .executes(ctx -> claim(ctx, IntegerArgumentType.getInteger(ctx, "radius")))))
                 .then(Commands.literal("unclaim")
                         .executes(ctx -> unclaim(ctx, false))
                         .then(Commands.literal("all").executes(ctx -> unclaim(ctx, true))))
                 .then(Commands.literal("map").executes(this::map))
                 .then(Commands.literal("power")
                         .executes(ctx -> power(ctx, null))
-                        .then(Commands.argument("faction", StringArgumentType.word())
-                                .executes(ctx -> power(ctx, StringArgumentType.getString(ctx, "faction")))))
+                        .then(Commands.argument("faction|player", StringArgumentType.word())
+                                .suggests(this::suggestTargets)
+                                .executes(ctx -> power(ctx, StringArgumentType.getString(ctx, "faction|player")))))
                 .then(Commands.literal("who")
                         .executes(ctx -> who(ctx, null))
-                        .then(Commands.argument("faction", StringArgumentType.word())
-                                .executes(ctx -> who(ctx, StringArgumentType.getString(ctx, "faction")))))
+                        .then(Commands.argument("faction|player", StringArgumentType.word())
+                                .suggests(this::suggestTargets)
+                                .executes(ctx -> who(ctx, StringArgumentType.getString(ctx, "faction|player")))))
                 .executes(this::usage)
                 .build();
     }
 
     private int usage(CommandContext<CommandSourceStack> ctx) {
-        send(ctx, Component.text("/f create <name> · /f disband · /f who [faction] · /f power [faction]", NamedTextColor.GRAY));
-        send(ctx, Component.text("/f claim · /f unclaim [all] · /f map", NamedTextColor.GRAY));
+        send(ctx, Component.text("/f create <name> · /f disband · /f who [faction|player] · /f power [faction|player]", NamedTextColor.GRAY));
+        send(ctx, Component.text("/f claim [radius] · /f unclaim [all] · /f map", NamedTextColor.GRAY));
         return 1;
     }
 
@@ -169,12 +183,28 @@ public final class FactionCommand {
         return 1;
     }
 
-    /** The named Faction, or the sender's own; sends the error and returns null when neither resolves. */
+    /**
+     * The Faction named, else the Faction of the player named, else the sender's own; sends the
+     * error and returns null when nothing resolves. A faction name wins over a player name.
+     */
     private Faction resolve(CommandContext<CommandSourceStack> ctx, String name) {
         if (name != null) {
-            var faction = factions.byName(name).orElse(null);
+            var byName = factions.byName(name);
+            if (byName.isPresent()) {
+                return byName.get();
+            }
+            // Cached lookup only: getOfflinePlayer(String) can block on a Mojang profile request.
+            OfflinePlayer target = Bukkit.getPlayerExact(name);
+            if (target == null) {
+                target = Bukkit.getOfflinePlayerIfCached(name);
+            }
+            if (target == null) {
+                send(ctx, error("No faction or player called " + name + "."));
+                return null;
+            }
+            var faction = factions.ofPlayer(target.getUniqueId()).orElse(null);
             if (faction == null) {
-                send(ctx, error("No faction called " + name + "."));
+                send(ctx, error(target.getName() + " is not in a faction."));
             }
             return faction;
         }
@@ -189,9 +219,27 @@ public final class FactionCommand {
         return faction;
     }
 
+    /** Online players and their factions; offline names still resolve when typed in full. */
+    private CompletableFuture<Suggestions> suggestTargets(CommandContext<CommandSourceStack> ctx,
+                                                          SuggestionsBuilder builder) {
+        var prefix = builder.getRemainingLowerCase();
+        var seen = new HashSet<String>();
+        for (var online : Bukkit.getOnlinePlayers()) {
+            var candidates = new ArrayList<String>();
+            candidates.add(online.getName());
+            factions.ofPlayer(online.getUniqueId()).ifPresent(f -> candidates.add(f.name()));
+            for (var candidate : candidates) {
+                if (candidate.toLowerCase(Locale.ROOT).startsWith(prefix) && seen.add(candidate)) {
+                    builder.suggest(candidate);
+                }
+            }
+        }
+        return builder.buildFuture();
+    }
+
     // --- claims ------------------------------------------------------------------------------
 
-    private int claim(CommandContext<CommandSourceStack> ctx) {
+    private int claim(CommandContext<CommandSourceStack> ctx, int radius) {
         var player = player(ctx);
         if (player == null) {
             return 0;
@@ -205,8 +253,16 @@ public final class FactionCommand {
             send(ctx, error("Officers and above may claim land."));
             return 0;
         }
+        int maxRadius = config.get().claims().maxRadius();
+        if (radius > maxRadius) {
+            send(ctx, error("The largest claim radius is " + maxRadius + "."));
+            return 0;
+        }
         var chunk = player.getLocation().getChunk();
         int capacity = power.claimCapacity(faction);
+        if (radius > 1) {
+            return claimSquare(ctx, faction, player, radius, capacity);
+        }
         var result = claims.claim(chunk.getWorld().getName(), chunk.getX(), chunk.getZ(),
                 faction.id(), player.getUniqueId(), capacity);
         if (!result.ok()) {
@@ -226,6 +282,35 @@ public final class FactionCommand {
                 .append(Component.text(String.format(" — %d/%d chunks.",
                         claims.countOf(faction.id()), capacity), NamedTextColor.GRAY)));
         return 1;
+    }
+
+    private int claimSquare(CommandContext<CommandSourceStack> ctx, Faction faction, Player player,
+                            int radius, int capacity) {
+        var chunk = player.getLocation().getChunk();
+        var result = claims.claimSquare(chunk.getWorld().getName(), chunk.getX(), chunk.getZ(), radius,
+                faction.id(), player.getUniqueId(), capacity);
+        if (result.worldDisabled()) {
+            send(ctx, error("Land cannot be claimed in this world."));
+            return 0;
+        }
+        result.persisted().exceptionally(logFailure("persist claims for " + faction.name()));
+        int side = 2 * radius - 1;
+        var summary = Component.text("Claimed ", NamedTextColor.GRAY)
+                .append(Component.text(result.claimed(), NamedTextColor.GOLD))
+                .append(Component.text(String.format(" of %d chunks in a %dx%d square — %d/%d chunks.",
+                        side * side, side, side, claims.countOf(faction.id()), capacity), NamedTextColor.GRAY));
+        send(ctx, summary);
+        if (result.alreadyYours() > 0) {
+            send(ctx, Component.text(result.alreadyYours() + " were already yours.", NamedTextColor.GRAY));
+        }
+        if (result.ownedByOther() > 0) {
+            send(ctx, error(result.ownedByOther() + " belong to another faction and were skipped."));
+        }
+        if (result.overCapacity() > 0) {
+            send(ctx, error(String.format("Not enough power for %d more. Your faction has %.1f power.",
+                    result.overCapacity(), power.powerOf(faction))));
+        }
+        return result.claimed() > 0 ? 1 : 0;
     }
 
     private int unclaim(CommandContext<CommandSourceStack> ctx, boolean all) {
