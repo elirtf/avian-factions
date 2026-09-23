@@ -4,6 +4,7 @@ import club.avian.factions.api.config.ConfigSpec;
 
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * One gameplay or infrastructure unit shaded into the single Avian jar (ADR-0001, ADR-0004).
@@ -25,6 +26,14 @@ public interface AvianModule {
     /** Config files this module owns; loaded and validated by core before any module enables (ADR-0003). */
     default List<ConfigSpec<?>> configs() {
         return List.of();
+    }
+
+    /**
+     * Runs in the plugin's {@code onLoad}, before any plugin enables and before configs load.
+     * Only for registrations another plugin closes at its own enable (FactionsUUID's upgrade
+     * registry, ADR-0007). Everything else belongs in {@link #enable}. Throwing disables the plugin.
+     */
+    default void load(Logger logger) {
     }
 
     /**

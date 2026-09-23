@@ -16,12 +16,15 @@ Everything is inside the `run/` folder, next to this project.
 run/
   server.properties          ← Minecraft's own settings
   plugins/
-    AvianFactions/           ← OUR settings (4 files)
+    AvianFactions/           ← OUR settings (5 files)
       core.conf              ← server name, database
-      factions.conf          ← factions, land, power, protection
+      factions.conf          ← extras on top of FactionsUUID (base power, upgrades)
       combat.conf            ← how fighting feels
       economy.conf           ← money, starting balances
+      ftop.conf              ← what spawners and blocks are worth on F-Top
     Essentials/config.yml    ← homes, teleporting, warps
+    FactionsUUID/config/     ← factions, land, power, protection, role names
+    CommandTimer/timers/     ← when raiding is allowed
     EconomyShopGUI/          ← shop prices and menus
     RoseStacker/config.yml   ← how many mobs/spawners stack
     WorldGuard/              ← protected areas like spawn
@@ -55,64 +58,84 @@ The database **password** is not in this file on purpose — it lives in a separ
 
 ### How much land a faction can claim, and how power works
 
-**File:** `run/plugins/AvianFactions/factions.conf`
+Factions come from the **FactionsUUID** plugin. Most settings are in its files; a few extras are ours.
 
-**Power** is the number that decides how much land a faction can hold. Every player has some, and
-every faction also gets a flat bonus. Add the bonus to everyone's power, divide by `per-claim`, and
-that is how many chunks they can own. Die, and you lose some — drop below what you have claimed,
-and enemies can raid you.
+**Power** decides how much land a faction can hold: **one power = one chunk**. A faction's power is
+all its members' power added up, plus a flat bonus. Die, and you lose some. If a faction's land
+goes above its power, it becomes **raidable**: enemies can claim over it.
+
+**File:** `run/plugins/FactionsUUID/config/main.conf`, in the `landRaidControl` → `power` section
+
+| Setting | What it does | Ours |
+|---|---|---|
+| `playerStarting` | Power a new player begins with | `20` |
+| `playerMax` | Most power one player can have | `20` |
+| `playerMin` | Lowest a player can drop to | `0` |
+| `powerPerMinute` | Power gained per minute **while online** (`0.0166667` = 1 an hour) | `0.0166667` |
+| `lossPerDeath` | Power lost each death | `2` |
+| `raidability` | Land above power makes a faction raidable | `true` |
+
+**File:** `run/plugins/AvianFactions/factions.conf` (ours)
 
 | Setting | What it does | Default |
 |---|---|---|
-| `power.starting` | Power a new player begins with | `20` |
-| `power.maximum` | Most power one player can have | `20` |
-| `power.faction-base` | Flat power every faction has, whatever its size. Never lost on death | `100` |
-| `power.minimum` | Lowest a player can drop to | `0` |
-| `power.regen-per-hour` | Power gained per hour **while online** | `1` |
-| `power.death-loss` | Power lost each death | `2` |
-| `power.per-claim` | Power needed for each chunk of land | `5` |
-| `power.offline-decay-per-hour` | Power lost per hour while offline (`0` = off) | `0` |
-| `power.offline-decay-grace-hours` | Hours offline before decay starts | `24` |
+| `faction-base-power` | Flat power every **new** faction gets. Never lost on death | `5` |
+| `enabled-upgrades` | Which faction upgrades can be bought with `/f upgrades` | claim_boost, spawner_rate, crop_yield, growth, mob_exp, tnt_bank |
 
-> **Example:** 100 base + 4 players with 20 power each = 180 power. 180 ÷ 5 per-claim =
-> **36 chunks of land**. A solo player gets (100 + 20) ÷ 5 = **24 chunks**.
-> Lower `per-claim` and everyone gets more land. Raise it and land gets scarcer.
+> **Example:** a solo player has 5 base + 20 = **25 chunks**, a 5×5 square. A 4-player faction has
+> 5 + 80 = **85 chunks**. The **Claim Boost** upgrade adds +10, +30 or +70 more.
 
-**Faction names**
+Upgrade prices and levels live in `run/plugins/FactionsUUID/data/universe.json`. Edit that only
+while the server is **stopped**.
+
+Role names (Leader, Co-Leader, Officer, Member, Recruit) and every message are in
+`run/plugins/FactionsUUID/config/translations.conf`.
+
+---
+
+### When raiding is allowed
+
+Outside raid hours, FactionsUUID's **grace** is switched on and **no explosions happen anywhere**.
+The **CommandTimer** plugin switches it on and off:
+
+| Days | Raiding allowed |
+|---|---|
+| Monday to Friday | 20:00 to 23:00 |
+| Saturday and Sunday | 18:00 to midnight |
+
+The times are in **server time**. Each rule is a file in `run/plugins/CommandTimer/timers/`. A
+`raid-close-…` file switches grace on for however long it is until the next window opens, and a
+`raid-open-…` file switches it off. To change the hours, edit both the times and the grace lengths
+(like `fa set grace on 21h`) so they still meet up.
+
+By hand, in the console: `fa set grace on 3h` stops explosions for three hours, `fa set grace off`
+allows them again, and `f grace` shows the current state.
+
+---
+
+### F-Top: what a faction's base is worth
+
+**File:** `run/plugins/AvianFactions/ftop.conf`
+
+`/ftop` ranks factions by the **spawners** and **valuable blocks** inside their claims. Hover over
+a line to see the breakdown. The ranking is recalculated every few minutes. Staff can force it with
+`/ftop recalc`.
 
 | Setting | What it does | Default |
 |---|---|---|
-| `names.min-length` | Shortest name allowed | `3` |
-| `names.max-length` | Longest name allowed (16 is the hard limit) | `16` |
-| `names.reserved` | Names nobody can take | wilderness, warzone, safezone, spawn, admin, avian |
-| `names.blocked` | Words that make a name invalid | empty |
+| `recalculate-minutes` | How often the ranking updates | `5` |
+| `spawner-values` | Worth of one spawner, by mob | zombie/spider 250k, skeleton 300k, blaze 400k, creeper 500k, enderman 600k, iron golem 1M |
+| `block-values` | Worth of one placed block. Only these blocks count | gold 250, diamond 500, emerald 750 |
+| `aging.starting-percent` | New spawners and blocks start at this share of their value | `10` |
+| `aging.hours-to-full-value` | …and grow to full value over this many hours | `72` |
+| `pickup-cost.grace-minutes` | Minutes after placing when spawners can be picked up free | `5` |
+| `pickup-cost.percent-of-value` | After that, breaking your own spawner costs this % of its value | `50` |
 
-**Land**
+> **Why aging and the pickup cost:** without them a faction can buy spawners the night before a
+> payout, or mine its spawners up to hide them when a raid starts. Explosions never pay the
+> pickup cost, so raiders take spawners for free.
 
-| Setting | What it does | Default |
-|---|---|---|
-| `claims.worlds` | Which worlds allow claiming. Anywhere else is unprotected | `world` |
-| `claims.map-radius` | How big `/f map` draws | `4` |
-| `claims.max-radius` | Biggest `/f claim <radius>` allowed. 1 = one chunk, 2 = 3x3, 5 = 9x9 | `5` |
-
-**Protection — who can touch what inside a claim**
-
-| Setting | What it does | Default |
-|---|---|---|
-| `protection.non-member-allowed` | What outsiders may still do. Empty = nothing | empty |
-| `protection.explosions-in-claims` | Can TNT and creepers break claimed blocks? | `false` |
-| `protection.fire-spread-in-claims` | Can fire spread inside claims? | `false` |
-| `protection.fluid-flow-into-claims` | Can lava/water flow in from outside? | `false` |
-| `protection.bypass-permission` | Permission that ignores all protection (staff) | `avian.factions.bypass` |
-| `protection.deny-message-cooldown-seconds` | Seconds between repeat "you can't do that" messages | `3` |
-
-For `non-member-allowed` the options are: `BUILD`, `CONTAINER` (chests), `DOOR`, `SWITCH` (buttons
-and levers), `ENTITY` (item frames, armour stands), `ITEM_USE` (buckets, flint and steel),
-`DAMAGE_ENTITY` (hitting animals). Write them in a list, like `["DOOR"]` to let strangers open
-doors but nothing else.
-
-> Note: a faction that claims more land than its power allows becomes **raidable** — protection
-> switches off for everyone until they unclaim or regain power. That is automatic, not a setting.
+Only spawners **placed by players** count. Naturally generated dungeon spawners never do.
 
 ---
 
@@ -180,6 +203,13 @@ auto-sell use the new price — they read the same list on purpose, so they can 
 | `global-entity-settings.max-stack-size` | Most mobs in one stack | `128` |
 | `global-entity-settings.merge-radius` | How close mobs must be to stack | `5` |
 | `global-item-settings.max-stack-size` | Most dropped items in one stack | `1024` |
+| `global-block-settings.stacking-enabled` | Whether placed blocks stack. **Off**: only spawners stack | `false` |
+| `global-spawner-settings.explosion-protection` | Spawners immune to TNT? **Off**, so spawners can be raided | `false` |
+| `global-spawner-settings.explosion-amount-percentage` | Share of a blown-up stack that drops as spawner items | `75` |
+| `global-spawner-settings.explosion-destroy-remaining` | The rest of the stack is destroyed, not left behind | `true` |
+
+> **Raiding a spawner stack:** TNT drops 75% of it as spawner items (rounded up) and destroys the
+> rest. A stack of 100 drops 75. Stacks of 1 to 3 lose nothing, because of the rounding up.
 
 > **32 spawners is low for this kind of server.** Raising it means bigger spawner bases and bigger
 > faction values — but also more mobs for the server to handle, so raise it a bit at a time and
@@ -269,7 +299,7 @@ worldborder set 5000
 file and the exact setting, like:
 
 ```
-factions.conf → power.per-claim: must be > 0 (got -5)
+factions.conf → faction-base-power: must be a finite number >= 0 (got -5)
 ```
 
 Fix the setting it names and start again. It will never start with a broken setting and silently

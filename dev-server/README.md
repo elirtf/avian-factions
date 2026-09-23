@@ -9,6 +9,10 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/Essentials/config.yml` | `unsafe-enchantments: true` (spec §22 custom enchants need levels above vanilla caps) |
 | `plugins/LuckPerms/config.yml` | `storage-method: mariadb`, pointed at the Compose database (`luckperms_` tables) |
 | `plugins/CoreProtect/config.yml` | `use-mysql: true`, pointed at the Compose database (`co_` tables) |
+| `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007) |
+| `plugins/FactionsUUID/config/translations.conf` | Role names: Leader, Co-Leader, Officer, Member, Recruit |
+| `plugins/RoseStacker/config.yml` | Only spawners stack (block stacking off); spawners are raidable: TNT drops 75% as items, destroys the rest |
+| `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
 
 Credentials here are the local dev ones from `.env.example`. A real deployment supplies its own.
 
@@ -38,7 +42,7 @@ sets rather than appends.
 To back up what is live: `lp export <name>` writes `run/plugins/LuckPerms/<name>.json.gz`. That is
 a snapshot, not the source of truth; if the two ever disagree, fix `ranks.lp` and reapply.
 
-`plugins/RoseStacker/config.yml` — stacking for mobs, items, blocks and spawners. Changed so
+`plugins/RoseStacker/config.yml` — stacking for mobs, items and spawners (not blocks). Changed so
 spawner farming pays: mobs from **player-placed** spawners have their AI goals removed
 (`global-spawner-settings.disable-mob-ai` + `disable-mob-ai-only-player-placed` — they stand still
 and don't attack, but water still pushes them), die to **one hit** (`instant-kill-disabled-ai`), and

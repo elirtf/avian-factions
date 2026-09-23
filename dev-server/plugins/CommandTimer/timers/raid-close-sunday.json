@@ -1,0 +1,25 @@
+{
+  "configVersion": 1,
+  "id": "6f1c2a10-7d3e-4c1a-9b21-000000000004",
+  "name": "raid-close-sunday",
+  "commands": [
+    {
+      "command": "fa set grace on 20h",
+      "gender": "CONSOLE",
+      "interval": { "days": 0, "hours": 0, "minutes": 0, "seconds": 0 },
+      "delay": { "days": 0, "hours": 0, "minutes": 0, "seconds": 0 },
+      "description": ""
+    }
+  ],
+  "interval": { "days": 0, "hours": 0, "minutes": 0, "seconds": 5 },
+  "times": [ { "time1": "00:00:00", "isMinecraftTime": false } ],
+  "random": 1.0,
+  "days": ["MONDAY"],
+  "executionLimit": -1,
+  "commandExecutionMode": "ALL",
+  "commandExecutionInterval": { "days": 0, "hours": 0, "minutes": 0, "seconds": 1 },
+  "active": true,
+  "resetExecutionsAfterRestart": false,
+  "condition": { "conditionType": "SIMPLE", "conditions": [], "simpleCondition": { "conditionParamFields": [] } },
+  "events": []
+}

@@ -10,12 +10,18 @@ plugins {
 val mcVersion = providers.gradleProperty("mcVersion").get()
 val paperBuild = providers.gradleProperty("paperBuild").get().toInt()
 
+// FactionsUUID is built from pinned source in avian-factions (ADR-0007); this pulls that jar in.
+val factionsUuid = configurations.dependencyScope("factionsUuid")
+val factionsUuidJar = configurations.resolvable("factionsUuidJar") { extendsFrom(factionsUuid.get()) }
+
 dependencies {
     implementation(project(":avian-api"))
     implementation(project(":avian-core"))
     implementation(project(":avian-combat"))
     implementation(project(":avian-economy"))
     implementation(project(":avian-factions"))
+    implementation(project(":avian-ftop"))
+    factionsUuid(project(":avian-factions", "factionsUuidJar"))
 }
 
 tasks.processResources {
@@ -121,6 +127,11 @@ val pluginStack = listOf(
     PinnedPlugin("CrazyCrates-26.1.2-3726eba.jar",
         "https://cdn.modrinth.com/data/r3BBZyf3/versions/d4FEchgk/CrazyCrates-26.1.2-3726eba.jar",
         "SHA-256", "f7dcf465213c24451e7ff4b56c8047a33b424155a77dacc8a39e7757e8aa06d2"),
+    // CommandTimer 8.18.0 (Apache-2.0): runs console commands on a weekly timetable. Switches
+    // FactionsUUID grace on and off for the raid windows (ADR-0007), and later the event timetable.
+    PinnedPlugin("CommandTimer-8.18.0.jar",
+        "https://cdn.modrinth.com/data/UQTtLW4O/versions/nCJVp89f/commandtimer-java8%20%282%29.jar",
+        "SHA-256", "d31b03f5ebf558469c0d44d26bf80c4d637dd5b83fe7d6e5a382fa726b4e9afa"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
@@ -130,6 +141,8 @@ tasks.register("downloadPlugins") {
     val target = layout.projectDirectory.dir("../run/plugins")
     val stack = pluginStack
     outputs.dir(target)
+    val builtFromSource: FileCollection = factionsUuidJar.get()
+    inputs.files(builtFromSource)
     doLast {
         val dir = target.asFile.apply { mkdirs() }
         for (p in stack) {
@@ -145,6 +158,11 @@ tasks.register("downloadPlugins") {
                 throw GradleException("${p.file}: ${p.algo} mismatch — expected ${p.hash}, got $digest. Deleted; re-run to retry.")
             }
             logger.lifecycle("  ok ${p.file} (${p.algo} ${digest.take(12)}…)")
+        }
+        // Built from source and hash-pinned at the tarball, so copied rather than downloaded.
+        for (jar in builtFromSource) {
+            jar.copyTo(dir.resolve(jar.name), overwrite = true)
+            logger.lifecycle("  ok ${jar.name} (built from pinned source)")
         }
     }
 }

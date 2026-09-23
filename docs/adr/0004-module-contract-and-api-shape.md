@@ -86,6 +86,7 @@ By the second-module rule:
 
 - **Contract:** `AvianModule`, `ModuleContext`, `Services`, `ConfigSpec`, `ConfigHandle`, `@RequiresRestart`.
 - **Core services:** `Players`, `AvianPlayer`, `Economy`, `Tokens`, `Messages`, `AvianScheduler`, `Commands`, `Events`, `Database` (DataSource access for repositories only).
+- *Superseded by ADR-0007: factions come from FactionsUUID and these interfaces were deleted; use its API.*
 - **From factions** (needed by raiding, events, scoreboard, economy): `Territory at(World, int cx, int cz)` with `at(Location)`/`at(Block)` overloads, non-null with a wilderness singleton; `FactionService` read views (`Faction`, `Relation` ordered enum with `isAtLeast`, faction power on demand); `ProtectionPolicy` with pure `canBuild(actor, territory)`, `canUse(actor, territory, kind)`, `canDamage(actor, target)`, `denyExplode(source, territory, …)` ordered world → bypass → territory type → raid/shield → relation/role. Listeners live in `avian-factions` and only translate events into these calls.
 - **Events:** `…api.event.faction.*` (claim, unclaim, relation change, disband), `…api.event.player.*` (profile loaded, balance changed).
 

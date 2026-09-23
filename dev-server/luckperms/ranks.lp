@@ -41,6 +41,9 @@ lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
 lp group hatchling permission set EconomyShopGUI.sellall true
+# F-Top is /ftop (value of spawners and blocks). FactionsUUID's own /f top ranks by money and
+# would contradict it, so it is hidden from everyone.
+lp group hatchling permission set factions.top false
 
 lp creategroup fledgling
 lp group fledgling setweight 20
@@ -134,9 +137,9 @@ lp group mod permission set essentials.tp true
 lp group mod permission set essentials.tphere true
 lp group mod permission set essentials.invsee true
 lp group mod permission set coreprotect.rollback true
-# The only Avian permission that exists today. Our /f command has no permission gating yet —
-# every subcommand is open to any player, which is fine while they are all player commands.
-lp group mod permission set avian.factions.bypass true
+# Factions come from FactionsUUID (ADR-0007). Its halfmod kit: bypass claims, manage safezone and
+# warzone, kick from any faction, faction chat spy.
+lp group mod permission set factions.kit.halfmod true
 
 lp creategroup admin
 lp group admin setweight 220
@@ -146,6 +149,9 @@ lp group admin permission set essentials.gamemode true
 lp group admin permission set essentials.give true
 lp group admin permission set worldedit.* true
 lp group admin permission set worldguard.* true
+# FactionsUUID's mod kit adds /fa power, grace (raid windows by hand), disband any; and F-Top recalc.
+lp group admin permission set factions.kit.mod true
+lp group admin permission set avian.ftop.admin true
 
 lp creategroup owner
 lp group owner setweight 230

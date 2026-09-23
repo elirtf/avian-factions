@@ -63,5 +63,5 @@ _Avoid_: lang key, translation key (no locales in V1)
 What a Module receives at enable: typed accessors for core services (players, database, messages, scheduler, commands, events, config) and the Service registry. A Module's dependencies are whatever it takes from its Module Context in `enable`, held in fields; never static lookups later (ADR-0004).
 
 **Service**:
-A cross-module interface in `avian-api` (`FactionService`, `Economy`, `ProtectionPolicy`, …) that one Module provides and others `require` through the Module Context. An interface becomes a Service only when a second Module needs it.
+A cross-module interface in `avian-api` (`Economy`, `Players`, …) that one Module provides and others `require` through the Module Context. An interface becomes a Service only when a second Module needs it.
 _Avoid_: manager, handler, helper

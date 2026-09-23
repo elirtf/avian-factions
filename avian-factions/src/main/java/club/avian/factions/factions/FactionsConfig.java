@@ -2,13 +2,15 @@ package club.avian.factions.factions;
 
 import club.avian.factions.api.config.ConfigErrors;
 import club.avian.factions.api.config.ConfigSpec;
-import club.avian.factions.api.config.RequiresRestart;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
 import java.util.List;
 
-/** {@code factions.conf} — every gameplay value here is configurable (spec §2 rule 9). */
+/**
+ * {@code factions.conf}. Factions, claims, power and protection belong to FactionsUUID (ADR-0007)
+ * and are configured in its own {@code config/main.conf}; this file holds only what we add on top.
+ */
 @ConfigSerializable
 public final class FactionsConfig {
 
@@ -17,105 +19,27 @@ public final class FactionsConfig {
             .validate(FactionsConfig::validate)
             .build();
 
-    @RequiresRestart
-    @Comment("Current Season. Factions belong to one Season and are archived, never deleted, on reset.")
-    private int seasonId = 1;
+    @Comment("Flat power every new faction gets on top of its members' power, so a solo player can\n"
+            + "hold a real base. With FactionsUUID one power is one chunk: base 5 + a full player's 20\n"
+            + "is 25, a 5x5 square. Applied once, when the faction is created; changing it does not\n"
+            + "touch existing factions (use /f admin power boost for those). Not lost on death.")
+    private double factionBasePower = 5.0;
 
-    private Names names = new Names();
-    private Claims claims = new Claims();
-    private club.avian.factions.factions.protection.ProtectionConfig protection =
-            new club.avian.factions.factions.protection.ProtectionConfig();
-    private club.avian.factions.factions.power.PowerConfig power = new club.avian.factions.factions.power.PowerConfig();
+    @Comment("FactionsUUID upgrades factions can buy, by name. Every other upgrade is switched off.\n"
+            + "Costs and levels are FactionsUUID's own, in its data/universe.json.\n"
+            + "Launch set: claim_boost (ours), spawner_rate, crop_yield + growth (farming), mob_exp, tnt_bank.")
+    private List<String> enabledUpgrades = List.of("claim_boost", "spawner_rate", "crop_yield", "growth", "mob_exp", "tnt_bank");
 
-    public int seasonId() {
-        return seasonId;
+    public double factionBasePower() {
+        return factionBasePower;
     }
 
-    public Names names() {
-        return names;
-    }
-
-    public Claims claims() {
-        return claims;
-    }
-
-    public club.avian.factions.factions.protection.ProtectionConfig protection() {
-        return protection;
-    }
-
-    public club.avian.factions.factions.power.PowerConfig power() {
-        return power;
+    public List<String> enabledUpgrades() {
+        return enabledUpgrades;
     }
 
     static void validate(FactionsConfig cfg, ConfigErrors e) {
-        e.check(cfg.seasonId >= 1, "season-id", "must be >= 1 (got %d)", cfg.seasonId);
-        e.check(cfg.names.minLength >= 1, "names.min-length", "must be >= 1");
-        e.check(cfg.names.maxLength >= cfg.names.minLength, "names.max-length",
-                "must be >= names.min-length (%d)", cfg.names.minLength);
-        e.check(cfg.names.maxLength <= 16, "names.max-length",
-                "must be <= 16 (the database column width)");
-        cfg.power.validate(e);
-        e.check(!cfg.claims.worlds.isEmpty(), "claims.worlds", "must list at least one world");
-        e.check(cfg.claims.maxRadius >= 1 && cfg.claims.maxRadius <= 16, "claims.max-radius",
-                "must be 1-16 (got %d)", cfg.claims.maxRadius);
-        cfg.protection.validate(e);
-    }
-
-    @ConfigSerializable
-    public static final class Claims {
-        @Comment("Worlds where factions may claim chunks. Everywhere else reads as wilderness\n"
-                + "and is never protected.")
-        private List<String> worlds = List.of("world");
-
-        @Comment("Radius in chunks drawn by /f map, so the output fits a chat window.")
-        private int mapRadius = 4;
-
-        @Comment("Largest radius /f claim <radius> accepts. 1 is one chunk, 2 is 3x3, 5 is 9x9.")
-        private int maxRadius = 5;
-
-        public List<String> worlds() {
-            return worlds;
-        }
-
-        public int mapRadius() {
-            return mapRadius;
-        }
-
-        public int maxRadius() {
-            return maxRadius;
-        }
-    }
-
-    @ConfigSerializable
-    public static final class Names {
-        @Comment("Shortest allowed faction name.")
-        private int minLength = 3;
-
-        @Comment("Longest allowed faction name. The column holds 16; raising this needs a migration.")
-        private int maxLength = 16;
-
-        @Comment("Names players may not take, case-insensitive. Matches the wilderness/zone names\n"
-                + "protection messages use, so a faction cannot impersonate them.")
-        private List<String> reserved = List.of("wilderness", "warzone", "safezone", "spawn", "admin", "avian");
-
-        @Comment("Substrings that make a name invalid, case-insensitive. Keep it short;\n"
-                + "this is a stopgap until a real filter (spec §7 profanity) lands.")
-        private List<String> blocked = List.of();
-
-        public int minLength() {
-            return minLength;
-        }
-
-        public int maxLength() {
-            return maxLength;
-        }
-
-        public List<String> reserved() {
-            return reserved;
-        }
-
-        public List<String> blocked() {
-            return blocked;
-        }
+        e.check(Double.isFinite(cfg.factionBasePower) && cfg.factionBasePower >= 0, "faction-base-power",
+                "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
     }
 }

@@ -398,7 +398,7 @@ global-block-settings:
 
   # Should block stacking be enabled at all?
   # Default: true
-  stacking-enabled: true
+  stacking-enabled: false
 
   # The maximum number of blocks that can be in a single stack
   # Default: 2048
@@ -592,7 +592,7 @@ global-spawner-settings:
 
   # Should spawners be protected from explosions?
   # Default: true
-  explosion-protection: true
+  explosion-protection: false
 
   # If true, the stack size will decrease without dropping any items. Set to false to drop items.
   # Default: false
@@ -604,7 +604,7 @@ global-spawner-settings:
 
   # The percentage of the stack to either destroy or drop as items. (0-100)
   # Default: 100.0
-  explosion-amount-percentage: 100.0
+  explosion-amount-percentage: 75.0
 
   # The amount of the stack to either destroy or drop as items. If this is set to 1 or greater, overrides explosion-amount-percentage
   # Default: -1
@@ -612,7 +612,7 @@ global-spawner-settings:
 
   # If this is set to true and explosion-decrease-stack-size-only is set to false, the remainder of the stack not dropped as items will be destroyed
   # Default: false
-  explosion-destroy-remaining: false
+  explosion-destroy-remaining: true
 
   # If true, naturally-generated spawners will always be destroyed if exploded
   # Default: false

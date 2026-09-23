@@ -9,9 +9,10 @@ means to that end, nothing more. So:
 
 - **Prefer an existing plugin** whenever one does the job. Already bought rather than built:
   EssentialsX, LuckPerms, Vault, WorldEdit/WorldGuard, PlaceholderAPI, CoreProtect, Chunky, spark,
-  EconomyShopGUI (`/shop` + sell prices), and a stacking plugin for mobs and spawners (#19).
-- **Build only what is Avian-specific** and what nothing off the shelf provides: factions, claims,
-  power, protection, the token/gem side of the economy, the Harvester Hoe, F-Top valuation, seasons.
+  FactionsUUID (ADR-0007), CommandTimer, EconomyShopGUI (`/shop` + sell prices), and a stacking
+  plugin for mobs and spawners (#19).
+- **Build only what is Avian-specific** and what nothing off the shelf provides: faction add-ons,
+  the token/gem side of the economy, the Harvester Hoe, F-Top valuation (`avian-ftop`), seasons.
 - When a feature could go either way, the question is "what gets us a working, fun server soonest
   and leaves us able to change it later" — not "what would be cleanest to own".
 - **Take inspiration from popular servers** for events, crates, ranks and progression. Copy the
@@ -32,8 +33,8 @@ and the `mc.avian.club` identity.
 - Language/build: **Java 25** (Paper 26.1.2 minimum; this dev box has only 21 — use Gradle toolchain auto-provisioning or install openjdk25), **Gradle Kotlin DSL, multi-module, ONE shaded plugin jar** (`avian-api`, `avian-core`, `avian-factions`, …).
 - Base package: `club.avian.factions`.
 - Database: **MariaDB everywhere** (Docker Compose locally), HikariCP + Flyway, portable SQL, all DB access behind per-module repository interfaces. No SQLite path.
-- Factions: custom `avian-factions` module, informed by (not copied from) open-source factions plugins.
-- Third-party stack: EssentialsX, LuckPerms, Vault, WorldEdit+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky.
+- Factions: **FactionsUUID 4.7.0** (ADR-0007), built from pinned source; `avian-factions` only adds what it lacks (base power, Claim Boost, upgrade list) through its API.
+- Third-party stack: EssentialsX, LuckPerms, Vault, WorldEdit+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer.
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
 - V1 world border: 5,000 blocks diameter.
 
