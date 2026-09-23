@@ -40,7 +40,7 @@ public final class CoreModule implements AvianModule {
         // Startup-only blocking I/O: the pool handshake and migrations run before any player can
         // join. Everything after this point goes through Database#query on the db executor.
         database = new HikariDatabase(db.jdbcUrl(), db.user(), db.password(), db.poolSize(),
-                runtime.isMainThread(), ctx.logger());
+                ctx.logger());
         database.migrate();
         runtime.database(database);
 

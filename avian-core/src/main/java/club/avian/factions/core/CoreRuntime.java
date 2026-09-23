@@ -4,8 +4,6 @@ import club.avian.factions.api.database.Database;
 import club.avian.factions.api.player.Players;
 import club.avian.factions.core.config.ConfigService;
 
-import java.util.function.BooleanSupplier;
-
 /**
  * Core's services as seen by the plugin's {@code ModuleContext}. Created by the plugin, filled in
  * by {@link CoreModule#enable}; other modules boot after core, so they always see populated fields.
@@ -13,21 +11,15 @@ import java.util.function.BooleanSupplier;
 public final class CoreRuntime {
 
     private final ConfigService configs;
-    private final BooleanSupplier isMainThread;
     private Database database;
     private Players players;
 
-    public CoreRuntime(ConfigService configs, BooleanSupplier isMainThread) {
+    public CoreRuntime(ConfigService configs) {
         this.configs = configs;
-        this.isMainThread = isMainThread;
     }
 
     public ConfigService configs() {
         return configs;
-    }
-
-    public BooleanSupplier isMainThread() {
-        return isMainThread;
     }
 
     public Database database() {

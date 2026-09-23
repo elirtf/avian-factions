@@ -12,24 +12,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BooleanSupplier;
 import java.util.logging.Logger;
 
 /**
  * HikariCP pool + a bounded database executor + Flyway migrations (ADR-0002).
  *
- * <p>The main-thread guard is a {@link BooleanSupplier} so the class is testable without Bukkit;
- * the plugin passes {@code Bukkit::isPrimaryThread}.
+ * <p>{@link #query} and {@link #execute} never block the caller: they hand the work to the executor
+ * and return at once, so scheduling a write from the main thread is the intended write-behind
+ * pattern (spec §65). What must never happen on the main thread is waiting on the returned future.
  */
 public final class HikariDatabase implements Database, AutoCloseable {
 
     private final HikariDataSource pool;
     private final ExecutorService executor;
-    private final BooleanSupplier isMainThread;
     private final Logger log;
 
     public HikariDatabase(String jdbcUrl, String user, String password, int poolSize,
-                          BooleanSupplier isMainThread, Logger log) {
+                          Logger log) {
         var cfg = new HikariConfig();
         cfg.setJdbcUrl(jdbcUrl);
         // Class literal, not a string: in the shaded jar this becomes the relocated driver, which
@@ -48,7 +47,6 @@ public final class HikariDatabase implements Database, AutoCloseable {
             t.setDaemon(true);
             return t;
         });
-        this.isMainThread = isMainThread;
         this.log = log;
     }
 
@@ -70,7 +68,6 @@ public final class HikariDatabase implements Database, AutoCloseable {
 
     @Override
     public <R> CompletableFuture<R> query(SqlFunction<R> work) {
-        guard();
         return CompletableFuture.supplyAsync(() -> {
             try (var connection = pool.getConnection()) {
                 return work.apply(connection);
@@ -94,13 +91,6 @@ public final class HikariDatabase implements Database, AutoCloseable {
             return work.apply(connection);
         } catch (SQLException e) {
             throw new DatabaseException(e);
-        }
-    }
-
-    private void guard() {
-        if (isMainThread.getAsBoolean()) {
-            throw new IllegalStateException("Database access from the main thread (spec §65); "
-                    + "call from an async context and hop back with the scheduler");
         }
     }
 

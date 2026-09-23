@@ -23,7 +23,7 @@ public final class MariaDbExtension implements BeforeAllCallback {
             container = new MariaDBContainer(System.getProperty("avian.mariadb.image", "mariadb:11.8.9"));
             container.start();
             database = new HikariDatabase(container.getJdbcUrl(), container.getUsername(), container.getPassword(),
-                    4, () -> false, Logger.getLogger("integrationTest"));
+                    4, Logger.getLogger("integrationTest"));
             database.migrate();
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 database.close();

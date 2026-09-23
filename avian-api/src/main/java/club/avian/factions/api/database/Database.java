@@ -5,9 +5,9 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Pooled database access for repositories (ADR-0002). All work runs on the database executor;
- * calling {@link #query} or {@link #execute} from the main thread is a programming error and
- * throws (spec §65).
+ * Pooled database access for repositories (ADR-0002). All work runs on the database executor, so
+ * {@link #query} and {@link #execute} return immediately and are safe to call from any thread,
+ * including the main thread. Never block the main thread on the returned future (spec §65).
  */
 public interface Database {
 
@@ -28,7 +28,7 @@ public interface Database {
     CompletableFuture<Void> execute(SqlAction work);
 
     /**
-     * Runs {@code work} on the calling thread, bypassing the main-thread guard.
+     * Runs {@code work} on the calling thread, blocking it until the query finishes.
      *
      * <p>Only legitimate during module enable, when no player can be online and nothing is
      * ticking yet: loading an index the module needs before it will answer any command. Calling

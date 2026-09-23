@@ -17,7 +17,6 @@ import club.avian.factions.core.config.ConfigService;
 import club.avian.factions.core.module.ModuleBootstrap;
 import club.avian.factions.core.module.ServiceRegistry;
 import club.avian.factions.factions.FactionsModule;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -34,7 +33,7 @@ public final class AvianFactionsPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         var configs = new ConfigService(getDataFolder().toPath(), getLogger());
-        var core = new CoreRuntime(configs, Bukkit::isPrimaryThread);
+        var core = new CoreRuntime(configs);
         var registry = new ServiceRegistry();
         List<AvianModule> modules = List.of(
                 new CoreModule(core),

@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Test;
 import club.avian.factions.testing.MariaDbExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.logging.Logger;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MariaDbExtension.class)
@@ -36,16 +34,12 @@ class HikariDatabaseIT {
         assertEquals(1, applied);
     }
 
+    /** Write-behind from the main thread depends on this: the caller only schedules the work. */
     @Test
-    void mainThreadAccessIsRefused() {
-        var c = MariaDbExtension.container();
-        var guarded = new HikariDatabase(c.getJdbcUrl(), c.getUsername(), c.getPassword(), 1,
-                () -> true, Logger.getLogger("guard"));
-        try {
-            var e = assertThrows(IllegalStateException.class, () -> guarded.query(conn -> 1));
-            assertTrue(e.getMessage().contains("main thread"), e.getMessage());
-        } finally {
-            guarded.close();
-        }
+    void queryRunsOnTheDatabaseExecutorNotTheCaller() {
+        var caller = Thread.currentThread();
+        var ranOn = MariaDbExtension.database().query(conn -> Thread.currentThread()).join();
+        assertNotSame(caller, ranOn);
+        assertTrue(ranOn.getName().startsWith("avian-db-"), ranOn.getName());
     }
 }
