@@ -40,7 +40,7 @@ and the `mc.avian.club` identity.
 
 ## Dev loop
 
-`docker compose up -d` (MariaDB), `./gradlew build` (JDK 25 toolchain auto-provisioned; unit + MockBukkit + Testcontainers), `./gradlew runServer` (Paper pinned in `gradle.properties`; needs `AVIAN_DB_PASSWORD` exported; type `stop` to exit), `./gradlew downloadPlugins` (pinned stack → `run/plugins/`). Pins: `gradle.properties` + `gradle/libs.versions.toml`. Details in `README.md`.
+Everything goes through `./dev` (guide: `docs/DEVELOPING.md`): `./dev setup` once, then `./dev start` / `restart` / `stop`. The server runs in a tmux session named `avian`: `./dev console` attaches, `./dev cmd "<command>"` runs one console command and prints the reply (use this instead of attaching), `./dev check-log` fails on plugin errors. `./dev start` applies `dev-server/luckperms/ranks.lp` and the world border. Edit `dev-server/`, never `run/` (overwritten on every start). `./dev test` = `./gradlew build` (JDK 25 auto-provisioned; unit + MockBukkit + Testcontainers). Pins: `gradle.properties` + `gradle/libs.versions.toml`. CI boots the full stack with `./dev` on every push and PR.
 
 ## Development rules
 

@@ -1,0 +1,310 @@
+#!/usr/bin/env bash
+# ./dev — one command for running the Avian Factions dev server. See docs/DEVELOPING.md.
+#
+# The server runs inside a tmux session called "avian", so it keeps running when you close your
+# terminal, and you can open its console again at any time with `./dev console`.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SESSION="${AVIAN_DEV_SESSION:-avian}"
+LOG="$ROOT/run/logs/latest.log"
+RANKS="$ROOT/dev-server/luckperms/ranks.lp"
+WORLD_BORDER=5000
+START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
+STOP_TIMEOUT=90
+
+cd "$ROOT"
+
+# --- Output helpers -------------------------------------------------------------------------------
+
+if [[ -t 1 ]]; then
+    BOLD=$'\e[1m'; DIM=$'\e[2m'; RED=$'\e[31m'; GREEN=$'\e[32m'; GOLD=$'\e[33m'; RESET=$'\e[0m'
+else
+    BOLD=""; DIM=""; RED=""; GREEN=""; GOLD=""; RESET=""
+fi
+say()  { echo "${GOLD}▸${RESET} $*"; }
+ok()   { echo "${GREEN}✓${RESET} $*"; }
+fail() { echo "${RED}✗ $*${RESET}" >&2; exit 1; }
+
+# --- State checks ---------------------------------------------------------------------------------
+
+session_running() { tmux has-session -t "$SESSION" 2>/dev/null; }
+
+# A Paper server for this project started some other way (plain ./gradlew runServer in a terminal).
+stray_server_pid() {
+    local pid
+    for pid in $(pgrep -f 'jars/[0-9.]+/[0-9]+\.jar' || true); do
+        if [[ "$(readlink "/proc/$pid/cwd" 2>/dev/null)" == "$ROOT/run" ]]; then
+            echo "$pid"
+            return
+        fi
+    done
+}
+
+load_env() {
+    [[ -f .env ]] || fail "No .env file. Run ${BOLD}./dev setup${RESET} first."
+    set -a
+    # shellcheck disable=SC1091
+    . ./.env
+    set +a
+}
+
+need() {
+    command -v "$1" >/dev/null 2>&1 || fail "$1 is not installed. $2"
+}
+
+db_healthy() {
+    [[ "$(docker inspect -f '{{.State.Health.Status}}' avian-mariadb 2>/dev/null || true)" == healthy ]]
+}
+
+start_db() {
+    if db_healthy; then
+        return
+    fi
+    say "Starting the database (MariaDB in Docker)…"
+    docker compose up -d --quiet-pull >/dev/null
+    for _ in $(seq 1 60); do
+        db_healthy && { ok "Database is up"; return; }
+        sleep 2
+    done
+    fail "The database did not become healthy. Check: docker compose logs mariadb"
+}
+
+# --- Talking to the console -----------------------------------------------------------------------
+
+# Sends one line to the server console, as if typed there.
+send() {
+    tmux send-keys -t "$SESSION" -l "$1"
+    tmux send-keys -t "$SESSION" Enter
+}
+
+log_inode() { [[ -f "$LOG" ]] && stat -c %i "$LOG" || echo none; }
+
+log_size() { [[ -f "$LOG" ]] && stat -c %s "$LOG" || echo 0; }
+
+# Prints what the server logged after byte offset $1.
+log_since() { [[ -f "$LOG" ]] && tail -c +"$(( $1 + 1 ))" "$LOG" || true; }
+
+wait_for_done() {
+    local old_inode="$1" waited=0
+    while (( waited < START_TIMEOUT )); do
+        if ! session_running; then
+            echo
+            tail -n 30 "$LOG" >&2 || true
+            fail "The server stopped while starting. The lines above are the end of its log."
+        fi
+        # Paper archives the previous latest.log at startup and starts a new file; until that new
+        # file exists, the old one (which also says "Done") must not count.
+        if [[ "$(log_inode)" == "$old_inode" ]]; then
+            printf '.'; sleep 2; waited=$(( waited + 2 )); continue
+        fi
+        local text
+        text="$(cat "$LOG" 2>/dev/null || true)"
+        if grep -q 'Done (' <<<"$text"; then
+            echo
+            return 0
+        fi
+        if grep -qE 'refusing to start|refused to start' <<<"$text"; then
+            echo
+            grep -E 'AvianFactions' <<<"$text" | tail -n 20 >&2
+            fail "Avian Factions refused to start; the reasons are listed above."
+        fi
+        printf '.'
+        sleep 2
+        waited=$(( waited + 2 ))
+    done
+    echo
+    fail "The server did not finish starting within ${START_TIMEOUT}s. Look with: ./dev console"
+}
+
+# --- Commands -------------------------------------------------------------------------------------
+
+cmd_setup() {
+    need java   "Install any JDK 17 or newer to run Gradle (the right JDK 25 is downloaded for you)."
+    need docker "Install Docker; the database runs in it."
+    need tmux   "Install tmux; the server runs inside it."
+    if [[ ! -f .env ]]; then
+        cp .env.example .env
+        ok "Created .env from .env.example (local database passwords)"
+    fi
+    load_env
+    start_db
+    say "Downloading the plugin stack and building FactionsUUID (slow the first time)…"
+    ./gradlew --quiet downloadPlugins
+    ok "Setup done. Start the server with: ${BOLD}./dev start${RESET}"
+}
+
+cmd_start() {
+    local setup=1
+    [[ "${1:-}" == "--no-setup" ]] && setup=0
+    session_running && { ok "The server is already running. Open its console with: ./dev console"; return; }
+    local stray
+    stray="$(stray_server_pid)"
+    [[ -n "$stray" ]] && fail "A server is already running outside ./dev (process $stray). Stop it first: type 'stop' in its console, or run: kill $stray"
+    need tmux "Install tmux; the server runs inside it."
+    load_env
+    start_db
+    local old_inode
+    old_inode="$(log_inode)"
+    say "Building the plugin and starting the server…"
+    # downloadPlugins is instant when nothing changed; runServer builds our jar and copies dev-server/ config in.
+    tmux new-session -d -s "$SESSION" -x 200 -y 50 \
+        "set -a; . ./.env; set +a; ./gradlew --console=plain downloadPlugins runServer; echo; echo '[dev] Server stopped. This window closes in 5 seconds.'; sleep 5"
+    wait_for_done "$old_inode"
+    local port
+    port="$(sed -n 's/^server-port=//p' run/server.properties 2>/dev/null || true)"
+    ok "Server is up: connect Minecraft to localhost:${port:-25565}"
+    if (( setup )); then
+        cmd_setup_world
+    fi
+    echo "  Console: ${BOLD}./dev console${RESET}   Logs: ${BOLD}./dev logs${RESET}   Stop: ${BOLD}./dev stop${RESET}"
+}
+
+# Things that live in the world or LuckPerms' database rather than a config file. Safe to repeat.
+cmd_setup_world() {
+    session_running || fail "The server is not running. Start it with: ./dev start"
+    say "Applying the ranks from dev-server/luckperms/ranks.lp and the ${WORLD_BORDER}-block world border…"
+    local count=0 line
+    while IFS= read -r line; do
+        [[ -z "${line// }" || "$line" =~ ^[[:space:]]*# ]] && continue
+        send "$line"
+        count=$(( count + 1 ))
+        sleep 0.05
+    done < "$RANKS"
+    send "worldborder set $WORLD_BORDER"
+    ok "Applied $count rank commands and the world border"
+}
+
+cmd_stop() {
+    if ! session_running; then
+        local stray
+        stray="$(stray_server_pid)"
+        [[ -n "$stray" ]] && fail "The server running is not one ./dev started (process $stray). Type 'stop' in its console, or run: kill $stray"
+        ok "The server is not running"
+        return
+    fi
+    say "Stopping the server (it saves the world first)…"
+    send "stop"
+    for _ in $(seq 1 "$STOP_TIMEOUT"); do
+        session_running || { ok "Server stopped"; return; }
+        sleep 1
+    done
+    fail "The server is still stopping after ${STOP_TIMEOUT}s. Look with: ./dev console"
+}
+
+cmd_restart() {
+    cmd_stop
+    cmd_start "$@"
+}
+
+cmd_console() {
+    session_running || fail "The server is not running. Start it with: ./dev start"
+    echo "${BOLD}Opening the server console.${RESET} Type commands without a slash (e.g. ${BOLD}list${RESET})."
+    echo "To leave and keep the server running: press ${BOLD}Ctrl-b${RESET}, let go, then press ${BOLD}d${RESET}."
+    sleep 2
+    tmux attach -t "$SESSION"
+}
+
+# Runs one console command and prints what the server answered.
+cmd_cmd() {
+    [[ $# -gt 0 ]] || fail "Usage: ./dev cmd <command>   e.g. ./dev cmd \"lp user Steve parent add raven\""
+    session_running || fail "The server is not running. Start it with: ./dev start"
+    local since
+    since="$(log_size)"
+    send "$*"
+    sleep "${DEV_CMD_WAIT:-1}"
+    log_since "$since" | sed -E 's/^\[[0-9:]+\] \[[^]]+\]: //'
+}
+
+cmd_logs() {
+    [[ -f "$LOG" ]] || fail "No log yet. Start the server with: ./dev start"
+    echo "${DIM}Following run/logs/latest.log. Press Ctrl-C to stop watching (the server keeps running).${RESET}"
+    tail -n 50 -f "$LOG"
+}
+
+cmd_status() {
+    if db_healthy; then ok "Database: running"; else echo "${RED}✗${RESET} Database: not running (./dev start starts it)"; fi
+    if session_running; then
+        ok "Server: running (./dev console to open it)"
+    elif [[ -n "$(stray_server_pid)" ]]; then
+        echo "${GOLD}!${RESET} Server: running outside ./dev (process $(stray_server_pid))"
+    else
+        echo "${RED}✗${RESET} Server: not running (./dev start)"
+    fi
+}
+
+cmd_db() {
+    load_env
+    db_healthy || fail "The database is not running. Start it with: ./dev start"
+    docker exec -it avian-mariadb mariadb -u"$AVIAN_DB_USER" -p"$AVIAN_DB_PASSWORD" "$AVIAN_DB_NAME"
+}
+
+cmd_test() {
+    load_env
+    ./gradlew build
+}
+
+# CI: fails if any plugin logged an error or failed to enable, or an expected hook is missing.
+cmd_check_log() {
+    [[ -f "$LOG" ]] || fail "No log to check"
+    local problems=0
+    if grep -nE 'ERROR\]|Error occurred while enabling|Could not load plugin|Disabling .* \(Is it up to date\?\)' "$LOG"; then
+        echo "${RED}✗ Errors in the server log (above)${RESET}"
+        problems=1
+    fi
+    local expect
+    for expect in \
+        'Enabled [0-9]+ modules' \
+        'Registered the claim_boost upgrade with FactionsUUID' \
+        'Hooked FactionsUUID' \
+        'Faction upgrades on:' \
+        "Enabled module 'ftop'" \
+        'CommandTimer.*loaded [0-9]+ tasks' \
+        'FactionsUUID\] === Done! ===' \
+        'Enabling RoseStacker' \
+        'Done \('; do
+        if grep -qE "$expect" "$LOG"; then
+            ok "log has: $expect"
+        else
+            echo "${RED}✗ log is missing: $expect${RESET}"
+            problems=1
+        fi
+    done
+    (( problems == 0 )) || fail "Server log check failed"
+    ok "Server log is clean"
+}
+
+cmd_help() {
+    cat <<EOF
+${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEVELOPING.md
+
+  ${BOLD}setup${RESET}            First time only: create .env, start the database, download plugins
+  ${BOLD}start${RESET}            Build the plugin and start the server in the background
+  ${BOLD}stop${RESET}             Save and stop the server
+  ${BOLD}restart${RESET}          Stop, rebuild, start: what you run after changing code or config
+  ${BOLD}console${RESET}          Open the live server console (leave with Ctrl-b then d)
+  ${BOLD}cmd${RESET} <command>    Run one console command and show the reply, e.g. ./dev cmd list
+  ${BOLD}logs${RESET}             Watch the server log (Ctrl-C to stop watching)
+  ${BOLD}status${RESET}           Is the database and server running?
+  ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this already)
+  ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
+  ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
+EOF
+}
+
+case "${1:-help}" in
+    setup)     shift; cmd_setup "$@" ;;
+    start)     shift; cmd_start "$@" ;;
+    stop)      shift; cmd_stop ;;
+    restart)   shift; cmd_restart "$@" ;;
+    console)   shift; cmd_console ;;
+    cmd)       shift; cmd_cmd "$@" ;;
+    logs)      shift; cmd_logs ;;
+    status)    shift; cmd_status ;;
+    ranks)     shift; cmd_setup_world ;;
+    db)        shift; cmd_db ;;
+    test)      shift; cmd_test ;;
+    check-log) shift; cmd_check_log ;;
+    help|-h|--help) cmd_help ;;
+    *) echo "Unknown command: $1" >&2; cmd_help; exit 1 ;;
+esac

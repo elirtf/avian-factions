@@ -3,8 +3,8 @@
 Plain-language guide to every setting. No code needed — these are all text files you open, edit
 and save.
 
-**The one rule:** after changing anything, **restart the server**. Type `stop` in the console, wait
-for it to finish, then start it again. (There is no reload command yet.)
+**The one rule:** after changing anything, **restart the server** with `./dev restart`. There's no
+reload command yet. Running the server is covered in [`DEVELOPING.md`](DEVELOPING.md).
 
 ---
 
