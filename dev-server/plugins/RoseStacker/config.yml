@@ -311,7 +311,7 @@ global-entity-settings:
 
   # Should entities with disabled AI be killed instantly when receiving damage from a player?
   # Default: false
-  instant-kill-disabled-ai: false
+  instant-kill-disabled-ai: true
 
   # Should the AI of ALL MOBS on the server be disabled?
   # The parts of the AI that are disabled can be further customized in the global-spawner-settings section
@@ -500,7 +500,7 @@ global-spawner-settings:
 
   # Should mob AI be disabled for mobs spawned by spawners?
   # Default: false
-  disable-mob-ai: false
+  disable-mob-ai: true
 
   # Options to apply to mobs with disabled AI
   disable-mob-ai-options:
@@ -533,7 +533,7 @@ global-spawner-settings:
     # Should the entire stack of mobs be killed on death?
     # This will only apply to mobs with disabled AI and overwrites any other settings if this is set to true
     # Default: false
-    kill-entire-stack-on-death: false
+    kill-entire-stack-on-death: true
 
     # Should mobs with disabled AI be immune to zombification?
     # Default: true
@@ -556,7 +556,7 @@ global-spawner-settings:
   # Should only spawners placed by players spawn mobs with disabled AI?
   # disable-mob-ai must be enabled for this to work
   # Default: false
-  disable-mob-ai-only-player-placed: false
+  disable-mob-ai-only-player-placed: true
 
   # Should mobs spawned from spawners be prevented from attacking anything?
   # Default: false

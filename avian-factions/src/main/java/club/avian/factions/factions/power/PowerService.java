@@ -58,9 +58,9 @@ public final class PowerService {
         return stored == null ? rules().maximum() : PowerMath.maximumFor(stored, rules());
     }
 
-    /** A Faction's power: the sum over its members, evaluated on demand (spec §8). */
+    /** A Faction's power: the flat faction base plus the sum over its members, evaluated on demand (spec §8). */
     public double powerOf(Faction faction) {
-        double total = 0;
+        double total = rules().factionBase();
         for (var member : faction.members().keySet()) {
             total += powerOf(member);
         }

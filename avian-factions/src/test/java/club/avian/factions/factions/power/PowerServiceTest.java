@@ -82,55 +82,60 @@ class PowerServiceTest {
 
     @Test
     void anUnknownPlayerIsWorthTheStartingPower() {
-        assertEquals(10.0, service.powerOf(alice), 1e-9);
+        assertEquals(20.0, service.powerOf(alice), 1e-9);
         assertEquals(0, service.trackedPlayers(), "reading must not create a row");
     }
 
     @Test
     void loginSettlesThenRegeneratesWhileOnline() {
         service.handleLogin(alice).join();
-        service.handleDeath(alice).join();              // 10 → 8
-        assertEquals(8.0, service.powerOf(alice), 1e-9);
+        service.handleDeath(alice).join();              // 20 → 18
+        assertEquals(18.0, service.powerOf(alice), 1e-9);
         clock.advance(Duration.ofHours(1));
-        assertEquals(9.0, service.powerOf(alice), 1e-9, "regenerates while online");
+        assertEquals(19.0, service.powerOf(alice), 1e-9, "regenerates while online");
     }
 
     @Test
     void quitFreezesPowerSoOfflineTimeDoesNotRegenerate() {
         service.handleLogin(alice).join();
-        service.handleDeath(alice).join();              // 8
+        service.handleDeath(alice).join();              // 18
         service.handleQuit(alice).join();
         clock.advance(Duration.ofDays(7));
-        assertEquals(8.0, service.powerOf(alice), 1e-9, "no regeneration while offline");
+        assertEquals(18.0, service.powerOf(alice), 1e-9, "no regeneration while offline");
     }
 
     @Test
     void deathIsAppliedToTheRegeneratedValueAndPersistedOnce() {
         service.handleLogin(alice).join();
-        service.handleDeath(alice).join();              // 10 → 8
-        clock.advance(Duration.ofHours(1));             // → 9
-        service.handleDeath(alice).join();              // → 7
-        assertEquals(7.0, service.powerOf(alice), 1e-9);
+        service.handleDeath(alice).join();              // 20 → 18
+        clock.advance(Duration.ofHours(1));             // → 19
+        service.handleDeath(alice).join();              // → 17
+        assertEquals(17.0, service.powerOf(alice), 1e-9);
         assertEquals(3, repo.saves.size(), "login + two deaths, one write each");
     }
 
     @Test
-    void factionPowerIsTheSumOverMembersAndDrivesCapacity() {
+    void factionPowerIsTheBasePlusTheSumOverMembersAndDrivesCapacity() {
         var ravens = faction(alice, bob);
-        assertEquals(20.0, service.powerOf(ravens), 1e-9);
-        assertEquals(4, service.claimCapacity(ravens), "20 / 5 per claim");
+        assertEquals(140.0, service.powerOf(ravens), 1e-9, "100 base + 2 × 20");
+        assertEquals(28, service.claimCapacity(ravens), "140 / 5 per claim");
 
         service.handleLogin(alice).join();
-        service.handleDeath(alice).join();              // alice 8, faction 18
-        assertEquals(18.0, service.powerOf(ravens), 1e-9);
-        assertEquals(3, service.claimCapacity(ravens), "18 / 5 = 3.6 → 3");
+        service.handleDeath(alice).join();              // alice 18, faction 138
+        assertEquals(138.0, service.powerOf(ravens), 1e-9);
+        assertEquals(27, service.claimCapacity(ravens), "138 / 5 = 27.6 → 27");
+    }
+
+    @Test
+    void aSoloFactionStillHoldsARealBase() {
+        assertEquals(24, service.claimCapacity(faction(alice)), "(100 + 20) / 5");
     }
 
     @Test
     void raidableWhenClaimsExceedCapacity() {
-        var ravens = faction(alice, bob);               // capacity 4
-        assertFalse(service.isRaidable(ravens, 4));
-        assertTrue(service.isRaidable(ravens, 5), "one claim over capacity is raidable");
+        var ravens = faction(alice, bob);               // capacity 28
+        assertFalse(service.isRaidable(ravens, 28));
+        assertTrue(service.isRaidable(ravens, 29), "one claim over capacity is raidable");
     }
 
     @Test
@@ -152,7 +157,7 @@ class PowerServiceTest {
         service.setBoost(alice, 5).join();
         service.handleLogin(alice).join();
         clock.advance(Duration.ofDays(1));
-        assertEquals(15.0, service.powerOf(alice), 1e-9);
-        assertEquals(15.0, service.maximumOf(alice), 1e-9);
+        assertEquals(25.0, service.powerOf(alice), 1e-9);
+        assertEquals(25.0, service.maximumOf(alice), 1e-9);
     }
 }

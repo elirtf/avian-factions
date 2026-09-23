@@ -38,6 +38,11 @@ sets rather than appends.
 To back up what is live: `lp export <name>` writes `run/plugins/LuckPerms/<name>.json.gz`. That is
 a snapshot, not the source of truth; if the two ever disagree, fix `ranks.lp` and reapply.
 
-`plugins/RoseStacker/config.yml` — stacking for mobs, items, blocks and spawners. Tracked at its
-defaults for now; `global-spawner-settings.max-stack-size` (32) is the number most likely to need
-raising for an OP economy, and that is a balance decision (see `docs/research/mob-stacking.md`).
+`plugins/RoseStacker/config.yml` — stacking for mobs, items, blocks and spawners. Changed so
+spawner farming pays: mobs from **player-placed** spawners have their AI goals removed
+(`global-spawner-settings.disable-mob-ai` + `disable-mob-ai-only-player-placed` — they stand still
+and don't attack, but water still pushes them), die to **one hit** (`instant-kill-disabled-ai`), and
+that hit kills the **whole stack** with loot and XP for every mob
+(`disable-mob-ai-options.kill-entire-stack-on-death`). Natural mobs and dungeon spawners are
+unchanged. `global-spawner-settings.max-stack-size` (32) is the number most likely to need raising
+for an OP economy, and that is a balance decision (see `docs/research/mob-stacking.md`).

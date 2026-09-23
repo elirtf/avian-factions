@@ -57,14 +57,16 @@ The database **password** is not in this file on purpose — it lives in a separ
 
 **File:** `run/plugins/AvianFactions/factions.conf`
 
-**Power** is the number that decides how much land a faction can hold. Every player has some. Add
-up everyone in the faction, divide by `per-claim`, and that is how many chunks they can own. Die,
-and you lose some — drop below what you have claimed, and enemies can raid you.
+**Power** is the number that decides how much land a faction can hold. Every player has some, and
+every faction also gets a flat bonus. Add the bonus to everyone's power, divide by `per-claim`, and
+that is how many chunks they can own. Die, and you lose some — drop below what you have claimed,
+and enemies can raid you.
 
 | Setting | What it does | Default |
 |---|---|---|
-| `power.starting` | Power a new player begins with | `10` |
-| `power.maximum` | Most power one player can have | `10` |
+| `power.starting` | Power a new player begins with | `20` |
+| `power.maximum` | Most power one player can have | `20` |
+| `power.faction-base` | Flat power every faction has, whatever its size. Never lost on death | `100` |
 | `power.minimum` | Lowest a player can drop to | `0` |
 | `power.regen-per-hour` | Power gained per hour **while online** | `1` |
 | `power.death-loss` | Power lost each death | `2` |
@@ -72,7 +74,8 @@ and you lose some — drop below what you have claimed, and enemies can raid you
 | `power.offline-decay-per-hour` | Power lost per hour while offline (`0` = off) | `0` |
 | `power.offline-decay-grace-hours` | Hours offline before decay starts | `24` |
 
-> **Example:** 4 players with 10 power each = 40 power. 40 ÷ 5 per-claim = **8 chunks of land**.
+> **Example:** 100 base + 4 players with 20 power each = 180 power. 180 ÷ 5 per-claim =
+> **36 chunks of land**. A solo player gets (100 + 20) ÷ 5 = **24 chunks**.
 > Lower `per-claim` and everyone gets more land. Raise it and land gets scarcer.
 
 **Faction names**

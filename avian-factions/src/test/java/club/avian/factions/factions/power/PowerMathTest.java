@@ -14,7 +14,7 @@ class PowerMathTest {
 
     static final Instant T0 = Instant.parse("2026-09-22T12:00:00Z");
     static final UUID PLAYER = UUID.randomUUID();
-    final PowerConfig config = new FactionsConfig().power();   // 10 start/max, 0 min, +1/h, -2 death
+    final PowerConfig config = new FactionsConfig().power();   // 20 start/max, 0 min, +1/h, -2 death
 
     private PlayerPower online(double value, Instant updatedAt) {
         return new PlayerPower(PLAYER, value, 0, updatedAt, updatedAt);
@@ -39,15 +39,15 @@ class PowerMathTest {
     @Test
     void regenerationStopsAtTheMaximum() {
         var power = online(5, T0);
-        assertEquals(10.0, PowerMath.currentValue(power, config, after(Duration.ofDays(30))), 1e-9,
+        assertEquals(20.0, PowerMath.currentValue(power, config, after(Duration.ofDays(30))), 1e-9,
                 "a month online must not exceed the cap");
     }
 
     @Test
     void anAdminBoostRaisesTheCeiling() {
         var boosted = new PlayerPower(PLAYER, 5, 5, T0, T0);
-        assertEquals(15.0, PowerMath.maximumFor(boosted, config), 1e-9);
-        assertEquals(15.0, PowerMath.currentValue(boosted, config, after(Duration.ofDays(30))), 1e-9);
+        assertEquals(25.0, PowerMath.maximumFor(boosted, config), 1e-9);
+        assertEquals(25.0, PowerMath.currentValue(boosted, config, after(Duration.ofDays(30))), 1e-9);
     }
 
     @Test

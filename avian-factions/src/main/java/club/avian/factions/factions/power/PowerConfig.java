@@ -9,10 +9,10 @@ import org.spongepowered.configurate.objectmapping.meta.Comment;
 public final class PowerConfig {
 
     @Comment("Power a player starts with on first join.")
-    private double starting = 10.0;
+    private double starting = 20.0;
 
     @Comment("Most power a player can hold, before any admin boost.")
-    private double maximum = 10.0;
+    private double maximum = 20.0;
 
     @Comment("Least power a player can fall to. Negative values let a faction go deep into\n"
             + "raidable territory after a losing fight; 0 caps the damage.")
@@ -29,6 +29,10 @@ public final class PowerConfig {
 
     @Comment("Power lost on death.")
     private double deathLoss = 2.0;
+
+    @Comment("Flat power every faction has on top of its members' power, so a small faction\n"
+            + "can still hold a real base. Not lost on death; members' power still moves.")
+    private double factionBase = 100.0;
 
     @Comment("Power a faction must hold per claimed chunk: capacity = floor(power / per-claim).")
     private double perClaim = 5.0;
@@ -61,6 +65,10 @@ public final class PowerConfig {
         return deathLoss;
     }
 
+    public double factionBase() {
+        return factionBase;
+    }
+
     public double perClaim() {
         return perClaim;
     }
@@ -73,6 +81,7 @@ public final class PowerConfig {
         e.check(offlineDecayPerHour >= 0, "power.offline-decay-per-hour", "must be >= 0");
         e.check(offlineDecayGraceHours >= 0, "power.offline-decay-grace-hours", "must be >= 0");
         e.check(deathLoss >= 0, "power.death-loss", "must be >= 0 (it is subtracted)");
+        e.check(factionBase >= 0, "power.faction-base", "must be >= 0 (got %s)", factionBase);
         e.check(perClaim > 0, "power.per-claim", "must be > 0 (got %s)", perClaim);
     }
 }
