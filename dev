@@ -78,12 +78,18 @@ send() {
     tmux send-keys -t "$SESSION" Enter
 }
 
-log_inode() { [[ -f "$LOG" ]] && stat -c %i "$LOG" || echo none; }
+log_inode() {
+    if [[ -f "$LOG" ]]; then stat -c %i "$LOG"; else echo none; fi
+}
 
-log_size() { [[ -f "$LOG" ]] && stat -c %s "$LOG" || echo 0; }
+log_size() {
+    if [[ -f "$LOG" ]]; then stat -c %s "$LOG"; else echo 0; fi
+}
 
 # Prints what the server logged after byte offset $1.
-log_since() { [[ -f "$LOG" ]] && tail -c +"$(( $1 + 1 ))" "$LOG" || true; }
+log_since() {
+    if [[ -f "$LOG" ]]; then tail -c +"$(( $1 + 1 ))" "$LOG"; fi
+}
 
 wait_for_done() {
     local old_inode="$1" waited=0
