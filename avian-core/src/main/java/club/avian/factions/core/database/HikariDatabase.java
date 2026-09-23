@@ -7,7 +7,9 @@ import org.flywaydb.core.Flyway;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -26,6 +28,7 @@ public final class HikariDatabase implements Database, AutoCloseable {
     private final HikariDataSource pool;
     private final ExecutorService executor;
     private final Logger log;
+    private final Map<Object, CompletableFuture<Void>> tails = new ConcurrentHashMap<>();
 
     public HikariDatabase(String jdbcUrl, String user, String password, int poolSize,
                           Logger log) {
@@ -83,6 +86,18 @@ public final class HikariDatabase implements Database, AutoCloseable {
             work.run(connection);
             return null;
         });
+    }
+
+    @Override
+    public CompletableFuture<Void> executeInOrder(Object key, SqlAction work) {
+        // Each key keeps the future of its last submitted write; the next one starts only when that
+        // finishes, whether it succeeded or not. The entry is dropped once its tail completes.
+        CompletableFuture<Void> next = tails.compute(key, (k, tail) -> (tail == null
+                ? CompletableFuture.<Void>completedFuture(null)
+                : tail.handle((ignored, failure) -> (Void) null))
+                .thenCompose(ignored -> execute(work)));
+        next.whenComplete((ignored, failure) -> tails.remove(key, next));
+        return next;
     }
 
     @Override

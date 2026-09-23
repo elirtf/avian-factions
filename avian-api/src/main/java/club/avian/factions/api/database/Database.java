@@ -28,6 +28,15 @@ public interface Database {
     CompletableFuture<Void> execute(SqlAction work);
 
     /**
+     * Like {@link #execute}, but work sharing {@code key} runs one at a time, in the order it was
+     * submitted. Plain {@code execute} work may finish in any order across the executor's threads,
+     * so a delete can land before the insert it follows (#27). Use this for write-behind of state
+     * that can change twice before the first write lands; key it by what the row is keyed by.
+     * A failed write does not hold up the ones behind it.
+     */
+    CompletableFuture<Void> executeInOrder(Object key, SqlAction work);
+
+    /**
      * Runs {@code work} on the calling thread, blocking it until the query finishes.
      *
      * <p>Only legitimate during module enable, when no player can be online and nothing is
