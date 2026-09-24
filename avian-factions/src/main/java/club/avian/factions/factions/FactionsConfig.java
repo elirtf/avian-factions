@@ -30,6 +30,8 @@ public final class FactionsConfig {
             + "Launch set: claim_boost (ours), spawner_rate, crop_yield + growth (farming), mob_exp, tnt_bank.")
     private List<String> enabledUpgrades = List.of("claim_boost", "spawner_rate", "crop_yield", "growth", "mob_exp", "tnt_bank");
 
+    private ChunkBuster chunkBuster = new ChunkBuster();
+
     public double factionBasePower() {
         return factionBasePower;
     }
@@ -38,8 +40,52 @@ public final class FactionsConfig {
         return enabledUpgrades;
     }
 
+    public ChunkBuster chunkBuster() {
+        return chunkBuster;
+    }
+
     static void validate(FactionsConfig cfg, ConfigErrors e) {
         e.check(Double.isFinite(cfg.factionBasePower) && cfg.factionBasePower >= 0, "faction-base-power",
                 "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
+        e.check(cfg.chunkBuster.layersPerTick >= 1 && cfg.chunkBuster.layersPerTick <= 16,
+                "chunk-buster.layers-per-tick", "must be 1-16");
+        for (var name : cfg.chunkBuster.keep) {
+            e.check(org.bukkit.Material.matchMaterial(name) != null, "chunk-buster.keep", "%s is not a block", name);
+        }
+    }
+
+    /** The chunk buster: clears a chunk in the player's own claim, from where it is placed down. */
+    @ConfigSerializable
+    public static final class ChunkBuster {
+
+        @Comment("Whether chunk busters work at all.")
+        private boolean enabled = true;
+
+        @Comment("Layers cleared per tick (16x16 blocks each). 1 is gentle; higher is faster and heavier.")
+        private int layersPerTick = 1;
+
+        @Comment("""
+                Blocks a chunk buster never removes. Containers (chests, hoppers, barrels, shulker boxes,
+                furnaces…) are always kept too, so nothing is lost, as are bedrock and spawners.""")
+        private List<String> keep = List.of("BEDROCK", "SPAWNER", "END_PORTAL_FRAME", "END_PORTAL", "BEACON");
+
+        @Comment("Seconds a player has to click [BUST CHUNK] after placing one.")
+        private int confirmSeconds = 15;
+
+        public boolean enabled() {
+            return enabled;
+        }
+
+        public int layersPerTick() {
+            return layersPerTick;
+        }
+
+        public List<String> keep() {
+            return keep;
+        }
+
+        public int confirmSeconds() {
+            return confirmSeconds;
+        }
     }
 }
