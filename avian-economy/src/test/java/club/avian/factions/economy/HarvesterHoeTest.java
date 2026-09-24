@@ -168,6 +168,40 @@ class HarvesterHoeTest {
     }
 
     @Test
+    void withAutoSellOffTheCaneGoesToTheInventory() {
+        HarvesterHoe.setAutoSell(hoe, false, cfg);
+        farmer.getInventory().setItemInMainHand(hoe);
+        swing(column(0, 0, 3));
+        assertEquals(0, balance(Currency.MONEY), "nothing sold");
+        assertTrue(farmer.getInventory().contains(Material.SUGAR_CANE, 2), "both cane blocks kept");
+        assertEquals(4.0, xp, 1e-9, "XP still comes with it");
+    }
+
+    @Test
+    void autoSellFollowsTheConfigUntilThePlayerChoosesAndIsKeptOnTheItem() {
+        assertTrue(HarvesterHoe.autoSell(hoe, cfg), "hoe.conf default is on");
+        HarvesterHoe.setAutoSell(hoe, false, cfg);
+        assertFalse(HarvesterHoe.autoSell(hoe.clone(), cfg), "the choice travels with the hoe");
+    }
+
+    @Test
+    void rightClickOpensTheMenuOnlyForTheRealHoe() {
+        var menu = new HoeMenu(MockBukkit.createMockPlugin(), economy, new Handle<>(cfg));
+        var plain = new ItemStack(Material.NETHERITE_HOE);
+        var click = new org.bukkit.event.player.PlayerInteractEvent(farmer, org.bukkit.event.block.Action.RIGHT_CLICK_AIR,
+                plain, null, org.bukkit.block.BlockFace.SELF, EquipmentSlot.HAND);
+        menu.onRightClick(click);
+        assertEquals(org.bukkit.event.Event.Result.DEFAULT, click.useItemInHand(), "a plain netherite hoe still tills");
+
+        var real = new org.bukkit.event.player.PlayerInteractEvent(farmer, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK,
+                hoe, world.getBlockAt(0, 63, 0), org.bukkit.block.BlockFace.UP, EquipmentSlot.HAND);
+        menu.onRightClick(real);
+        assertEquals(org.bukkit.event.Event.Result.DENY, real.useItemInHand(), "the Harvester Hoe opens /hoe instead of tilling");
+        assertEquals(45, farmer.getOpenInventory().getTopInventory().getSize());
+        assertEquals(Material.NETHERITE_HOE, hoe.getType());
+    }
+
+    @Test
     void anOrdinaryHoeIsJustAHoe() {
         var plain = new ItemStack(Material.DIAMOND_HOE);
         plain.editMeta(meta -> meta.itemName(net.kyori.adventure.text.Component.text("Harvester Hoe")));

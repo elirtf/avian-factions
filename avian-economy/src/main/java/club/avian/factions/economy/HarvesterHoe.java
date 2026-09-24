@@ -1,9 +1,7 @@
 package club.avian.factions.economy;
 
+import club.avian.factions.api.text.Brand;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemFlag;
@@ -48,20 +46,20 @@ final class HarvesterHoe {
     }
 
     static final NamespacedKey ID = new NamespacedKey("avian", "harvester_hoe");
-    private static final TextColor GOLD = TextColor.color(0xE0B44A);
-    private static final TextColor STONE = TextColor.color(0x9E9E9E);
+    static final NamespacedKey AUTO_SELL = new NamespacedKey("avian", "hoe_auto_sell");
 
     private HarvesterHoe() {
     }
 
     /** A new level-0 hoe with its own id. */
     static ItemStack create(HoeConfig cfg) {
-        var item = new ItemStack(Material.DIAMOND_HOE);
+        var item = new ItemStack(Material.NETHERITE_HOE);
         item.editPersistentDataContainer(pdc -> pdc.set(ID, PersistentDataType.STRING, UUID.randomUUID().toString()));
         item.editMeta(meta -> {
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE, ItemFlag.HIDE_ATTRIBUTES);
-            meta.itemName(Component.text("Harvester Hoe", GOLD, TextDecoration.BOLD));
+            meta.itemName(Brand.title("Harvester Hoe"));
+            meta.setEnchantmentGlintOverride(true);
         });
         refreshLore(item, cfg);
         return item;
@@ -88,23 +86,31 @@ final class HarvesterHoe {
         refreshLore(item, cfg);
     }
 
+    /** Whether this hoe sells its harvest on the spot; set per hoe from /hoe, else the config default. */
+    static boolean autoSell(ItemStack item, HoeConfig cfg) {
+        Byte flag = item.getPersistentDataContainer().get(AUTO_SELL, PersistentDataType.BYTE);
+        return flag == null ? cfg.autoSell() : flag != 0;
+    }
+
+    static void setAutoSell(ItemStack item, boolean on, HoeConfig cfg) {
+        item.editPersistentDataContainer(pdc -> pdc.set(AUTO_SELL, PersistentDataType.BYTE, (byte) (on ? 1 : 0)));
+        refreshLore(item, cfg);
+    }
+
     /** The lore shows the levels; it is display only and rebuilt from the data every time. */
     static void refreshLore(ItemStack item, HoeConfig cfg) {
         var lore = new ArrayList<Component>();
-        lore.add(line("Harvests sugar cane, leaving the roots.", STONE));
+        lore.add(Brand.mm("<soft>Harvests <cane>sugar cane</cane>, leaving the roots."));
         lore.add(Component.empty());
         for (var track : Track.values()) {
             int level = level(item, track);
             int max = track.upgrade(cfg).maxLevel();
-            lore.add(Component.text(track.label + " ", STONE).decoration(TextDecoration.ITALIC, false)
-                    .append(Component.text(level + "/" + max, level == max ? GOLD : NamedTextColor.WHITE)));
+            lore.add(Brand.mm("<soft>" + track.label + "  " + Brand.bar(level, max)
+                    + (level == max ? "  <sun>MAX</sun>" : "  <dim>" + level + "/" + max + "</dim>")));
         }
         lore.add(Component.empty());
-        lore.add(line("/hoe to upgrade", STONE));
+        lore.add(Brand.mm(autoSell(item, cfg) ? "<soft>Auto-sell  <money>ON</money>" : "<soft>Auto-sell  <bad>OFF</bad>"));
+        lore.add(Brand.mm("<dim>/hoe to upgrade</dim>"));
         item.editMeta(meta -> meta.lore(lore));
-    }
-
-    private static Component line(String text, TextColor color) {
-        return Component.text(text, color).decoration(TextDecoration.ITALIC, false);
     }
 }
