@@ -56,6 +56,19 @@ public final class CombatConfig {
             remain (RoseStacker); a lone mob still plays its death. Drops and XP are unchanged.""")
     private boolean clearStackedMobCorpses = true;
 
+    @Comment("""
+            Seconds before a player can eat another enchanted golden apple. Shown on the item like a
+            vanilla cooldown, kept across relogs and deaths, and enforced by the server. 0 = none.""")
+    private int enchantedGoldenAppleCooldownSeconds = 60;
+
+    @Comment("Seconds before a player can eat another golden apple. 0 = none.")
+    private int goldenAppleCooldownSeconds = 10;
+
+    @Comment("""
+            Seconds after a totem of undying saves a player before another one can. A totem popped
+            while this is running does nothing and the player dies. 0 = none.""")
+    private int totemCooldownSeconds = 60;
+
     private Knockback knockback = new Knockback();
 
     public Preset preset() {
@@ -82,6 +95,18 @@ public final class CombatConfig {
         return clearStackedMobCorpses;
     }
 
+    public int enchantedGoldenAppleCooldownSeconds() {
+        return enchantedGoldenAppleCooldownSeconds;
+    }
+
+    public int goldenAppleCooldownSeconds() {
+        return goldenAppleCooldownSeconds;
+    }
+
+    public int totemCooldownSeconds() {
+        return totemCooldownSeconds;
+    }
+
     /** The knockback values in effect: the preset's, unless the preset is {@code CUSTOM}. */
     public Knockback knockback() {
         return switch (preset) {
@@ -94,6 +119,9 @@ public final class CombatConfig {
     static void validate(CombatConfig cfg, ConfigErrors e) {
         e.check(cfg.attackSpeed > 0, "attack-speed", "must be > 0 (got %s)", cfg.attackSpeed);
         e.check(cfg.hitDelayTicks >= 0 && cfg.hitDelayTicks <= 60, "hit-delay-ticks", "must be 0-60");
+        e.check(cfg.enchantedGoldenAppleCooldownSeconds >= 0, "enchanted-golden-apple-cooldown-seconds", "must be >= 0");
+        e.check(cfg.goldenAppleCooldownSeconds >= 0, "golden-apple-cooldown-seconds", "must be >= 0");
+        e.check(cfg.totemCooldownSeconds >= 0, "totem-cooldown-seconds", "must be >= 0");
         var kb = cfg.knockback;
         e.check(kb.horizontal >= 0, "knockback.horizontal", "must be >= 0");
         e.check(kb.vertical >= 0, "knockback.vertical", "must be >= 0");

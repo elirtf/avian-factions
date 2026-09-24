@@ -99,8 +99,8 @@ public final class ConfigService {
                 log.info(file + ": not found, wrote defaults");
             } else {
                 checkVersion(spec, root, errors);
-                backfill(file, root, defaults, "");
-                warnUnknown(file, root, defaults, "");
+                backfill(file, root, defaults, "", spec.freeForm());
+                warnUnknown(file, root, defaults, "", spec.freeForm());
             }
             applyEnvOverrides(spec, root);
 
@@ -145,7 +145,8 @@ public final class ConfigService {
         node.set(spec.version());
     }
 
-    private void backfill(String file, ConfigurationNode target, ConfigurationNode defaults, String prefix) {
+    private void backfill(String file, ConfigurationNode target, ConfigurationNode defaults, String prefix,
+                          java.util.Set<String> freeForm) {
         for (var entry : defaults.childrenMap().entrySet()) {
             var key = String.valueOf(entry.getKey());
             var path = prefix.isEmpty() ? key : prefix + "." + key;
@@ -154,21 +155,22 @@ public final class ConfigService {
             if (node.virtual()) {
                 node.from(def);
                 log.warning(file + ": added missing key " + path + " = " + render(def));
-            } else if (def.isMap() && node.isMap()) {
-                backfill(file, node, def, path);
+            } else if (def.isMap() && node.isMap() && !freeForm.contains(path)) {
+                backfill(file, node, def, path, freeForm);
             }
         }
     }
 
-    private void warnUnknown(String file, ConfigurationNode node, ConfigurationNode defaults, String prefix) {
+    private void warnUnknown(String file, ConfigurationNode node, ConfigurationNode defaults, String prefix,
+                             java.util.Set<String> freeForm) {
         for (var entry : node.childrenMap().entrySet()) {
             var key = String.valueOf(entry.getKey());
             var path = prefix.isEmpty() ? key : prefix + "." + key;
             var def = defaults.node(entry.getKey());
             if (def.virtual()) {
                 log.warning(file + ": unknown key " + path + " (ignored)");
-            } else if (def.isMap() && entry.getValue().isMap()) {
-                warnUnknown(file, entry.getValue(), def, path);
+            } else if (def.isMap() && entry.getValue().isMap() && !freeForm.contains(path)) {
+                warnUnknown(file, entry.getValue(), def, path, freeForm);
             }
         }
     }

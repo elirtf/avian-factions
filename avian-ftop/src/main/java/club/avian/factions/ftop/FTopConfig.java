@@ -16,6 +16,7 @@ public final class FTopConfig {
     public static final ConfigSpec<FTopConfig> SPEC = ConfigSpec.of("ftop.conf", FTopConfig.class)
             .version(1)
             .validate(FTopConfig::validate)
+            .freeForm("spawner-values", "block-values")
             .build();
 
     @Comment("How often the ranking is recalculated, in minutes. /ftop recalc forces one now.")

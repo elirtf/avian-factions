@@ -1,0 +1,95 @@
+pages:
+  page1:
+    items:
+      redstone_torch:
+        material: REDSTONE_TORCH
+        buy: 5
+        sell: -1
+      redstone_lamp:
+        material: REDSTONE_LAMP
+        buy: 46
+        sell: -1
+      repeater:
+        material: REPEATER
+        buy: 15
+        sell: -1
+      comparator:
+        material: COMPARATOR
+        buy: 25
+        sell: -1
+      observer:
+        material: OBSERVER
+        buy: 21
+        sell: -1
+      dispenser:
+        material: DISPENSER
+        buy: 34
+        sell: -1
+      dropper:
+        material: DROPPER
+        buy: 9
+        sell: -1
+      hopper:
+        material: HOPPER
+        buy: 39
+        sell: -1
+      piston:
+        material: PISTON
+        buy: 16
+        sell: -1
+      sticky_piston:
+        material: STICKY_PISTON
+        buy: 22
+        sell: -1
+      lever:
+        material: LEVER
+        buy: 2
+        sell: -1
+      tripwire_hook:
+        material: TRIPWIRE_HOOK
+        buy: 4
+        sell: -1
+      rail:
+        material: RAIL
+        buy: 3
+        sell: -1
+      powered_rail:
+        material: POWERED_RAIL
+        buy: 7
+        sell: -1
+      activator_rail:
+        material: ACTIVATOR_RAIL
+        buy: 7
+        sell: -1
+      detector_rail:
+        material: DETECTOR_RAIL
+        buy: 7
+        sell: -1
+      tnt:
+        material: TNT
+        buy: 107
+        sell: -1
+      daylight_detector:
+        material: DAYLIGHT_DETECTOR
+        buy: 48
+        sell: -1
+      note_block:
+        material: NOTE_BLOCK
+        buy: 13
+        sell: -1
+      crafter:
+        material: CRAFTER
+        buy: 51
+        sell: -1
+      target:
+        material: TARGET
+        buy: 65
+        sell: -1
+      calibrated_sculk_sensor:
+        material: CALIBRATED_SCULK_SENSOR
+        buy: 17
+        sell: -1
+      sculk_sensor:
+        material: SCULK_SENSOR
+        buy: 125
+        sell: -1

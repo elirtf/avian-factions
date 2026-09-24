@@ -32,6 +32,7 @@ public final class CombatModule implements AvianModule {
         var config = ctx.config(CombatConfig.SPEC);
         var listener = new CombatListener(config);
         ctx.registerListener(listener);
+        ctx.registerListener(new ConsumableCooldowns(config, System::currentTimeMillis));
         if (Bukkit.getPluginManager().getPlugin("RoseStacker") != null) {
             ctx.registerListener(new StackedCorpseListener(ctx.plugin(), config, StackedCorpseListener.roseStacker()));
         }

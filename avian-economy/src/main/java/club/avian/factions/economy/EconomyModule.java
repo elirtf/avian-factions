@@ -59,6 +59,9 @@ public final class EconomyModule implements AvianModule {
         ctx.services().provide(Economy.class, economy);
         ctx.services().provide(SellValues.class, sellValues);
         ctx.registerListener(new StartingBalanceListener(economy, ctx.logger()));
+        ctx.registerListener(new SugarCaneTokens(economy, config,
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
+        ctx.registerListener(new VillagerGolemGuard(config));
 
         if (config.get().provideVault() && Bukkit.getPluginManager().getPlugin("Vault") != null) {
             var bridge = new VaultEconomyBridge(economy, "Avian");
