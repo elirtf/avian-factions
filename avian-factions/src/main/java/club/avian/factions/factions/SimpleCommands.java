@@ -22,6 +22,8 @@ public final class SimpleCommands implements Listener {
 
     private static final Set<String> ROOTS = Set.of("f", "faction", "factions", "factionsuuid:f",
             "factionsuuid:faction", "factionsuuid:factions");
+    private static final Set<String> MENU = Set.of("menu", "gui");
+    static final String MENU_COMMAND = "fmenu";
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
@@ -34,9 +36,13 @@ public final class SimpleCommands implements Listener {
             return Optional.empty();
         }
         String[] parts = message.substring(1).trim().split("\\s+");
-        if (parts.length < 2 || !ROOTS.contains(parts[0].toLowerCase(Locale.ROOT))
+        if (!ROOTS.contains(parts[0].toLowerCase(Locale.ROOT))
                 || Arrays.stream(parts).anyMatch(p -> p.startsWith("--"))) {
             return Optional.empty();
+        }
+        // Bare /f, /f menu and /f gui open the faction menu (DeluxeMenus, /fmenu). /f help still lists commands.
+        if (parts.length == 1 || (parts.length == 2 && MENU.contains(parts[1].toLowerCase(Locale.ROOT)))) {
+            return Optional.of("/" + MENU_COMMAND);
         }
         String sub = parts[1].toLowerCase(Locale.ROOT);
         List<String> args = Arrays.asList(parts).subList(2, parts.length);
@@ -47,11 +53,22 @@ public final class SimpleCommands implements Listener {
             case "map" -> map(args);
             case "fly" -> args.size() == 1 && args.getFirst().equalsIgnoreCase("auto")
                     ? List.of("fly", "--auto") : null;
-            case "warp", "setwarp" -> args.size() == 2
-                    ? List.of(sub, args.get(0), "--password", args.get(1)) : null;
-            case "delwarp" -> args.size() == 1 ? List.of("setwarp", args.getFirst(), "--delete") : null;
+            case "warp" -> args.size() == 2 ? List.of("warp", args.get(0), "--password", args.get(1)) : null;
+            // Setting a home or warp lives under /f set in FactionsUUID 4.7: /f set home, /f set warp.
+            case "sethome" -> args.isEmpty() ? List.of("set", "home") : null;
+            case "delhome" -> args.isEmpty() ? List.of("set", "home", "--delete") : null;
+            case "setwarp" -> switch (args.size()) {
+                case 1 -> List.of("set", "warp", args.getFirst());
+                case 2 -> List.of("set", "warp", args.get(0), "--password", args.get(1));
+                default -> null;
+            };
+            case "delwarp" -> args.size() == 1 ? List.of("set", "warp", args.getFirst(), "--delete") : null;
             case "deinvite" -> args.size() == 1 ? List.of("invite", args.getFirst(), "--delete") : null;
-            case "delhome" -> args.isEmpty() ? List.of("sethome", "--delete") : null;
+            case "desc" -> args.isEmpty() ? null : concat(List.of("set", "description"), args);
+            case "tag", "rename" -> args.size() == 1 ? List.of("set", "tag", args.getFirst()) : null;
+            // Older plugins: /f ally <faction>. FactionsUUID: /f relation <faction> ally.
+            case "ally", "enemy", "neutral", "truce" -> args.size() == 1 ? List.of("relation", args.getFirst(), sub) : null;
+            case "who", "f", "info" -> args.size() <= 1 ? concat(List.of("show"), args) : null;
             default -> null;
         };
         if (out == null) {
@@ -61,6 +78,12 @@ public final class SimpleCommands implements Listener {
         joined.add("/" + parts[0]);
         joined.addAll(out);
         return Optional.of(String.join(" ", joined));
+    }
+
+    private static List<String> concat(List<String> head, List<String> tail) {
+        var all = new ArrayList<>(head);
+        all.addAll(tail);
+        return all;
     }
 
     /** {@code claim 5}, {@code claim auto}, {@code claim fill}; unclaim also takes {@code all}. */

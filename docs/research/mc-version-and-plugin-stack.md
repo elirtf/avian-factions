@@ -54,6 +54,15 @@ CoreProtect caveat noted below).
 | Caveat on 26.1.2 | None. Folia not supported (release notes). Does **not** support 26.2/26.3 in this release (see above). |
 | Source | https://github.com/EssentialsX/Essentials/releases/tag/2.22.0 |
 
+### DeluxeMenus
+
+| | |
+|---|---|
+| Version | **1.14.1-Release** (Modrinth; listed for 26.1, 26.1.1, 26.1.2, 26.2, 26.3) |
+| Download | https://cdn.modrinth.com/data/kKZkPgJ7/versions/PNKQ6RMs/DeluxeMenus-1.14.1-Release.jar (sha256 `ec10a1317152aa57d76eec8cb3e1e7dc7f52e45c7a5d742c0baa1e394496ec20`) |
+| License | MIT (https://github.com/HelpChat/DeluxeMenus, last push 2026-08) |
+| Why | Click menus from YAML, with PlaceholderAPI and per-item view requirements: the faction menu over FactionsUUID's commands, without writing GUI code |
+
 ### LuckPerms
 
 | | |

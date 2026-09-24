@@ -405,6 +405,7 @@ cmd_check_log() {
         'ViaVersion detected server version' \
         'Took .* to boot Floodgate' \
         'Started Geyser on UDP port' \
+        '[1-9][0-9]* GUI menus loaded' \
         'Done \('; do
         if grep -qE "$expect" "$LOG"; then
             ok "log has: $expect"
