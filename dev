@@ -9,6 +9,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SESSION="${AVIAN_DEV_SESSION:-avian}"
 LOG="$ROOT/run/logs/latest.log"
 RANKS="$ROOT/dev-server/luckperms/ranks.lp"
+SETUP_STAMP="$ROOT/run/.dev-setup-applied"
 WORLD_BORDER=5000
 START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
 STOP_TIMEOUT=90
@@ -161,12 +162,25 @@ cmd_start() {
     port="$(sed -n 's/^server-port=//p' run/server.properties 2>/dev/null || true)"
     ok "Server is up: connect Minecraft to localhost:${port:-25565}"
     if (( setup )); then
-        cmd_setup_world
+        if [[ "$(cat "$SETUP_STAMP" 2>/dev/null || true)" == "$(setup_fingerprint)" ]]; then
+            ok "Ranks and world border unchanged since last applied (force it with: ./dev ranks)"
+        else
+            cmd_setup_world
+        fi
     fi
     echo "  Console: ${BOLD}./dev console${RESET}   Logs: ${BOLD}./dev logs${RESET}   Stop: ${BOLD}./dev stop${RESET}"
 }
 
-# Things that live in the world or LuckPerms' database rather than a config file. Safe to repeat.
+# What cmd_setup_world last applied: ranks.lp, the border, and the database container. A wiped
+# database comes back in a new container, so its ranks are re-applied; a wiped run/ loses the stamp.
+setup_fingerprint() {
+    { cat "$RANKS"; echo "$WORLD_BORDER"; docker inspect -f '{{.Id}}' avian-mariadb 2>/dev/null || true; } \
+        | sha256sum | cut -d' ' -f1
+}
+
+# Things that live in the world or LuckPerms' database rather than a config file. Safe to repeat,
+# but every line echoes to online ops ("owner already has * set…"), so start skips it when nothing
+# changed.
 cmd_setup_world() {
     session_running || fail "The server is not running. Start it with: ./dev start"
     say "Applying the ranks from dev-server/luckperms/ranks.lp and the ${WORLD_BORDER}-block world border…"
@@ -178,6 +192,7 @@ cmd_setup_world() {
         sleep 0.05
     done < "$RANKS"
     send "worldborder set $WORLD_BORDER"
+    setup_fingerprint > "$SETUP_STAMP"
     ok "Applied $count rank commands and the world border"
 }
 
@@ -244,6 +259,19 @@ cmd_status() {
 # Safe while the server runs: world saving is paused, flushed to disk, archived, then resumed.
 BACKUP_DIR="${AVIAN_BACKUP_DIR:-backups}"
 
+# True once no world file has changed for 3 seconds in a row; false after 60 seconds of changes.
+world_quiet() {
+    local before after tries=0
+    before="$(find run/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+    while (( tries++ < 20 )); do
+        sleep 3
+        after="$(find run/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+        [[ "$before" == "$after" ]] && return 0
+        before="$after"
+    done
+    return 1
+}
+
 cmd_backup() {
     load_env
     db_healthy || fail "The database is not running. Start it with: ./dev start"
@@ -258,9 +286,18 @@ cmd_backup() {
     if session_running; then
         live=true
         say "Server is running: pausing world saves and flushing to disk…"
+        local since
+        since="$(log_size)"
         send "save-off"
         send "save-all flush"
-        sleep 5
+        # Wait for the server to say the save finished, not a fixed time: right after a big paste
+        # there are thousands of dirty chunks, and a 5-second guess let tar read a file mid-write.
+        local waited=0
+        until log_since "$since" | grep -q "Saved the game"; do
+            (( waited++ >= 180 )) && { send "save-on"; rm -rf "$work"; fail "The save did not finish within 3 minutes; no backup taken."; }
+            sleep 1
+        done
+        world_quiet || { send "save-on"; rm -rf "$work"; fail "World files kept changing after the save; no backup taken."; }
     fi
 
     say "Dumping the database…"
@@ -275,13 +312,24 @@ cmd_backup() {
         [[ -e "$f" ]] && extras+=("$f")
     done
     # Jars come back from downloadPlugins, libs/ from the plugins themselves, logs are not state.
-    tar -czf "$archive" \
-        --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
-        --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
-        -C . run/world run/plugins \
-        "${extras[@]}" \
-        -C "$work" database.sql \
-        || { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed; the partial file is at $archive"; }
+    # tar exits 1 when a file changed while being read. That archive is torn, so it is discarded
+    # and retried rather than kept — a quietly corrupt backup is worse than none.
+    local attempt
+    for attempt in 1 2 3; do
+        if tar -czf "$archive" \
+            --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
+            --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
+            -C . run/world run/plugins \
+            "${extras[@]}" \
+            -C "$work" database.sql; then
+            break
+        fi
+        rm -f "$archive"
+        (( attempt == 3 )) && { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed 3 times (files kept changing); no backup taken."; }
+        say "A file changed while archiving; waiting and retrying (attempt $((attempt + 1)) of 3)…"
+        sleep 5
+        world_quiet || true
+    done
 
     $live && send "save-on"
     rm -rf "$work"
@@ -316,6 +364,9 @@ cmd_restore() {
     rm -rf run/world run/world_*
     cp -a "$work/run/." run/
     rm -rf "$work"
+    # The restored database holds the ranks as they were at backup time, which may predate the
+    # current ranks.lp. Clear the "already applied" stamp so the next start re-applies them.
+    rm -f "$SETUP_STAMP"
     ok "Restored from $archive. Now: ./dev start"
     echo "  Plugin jars are not in the backup; ./dev start downloads the pinned set."
 }
@@ -375,7 +426,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}cmd${RESET} <command>    Run one console command and show the reply, e.g. ./dev cmd list
   ${BOLD}logs${RESET}             Watch the server log (Ctrl-C to stop watching)
   ${BOLD}status${RESET}           Is the database and server running?
-  ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this already)
+  ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this when they changed)
   ${BOLD}backup${RESET}           Save the world, database and plugin data to backups/ (safe while running)
   ${BOLD}restore${RESET} <file>   Replace world, database and plugin data from a backup (server must be stopped)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
