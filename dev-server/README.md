@@ -15,6 +15,7 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
 | `plugins/AuraSkills/config.yml` | `sql.enabled: true`, pointed at the Compose database (`auraskills_` tables) |
 | `plugins/AuraSkills/stats.yml`, `abilities.yml`, `mana_abilities.yml` | Combat stats and abilities capped for Factions PvP, still growing to level 100; the numbers and why are in `docs/research/skills-rpg.md` |
+| `plugins/BetterRTP/config.yml` | `/rtp` lands inside the world border but at least 400 blocks from 0,0 (clear of spawn), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
 | `server.properties` | `white-list=true`, `enforce-whitelist=true`: port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
 | `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"`, then copy `run/whitelist.json` back here |
 

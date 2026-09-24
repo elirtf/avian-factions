@@ -27,6 +27,7 @@ lp group hatchling setweight 10
 lp group hatchling meta removeprefix 10
 lp group hatchling meta setsuffix 10 "&#9E9E9E ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
+lp group hatchling permission set betterrtp.use true
 lp group hatchling permission set essentials.tpa true
 lp group hatchling permission set essentials.tpaccept true
 lp group hatchling permission set essentials.tpdeny true

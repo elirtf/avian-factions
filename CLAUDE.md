@@ -34,7 +34,7 @@ and the `mc.avian.club` identity.
 - Base package: `club.avian.factions`.
 - Database: **MariaDB everywhere** (Docker Compose locally), HikariCP + Flyway, portable SQL, all DB access behind per-module repository interfaces. No SQLite path.
 - Factions: **FactionsUUID 4.7.0** (ADR-0007), built from pinned source; `avian-factions` only adds what it lacks (base power, Claim Boost, upgrade list) through its API.
-- Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer, AuraSkills (skills/stats; combat stats capped).
+- Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer, AuraSkills (skills/stats; combat stats capped), BetterRTP (`/rtp` inside the border), FancyNpcs (spawn NPCs).
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
 - V1 world border: 5,000 blocks diameter.
 
