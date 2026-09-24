@@ -110,4 +110,121 @@ class VaultEconomyBridgeTest {
     void formatMatchesOurWholeDollarFormatting() {
         assertEquals("$1,640", bridge.format(1_640));
     }
+
+    // --- accounts keyed by OfflinePlayer: how FactionsUUID stores faction banks --------------------
+
+    /** A faction bank: a UUID the server has never seen as a real player. */
+    private org.bukkit.OfflinePlayer factionBank() {
+        return server.getOfflinePlayer(UUID.randomUUID());
+    }
+
+    @Test
+    void aFactionBankAccountExistsEvenThoughNoPlayerHasThatUuid() {
+        assertTrue(bridge.hasAccount(factionBank()),
+                "answering false here made FactionsUUID loop into a StackOverflowError on /f claim");
+    }
+
+    /**
+     * FactionsUUID's Econ.checkStatus: if the account is missing it sets the balance, and setting the
+     * balance reads it, which checks status again. It terminates only if hasAccount becomes true.
+     */
+    @Test
+    void factionsUuidsAccountCheckTerminates() {
+        var bank = factionBank();
+        int depth = 0;
+        while (!bridge.hasAccount(bank)) {
+            bridge.createPlayerAccount(bank);
+            assertTrue(++depth < 5, "hasAccount never became true: this is the loop that crashed /f claim");
+        }
+        assertEquals(0, bridge.getBalance(bank));
+    }
+
+    @Test
+    void aFactionBankCanBePaidIntoAndChargedByUuid() {
+        var bank = factionBank();
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, bridge.depositPlayer(bank, 300).type);
+        assertEquals(300, bridge.getBalance(bank));
+        assertTrue(bridge.has(bank, 300));
+
+        var claimCost = bridge.withdrawPlayer(bank, 120);
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, claimCost.type);
+        assertEquals(180, bridge.getBalance(bank));
+        assertEquals(180, economy.balance(bank.getUniqueId(), Currency.MONEY), "stored in our ledger by UUID");
+    }
+
+    @Test
+    void aFactionBankCannotBeOverdrawn() {
+        var bank = factionBank();
+        bridge.depositPlayer(bank, 50);
+        assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.withdrawPlayer(bank, 500).type);
+        assertEquals(50, bridge.getBalance(bank));
+    }
+
+    @Test
+    void zeroAmountsSucceedWithoutWritingAnything() {
+        var bank = factionBank();
+        int before = repo.audit.size();
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, bridge.depositPlayer(bank, 0).type);
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, bridge.withdrawPlayer(bank, 0).type);
+        assertEquals(before, repo.audit.size(), "zeroing an account is not a transaction");
+    }
+
+    @Test
+    void aRealPlayerIsTheSameAccountByNameOrByUuid() {
+        bridge.depositPlayer(server.getOfflinePlayer(alice), 75);
+        assertEquals(75, bridge.getBalance("Alice"), "both halves of the Vault API see one balance");
+    }
+
+    // --- whole-dollar rounding: charges round up, payouts round down --------------------------------
+
+    @Test
+    void aSubDollarChargeIsNeverFree() {
+        var buyer = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(buyer, 10);
+        var response = bridge.withdrawPlayer(buyer, 0.4);   // EconomyShopGUI's default sugar cane price
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, response.type);
+        assertEquals(9, bridge.getBalance(buyer), "a $0.40 item costs $1, never $0");
+    }
+
+    @Test
+    void aSubDollarChargeFailsWhenThePlayerHasNothing() {
+        var broke = factionBank();
+        assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.withdrawPlayer(broke, 0.4).type,
+                "rounding must not let a broke player buy something for free");
+    }
+
+    @Test
+    void fractionalChargesRoundUp() {
+        var buyer = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(buyer, 100);
+        bridge.withdrawPlayer(buyer, 25.01);
+        assertEquals(74, bridge.getBalance(buyer), "$25.01 charges $26");
+    }
+
+    @Test
+    void fractionalPayoutsRoundDown() {
+        var seller = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(seller, 7.68);   // 64 sugar cane at $0.12
+        assertEquals(7, bridge.getBalance(seller), "$7.68 pays $7, never $8");
+        bridge.depositPlayer(seller, 0.99);
+        assertEquals(7, bridge.getBalance(seller), "under a dollar pays nothing rather than rounding up");
+    }
+
+    @Test
+    void negativeAndNotANumberAmountsAreRefused() {
+        var p = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(p, 50);
+        for (double bad : new double[] {-5, Double.NaN}) {
+            assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.withdrawPlayer(p, bad).type, "withdraw " + bad);
+            assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.depositPlayer(p, bad).type, "deposit " + bad);
+        }
+        assertEquals(50, bridge.getBalance(p));
+    }
+
+    @Test
+    void theByNamePathUsesTheSameRounding() {
+        bridge.depositPlayer("Alice", 10);
+        bridge.withdrawPlayer("Alice", 0.4);
+        assertEquals(9, bridge.getBalance("Alice"));
+    }
 }
