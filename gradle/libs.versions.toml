@@ -2,6 +2,7 @@
 [versions]
 paper-api = "26.1.2.build.74-stable"
 vault = "1.7.1"
+placeholderapi = "2.12.3"
 economyshopgui-api = "1.10.1"
 rosestacker = "1.5.42"
 configurate = "4.2.0"
@@ -17,6 +18,8 @@ run-paper = "3.1.0"
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
 vault = { module = "com.github.MilkBowl:VaultAPI", version.ref = "vault" }
+# Same version as the pinned PlaceholderAPI plugin jar (HelpChat's repository).
+placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderapi" }
 # API-only artifact (45 KB), versioned on JitPack — unlike the plugin jar, which only exists behind
 # a floating SpigotMC mirror. The plugin itself is still pinned by hash in downloadPlugins.
 economyshopgui-api = { module = "com.github.Gypopo:EconomyShopGUI-API", version.ref = "economyshopgui-api" }
