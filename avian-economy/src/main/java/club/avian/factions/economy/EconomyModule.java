@@ -70,6 +70,8 @@ public final class EconomyModule implements AvianModule {
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
+        // /avian tokens|gems|money give|take|set: how crates, votes and events pay out (#26).
+        ctx.commands().register(new EconomyCommand(economy).build(), "Give, take or set a player's money, tokens or gems");
 
         if (config.get().provideVault() && Bukkit.getPluginManager().getPlugin("Vault") != null) {
             var bridge = new VaultEconomyBridge(economy, "Avian");
