@@ -59,13 +59,13 @@ pages:
         sell: -1
       arrow:
         material: ARROW
-        buy: 8
-        sell: 2
+        buy: 128
+        sell: 32
         stack-size: 16
         slot: 38
       spectral_arrow:
         material: SPECTRAL_ARROW
-        buy: 12
+        buy: 96
         sell: -1
         stack-size: 8
         slot: 39

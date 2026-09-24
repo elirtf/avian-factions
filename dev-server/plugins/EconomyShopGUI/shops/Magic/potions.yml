@@ -856,8 +856,8 @@ pages:
         stack-size: 3
       nether_wart:
         material: NETHER_WART
-        buy: 12
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       blaze_powder:
         material: BLAZE_POWDER

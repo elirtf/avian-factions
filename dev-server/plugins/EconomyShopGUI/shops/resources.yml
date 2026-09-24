@@ -8,28 +8,28 @@ pages:
         sell: -1
       redstone_block:
         material: REDSTONE_BLOCK
-        buy: 36
-        sell: 9
+        buy: 72
+        sell: 18
       iron_block:
         material: IRON_BLOCK
         buy: 1440
         sell: 360
       gold_block:
         material: GOLD_BLOCK
-        buy: 180
-        sell: 45
+        buy: 288
+        sell: 72
       diamond_block:
         material: DIAMOND_BLOCK
-        buy: 3600
-        sell: 900
+        buy: 5400
+        sell: 1350
       emerald_block:
         material: EMERALD_BLOCK
         buy: 373
         sell: -1
       netherite_block:
         material: NETHERITE_BLOCK
-        buy: 72000
-        sell: 18000
+        buy: 108000
+        sell: 27000
       copper_ingot:
         material: COPPER_INGOT
         buy: 9
@@ -37,23 +37,23 @@ pages:
         stack-size: 9
       redstone:
         material: REDSTONE
-        buy: 32
-        sell: 1
+        buy: 72
+        sell: 18
         stack-size: 9
       iron_ingot:
         material: IRON_INGOT
-        buy: 160
-        sell: 40
+        buy: 1440
+        sell: 360
         stack-size: 9
       gold_ingot:
         material: GOLD_INGOT
-        buy: 75
-        sell: 5
+        buy: 288
+        sell: 72
         stack-size: 9
       diamond:
         material: DIAMOND
-        buy: 473
-        sell: 100
+        buy: 5400
+        sell: 1350
         stack-size: 9
       emerald:
         material: EMERALD
@@ -62,8 +62,8 @@ pages:
         stack-size: 9
       netherite_ingot:
         material: NETHERITE_INGOT
-        buy: 21309
-        sell: 2000
+        buy: 108000
+        sell: 27000
         stack-size: 9
       copper_ore:
         material: COPPER_ORE
@@ -79,7 +79,7 @@ pages:
         sell: -1
       gold_ore:
         material: GOLD_ORE
-        buy: 30
+        buy: 32
         sell: -1
       diamond_ore:
         material: DIAMOND_ORE
@@ -91,8 +91,8 @@ pages:
         sell: -1
       ancient_debris:
         material: ANCIENT_DEBRIS
-        buy: 2000
-        sell: 500
+        buy: 3000
+        sell: 750
   page2:
     gui-rows: 5
     items:
@@ -103,13 +103,13 @@ pages:
         slot: 11
       coal_block:
         material: COAL_BLOCK
-        buy: 108
-        sell: 27
+        buy: 180
+        sell: 45
         slot: 12
       lapis_block:
         material: LAPIS_BLOCK
-        buy: 72
-        sell: 18
+        buy: 144
+        sell: 36
         slot: 13
       amethyst_cluster:
         material: AMETHYST_CLUSTER
@@ -123,26 +123,26 @@ pages:
         slot: 15
       quartz:
         material: QUARTZ
-        buy: 75
-        sell: 3
+        buy: 216
+        sell: 54
         stack-size: 9
         slot: 20
       coal:
         material: COAL
-        buy: 48
-        sell: 3
+        buy: 180
+        sell: 45
         stack-size: 9
         slot: 21
       lapis_lazuli:
         material: LAPIS_LAZULI
-        buy: 65
-        sell: 2
+        buy: 144
+        sell: 36
         stack-size: 9
         slot: 22
       amethyst_shard:
         material: AMETHYST_SHARD
-        buy: 12
-        sell: 2
+        buy: 108
+        sell: 27
         stack-size: 9
         slot: 23
       resin_brick:
@@ -158,7 +158,7 @@ pages:
         slot: 29
       coal_ore:
         material: COAL_ORE
-        buy: 12
+        buy: 20
         sell: -1
         slot: 30
       lapis_ore:

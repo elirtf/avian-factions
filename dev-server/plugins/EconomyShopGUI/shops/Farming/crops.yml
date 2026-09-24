@@ -3,63 +3,63 @@ pages:
     items:
       melon:
         material: MELON
-        buy: 38
+        buy: 144
         sell: -1
         stack-size: 4
       pumpkin:
         material: PUMPKIN
-        buy: 20
-        sell: 3
+        buy: 48
+        sell: 12
         stack-size: 4
       cactus:
         material: CACTUS
-        buy: 20
-        sell: 4
+        buy: 80
+        sell: 16
         stack-size: 4
       wheat:
         material: WHEAT
-        buy: 20
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       carrot:
         material: CARROT
-        buy: 20
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       potato:
         material: POTATO
-        buy: 20
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       kelp:
         material: KELP
-        buy: 4
-        sell: 1
+        buy: 16
+        sell: 4
         stack-size: 4
       sugar_cane:
         material: SUGAR_CANE
-        buy: 64
-        sell: 16
+        buy: 256
+        sell: 64
         stack-size: 4
       nether_wart:
         material: NETHER_WART
-        buy: 12
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       beetroot:
         material: BEETROOT
-        buy: 24
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       sweet_berries:
         material: SWEET_BERRIES
         buy: 20
-        sell: 1
+        sell: 4
         stack-size: 4
       glow_berries:
         material: GLOW_BERRIES
-        buy: 4
-        sell: 1
+        buy: 16
+        sell: 4
         stack-size: 4
       honeycomb:
         material: HONEYCOMB
@@ -73,13 +73,13 @@ pages:
         stack-size: 4
       chorus_fruit:
         material: CHORUS_FRUIT
-        buy: 12
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       bamboo:
         material: BAMBOO
-        buy: 4
-        sell: 1
+        buy: 16
+        sell: 4
         stack-size: 4
       egg:
         material: EGG
