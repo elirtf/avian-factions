@@ -533,7 +533,7 @@ global-spawner-settings:
     # Should the entire stack of mobs be killed on death?
     # This will only apply to mobs with disabled AI and overwrites any other settings if this is set to true
     # Default: false
-    kill-entire-stack-on-death: true
+    kill-entire-stack-on-death: false
 
     # Should mobs with disabled AI be immune to zombification?
     # Default: true

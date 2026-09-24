@@ -44,8 +44,9 @@ a snapshot, not the source of truth; if the two ever disagree, fix `ranks.lp` an
 `plugins/RoseStacker/config.yml` — stacking for mobs, items and spawners (not blocks). Changed so
 spawner farming pays: mobs from **player-placed** spawners have their AI goals removed
 (`global-spawner-settings.disable-mob-ai` + `disable-mob-ai-only-player-placed` — they stand still
-and don't attack, but water still pushes them), die to **one hit** (`instant-kill-disabled-ai`), and
-that hit kills the **whole stack** with loot and XP for every mob
-(`disable-mob-ai-options.kill-entire-stack-on-death`). Natural mobs and dungeon spawners are
+and don't attack, but water still pushes them), and die to **one hit** (`instant-kill-disabled-ai`)
+— **one mob per hit**, not the whole stack (`disable-mob-ai-options.kill-entire-stack-on-death:
+false`; one swing wiping a 42-blaze stack was too much). For a middle ground, `multikill-options`
+kills a set number per hit. Natural mobs and dungeon spawners are
 unchanged. `global-spawner-settings.max-stack-size` (32) is the number most likely to need raising
 for an OP economy, and that is a balance decision (see `docs/research/mob-stacking.md`).
