@@ -5,8 +5,7 @@ import club.avian.factions.api.economy.Currency;
 import club.avian.factions.api.economy.Economy;
 import club.avian.factions.api.economy.SellValues;
 import club.avian.factions.economy.HarvesterHoe.Track;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextColor;
+import club.avian.factions.api.text.Brand;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -40,8 +39,6 @@ final class HoeHarvest implements Listener {
     /** True while this class is asking other plugins whether a neighbouring column may be broken. */
     static final ThreadLocal<Boolean> PROBING = ThreadLocal.withInitial(() -> false);
 
-    private static final TextColor GOLD = TextColor.color(0xE0B44A);
-    private static final TextColor TOKEN = TextColor.color(0xF2D06B);
 
     private final Economy economy;
     private final SellValues sellValues;
@@ -166,13 +163,14 @@ final class HoeHarvest implements Listener {
         var summary = new ArrayList<String>();
 
         // Money, or the cane itself.
-        long money = cfg.autoSell() ? SellValues.applyMultiplier(priceOf(player, h.cane()),
+        long money = HarvesterHoe.autoSell(tool, cfg) ? SellValues.applyMultiplier(priceOf(player, h.cane()),
                 10_000 + 100 * cfg.moneyMultiplier().perLevel() * HarvesterHoe.level(tool, Track.MONEY_MULTIPLIER)) : 0;
         if (money > 0) {
             deposit(player, Currency.MONEY, money, "hoe:sugar_cane");
-            summary.add(economy.format(Currency.MONEY, money));
+            summary.add("<money>+" + economy.format(Currency.MONEY, money) + "</money>");
         } else {
             give(player, new ItemStack(Material.SUGAR_CANE, h.cane()));
+            summary.add("<cane>+" + h.cane() + " cane</cane>");
         }
 
         // Tokens: the hand-harvest chance, boosted.
@@ -209,17 +207,18 @@ final class HoeHarvest implements Listener {
                 * (1 + cfg.cultivation().perLevel() / 100.0 * HarvesterHoe.level(tool, Track.CULTIVATION));
         if (xp > 0) {
             farmingXp.accept(player, xp);
+            summary.add("<xp>+" + new DecimalFormat("#,##0.#").format(xp) + " XP</xp>");
         }
 
         if (tokens > 0) {
             deposit(player, Currency.TOKENS, tokens, "hoe:sugar_cane");
-            summary.add("+" + new DecimalFormat("#,##0").format(tokens) + (tokens == 1 ? " token" : " tokens"));
+            summary.add("<token>+" + new DecimalFormat("#,##0").format(tokens) + (tokens == 1 ? " token" : " tokens") + "</token>");
         }
         if (!summary.isEmpty()) {
-            player.sendActionBar(Component.text(String.join("  ·  ", summary), GOLD));
+            player.sendActionBar(Brand.mm(String.join("  <dim>·</dim>  ", summary)));
         }
         for (var message : lucky) {
-            player.sendMessage(Component.text("Lucky harvest: " + message + "!", TOKEN));
+            player.sendMessage(Brand.mm("<gem><bold>LUCKY HARVEST!</bold></gem> <soft>You found <sun>" + message + "</sun>."));
         }
     }
 

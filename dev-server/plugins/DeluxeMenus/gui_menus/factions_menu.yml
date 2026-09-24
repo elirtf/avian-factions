@@ -4,7 +4,7 @@
 # Buttons run FactionsUUID's own commands in their exact form (flags included), so the menu never
 # depends on the /f rewrite. Players in a faction and players without one see different buttons:
 # %factionsuuid_player_factionless% is empty for someone in a faction, hence the "[]" checks.
-menu_title: '&8ꜰᴀᴄᴛɪᴏɴ'
+menu_title: '&#FFD23F&l✦ &#FFC23F&lꜰ&#FFB240&lᴀ&#FFA241&lᴄ&#FF9242&lᴛ&#FF8243&lɪ&#FF7A45&lᴏ&#FF6A48&lɴ &#FF5C5C&l✦'
 register_command: true
 open_command:
   - fmenu
@@ -14,10 +14,20 @@ update_interval: 2
 items:
 
   # --- frame ---------------------------------------------------------------------------------
-  'frame':
+  'frame_a':
+    material: ORANGE_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [0, 2, 6, 8, 18, 26, 36, 38, 40, 42, 44]
+    priority: 9
+  'frame_b':
+    material: YELLOW_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [1, 3, 5, 7, 9, 17, 27, 35, 37, 39, 41, 43]
+    priority: 9
+  'inside':
     material: BLACK_STAINED_GLASS_PANE
     display_name: ' '
-    slots: [0, 1, 2, 3, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44]
+    slots: [14, 30]
     priority: 9
 
   # --- info card (slot 4) ---------------------------------------------------------------------
