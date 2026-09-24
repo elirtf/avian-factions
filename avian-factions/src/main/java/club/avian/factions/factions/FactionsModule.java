@@ -54,6 +54,15 @@ public final class FactionsModule implements AvianModule {
         var config = ctx.config(FactionsConfig.SPEC);
         ctx.registerListener(new BasePowerListener(config));
         ctx.registerListener(new SimpleCommands());
+
+        // Chunk busters: clear a chunk of your own land (spec §17 raiding tools; VanityMC's Builder kit).
+        var busters = new ChunkBusters(ctx.plugin(), config, (player, chunk) -> {
+            var member = dev.kitteh.factions.FPlayers.fPlayers().get(player);
+            var owner = dev.kitteh.factions.Board.board().factionAt(new dev.kitteh.factions.FLocation(chunk));
+            return member.hasFaction() && member.faction().equals(owner);
+        }, System::currentTimeMillis, ChunkBusters.tickets(ctx.plugin()));
+        ctx.registerListener(busters);
+        ctx.commands().register(new ChunkBusterCommand(busters).build(), "Chunk busters: confirm one, or give them (admins)");
         UpgradeSwitch.apply(config.get().enabledUpgrades(), ctx.logger());
         config.onReload(c -> UpgradeSwitch.apply(c.enabledUpgrades(), ctx.logger()));
         ctx.logger().info("Hooked " + FACTIONS_PLUGIN + ": new factions start with "
