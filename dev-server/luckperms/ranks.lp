@@ -24,7 +24,8 @@
 
 lp creategroup hatchling
 lp group hatchling setweight 10
-lp group hatchling meta setprefix 10 "&#9E9E9E[Hatchling] "
+lp group hatchling meta removeprefix 10
+lp group hatchling meta setsuffix 10 "&#9E9E9E ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
 lp group hatchling permission set essentials.tpa true
 lp group hatchling permission set essentials.tpaccept true
@@ -47,7 +48,8 @@ lp group hatchling permission set factions.top false
 
 lp creategroup fledgling
 lp group fledgling setweight 20
-lp group fledgling meta setprefix 20 "&#C9C9C9[Fledgling] "
+lp group fledgling meta removeprefix 20
+lp group fledgling meta setsuffix 20 "&#C9C9C9 ꜰʟᴇᴅɢʟɪɴɢ"
 lp group fledgling parent add hatchling
 lp group fledgling permission set essentials.sethome.multiple.fledgling true
 lp group fledgling meta set homes 2
@@ -75,34 +77,44 @@ lp track free append fledgling
 
 lp creategroup finch
 lp group finch setweight 100
-lp group finch meta setprefix 100 "&#E0B44A[Finch] "
+lp group finch meta removeprefix 100
+lp group finch meta setsuffix 100 "&#F2D06B ꜰɪɴᴄʜ"
 lp group finch permission set essentials.nick true
 lp group finch permission set essentials.nick.color true
 lp group finch permission set essentials.chat.color true
 
 lp creategroup cardinal
 lp group cardinal setweight 110
-lp group cardinal meta setprefix 110 "&#C1444A[Cardinal] "
+lp group cardinal meta removeprefix 110
+lp group cardinal meta setsuffix 110 "&#E0474C ᴄᴀʀᴅɪɴᴀʟ"
 lp group cardinal parent add finch
 lp group cardinal permission set essentials.hat true
 lp group cardinal permission set essentials.chat.format true
+lp group cardinal permission set essentials.nick.format true
 
 lp creategroup falcon
 lp group falcon setweight 120
-lp group falcon meta setprefix 120 "&#D4A017[Falcon] "
+lp group falcon meta removeprefix 120
+lp group falcon meta setsuffix 120 "&#F0923A ꜰᴀʟᴄᴏɴ"
 lp group falcon parent add cardinal
-lp group falcon permission set essentials.nick.hex true
+# Hex colours. EssentialsX calls this "rgb"; an earlier version granted "essentials.nick.hex", which
+# does not exist, so the unset below cleans it out of databases that already have it.
+lp group falcon permission unset essentials.nick.hex
+lp group falcon permission set essentials.nick.rgb true
+lp group falcon permission set essentials.chat.rgb true
 lp group falcon permission set essentials.itemname true
 
 lp creategroup hawk
 lp group hawk setweight 130
-lp group hawk meta setprefix 130 "&#8E5FBF[Hawk] "
+lp group hawk meta removeprefix 130
+lp group hawk meta setsuffix 130 "&#B07FE0 ʜᴀᴡᴋ"
 lp group hawk parent add falcon
 lp group hawk permission set essentials.itemlore true
 
 lp creategroup raven
 lp group raven setweight 140
-lp group raven meta setprefix 140 "&#5B2C8D&l[Raven] "
+lp group raven meta removeprefix 140
+lp group raven meta setsuffix 140 "&#8C5CFF&l ʀᴀᴠᴇɴ"
 lp group raven parent add hawk
 lp group raven permission set essentials.nick.others false
 
@@ -120,7 +132,8 @@ lp track paid append raven
 
 lp creategroup helper
 lp group helper setweight 200
-lp group helper meta setprefix 200 "&#8E5FBF[Helper] "
+lp group helper meta removeprefix 200
+lp group helper meta setsuffix 200 "&#5FD3C7 ʜᴇʟᴘᴇʀ"
 lp group helper permission set essentials.mute true
 lp group helper permission set essentials.kick true
 lp group helper permission set essentials.tempban true
@@ -130,7 +143,8 @@ lp group helper permission set coreprotect.lookup true
 
 lp creategroup mod
 lp group mod setweight 210
-lp group mod meta setprefix 210 "&#5B2C8D[Mod] "
+lp group mod meta removeprefix 210
+lp group mod meta setsuffix 210 "&#4DA3FF ᴍᴏᴅ"
 lp group mod parent add helper
 lp group mod permission set essentials.ban true
 lp group mod permission set essentials.tp true
@@ -143,7 +157,8 @@ lp group mod permission set factions.kit.halfmod true
 
 lp creategroup admin
 lp group admin setweight 220
-lp group admin meta setprefix 220 "&#D4A017[Admin] "
+lp group admin meta removeprefix 220
+lp group admin meta setsuffix 220 "&#3DDC84 ᴀᴅᴍɪɴ"
 lp group admin parent add mod
 lp group admin permission set essentials.gamemode true
 lp group admin permission set essentials.give true
@@ -155,7 +170,8 @@ lp group admin permission set avian.ftop.admin true
 
 lp creategroup owner
 lp group owner setweight 230
-lp group owner meta setprefix 230 "&#C1444A&l[Owner] "
+lp group owner meta removeprefix 230
+lp group owner meta setsuffix 230 "&#00E5FF&l ᴏᴡɴᴇʀ"
 lp group owner parent add admin
 lp group owner permission set * true
 
