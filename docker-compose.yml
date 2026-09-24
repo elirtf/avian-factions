@@ -12,8 +12,10 @@ services:
       MARIADB_DATABASE: ${AVIAN_DB_NAME:-avian}
       MARIADB_USER: ${AVIAN_DB_USER:-avian}
       MARIADB_PASSWORD: ${AVIAN_DB_PASSWORD:-avian}
+    # Loopback only: the dev server and tests connect from this machine, and the dev
+    # credentials must never be reachable from the LAN (or the internet, via a port forward).
     ports:
-      - "${AVIAN_DB_PORT:-3306}:3306"
+      - "127.0.0.1:${AVIAN_DB_PORT:-3306}:3306"
     volumes:
       - mariadb-data:/var/lib/mysql
     healthcheck:
