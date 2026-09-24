@@ -64,7 +64,9 @@ tasks.runServer {
     build(paperBuild)
     runDirectory(layout.projectDirectory.dir("../run").asFile)
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
-    jvmArgs("-Xmx2G")
+    // 8 GB: a large //paste buffers the whole schematic in memory. At 2 GB a spawn build pushed the
+    // heap to 99.9% and the server spent ~85% of its time in full GC, frozen mid-paste.
+    jvmArgs("-Xms2G", "-Xmx8G")
     // Running this task means the developer accepts the Minecraft EULA (https://aka.ms/MinecraftEULA)
     // for the local dev server only. Paper honours this property instead of eula.txt.
     systemProperty("com.mojang.eula.agree", "true")
