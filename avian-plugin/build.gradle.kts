@@ -115,6 +115,10 @@ val pluginStack = listOf(
     PinnedPlugin("PlaceholderAPI-2.12.3.jar",
         "https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.12.3/PlaceholderAPI-2.12.3.jar",
         "SHA-256", "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"),
+    // Click menus (the /f faction menu). Modrinth's file for 1.14.1, listed for 26.1.2.
+    PinnedPlugin("DeluxeMenus-1.14.1-Release.jar",
+        "https://cdn.modrinth.com/data/kKZkPgJ7/versions/PNKQ6RMs/DeluxeMenus-1.14.1-Release.jar",
+        "SHA-256", "ec10a1317152aa57d76eec8cb3e1e7dc7f52e45c7a5d742c0baa1e394496ec20"),
     PinnedPlugin("CoreProtect-CE-24.0.jar",
         "https://cdn.modrinth.com/data/Lu3KuzdV/versions/Kma0kBsY/CoreProtect-CE-24.0.jar",
         "SHA-256", "66cd362089bb8430e5a018ee77e9b433bf0dc9e65590d5f1a043a78d60415696"),

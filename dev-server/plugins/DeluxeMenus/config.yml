@@ -1,0 +1,6 @@
+# AVIAN: DeluxeMenus holds the click menus. Only our menus are registered, so the plugin's example
+# menus (and their /menu commands) are never created. Menu files live in gui_menus/.
+check_updates: false
+gui_menus:
+  factions_menu:
+    file: factions_menu.yml
