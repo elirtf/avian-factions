@@ -151,6 +151,20 @@ val pluginStack = listOf(
     PinnedPlugin("AuraSkills-2.4.0.jar",
         "https://cdn.modrinth.com/data/uDdZAVls/versions/9rSJ3THD/AuraSkills-2.4.0.jar",
         "SHA-256", "de54cbd2e33d65e8b1704751ae4121ed2f5b466ba89c63a1aadf3a3e629d6a40"),
+    // Bedrock crossplay: Geyser translates Bedrock clients (UDP 19132) into Java ones, Floodgate
+    // lets them in without a Java account. Geyser only speaks the newest Java protocol (26.2), so
+    // ViaVersion lets it — and 26.2 Java clients — join our 26.1.2 server. GeyserMC publishes every
+    // build as "latest"; the build-number URLs are stable and the hash is the pin. All three
+    // boot-tested clean on Paper 26.1.2 build 74; see docs/research/bedrock-crossplay.md.
+    PinnedPlugin("ViaVersion-5.12.0.jar",
+        "https://cdn.modrinth.com/data/P1OZGk5p/versions/FaishMnD/ViaVersion-5.12.0.jar",
+        "SHA-256", "c4d512fa9760fa41d17abaedde12aa1f4c9bde920d0a992fe0fc016962f126be"),
+    PinnedPlugin("Geyser-Spigot-2.11.3-b1246.jar",
+        "https://download.geysermc.org/v2/projects/geyser/versions/2.11.3/builds/1246/downloads/spigot",
+        "SHA-256", "d1607770723a740b4165afed56bcafe544ea2767d71eeda9867f985031812600"),
+    PinnedPlugin("floodgate-spigot-2.2.5-b141.jar",
+        "https://download.geysermc.org/v2/projects/floodgate/versions/2.2.5/builds/141/downloads/spigot",
+        "SHA-256", "21570aff9ce17d6983928e8552777760e1ede5050026b04c686b0ae112e6fd7e"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
