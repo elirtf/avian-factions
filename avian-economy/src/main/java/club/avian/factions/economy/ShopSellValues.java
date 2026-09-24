@@ -52,6 +52,7 @@ public final class ShopSellValues implements SellValues {
      * any sell limit they have reached. Falls back to the configured table if the shop cannot
      * answer, so a pricing failure never breaks a harvest.
      */
+    @Override
     public long priceFor(OfflinePlayer player, ItemStack stack) {
         if (stack == null || stack.getType().isAir()) {
             return 0;

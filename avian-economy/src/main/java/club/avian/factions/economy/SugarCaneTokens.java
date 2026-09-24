@@ -57,7 +57,7 @@ final class SugarCaneTokens implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event) {
         var block = event.getBlock();
-        if (block.getType() != Material.SUGAR_CANE) {
+        if (HoeHarvest.PROBING.get() || block.getType() != Material.SUGAR_CANE) {
             return;
         }
         var player = event.getPlayer();
