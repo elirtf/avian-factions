@@ -78,6 +78,8 @@ CoreProtect caveat noted below).
 
 ### WorldEdit
 
+> **Superseded 2026-09-23:** replaced by FastAsyncWorldEdit. Plain WorldEdit froze the server pasting the 46-million-block spawn schematic. FAWE release 2.15.4 fails on 26.1.2 (`ExceptionInInitializerError` in `BlockTypesCache`), so the pin is Jenkins build 1389 (commit `944c416`, includes upstream fix #3641). Pin and reasoning live in `avian-plugin/build.gradle.kts`.
+
 | | |
 |---|---|
 | Version | **7.4.5** (2026-08-09). EngineHub has no GitHub Releases; the tag `7.4.5` exists and the artifact is published on the author-owned Hangar and Modrinth pages. |

@@ -64,7 +64,9 @@ tasks.runServer {
     build(paperBuild)
     runDirectory(layout.projectDirectory.dir("../run").asFile)
     javaLauncher = javaToolchains.launcherFor(java.toolchain)
-    jvmArgs("-Xmx2G")
+    // 8 GB: a large //paste buffers the whole schematic in memory. At 2 GB a spawn build pushed the
+    // heap to 99.9% and the server spent ~85% of its time in full GC, frozen mid-paste.
+    jvmArgs("-Xms2G", "-Xmx8G")
     // Running this task means the developer accepts the Minecraft EULA (https://aka.ms/MinecraftEULA)
     // for the local dev server only. Paper honours this property instead of eula.txt.
     systemProperty("com.mojang.eula.agree", "true")
@@ -92,9 +94,20 @@ val pluginStack = listOf(
     PinnedPlugin("Vault-1.7.3.jar",
         "https://github.com/MilkBowl/Vault/releases/download/1.7.3/Vault.jar",
         "SHA-256", "a6b5ed97f43a5cf5bbaf00a7c8cd23c5afc9bd003f849875af8b36e6cf77d01d"),
-    PinnedPlugin("worldedit-bukkit-7.4.5.jar",
-        "https://cdn.modrinth.com/data/1u6JkXh5/versions/F5ea2ov3/worldedit-bukkit-7.4.5.jar",
-        "SHA-256", "e5696a6d064b9969437a8888be91b0941148a28e0c3736de1554a00254a5d142"),
+    // FastAsyncWorldEdit replaces WorldEdit. Plain WorldEdit pastes on the main thread and holds the
+    // whole paste plus an undo copy in memory: the 46-million-block spawn schematic froze the server
+    // twice. FAWE pastes in chunks off the main thread. Its plugin.yml `provides: [ WorldEdit ]`, so
+    // WorldGuard, CoreProtect and our softdepend on WorldEdit all keep working unchanged.
+    //
+    // A DEV BUILD, deliberately. Release 2.15.4 (Modrinth tags it 26.1.2) fails on our server with
+    // ExceptionInInitializerError in BlockTypesCache — its block registry cannot load, so pasting
+    // cannot work. Upstream fixed exactly that in #3641 (2026-09-10, "Bind BlockTypes constants to
+    // explicit ids"), after 2.15.4. Jenkins build 1389 = commit 944c416 includes it. Move back to a
+    // release (2.15.5+) once one ships. Build-number URLs are stable, but Jenkins can prune old
+    // builds eventually — if this 404s, take the newest successful build and re-pin the hash.
+    PinnedPlugin("FastAsyncWorldEdit-Paper-2.15.5-SNAPSHOT-1389.jar",
+        "https://ci.athion.net/job/FastAsyncWorldEdit/1389/artifact/artifacts/FastAsyncWorldEdit-Paper-2.15.5-SNAPSHOT.jar",
+        "SHA-256", "f234b5c9617541d92b221d80d72c690f39c9391e4afa1b0d226f5fc9df6840de"),
     PinnedPlugin("worldguard-bukkit-7.0.18.jar",
         "https://cdn.modrinth.com/data/DKY9btbd/versions/btHBavWa/worldguard-bukkit-7.0.18.jar",
         "SHA-256", "08f3ef58bc521c635d8c78aedaca96f151d2d397e7cd8018584955dd7468eb05"),
@@ -164,6 +177,15 @@ tasks.register("downloadPlugins") {
             jar.copyTo(dir.resolve(jar.name), overwrite = true)
             logger.lifecycle("  ok ${jar.name} (built from pinned source)")
         }
+        // Remove any jar that is no longer pinned. Without this, swapping a plugin (WorldEdit →
+        // FastAsyncWorldEdit) leaves the old jar behind and both load, fighting over the same API.
+        // Our own AvianFactions jar is not in run/plugins — run-paper adds it with -add-plugin.
+        val expected = stack.map { it.file }.toSet() + builtFromSource.map { it.name }.toSet()
+        dir.listFiles { f -> f.isFile && f.name.endsWith(".jar") && f.name !in expected }
+            ?.forEach { stale ->
+                stale.delete()
+                logger.lifecycle("  removed ${stale.name} (no longer pinned)")
+            }
     }
 }
 

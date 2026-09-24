@@ -58,6 +58,10 @@ public final class HikariDatabase implements Database, AutoCloseable {
         var flyway = Flyway.configure(HikariDatabase.class.getClassLoader())
                 .dataSource(pool)
                 .locations("classpath:db/migration")
+                // LuckPerms and CoreProtect share the database and enable first, so a fresh schema
+                // already holds their tables. Baseline at 0: every dated migration of ours still runs.
+                .baselineOnMigrate(true)
+                .baselineVersion("0")
                 .load();
         var result = flyway.migrate();
         var current = flyway.info().current();

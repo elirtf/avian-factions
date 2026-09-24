@@ -34,6 +34,31 @@ class HikariDatabaseIT {
         assertEquals(1, applied);
     }
 
+    /**
+     * LuckPerms and CoreProtect share our database and enable first, so on a fresh install the
+     * schema already holds their tables before Flyway has ever run.
+     */
+    @Test
+    void migratesASchemaThatOtherPluginsWroteToFirst() throws Exception {
+        var container = MariaDbExtension.container();
+        try (var root = java.sql.DriverManager.getConnection(container.getJdbcUrl(), "root", container.getPassword());
+             var st = root.createStatement()) {
+            st.execute("CREATE DATABASE shared_first");
+            st.execute("CREATE TABLE shared_first.luckperms_players (uuid VARCHAR(36) PRIMARY KEY)");
+        }
+        var url = container.getJdbcUrl().replaceFirst("/" + container.getDatabaseName(), "/shared_first");
+        try (var db = new HikariDatabase(url, "root", container.getPassword(), 1,
+                java.util.logging.Logger.getLogger("integrationTest"))) {
+            db.migrate();
+            var hasPlayers = db.query(c -> {
+                try (var rs = c.getMetaData().getTables("shared_first", null, "players", null)) {
+                    return rs.next();
+                }
+            }).join();
+            assertTrue(hasPlayers, "our migrations should still run after the baseline");
+        }
+    }
+
     /** Write-behind from the main thread depends on this: the caller only schedules the work. */
     @Test
     void queryRunsOnTheDatabaseExecutorNotTheCaller() {
