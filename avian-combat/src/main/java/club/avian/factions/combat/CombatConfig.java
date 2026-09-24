@@ -49,6 +49,13 @@ public final class CombatConfig {
             Lower = faster combos; much below 14 starts to feel spammy. 0 = vanilla (20).""")
     private int hitDelayTicks = 0;
 
+    @Comment("""
+            Remove a stacked mob's body the moment a player kills it, instead of after its one-second
+            death animation. The next mob of the stack appears in the same spot, so the dying body
+            soaked up clicks meant for it and made grinding feel slow. Only when more of the stack
+            remain (RoseStacker); a lone mob still plays its death. Drops and XP are unchanged.""")
+    private boolean clearStackedMobCorpses = true;
+
     private Knockback knockback = new Knockback();
 
     public Preset preset() {
@@ -69,6 +76,10 @@ public final class CombatConfig {
 
     public int hitDelayTicks() {
         return hitDelayTicks;
+    }
+
+    public boolean clearStackedMobCorpses() {
+        return clearStackedMobCorpses;
     }
 
     /** The knockback values in effect: the preset's, unless the preset is {@code CUSTOM}. */

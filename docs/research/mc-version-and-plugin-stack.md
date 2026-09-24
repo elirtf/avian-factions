@@ -49,6 +49,7 @@ CoreProtect caveat noted below).
 | Download (core) | https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsX-2.22.0.jar (sha256 `bda4685105977fca2e209820a9f0ad24275bd103390a03236f38e59bfdac58e6`) |
 | Download (Spawn) | https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXSpawn-2.22.0.jar (sha256 `dd5377c4c921b9b67814209f4f6646ffbb959729003e721ec5e63c47c7c010b8`) |
 | Download (Chat) | https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXChat-2.22.0.jar (sha256 `e5b0211f98af1eaba712d9294997639a39209db1fc842394a0923820073ec65a`) |
+| Superseded (Chat) | EssentialsXChat was replaced by **CarbonChat 3.0.0-beta.39** (`carbonchat-paper-3.0.0-beta.39.jar`, sha256 `bc79bba5b67f4ceeca531775970ce6e2922ddff87999e12e463cdffa8e6fe4f5`, https://github.com/Hexaoxide/Carbon/releases/tag/v3.0.0-beta.39, GPL-3.0): EssentialsXChat cannot put hover text on a name. Carbon is maintained by a Paper core developer, smoke-tested on Paper 26.x, and also runs on Velocity. The alternative, HelpChat's ChatChat, has had no commits since April 2025. |
 | License | GPL-3.0 |
 | Caveat on 26.1.2 | None. Folia not supported (release notes). Does **not** support 26.2/26.3 in this release (see above). |
 | Source | https://github.com/EssentialsX/Essentials/releases/tag/2.22.0 |

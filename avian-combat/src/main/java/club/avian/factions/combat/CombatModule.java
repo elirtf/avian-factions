@@ -32,6 +32,9 @@ public final class CombatModule implements AvianModule {
         var config = ctx.config(CombatConfig.SPEC);
         var listener = new CombatListener(config);
         ctx.registerListener(listener);
+        if (Bukkit.getPluginManager().getPlugin("RoseStacker") != null) {
+            ctx.registerListener(new StackedCorpseListener(ctx.plugin(), config, StackedCorpseListener.roseStacker()));
+        }
 
         // /avian reload and a mid-session preset change must reach players already online.
         config.onReload(cfg -> Bukkit.getOnlinePlayers().forEach(listener::applyAttackSpeed));

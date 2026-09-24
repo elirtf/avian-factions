@@ -85,9 +85,10 @@ val pluginStack = listOf(
     PinnedPlugin("EssentialsXSpawn-2.22.0.jar",
         "https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXSpawn-2.22.0.jar",
         "SHA-256", "dd5377c4c921b9b67814209f4f6646ffbb959729003e721ec5e63c47c7c010b8"),
-    PinnedPlugin("EssentialsXChat-2.22.0.jar",
-        "https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXChat-2.22.0.jar",
-        "SHA-256", "e5b0211f98af1eaba712d9294997639a39209db1fc842394a0923820073ec65a"),
+    // Chat formatting with hover tooltips (replaces EssentialsXChat, which cannot do hover).
+    PinnedPlugin("carbonchat-paper-3.0.0-beta.39.jar",
+        "https://github.com/Hexaoxide/Carbon/releases/download/v3.0.0-beta.39/carbonchat-paper-3.0.0-beta.39.jar",
+        "SHA-256", "bc79bba5b67f4ceeca531775970ce6e2922ddff87999e12e463cdffa8e6fe4f5"),
     PinnedPlugin("LuckPerms-Bukkit-5.5.84.jar",
         "https://download.luckperms.net/1671/bukkit/loader/LuckPerms-Bukkit-5.5.84.jar",
         "SHA-256", "ee57b908b415a22a770f0e1f5af1e43de9cb2b81b33715c6c60d0f6d89ee3a58"),
