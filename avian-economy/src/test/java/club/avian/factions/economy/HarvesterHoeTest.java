@@ -185,6 +185,23 @@ class HarvesterHoeTest {
     }
 
     @Test
+    void rightClickOpensTheMenuOnlyForTheRealHoe() {
+        var menu = new HoeMenu(MockBukkit.createMockPlugin(), economy, new Handle<>(cfg));
+        var plain = new ItemStack(Material.NETHERITE_HOE);
+        var click = new org.bukkit.event.player.PlayerInteractEvent(farmer, org.bukkit.event.block.Action.RIGHT_CLICK_AIR,
+                plain, null, org.bukkit.block.BlockFace.SELF, EquipmentSlot.HAND);
+        menu.onRightClick(click);
+        assertEquals(org.bukkit.event.Event.Result.DEFAULT, click.useItemInHand(), "a plain netherite hoe still tills");
+
+        var real = new org.bukkit.event.player.PlayerInteractEvent(farmer, org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK,
+                hoe, world.getBlockAt(0, 63, 0), org.bukkit.block.BlockFace.UP, EquipmentSlot.HAND);
+        menu.onRightClick(real);
+        assertEquals(org.bukkit.event.Event.Result.DENY, real.useItemInHand(), "the Harvester Hoe opens /hoe instead of tilling");
+        assertEquals(45, farmer.getOpenInventory().getTopInventory().getSize());
+        assertEquals(Material.NETHERITE_HOE, hoe.getType());
+    }
+
+    @Test
     void anOrdinaryHoeIsJustAHoe() {
         var plain = new ItemStack(Material.DIAMOND_HOE);
         plain.editMeta(meta -> meta.itemName(net.kyori.adventure.text.Component.text("Harvester Hoe")));

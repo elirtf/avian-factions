@@ -53,7 +53,7 @@ final class HarvesterHoe {
 
     /** A new level-0 hoe with its own id. */
     static ItemStack create(HoeConfig cfg) {
-        var item = new ItemStack(Material.DIAMOND_HOE);
+        var item = new ItemStack(Material.NETHERITE_HOE);
         item.editPersistentDataContainer(pdc -> pdc.set(ID, PersistentDataType.STRING, UUID.randomUUID().toString()));
         item.editMeta(meta -> {
             meta.setUnbreakable(true);

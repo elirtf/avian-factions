@@ -11,9 +11,13 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
@@ -93,9 +97,11 @@ final class HoeMenu implements Listener {
     private void render(Inventory inv, Player player) {
         inv.clear();
         frame(inv);
-        var hand = player.getInventory().getItemInMainHand();
+        var held = player.getInventory().getItemInMainHand();
         var cfg = config.get();
-        if (HarvesterHoe.is(hand)) {
+        if (HarvesterHoe.is(held)) {
+            // early hoes were diamond
+            var hand = held.getType() == Material.NETHERITE_HOE ? held : held.withType(Material.NETHERITE_HOE);
             HarvesterHoe.refreshLore(hand, cfg);   // older hoes pick up the current look
             player.getInventory().setItemInMainHand(hand);
             var preview = hand.clone();
@@ -235,6 +241,18 @@ final class HoeMenu implements Listener {
         } else if (holding && ICON_SLOTS.containsKey(slot - 9)) {
             upgrade(player, ICON_SLOTS.get(slot - 9));
         }
+    }
+
+    /** Right-clicking the Harvester Hoe (only the real one, found by its id) opens this menu. */
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onRightClick(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND
+                || (event.getAction() != Action.RIGHT_CLICK_AIR && event.getAction() != Action.RIGHT_CLICK_BLOCK)
+                || !HarvesterHoe.is(event.getItem())) {
+            return;
+        }
+        event.setCancelled(true);   // no tilling: the hoe is for cane
+        open(event.getPlayer());
     }
 
     @EventHandler
