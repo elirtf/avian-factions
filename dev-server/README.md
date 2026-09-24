@@ -13,6 +13,8 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/FactionsUUID/config/translations.conf` | Role names: Leader, Co-Leader, Officer, Member, Recruit |
 | `plugins/RoseStacker/config.yml` | Only spawners stack (block stacking off); spawners are raidable: TNT drops 75% as items, destroys the rest |
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
+| `server.properties` | `white-list=true`, `enforce-whitelist=true`: port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
+| `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"`, then copy `run/whitelist.json` back here |
 
 Credentials here are the local dev ones from `.env.example`. A real deployment supplies its own.
 
