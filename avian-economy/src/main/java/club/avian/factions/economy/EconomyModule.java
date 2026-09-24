@@ -35,7 +35,7 @@ public final class EconomyModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(EconomyConfig.SPEC);
+        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC);
     }
 
     @Override
@@ -62,6 +62,14 @@ public final class EconomyModule implements AvianModule {
         ctx.registerListener(new SugarCaneTokens(economy, config,
                 () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
         ctx.registerListener(new VillagerGolemGuard(config));
+
+        // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
+        var hoe = ctx.config(HoeConfig.SPEC);
+        ctx.registerListener(new HoeHarvest(economy, sellValues, hoe, config,
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
+        var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
+        ctx.registerListener(hoeMenu);
+        ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
 
         if (config.get().provideVault() && Bukkit.getPluginManager().getPlugin("Vault") != null) {
             var bridge = new VaultEconomyBridge(economy, "Avian");

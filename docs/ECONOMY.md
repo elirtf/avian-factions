@@ -85,6 +85,31 @@ Only these 14 are sold. Villagers can no longer summon iron golems (`economy.con
 Buying gear is a convenience premium: mining diamonds and crafting a pickaxe still costs three
 diamonds.
 
+## The Harvester Hoe
+
+The signature farming tool (spec §31, `hoe.conf`). Buy it for **$25,000** from `/hoe`, then hold it
+and run `/hoe` to upgrade it with tokens. Breaking sugar cane with it takes every block above the
+root, so nothing needs replanting. The cane sells on the spot at `/shop` prices, and each grown
+block rolls for tokens just like hand-harvesting.
+
+| Upgrade | Per level | Levels | Token costs |
+|---|---|---|---|
+| Harvest radius | one more ring of columns (3x3, then 5x5) | 2 | 250, 1,000 |
+| Token boost | +25 % token chance | 5 | 100, 250, 500, 1,000, 2,000 |
+| Money multiplier | +5 % sell price | 5 | 150, 400, 800, 1,500, 3,000 |
+| Random drops | turns drops on; each level multiplies their chance | 3 | 200, 600, 1,500 |
+
+A fully upgraded hoe (15,750 tokens in all) harvests 25 columns a swing at 1.25× price, with
+double the token chance. Random drops are a config list of chance → tokens and/or a console
+command, so crate keys plug in with no code once crates exist: for example
+`{ chance=0.0005, command="crazycrates give virtual feather 1 {player}", message="a Feather Crate key" }`.
+The one drop today is 25 bonus tokens at 0.2 % per grown block.
+
+The hoe is identified by its item data, not its name, and its levels are stored on the item, so it
+keeps them when traded or stored. Neighbouring columns are only harvested where the player could
+break them (claims, WorldGuard). Admins can give one with `/hoe give <player>`
+(`avian.hoe.admin`).
+
 ## PvP consumables
 
 Cooldowns in `combat.conf`:
