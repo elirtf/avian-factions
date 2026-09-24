@@ -1,0 +1,96 @@
+pages:
+  page1:
+    items:
+      wooden_sword:
+        material: WOODEN_SWORD
+        buy: 100
+        sell: -1
+      stone_sword:
+        material: STONE_SWORD
+        buy: 250
+        sell: -1
+      copper_sword:
+        material: COPPER_SWORD
+        buy: 500
+        sell: -1
+      iron_sword:
+        material: IRON_SWORD
+        buy: 2500
+        sell: -1
+      golden_sword:
+        material: GOLDEN_SWORD
+        buy: 1500
+        sell: -1
+      diamond_sword:
+        material: DIAMOND_SWORD
+        buy: 15000
+        sell: -1
+      netherite_sword:
+        material: NETHERITE_SWORD
+        buy: 60000
+        sell: -1
+      wooden_spear:
+        material: WOODEN_SPEAR
+        buy: 75
+        sell: -1
+      stone_spear:
+        material: STONE_SPEAR
+        buy: 188
+        sell: -1
+      copper_spear:
+        material: COPPER_SPEAR
+        buy: 375
+        sell: -1
+      iron_spear:
+        material: IRON_SPEAR
+        buy: 1875
+        sell: -1
+      golden_spear:
+        material: GOLDEN_SPEAR
+        buy: 1125
+        sell: -1
+      diamond_spear:
+        material: DIAMOND_SPEAR
+        buy: 11250
+        sell: -1
+      netherite_spear:
+        material: NETHERITE_SPEAR
+        buy: 45000
+        sell: -1
+      arrow:
+        material: ARROW
+        buy: 8
+        sell: 2
+        stack-size: 16
+        slot: 38
+      spectral_arrow:
+        material: SPECTRAL_ARROW
+        buy: 12
+        sell: -1
+        stack-size: 8
+        slot: 39
+      bow:
+        material: BOW
+        buy: 500
+        sell: -1
+        slot: 40
+      crossbow:
+        material: CROSSBOW
+        buy: 750
+        sell: -1
+        slot: 41
+      mace:
+        material: MACE
+        buy: 100000
+        sell: -1
+        slot: 42
+      trident:
+        material: TRIDENT
+        buy: 25000
+        sell: -1
+        slot: 43
+      shield:
+        material: SHIELD
+        buy: 500
+        sell: -1
+        slot: 44

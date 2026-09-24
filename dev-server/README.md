@@ -21,7 +21,9 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/CarbonChat/channels/global.conf` | The chat line: name, rank tag, a dim ➜, the message. Hovering the name shows rank, balance, tokens, gems and faction; clicking it starts a `/msg`. `%avian_*%` placeholders come from our plugin (`AvianPlaceholders`) |
 | `plugins/CarbonChat/config.conf` | `use-carbon-nicknames=false`: nicknames stay with EssentialsX `/nick` (otherwise Carbon clears them on join). Storage is Carbon's default JSON (only ignores and channel choices) |
 | `plugins/CarbonChat/command-settings.conf` | Carbon's `/nick` is off so EssentialsX's answers. Carbon owns `/msg`, `/r` and `/ignore` |
-| `plugins/AvianFactions/combat.conf` | `hit-delay-ticks=16` (faster PvP combos); `clear-stacked-mob-corpses=true` (a mob killed out of a stack vanishes at once so the next hit on the stack lands) |
+| `plugins/AvianFactions/combat.conf` | `hit-delay-ticks=16` (faster PvP combos); `clear-stacked-mob-corpses=true` (a mob killed out of a stack vanishes at once so the next hit on the stack lands) ; gapple, notch apple and totem cooldowns (docs/ECONOMY.md) |
+| `plugins/AvianFactions/economy.conf` | Sugar cane tokens (2 % per grown block harvested by hand), villagers cannot summon iron golems, fallback sell values |
+| `plugins/AvianFactions/ftop.conf` | Spawner and block values equal to their /shop prices |
 
 Credentials here are the local dev ones from `.env.example`. A real deployment supplies its own.
 
@@ -29,9 +31,7 @@ The 5,000-block world border is world state, not config: it lives in `run/world/
 `worldborder set 5000` on the console. A fresh world needs that command once (or Chunky's
 `/chunky worldborder`); the README's dev-loop section says so.
 
-`plugins/EconomyShopGUI/config.yml` — EconomyShopGUI owns sell prices when installed (see
-`ShopSellValues`); this tracks the settings we changed from its defaults. Its `/shops` and
-`/sections` directories are left at their defaults and are not tracked.
+`plugins/EconomyShopGUI/` — EconomyShopGUI owns sell prices when installed (see `ShopSellValues`). `config.yml` holds the settings we changed; `shops/` is the whole Avian price sheet (sell list, gear by tier, spawner ladder) and `sections/Magic/potions.yml` turns the potion shop off. Numbers and reasoning: `docs/ECONOMY.md`.
 
 ## Ranks
 

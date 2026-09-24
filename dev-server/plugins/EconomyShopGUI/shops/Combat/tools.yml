@@ -1,0 +1,115 @@
+pages:
+  page1:
+    items:
+      wooden_pickaxe:
+        material: WOODEN_PICKAXE
+        buy: 100
+        sell: -1
+      stone_pickaxe:
+        material: STONE_PICKAXE
+        buy: 250
+        sell: -1
+      copper_pickaxe:
+        material: COPPER_PICKAXE
+        buy: 500
+        sell: -1
+      iron_pickaxe:
+        material: IRON_PICKAXE
+        buy: 2500
+        sell: -1
+      golden_pickaxe:
+        material: GOLDEN_PICKAXE
+        buy: 1500
+        sell: -1
+      diamond_pickaxe:
+        material: DIAMOND_PICKAXE
+        buy: 15000
+        sell: -1
+      netherite_pickaxe:
+        material: NETHERITE_PICKAXE
+        buy: 60000
+        sell: -1
+      wooden_axe:
+        material: WOODEN_AXE
+        buy: 100
+        sell: -1
+      stone_axe:
+        material: STONE_AXE
+        buy: 250
+        sell: -1
+      copper_axe:
+        material: COPPER_AXE
+        buy: 500
+        sell: -1
+      iron_axe:
+        material: IRON_AXE
+        buy: 2500
+        sell: -1
+      golden_axe:
+        material: GOLDEN_AXE
+        buy: 1500
+        sell: -1
+      diamond_axe:
+        material: DIAMOND_AXE
+        buy: 15000
+        sell: -1
+      netherite_axe:
+        material: NETHERITE_AXE
+        buy: 60000
+        sell: -1
+      wooden_shovel:
+        material: WOODEN_SHOVEL
+        buy: 50
+        sell: -1
+      stone_shovel:
+        material: STONE_SHOVEL
+        buy: 125
+        sell: -1
+      copper_shovel:
+        material: COPPER_SHOVEL
+        buy: 250
+        sell: -1
+      iron_shovel:
+        material: IRON_SHOVEL
+        buy: 1250
+        sell: -1
+      golden_shovel:
+        material: GOLDEN_SHOVEL
+        buy: 750
+        sell: -1
+      diamond_shovel:
+        material: DIAMOND_SHOVEL
+        buy: 7500
+        sell: -1
+      netherite_shovel:
+        material: NETHERITE_SHOVEL
+        buy: 30000
+        sell: -1
+      wooden_hoe:
+        material: WOODEN_HOE
+        buy: 50
+        sell: -1
+      stone_hoe:
+        material: STONE_HOE
+        buy: 125
+        sell: -1
+      copper_hoe:
+        material: COPPER_HOE
+        buy: 250
+        sell: -1
+      iron_hoe:
+        material: IRON_HOE
+        buy: 1250
+        sell: -1
+      golden_hoe:
+        material: GOLDEN_HOE
+        buy: 750
+        sell: -1
+      diamond_hoe:
+        material: DIAMOND_HOE
+        buy: 7500
+        sell: -1
+      netherite_hoe:
+        material: NETHERITE_HOE
+        buy: 30000
+        sell: -1

@@ -1,0 +1,128 @@
+pages:
+  page1:
+    items:
+      cookie:
+        material: COOKIE
+        buy: 34
+        sell: -1
+        stack-size: 16
+      bread:
+        material: BREAD
+        buy: 252
+        sell: -1
+        stack-size: 16
+      baked_potato:
+        material: BAKED_POTATO
+        buy: 84
+        sell: -1
+        stack-size: 16
+      cooked_beef:
+        material: COOKED_BEEF
+        buy: 51
+        sell: 2
+        stack-size: 8
+      cooked_mutton:
+        material: COOKED_MUTTON
+        buy: 51
+        sell: 2
+        stack-size: 8
+      cooked_porkchop:
+        material: COOKED_PORKCHOP
+        buy: 51
+        sell: 2
+        stack-size: 8
+      cooked_chicken:
+        material: COOKED_CHICKEN
+        buy: 51
+        sell: 2
+        stack-size: 8
+      cooked_cod:
+        material: COOKED_COD
+        buy: 51
+        sell: -1
+        stack-size: 8
+      cooked_salmon:
+        material: COOKED_SALMON
+        buy: 51
+        sell: -1
+        stack-size: 8
+      cooked_rabbit:
+        material: COOKED_RABBIT
+        buy: 26
+        sell: 2
+        stack-size: 4
+      apple:
+        material: APPLE
+        buy: 40
+        sell: -1
+        stack-size: 4
+      pumpkin_pie:
+        material: PUMPKIN_PIE
+        buy: 43
+        sell: -1
+        stack-size: 4
+      golden_carrot:
+        material: GOLDEN_CARROT
+        buy: 49
+        sell: -1
+        stack-size: 4
+      golden_apple:
+        material: GOLDEN_APPLE
+        buy: -1
+        sell: -1
+      glistering_melon_slice:
+        material: GLISTERING_MELON_SLICE
+        buy: 8
+        sell: -1
+      honey_bottle:
+        material: HONEY_BOTTLE
+        buy: 8
+        sell: -1
+      beef:
+        material: BEEF
+        buy: 6
+        sell: 1
+      mutton:
+        material: MUTTON
+        buy: 6
+        sell: 1
+      chicken:
+        material: CHICKEN
+        buy: 6
+        sell: 1
+      porkchop:
+        material: PORKCHOP
+        buy: 6
+        sell: 1
+      rabbit:
+        material: RABBIT
+        buy: 6
+        sell: 1
+      cod:
+        material: COD
+        buy: 6
+        sell: -1
+      salmon:
+        material: SALMON
+        buy: 6
+        sell: -1
+      melon_slice:
+        material: MELON_SLICE
+        buy: 4
+        sell: 1
+      beetroot_soup:
+        material: BEETROOT_SOUP
+        buy: 39
+        sell: -1
+      mushroom_stew:
+        material: MUSHROOM_STEW
+        buy: 6
+        sell: -1
+      rabbit_stew:
+        material: RABBIT_STEW
+        buy: 21
+        sell: -1
+      cake:
+        material: CAKE
+        buy: 80
+        sell: -1

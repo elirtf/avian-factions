@@ -1,0 +1,165 @@
+pages:
+  page1:
+    items:
+      chest:
+        material: CHEST
+        buy: 10
+        sell: -1
+      barrel:
+        material: BARREL
+        buy: 9
+        sell: -1
+      copper_chest:
+        material: COPPER_CHEST
+        buy: 20
+        sell: -1
+      ender_chest:
+        material: ENDER_CHEST
+        buy: 274
+        sell: -1
+      decorated_pot:
+        material: DECORATED_POT
+        buy: 93
+        sell: -1
+      chiseled_bookshelf:
+        material: CHISELED_BOOKSHELF
+        buy: 9
+        sell: -1
+      cauldron:
+        material: CAULDRON
+        buy: 29
+        sell: -1
+      bundle:
+        material: BUNDLE
+        buy: 252
+        sell: -1
+      white_bundle:
+        material: WHITE_BUNDLE
+        buy: 254
+        sell: -1
+      light_gray_bundle:
+        material: LIGHT_GRAY_BUNDLE
+        buy: 253
+        sell: -1
+      gray_bundle:
+        material: GRAY_BUNDLE
+        buy: 256
+        sell: -1
+      black_bundle:
+        material: BLACK_BUNDLE
+        buy: 257
+        sell: -1
+      brown_bundle:
+        material: BROWN_BUNDLE
+        buy: 254
+        sell: -1
+      red_bundle:
+        material: RED_BUNDLE
+        buy: 253
+        sell: -1
+      orange_bundle:
+        material: ORANGE_BUNDLE
+        buy: 253
+        sell: -1
+      yellow_bundle:
+        material: YELLOW_BUNDLE
+        buy: 253
+        sell: -1
+      lime_bundle:
+        material: LIME_BUNDLE
+        buy: 253
+        sell: -1
+      green_bundle:
+        material: GREEN_BUNDLE
+        buy: 253
+        sell: -1
+      cyan_bundle:
+        material: CYAN_BUNDLE
+        buy: 253
+        sell: -1
+      light_blue_bundle:
+        material: LIGHT_BLUE_BUNDLE
+        buy: 253
+        sell: -1
+      blue_bundle:
+        material: BLUE_BUNDLE
+        buy: 253
+        sell: -1
+      purple_bundle:
+        material: PURPLE_BUNDLE
+        buy: 253
+        sell: -1
+      magenta_bundle:
+        material: MAGENTA_BUNDLE
+        buy: 253
+        sell: -1
+      pink_bundle:
+        material: PINK_BUNDLE
+        buy: 253
+        sell: -1
+      white_shulker_box:
+        material: WHITE_SHULKER_BOX
+        buy: 522
+        sell: -1
+      light_gray_shulker_box:
+        material: LIGHT_GRAY_SHULKER_BOX
+        buy: 521
+        sell: -1
+      gray_shulker_box:
+        material: GRAY_SHULKER_BOX
+        buy: 524
+        sell: -1
+      black_shulker_box:
+        material: BLACK_SHULKER_BOX
+        buy: 525
+        sell: -1
+  page2:
+    items:
+      brown_shulker_box:
+        material: BROWN_SHULKER_BOX
+        buy: 522
+        sell: -1
+      red_shulker_box:
+        material: RED_SHULKER_BOX
+        buy: 521
+        sell: -1
+      orange_shulker_box:
+        material: ORANGE_SHULKER_BOX
+        buy: 521
+        sell: -1
+      yellow_shulker_box:
+        material: YELLOW_SHULKER_BOX
+        buy: 521
+        sell: -1
+      lime_shulker_box:
+        material: LIME_SHULKER_BOX
+        buy: 521
+        sell: -1
+      green_shulker_box:
+        material: GREEN_SHULKER_BOX
+        buy: 521
+        sell: -1
+      cyan_shulker_box:
+        material: CYAN_SHULKER_BOX
+        buy: 521
+        sell: -1
+      light_blue_shulker_box:
+        material: LIGHT_BLUE_SHULKER_BOX
+        buy: 521
+        sell: -1
+      blue_shulker_box:
+        material: BLUE_SHULKER_BOX
+        buy: 521
+        sell: -1
+      purple_shulker_box:
+        material: PURPLE_SHULKER_BOX
+        buy: 521
+        sell: -1
+      magenta_shulker_box:
+        material: MAGENTA_SHULKER_BOX
+        buy: 521
+        sell: -1
+      pink_shulker_box:
+        material: PINK_SHULKER_BOX
+        buy: 521
+        sell: -1
