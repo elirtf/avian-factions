@@ -47,6 +47,7 @@ class HarvesterHoeTest {
     PlayerMock farmer;
     ItemStack hoe;
     double roll;
+    double xp;
 
     @BeforeEach
     void setUp() {
@@ -54,7 +55,9 @@ class HarvesterHoeTest {
         economy = new EconomyService(new EconomyServiceTest.MemoryRepository(), new VaultEconomyBridgeTest.Handle(), 1);
         cfg = new HoeConfig();
         harvest = new HoeHarvest(economy, PRICES, new Handle<>(cfg), new VaultEconomyBridgeTest.Handle(),
-                () -> roll, Logger.getAnonymousLogger());
+                () -> roll, (p, xp) -> this.xp += xp, Logger.getAnonymousLogger());
+        // Registered, so the protection probe on neighbouring columns gets its verdict.
+        server.getPluginManager().registerEvents(harvest, MockBukkit.createMockPlugin());
         world = server.addSimpleWorld("world");
         farmer = server.addPlayer("Farmer");
         farmer.setGameMode(GameMode.SURVIVAL);
@@ -153,6 +156,15 @@ class HarvesterHoeTest {
         upgrade(Track.RANDOM_DROPS, 1);
         swing(column(5, 5, 2));
         assertEquals(1 + 1 + 25, balance(Currency.TOKENS), "the default drop: 25 bonus tokens");
+    }
+
+    @Test
+    void grownCaneGivesFarmingXpAndCultivationAddsToIt() {
+        swing(column(0, 0, 3));
+        assertEquals(4.0, xp, 1e-9, "two grown blocks at 2 XP");
+        upgrade(Track.CULTIVATION, 5);   // +100 %
+        swing(column(5, 5, 3));
+        assertEquals(4.0 + 8.0, xp, 1e-9);
     }
 
     @Test

@@ -35,12 +35,12 @@ final class HoeMenu implements Listener {
 
     private static final TextColor GOLD = TextColor.color(0xE0B44A);
     private static final TextColor STONE = TextColor.color(0x9E9E9E);
-    private static final Map<Integer, Track> SLOTS = Map.of(10, Track.RADIUS, 12, Track.TOKEN_BOOST,
-            14, Track.MONEY_MULTIPLIER, 16, Track.RANDOM_DROPS);
+    private static final Map<Integer, Track> SLOTS = Map.of(11, Track.RADIUS, 12, Track.TOKEN_BOOST,
+            13, Track.MONEY_MULTIPLIER, 14, Track.RANDOM_DROPS, 15, Track.CULTIVATION);
     private static final int BUY_SLOT = 13;
     private static final Map<Track, Material> ICONS = Map.of(Track.RADIUS, Material.SUGAR_CANE,
             Track.TOKEN_BOOST, Material.SUNFLOWER, Track.MONEY_MULTIPLIER, Material.GOLD_INGOT,
-            Track.RANDOM_DROPS, Material.CHEST);
+            Track.RANDOM_DROPS, Material.CHEST, Track.CULTIVATION, Material.EXPERIENCE_BOTTLE);
 
     private final Plugin plugin;
     private final Economy economy;
@@ -120,6 +120,7 @@ final class HoeMenu implements Listener {
             case TOKEN_BOOST -> "+" + per * level + "% token chance";
             case MONEY_MULTIPLIER -> "+" + per * level + "% sell price";
             case RANDOM_DROPS -> level == 0 ? "No random drops" : level * Math.max(1, per) + "x drop chance";
+            case CULTIVATION -> "+" + per * level + "% farming XP";
         };
     }
 

@@ -54,6 +54,14 @@ public final class HoeConfig {
             message="a Feather Crate key" }""")
     private List<Drop> drops = new ArrayList<>(List.of(new Drop(0.002, 25, "", "25 bonus tokens")));
 
+    @Comment("""
+            AuraSkills farming XP per grown cane block the hoe harvests (AuraSkills gives 2 for a hand
+            break). Placed cane gives none, as in AuraSkills. 0 = no XP from the hoe.""")
+    private double farmingXpPerCane = 2.0;
+
+    @Comment("Cultivation (VanityMC's name): this many percent more farming XP per level.")
+    private Upgrade cultivation = new Upgrade(20, List.of(100L, 250L, 500L, 1_000L, 2_000L));
+
     public long price() {
         return price;
     }
@@ -82,12 +90,22 @@ public final class HoeConfig {
         return drops;
     }
 
+    public double farmingXpPerCane() {
+        return farmingXpPerCane;
+    }
+
+    public Upgrade cultivation() {
+        return cultivation;
+    }
+
     static void validate(HoeConfig cfg, ConfigErrors e) {
         e.check(cfg.price >= 0, "price", "must be >= 0");
+        e.check(cfg.farmingXpPerCane >= 0, "farming-xp-per-cane", "must be >= 0");
         for (var entry : List.of(
                 java.util.Map.entry("radius", cfg.radius), java.util.Map.entry("token-boost", cfg.tokenBoost),
                 java.util.Map.entry("money-multiplier", cfg.moneyMultiplier),
-                java.util.Map.entry("random-drops", cfg.randomDrops))) {
+                java.util.Map.entry("random-drops", cfg.randomDrops),
+                java.util.Map.entry("cultivation", cfg.cultivation))) {
             var u = entry.getValue();
             e.check(u.perLevel >= 0, entry.getKey() + ".per-level", "must be >= 0");
             e.check(u.costs.stream().allMatch(c -> c >= 0), entry.getKey() + ".costs", "must all be >= 0");

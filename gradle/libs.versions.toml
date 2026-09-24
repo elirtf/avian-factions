@@ -3,6 +3,7 @@
 paper-api = "26.1.2.build.74-stable"
 vault = "1.7.1"
 placeholderapi = "2.12.3"
+auraskills = "2.4.0"
 economyshopgui-api = "1.10.1"
 rosestacker = "1.5.42"
 configurate = "4.2.0"
@@ -20,6 +21,8 @@ paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
 vault = { module = "com.github.MilkBowl:VaultAPI", version.ref = "vault" }
 # Same version as the pinned PlaceholderAPI plugin jar (HelpChat's repository).
 placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderapi" }
+# Same version as the pinned AuraSkills plugin jar (Maven Central).
+auraskills-api = { module = "dev.aurelium:auraskills-api-bukkit", version.ref = "auraskills" }
 # API-only artifact (45 KB), versioned on JitPack — unlike the plugin jar, which only exists behind
 # a floating SpigotMC mirror. The plugin itself is still pinned by hash in downloadPlugins.
 economyshopgui-api = { module = "com.github.Gypopo:EconomyShopGUI-API", version.ref = "economyshopgui-api" }

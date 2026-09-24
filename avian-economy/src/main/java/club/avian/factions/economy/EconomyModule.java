@@ -65,8 +65,10 @@ public final class EconomyModule implements AvianModule {
 
         // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
         var hoe = ctx.config(HoeConfig.SPEC);
+        java.util.function.ObjDoubleConsumer<org.bukkit.entity.Player> farmingXp =
+                Bukkit.getPluginManager().getPlugin("AuraSkills") != null ? AuraSkillsXp::addFarmingXp : (p, xp) -> { };
         ctx.registerListener(new HoeHarvest(economy, sellValues, hoe, config,
-                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), farmingXp, ctx.logger()));
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
