@@ -151,4 +151,7 @@ player-sessions: true
 username-changes: true
 
 # Logs changes made via the plugin "WorldEdit" if it's in use on your server.
-worldedit: true
+# AVIAN: off. With it on, CoreProtect logs every block of a //paste, and pasting the spawn
+# schematic queued millions of entries in memory and froze the server. Turn back on if you want
+# WorldEdit edits to be rollback-able, but paste big schematics with it off.
+worldedit: false
