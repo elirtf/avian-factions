@@ -38,10 +38,11 @@ hay, slime blocks, melons) are never cheaper to buy than what they turn into.
 Emeralds and copper are not sellable: villager trading and copper scraping would otherwise be free
 money.
 
-**Sugar cane in numbers.** A cane block grows roughly every 18 minutes, so a column yields about
-3.3 cane an hour. At $16 each ($1,024 a stack), an early 200-column farm makes about $10,000 an
-hour and a 5,000-column auto-farm about $260,000: early on, cane out-earns any spawner a new
-faction can afford, and it stays competitive at scale. Hand-harvesting also pays **tokens**: a 2 % chance of 1 token per grown
+**Sugar cane in numbers.** Farm crops grow at 120 % of vanilla speed (`spigot.yml` growth
+modifiers; saplings, vines and mushrooms are unchanged), so a cane column yields about 4 cane an
+hour. At $16 each ($1,024 a stack), an early 200-column farm makes about $12,500 an hour and a
+5,000-column auto-farm about $320,000: early on, cane out-earns any spawner a new faction can
+afford, and it stays competitive at scale. Hand-harvesting also pays **tokens**: a 2 % chance of 1 token per grown
 block (`economy.conf`: `sugar-cane-token-chance`, `sugar-cane-tokens`). That is about 20–40
 tokens an hour of active farming. Cane the player placed never pays tokens, so place-and-break
 earns nothing, and pistons and observers earn money but no tokens.
