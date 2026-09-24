@@ -174,4 +174,57 @@ class VaultEconomyBridgeTest {
         bridge.depositPlayer(server.getOfflinePlayer(alice), 75);
         assertEquals(75, bridge.getBalance("Alice"), "both halves of the Vault API see one balance");
     }
+
+    // --- whole-dollar rounding: charges round up, payouts round down --------------------------------
+
+    @Test
+    void aSubDollarChargeIsNeverFree() {
+        var buyer = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(buyer, 10);
+        var response = bridge.withdrawPlayer(buyer, 0.4);   // EconomyShopGUI's default sugar cane price
+        assertEquals(EconomyResponse.ResponseType.SUCCESS, response.type);
+        assertEquals(9, bridge.getBalance(buyer), "a $0.40 item costs $1, never $0");
+    }
+
+    @Test
+    void aSubDollarChargeFailsWhenThePlayerHasNothing() {
+        var broke = factionBank();
+        assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.withdrawPlayer(broke, 0.4).type,
+                "rounding must not let a broke player buy something for free");
+    }
+
+    @Test
+    void fractionalChargesRoundUp() {
+        var buyer = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(buyer, 100);
+        bridge.withdrawPlayer(buyer, 25.01);
+        assertEquals(74, bridge.getBalance(buyer), "$25.01 charges $26");
+    }
+
+    @Test
+    void fractionalPayoutsRoundDown() {
+        var seller = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(seller, 7.68);   // 64 sugar cane at $0.12
+        assertEquals(7, bridge.getBalance(seller), "$7.68 pays $7, never $8");
+        bridge.depositPlayer(seller, 0.99);
+        assertEquals(7, bridge.getBalance(seller), "under a dollar pays nothing rather than rounding up");
+    }
+
+    @Test
+    void negativeAndNotANumberAmountsAreRefused() {
+        var p = server.getOfflinePlayer(alice);
+        bridge.depositPlayer(p, 50);
+        for (double bad : new double[] {-5, Double.NaN}) {
+            assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.withdrawPlayer(p, bad).type, "withdraw " + bad);
+            assertEquals(EconomyResponse.ResponseType.FAILURE, bridge.depositPlayer(p, bad).type, "deposit " + bad);
+        }
+        assertEquals(50, bridge.getBalance(p));
+    }
+
+    @Test
+    void theByNamePathUsesTheSameRounding() {
+        bridge.depositPlayer("Alice", 10);
+        bridge.withdrawPlayer("Alice", 0.4);
+        assertEquals(9, bridge.getBalance("Alice"));
+    }
 }

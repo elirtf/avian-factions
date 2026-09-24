@@ -114,10 +114,13 @@ public final class VaultEconomyBridge extends AbstractEconomy {
 
     @Override
     public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
-        if (toWhole(amount) == 0) {
+        if (!(amount >= 0)) {
+            return failure(getBalance(player), "Invalid amount: " + amount);   // negative or NaN
+        }
+        if (amount == 0) {
             return noChange(player);   // plugins zero accounts this way; nothing to write
         }
-        return await(economy.withdraw(player.getUniqueId(), Currency.MONEY, toWhole(amount), "vault"),
+        return await(economy.withdraw(player.getUniqueId(), Currency.MONEY, chargeOf(amount), "vault"),
                 amount, player.getUniqueId());
     }
 
@@ -128,10 +131,14 @@ public final class VaultEconomyBridge extends AbstractEconomy {
 
     @Override
     public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
-        if (toWhole(amount) == 0) {
-            return noChange(player);
+        if (!(amount >= 0)) {
+            return failure(getBalance(player), "Invalid amount: " + amount);
         }
-        return await(economy.deposit(player.getUniqueId(), Currency.MONEY, toWhole(amount), "vault"),
+        long payout = payoutOf(amount);
+        if (payout == 0) {
+            return noChange(player);   // nothing to pay: zero, or under a dollar
+        }
+        return await(economy.deposit(player.getUniqueId(), Currency.MONEY, payout, "vault"),
                 amount, player.getUniqueId());
     }
 
@@ -189,7 +196,7 @@ public final class VaultEconomyBridge extends AbstractEconomy {
         if (uuid == null) {
             return failure(0, "Unknown player " + playerName);
         }
-        return await(economy.withdraw(uuid, Currency.MONEY, toWhole(amount), "vault"), amount, uuid);
+        return withdrawPlayer(Bukkit.getOfflinePlayer(uuid), amount);   // one rounding rule for both halves
     }
 
     @Override
@@ -203,7 +210,7 @@ public final class VaultEconomyBridge extends AbstractEconomy {
         if (uuid == null) {
             return failure(0, "Unknown player " + playerName);
         }
-        return await(economy.deposit(uuid, Currency.MONEY, toWhole(amount), "vault"), amount, uuid);
+        return depositPlayer(Bukkit.getOfflinePlayer(uuid), amount);
     }
 
     @Override
@@ -270,9 +277,22 @@ public final class VaultEconomyBridge extends AbstractEconomy {
 
     // --- helpers ------------------------------------------------------------------------------
 
-    /** Vault speaks doubles; our money is whole dollars, so rounding is the whole conversion. */
+    /** For display only. Money that moves goes through chargeOf / payoutOf. */
     private static long toWhole(double amount) {
         return Math.round(amount);
+    }
+
+    /**
+     * Vault speaks doubles; our money is whole dollars. A charge rounds UP, so a fractional price can
+     * never round down to free: plain rounding made a $0.40 shop item cost $0.
+     */
+    static long chargeOf(double amount) {
+        return (long) Math.ceil(amount);
+    }
+
+    /** A payout rounds DOWN, so rounding can never create money. */
+    static long payoutOf(double amount) {
+        return (long) Math.floor(amount);
     }
 
     private static double toDouble(long minor) {
