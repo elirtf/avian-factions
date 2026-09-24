@@ -3,7 +3,6 @@ package club.avian.factions.combat;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.persistence.PersistentDataType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,17 +14,18 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** A spawner mob killed by a player loses its body a tick later; anything else keeps it. */
-class SpawnerCorpseListenerTest {
+/** A stacked mob killed by a player loses its body a tick later; anything else keeps it. */
+class StackedCorpseListenerTest {
 
     ServerMock server;
-    SpawnerCorpseListener listener;
+    StackedCorpseListener listener;
+    java.util.Set<org.bukkit.entity.Entity> stacked = new java.util.HashSet<>();
 
     @BeforeEach
     void setUp() {
         server = MockBukkit.mock();
         var plugin = MockBukkit.createMockPlugin();
-        listener = new SpawnerCorpseListener(plugin, new HitDelayTest.Handle());
+        listener = new StackedCorpseListener(plugin, new HitDelayTest.Handle(), e -> stacked.contains(e));
     }
 
     @AfterEach
@@ -33,11 +33,11 @@ class SpawnerCorpseListenerTest {
         MockBukkit.unmock();
     }
 
-    private LivingEntity blaze(boolean fromSpawner) {
+    private LivingEntity blaze(boolean inAStack) {
         var world = server.addSimpleWorld("world");
         var blaze = (LivingEntity) world.spawnEntity(world.getSpawnLocation(), EntityType.BLAZE);
-        if (fromSpawner) {
-            blaze.getPersistentDataContainer().set(SpawnerCorpseListener.SPAWNER_SPAWNED, PersistentDataType.BYTE, (byte) 1);
+        if (inAStack) {
+            stacked.add(blaze);
         }
         return blaze;
     }
@@ -52,21 +52,21 @@ class SpawnerCorpseListenerTest {
     }
 
     @Test
-    void aSpawnerMobKilledByAPlayerIsRemovedAtOnce() {
+    void aStackedMobKilledByAPlayerIsRemovedAtOnce() {
         var blaze = blaze(true);
         kill(blaze, true);
         assertFalse(blaze.isValid(), "its body would have blocked the next hit on the stack");
     }
 
     @Test
-    void aNaturalMobKeepsItsDeathAnimation() {
+    void aLoneMobKeepsItsDeathAnimation() {
         var blaze = blaze(false);
         kill(blaze, true);
         assertTrue(blaze.isValid());
     }
 
     @Test
-    void aSpawnerMobThatDiedWithoutAPlayerIsLeftAlone() {
+    void aStackedMobThatDiedWithoutAPlayerIsLeftAlone() {
         var blaze = blaze(true);
         kill(blaze, false);
         assertTrue(blaze.isValid());

@@ -50,11 +50,11 @@ public final class CombatConfig {
     private int hitDelayTicks = 0;
 
     @Comment("""
-            Remove a spawner mob's body the moment a player kills it, instead of after its one-second
-            death animation. Stacked spawner mobs die in one hit and the next one appears in the same
-            spot, so the dying body soaked up clicks meant for it and made grinding feel slow.
-            Applies only to mobs RoseStacker tagged as spawner-spawned; drops and XP are unchanged.""")
-    private boolean clearSpawnerMobCorpses = true;
+            Remove a stacked mob's body the moment a player kills it, instead of after its one-second
+            death animation. The next mob of the stack appears in the same spot, so the dying body
+            soaked up clicks meant for it and made grinding feel slow. Only when more of the stack
+            remain (RoseStacker); a lone mob still plays its death. Drops and XP are unchanged.""")
+    private boolean clearStackedMobCorpses = true;
 
     private Knockback knockback = new Knockback();
 
@@ -78,8 +78,8 @@ public final class CombatConfig {
         return hitDelayTicks;
     }
 
-    public boolean clearSpawnerMobCorpses() {
-        return clearSpawnerMobCorpses;
+    public boolean clearStackedMobCorpses() {
+        return clearStackedMobCorpses;
     }
 
     /** The knockback values in effect: the preset's, unless the preset is {@code CUSTOM}. */
