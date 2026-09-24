@@ -48,6 +48,9 @@ lp group hatchling permission set carbon.ping_sounds true
 lp group hatchling permission set carbon.ignore true
 lp group hatchling permission set carbon.ignore.unignore true
 lp group hatchling permission set carbon.itemlink true
+# Kits: the weekly Harvester Hoe (/kit harvester, dev-server/plugins/Essentials/kits.yml).
+lp group hatchling permission set essentials.kit true
+lp group hatchling permission set essentials.kits.harvester true
 lp group hatchling permission set essentials.help true
 lp group hatchling permission set essentials.rules true
 lp group hatchling permission set essentials.balance true
