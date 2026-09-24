@@ -269,12 +269,17 @@ cmd_backup() {
         || { $live && send "save-on"; rm -rf "$work"; fail "Database dump failed; nothing was written."; }
 
     say "Archiving the world and plugin data…"
+    # Extra worlds and the server's player lists, whichever exist.
+    local extras=() f
+    for f in run/world_* run/ops.json run/whitelist.json run/banned-players.json run/banned-ips.json; do
+        [[ -e "$f" ]] && extras+=("$f")
+    done
     # Jars come back from downloadPlugins, libs/ from the plugins themselves, logs are not state.
     tar -czf "$archive" \
         --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
         --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
         -C . run/world run/plugins \
-        $(cd run && ls -d world_* ops.json whitelist.json banned-players.json banned-ips.json 2>/dev/null | sed 's|^|run/|') \
+        "${extras[@]}" \
         -C "$work" database.sql \
         || { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed; the partial file is at $archive"; }
 
