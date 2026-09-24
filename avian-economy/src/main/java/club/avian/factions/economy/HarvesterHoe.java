@@ -25,7 +25,8 @@ final class HarvesterHoe {
         RADIUS("radius", "Harvest radius"),
         TOKEN_BOOST("token_boost", "Token boost"),
         MONEY_MULTIPLIER("money_multiplier", "Money multiplier"),
-        RANDOM_DROPS("random_drops", "Random drops");
+        RANDOM_DROPS("random_drops", "Random drops"),
+        CULTIVATION("cultivation", "Cultivation");
 
         final NamespacedKey key;
         final String label;
@@ -41,6 +42,7 @@ final class HarvesterHoe {
                 case TOKEN_BOOST -> cfg.tokenBoost();
                 case MONEY_MULTIPLIER -> cfg.moneyMultiplier();
                 case RANDOM_DROPS -> cfg.randomDrops();
+                case CULTIVATION -> cfg.cultivation();
             };
         }
     }

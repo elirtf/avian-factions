@@ -189,6 +189,9 @@ lp group admin meta setsuffix 220 "<#3DDC84>ᴀᴅᴍɪɴ"
 lp group admin parent add mod
 lp group admin permission set essentials.gamemode true
 lp group admin permission set essentials.give true
+# /avian tokens|gems|money give|take|set and /avian balance (#26). Console always can.
+lp group admin permission set avian.admin.economy true
+lp group admin permission set avian.hoe.admin true
 lp group admin permission set worldedit.* true
 lp group admin permission set worldguard.* true
 # FactionsUUID's mod kit adds /fa power, grace (raid windows by hand), disband any; and F-Top recalc.

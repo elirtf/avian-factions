@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
+import java.util.function.ObjDoubleConsumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,15 +48,20 @@ final class HoeHarvest implements Listener {
     private final ConfigHandle<HoeConfig> hoe;
     private final ConfigHandle<EconomyConfig> economyConfig;
     private final DoubleSupplier random;
+    private final ObjDoubleConsumer<Player> farmingXp;
     private final Logger log;
+    /** Whether the last probe was allowed by every other plugin; read right after the probe. */
+    private boolean probeAllowed;
 
     HoeHarvest(Economy economy, SellValues sellValues, ConfigHandle<HoeConfig> hoe,
-               ConfigHandle<EconomyConfig> economyConfig, DoubleSupplier random, Logger log) {
+               ConfigHandle<EconomyConfig> economyConfig, DoubleSupplier random,
+               ObjDoubleConsumer<Player> farmingXp, Logger log) {
         this.economy = economy;
         this.sellValues = sellValues;
         this.hoe = hoe;
         this.economyConfig = economyConfig;
         this.random = random;
+        this.farmingXp = farmingXp;
         this.log = log;
     }
 
@@ -128,17 +134,30 @@ final class HoeHarvest implements Listener {
         return new Harvest(above.size(), grown);
     }
 
-    private static boolean mayBreak(Player player, Block block) {
+    private boolean mayBreak(Player player, Block block) {
         if (block.getType() != Material.SUGAR_CANE) {
             return false;
         }
         PROBING.set(true);
+        probeAllowed = false;
         try {
-            var probe = new BlockBreakEvent(block, player);
-            Bukkit.getPluginManager().callEvent(probe);
-            return !probe.isCancelled();
+            Bukkit.getPluginManager().callEvent(new BlockBreakEvent(block, player));
+            return probeAllowed;
         } finally {
             PROBING.set(false);
+        }
+    }
+
+    /**
+     * Ends a probe once every protection plugin has had its say: note the verdict, then cancel it so
+     * MONITOR listeners (skills XP, block logging) never treat the probe as a real break. The hoe pays
+     * XP for the whole harvest itself.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onProbe(BlockBreakEvent event) {
+        if (PROBING.get()) {
+            probeAllowed = !event.isCancelled();
+            event.setCancelled(true);
         }
     }
 
@@ -185,6 +204,13 @@ final class HoeHarvest implements Listener {
                 }
             }
         }
+        // Farming XP: what a hand harvest would give, plus Cultivation.
+        double xp = h.grown() * cfg.farmingXpPerCane()
+                * (1 + cfg.cultivation().perLevel() / 100.0 * HarvesterHoe.level(tool, Track.CULTIVATION));
+        if (xp > 0) {
+            farmingXp.accept(player, xp);
+        }
+
         if (tokens > 0) {
             deposit(player, Currency.TOKENS, tokens, "hoe:sugar_cane");
             summary.add("+" + new DecimalFormat("#,##0").format(tokens) + (tokens == 1 ? " token" : " tokens"));
