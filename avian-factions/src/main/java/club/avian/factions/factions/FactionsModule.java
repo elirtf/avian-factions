@@ -53,6 +53,7 @@ public final class FactionsModule implements AvianModule {
         }
         var config = ctx.config(FactionsConfig.SPEC);
         ctx.registerListener(new BasePowerListener(config));
+        ctx.registerListener(new SimpleCommands());
         UpgradeSwitch.apply(config.get().enabledUpgrades(), ctx.logger());
         config.onReload(c -> UpgradeSwitch.apply(c.enabledUpgrades(), ctx.logger()));
         ctx.logger().info("Hooked " + FACTIONS_PLUGIN + ": new factions start with "
