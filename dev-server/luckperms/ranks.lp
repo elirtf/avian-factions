@@ -171,7 +171,7 @@ lp group admin permission set avian.ftop.admin true
 lp creategroup owner
 lp group owner setweight 230
 lp group owner meta removeprefix 230
-lp group owner meta setsuffix 230 "&#00E5FF&l ᴏᴡɴᴇʀ"
+lp group owner meta setsuffix 230 " &#FF4FA3&lᴏ&#FF6BB3&lᴡ&#FF87C3&lɴ&#FFA3D3&lᴇ&#FFBFE3&lʀ"
 lp group owner parent add admin
 lp group owner permission set * true
 
