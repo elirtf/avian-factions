@@ -73,6 +73,85 @@ public final class VaultEconomyBridge extends AbstractEconomy {
         return "dollar";
     }
 
+    // --- keyed by OfflinePlayer (UUID) -----------------------------------------------------------
+    //
+    // AbstractEconomy turns these into the by-name methods below, which only know players the server
+    // has seen. FactionsUUID keeps every faction's bank as its own account and asks about it by
+    // OfflinePlayer; the by-name lookup found no such player, reported "no account", and FactionsUUID
+    // then looped (checkStatus -> setBalance -> getBalance -> checkStatus …) into a StackOverflowError.
+    // That crashed /f claim, since claiming charges the bank. Our balances are keyed by UUID anyway,
+    // so answer these directly: every UUID has an account, and a missing row is a balance of zero.
+
+    @Override
+    public boolean hasAccount(OfflinePlayer player) {
+        return true;
+    }
+
+    @Override
+    public boolean hasAccount(OfflinePlayer player, String worldName) {
+        return true;
+    }
+
+    @Override
+    public double getBalance(OfflinePlayer player) {
+        return toDouble(economy.balance(player.getUniqueId(), Currency.MONEY));
+    }
+
+    @Override
+    public double getBalance(OfflinePlayer player, String world) {
+        return getBalance(player);
+    }
+
+    @Override
+    public boolean has(OfflinePlayer player, double amount) {
+        return getBalance(player) >= amount;
+    }
+
+    @Override
+    public boolean has(OfflinePlayer player, String worldName, double amount) {
+        return has(player, amount);
+    }
+
+    @Override
+    public EconomyResponse withdrawPlayer(OfflinePlayer player, double amount) {
+        if (toWhole(amount) == 0) {
+            return noChange(player);   // plugins zero accounts this way; nothing to write
+        }
+        return await(economy.withdraw(player.getUniqueId(), Currency.MONEY, toWhole(amount), "vault"),
+                amount, player.getUniqueId());
+    }
+
+    @Override
+    public EconomyResponse withdrawPlayer(OfflinePlayer player, String worldName, double amount) {
+        return withdrawPlayer(player, amount);
+    }
+
+    @Override
+    public EconomyResponse depositPlayer(OfflinePlayer player, double amount) {
+        if (toWhole(amount) == 0) {
+            return noChange(player);
+        }
+        return await(economy.deposit(player.getUniqueId(), Currency.MONEY, toWhole(amount), "vault"),
+                amount, player.getUniqueId());
+    }
+
+    @Override
+    public EconomyResponse depositPlayer(OfflinePlayer player, String worldName, double amount) {
+        return depositPlayer(player, amount);
+    }
+
+    @Override
+    public boolean createPlayerAccount(OfflinePlayer player) {
+        return true;   // accounts are implicit
+    }
+
+    @Override
+    public boolean createPlayerAccount(OfflinePlayer player, String worldName) {
+        return true;
+    }
+
+    // --- keyed by name (the deprecated half of Vault; still used by some plugins) ---------------
+
     @Override
     public boolean hasAccount(String playerName) {
         return resolve(playerName) != null;
@@ -214,10 +293,18 @@ public final class VaultEconomyBridge extends AbstractEconomy {
                 return new EconomyResponse(amount, balance, EconomyResponse.ResponseType.SUCCESS, null);
             }
             return new EconomyResponse(0, balance, EconomyResponse.ResponseType.FAILURE, result.status().name());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();   // only for a real interruption
+            return failure(toDouble(economy.balance(player, Currency.MONEY)), "interrupted");
         } catch (Exception e) {
-            Thread.currentThread().interrupt();
-            return failure(toDouble(economy.balance(player, Currency.MONEY)), e.getMessage());
+            // Timeout or a failed write. Never interrupt the calling thread for these: Vault is
+            // called on the main server thread, and marking it interrupted breaks unrelated code.
+            return failure(toDouble(economy.balance(player, Currency.MONEY)), String.valueOf(e.getMessage()));
         }
+    }
+
+    private EconomyResponse noChange(OfflinePlayer player) {
+        return new EconomyResponse(0, getBalance(player), EconomyResponse.ResponseType.SUCCESS, null);
     }
 
     private static EconomyResponse failure(double balance, String message) {
