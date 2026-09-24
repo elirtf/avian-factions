@@ -50,7 +50,13 @@ The first time takes a few minutes. After that it's quick.
 | Check what's running | `./dev status` |
 
 `./dev start` waits until the server is ready, then applies the ranks and the 5,000-block world
-border for you. It's safe to repeat every time.
+border for you, but only when `dev-server/luckperms/ranks.lp` or the border changed since last
+time (or the world or database was wiped). `./dev ranks` re-applies them regardless.
+
+If you're in game while they apply, you'll see a burst of `[LP] … already has … set` and
+`Nothing changed. The world border is already that size` messages. That's harmless: it's the
+console confirming the settings are already in place, echoed to ops. `lp log recent` shows every
+change came from `(Console)`.
 
 **The server runs in the background.** Closing your terminal does not stop it. It keeps going
 until you run `./dev stop`, or until the computer shuts down.
