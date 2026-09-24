@@ -259,6 +259,19 @@ cmd_status() {
 # Safe while the server runs: world saving is paused, flushed to disk, archived, then resumed.
 BACKUP_DIR="${AVIAN_BACKUP_DIR:-backups}"
 
+# True once no world file has changed for 3 seconds in a row; false after 60 seconds of changes.
+world_quiet() {
+    local before after tries=0
+    before="$(find run/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+    while (( tries++ < 20 )); do
+        sleep 3
+        after="$(find run/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+        [[ "$before" == "$after" ]] && return 0
+        before="$after"
+    done
+    return 1
+}
+
 cmd_backup() {
     load_env
     db_healthy || fail "The database is not running. Start it with: ./dev start"
@@ -273,9 +286,18 @@ cmd_backup() {
     if session_running; then
         live=true
         say "Server is running: pausing world saves and flushing to disk…"
+        local since
+        since="$(log_size)"
         send "save-off"
         send "save-all flush"
-        sleep 5
+        # Wait for the server to say the save finished, not a fixed time: right after a big paste
+        # there are thousands of dirty chunks, and a 5-second guess let tar read a file mid-write.
+        local waited=0
+        until log_since "$since" | grep -q "Saved the game"; do
+            (( waited++ >= 180 )) && { send "save-on"; rm -rf "$work"; fail "The save did not finish within 3 minutes; no backup taken."; }
+            sleep 1
+        done
+        world_quiet || { send "save-on"; rm -rf "$work"; fail "World files kept changing after the save; no backup taken."; }
     fi
 
     say "Dumping the database…"
@@ -290,13 +312,24 @@ cmd_backup() {
         [[ -e "$f" ]] && extras+=("$f")
     done
     # Jars come back from downloadPlugins, libs/ from the plugins themselves, logs are not state.
-    tar -czf "$archive" \
-        --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
-        --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
-        -C . run/world run/plugins \
-        "${extras[@]}" \
-        -C "$work" database.sql \
-        || { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed; the partial file is at $archive"; }
+    # tar exits 1 when a file changed while being read. That archive is torn, so it is discarded
+    # and retried rather than kept — a quietly corrupt backup is worse than none.
+    local attempt
+    for attempt in 1 2 3; do
+        if tar -czf "$archive" \
+            --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
+            --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
+            -C . run/world run/plugins \
+            "${extras[@]}" \
+            -C "$work" database.sql; then
+            break
+        fi
+        rm -f "$archive"
+        (( attempt == 3 )) && { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed 3 times (files kept changing); no backup taken."; }
+        say "A file changed while archiving; waiting and retrying (attempt $((attempt + 1)) of 3)…"
+        sleep 5
+        world_quiet || true
+    done
 
     $live && send "save-on"
     rm -rf "$work"
