@@ -66,6 +66,11 @@ public final class EconomyModule implements AvianModule {
                     ctx.plugin(), ServicePriority.Highest);
             ctx.logger().info("Registered as Vault's economy provider");
         }
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new AvianPlaceholders(economy).register();
+            ctx.logger().info("Registered %avian_...% placeholders");
+        }
     }
 
     /** Gives a player their starting balances the first time they join. */
