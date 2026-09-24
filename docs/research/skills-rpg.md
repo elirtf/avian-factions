@@ -62,12 +62,71 @@ Most of what we would want to change does not need a fork:
   merge. GPL-3.0: running a modified jar on our own server is not distribution; if we ever hand
   the modified jar to anyone, its source goes with it.
 
-## Things to decide before adopting
+## Combat balance (decided 2026-09-23)
 
-1. **PvP balance.** Stats add HP, attack damage, damage reduction and crit. On a competitive
-   Factions server a maxed player beats a new one on stats alone. Options: disable or cap the
-   combat stats (keep gathering stats like double drop), or accept it as progression. This
-   interacts with `combat-mechanics-on-paper.md`.
+Owner: "cap the combat stats but not too much — we want grinding to be a part of it." So nothing
+combat-related is disabled, and nothing stops early: every value keeps growing all the way to skill
+level 100, it just ends at a moderate edge instead of a dominating one. Files:
+`dev-server/plugins/AuraSkills/{stats,abilities,mana_abilities}.yml`.
+
+**How the numbers work.** Skill levels grant stat points (`rewards/*.yml`, unchanged); a stat
+turns into a trait by `modifier` in `stats.yml`. With every skill at 100 a player has about
+250 Strength, 100 Health, 250 Toughness, 250 Regeneration, 100 Crit Chance, 100 Crit Damage.
+Abilities unlock in the first five levels and gain a level every five, so they reach about
+level 20 at skill 100; value = `base_value + value_per_level × (level − 1)`. Mana abilities reach
+about level 16. `max_level` is left at 0 (uncapped) so grinding keeps paying.
+
+Stats (all skills at 100):
+
+| Trait | Default | Avian | Modifier |
+|---|---|---|---|
+| Attack damage | +100% | **+20%** | 0.4 → 0.08 |
+| Max HP | +100 HP (50 hearts) | **+6 HP (3 hearts)** | 1 → 0.06 |
+| Damage reduction | 53% | **12%** | 0.3 → 0.05 |
+| Crit chance | 100% | **15%** | 1 → 0.15 |
+| Crit damage | +100% | **+40%** | 1 → 0.4 |
+| Natural regen per tick | +5 HP | **+1 HP** | 0.02 → 0.004 |
+| Movement speed (from Fleeting / items) | 1 per point | 0.5 per point | 1 → 0.5 |
+
+Luck (double drops), Wisdom (XP bonus, anvil discount, mana) untouched — they are the gathering
+side, and an economy question (below), not a PvP one.
+
+Abilities at skill 100:
+
+| Ability | Default | Avian |
+|---|---|---|
+| Sword / Axe / Bow Master (damage) | +41% / +61% / +41% | +11.5% each |
+| First Strike | +110% first hit | +29% |
+| Shielding (sneaking) | −59% damage | −11.5% |
+| Immunity (negate a hit) | 8.1% | 3.4% |
+| No Debuff (negate harmful potion) | **100%** | 15% |
+| Parry | −43% | −24% |
+| Bleed chance / damage per tick | 60% / 10 HP | 21% / 1.45 HP |
+| Stun chance | 21% | 11.5% |
+| Shredder (triple armour durability) | 60% | 20% |
+| Golden Heal (regeneration effect) | +119% | +22% |
+| Golden Heart (absorption damage taken) | −62% | −17% |
+| Recovery (regen under half HP) | +200% | +33.5% |
+| Life Steal (on kill) | 21.5% max HP | 11.5% |
+| Meal Steal | 39% | 10.5% |
+| Fleeting (Speed under 20% HP) | +81 | +24 |
+| Absorption (mana ability: damage to mana) | ~47 s | ~5 s |
+| Lightning Blade (mana ability: attack speed) | +80% for 65 s | +27.5% for 20 s |
+| Charged Shot (per mana) | 2% | ~0.95% |
+
+Worst case, a fully maxed player against a brand-new one: about 1.25× damage (strength plus average
+crit, before the weapon-master ability) and about 1.45× effective health (+30% HP, 12% less
+damage taken). Gear, potions and skill
+still decide a fight; the grind is a clear edge, not a win button. Between two grinded players it
+cancels out. Mobs are affected the same way, which only makes PvE a little slower to trivialise.
+
+Tuning later: change `modifier` (stats) or `value_per_level` (abilities); the other files stay at
+AuraSkills defaults.
+
+## Still open
+
+1. **Balance in play.** The numbers above are from the formulas, not from fights. Revisit after
+   real PvP; `combat-mechanics-on-paper.md` covers the vanilla side.
 2. **Economy.** The money reward and `money` loot pay through Vault; that has to fit the token/gem
    economy and EconomyShopGUI sell prices, or double drop inflates everything.
 3. **Stacked mobs.** Fighting XP per kill with RoseStacker whole-stack kills — check it is not

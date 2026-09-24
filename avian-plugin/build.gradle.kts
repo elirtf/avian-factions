@@ -145,6 +145,12 @@ val pluginStack = listOf(
     PinnedPlugin("CommandTimer-8.18.0.jar",
         "https://cdn.modrinth.com/data/UQTtLW4O/versions/nCJVp89f/commandtimer-java8%20%282%29.jar",
         "SHA-256", "d31b03f5ebf558469c0d44d26bf80c4d637dd5b83fe7d6e5a382fa726b4e9afa"),
+    // AuraSkills 2.4.0 (GPL-3.0): skills, stats and abilities — the RPG grind. Modrinth tags it
+    // 26.1–26.3 but not 26.1.2; boot-tested clean on 26.1.2 anyway. Combat stats are capped in
+    // dev-server/plugins/AuraSkills; see docs/research/skills-rpg.md.
+    PinnedPlugin("AuraSkills-2.4.0.jar",
+        "https://cdn.modrinth.com/data/uDdZAVls/versions/9rSJ3THD/AuraSkills-2.4.0.jar",
+        "SHA-256", "de54cbd2e33d65e8b1704751ae4121ed2f5b466ba89c63a1aadf3a3e629d6a40"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
