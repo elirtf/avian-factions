@@ -9,6 +9,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SESSION="${AVIAN_DEV_SESSION:-avian}"
 LOG="$ROOT/run/logs/latest.log"
 RANKS="$ROOT/dev-server/luckperms/ranks.lp"
+SETUP_STAMP="$ROOT/run/.dev-setup-applied"
 WORLD_BORDER=5000
 START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
 STOP_TIMEOUT=90
@@ -161,12 +162,25 @@ cmd_start() {
     port="$(sed -n 's/^server-port=//p' run/server.properties 2>/dev/null || true)"
     ok "Server is up: connect Minecraft to localhost:${port:-25565}"
     if (( setup )); then
-        cmd_setup_world
+        if [[ "$(cat "$SETUP_STAMP" 2>/dev/null || true)" == "$(setup_fingerprint)" ]]; then
+            ok "Ranks and world border unchanged since last applied (force it with: ./dev ranks)"
+        else
+            cmd_setup_world
+        fi
     fi
     echo "  Console: ${BOLD}./dev console${RESET}   Logs: ${BOLD}./dev logs${RESET}   Stop: ${BOLD}./dev stop${RESET}"
 }
 
-# Things that live in the world or LuckPerms' database rather than a config file. Safe to repeat.
+# What cmd_setup_world last applied: ranks.lp, the border, and the database container. A wiped
+# database comes back in a new container, so its ranks are re-applied; a wiped run/ loses the stamp.
+setup_fingerprint() {
+    { cat "$RANKS"; echo "$WORLD_BORDER"; docker inspect -f '{{.Id}}' avian-mariadb 2>/dev/null || true; } \
+        | sha256sum | cut -d' ' -f1
+}
+
+# Things that live in the world or LuckPerms' database rather than a config file. Safe to repeat,
+# but every line echoes to online ops ("owner already has * set…"), so start skips it when nothing
+# changed.
 cmd_setup_world() {
     session_running || fail "The server is not running. Start it with: ./dev start"
     say "Applying the ranks from dev-server/luckperms/ranks.lp and the ${WORLD_BORDER}-block world border…"
@@ -178,6 +192,7 @@ cmd_setup_world() {
         sleep 0.05
     done < "$RANKS"
     send "worldborder set $WORLD_BORDER"
+    setup_fingerprint > "$SETUP_STAMP"
     ok "Applied $count rank commands and the world border"
 }
 
@@ -292,7 +307,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}cmd${RESET} <command>    Run one console command and show the reply, e.g. ./dev cmd list
   ${BOLD}logs${RESET}             Watch the server log (Ctrl-C to stop watching)
   ${BOLD}status${RESET}           Is the database and server running?
-  ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this already)
+  ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this when they changed)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
 EOF
