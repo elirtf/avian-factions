@@ -1,4 +1,5 @@
-enable: true
+# AVIAN: enchantments are not sold. Enchant at a table or anvil, or win books.
+enable: false
 title: '  &8<---- <#AA00FF><bold>Enchantments &8---->'
 slot: 0
 hidden: true

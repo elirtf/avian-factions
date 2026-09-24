@@ -24,15 +24,16 @@ hay, slime blocks, melons) are never cheaper to buy than what they turn into.
 
 | Crops | $ each | | Mob drops | $ each | | Ores | $ each |
 |---|---|---|---|---|---|---|---|
-| **Sugar cane** | **16** ($1,024 a stack) | | Rotten flesh | 12 | | Diamond | 100 |
+| **Sugar cane** | **16** ($1,024 a stack) | | Rotten flesh | 12 | | **Diamond** | **150** |
 | Cactus | 4 | | Bone | 10 | | Iron ingot | 40 |
-| Pumpkin | 3 | | String | 10 | | Gold ingot | 5 |
-| Wheat, carrot, potato, beetroot, nether wart, cocoa, chorus | 2 | | Spider eye | 8 | | Coal | 3 |
-| Melon slice, berries, bamboo, kelp, mushrooms | 1 | | Gunpowder | 30 | | Quartz | 3 |
-| | | | Ender pearl | 60 | | Lapis, amethyst | 2 |
-| | | | Slime ball | 15 | | Redstone | 1 |
-| | | | Magma cream | 25 | | Netherite scrap / debris | 500 |
-| | | | **Blaze rod** | **120** | | Netherite ingot | 2,000 |
+| Pumpkin | 3 | | String | 10 | | Gold ingot | 8 |
+| Wheat, carrot, potato, beetroot, nether wart, cocoa, chorus | 2 | | Spider eye | 8 | | Coal | 5 |
+| Melon slice, berries, bamboo, kelp, mushrooms | 1 | | Gunpowder | 30 | | Quartz | 6 |
+| | | | Ender pearl | 60 | | Lapis | 4 |
+| | | | Slime ball | 15 | | Amethyst | 3 |
+| | | | Magma cream | 25 | | Netherite scrap / debris | 750 |
+| | | | **Blaze rod** | **120** | | Netherite ingot | 3,000 |
+| | | | | | | Redstone | 2 |
 | | | | Raw meat 1, cooked 2, feather 2, leather 5 | | | Storage blocks | 9 × |
 
 Emeralds and copper are not sellable: villager trading and copper scraping would otherwise be free
@@ -77,7 +78,8 @@ Only these 14 are sold. Villagers can no longer summon iron golems (`economy.con
   1¾ for the leggings and 1 for the boots. A full diamond set is $90,000.
 - **Other gear**: bow $500, crossbow $750, shield $500, trident $25,000, mace $100,000, totem
   $25,000, elytra $250,000.
-- **Never sold** (#40): potions of any kind (the section is off), golden apples, enchanted golden
+- **Never sold** (#40): potions of any kind and enchanted books (both sections, and the Magic
+  button, are off), golden apples, enchanted golden
   apples and dragon's breath. They are all obtainable in game, just not bought.
 
 Buying gear is a convenience premium: mining diamonds and crafting a pickaxe still costs three
@@ -94,6 +96,14 @@ Cooldowns in `combat.conf`:
 The cooldown shows on the item like a vanilla one and survives relogging and dying.
 
 ## Changing prices
+
+Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`
+(a diamond entry with `stack-size: 9` is priced per 9), so the shop files hold price × stack-size;
+the script does that multiplication. Getting this wrong made 16 diamonds sell for $178 instead of
+$2,400 on 2026-09-24.
+
+Prices can be changed live: copy the files into `run/plugins/EconomyShopGUI/` and run `sreload` on
+the console (`./dev cmd "sreload"`). Keep `dev-server/` as the source of truth.
 
 Edit the files under `dev-server/plugins/EconomyShopGUI/shops/`, then `./dev restart`. To rebuild
 them from the plugin's defaults, for example after an EconomyShopGUI update adds items, run

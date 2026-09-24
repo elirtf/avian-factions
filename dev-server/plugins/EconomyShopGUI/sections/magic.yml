@@ -1,4 +1,5 @@
-enable: true
+# AVIAN: its two sections, potions and enchantments, are both off, so the Magic button is gone.
+enable: false
 title: ' &8<-- <#AA00FF><bold>Enchants &8& &d&lPotions &8-->'
 slot: 25
 item:

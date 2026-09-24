@@ -3,28 +3,28 @@ pages:
     items:
       rotten_flesh:
         material: ROTTEN_FLESH
-        buy: 80
-        sell: 12
+        buy: 768
+        sell: 192
         stack-size: 16
       gunpowder:
         material: GUNPOWDER
-        buy: 248
-        sell: 30
+        buy: 1920
+        sell: 480
         stack-size: 16
       string:
         material: STRING
-        buy: 112
-        sell: 10
+        buy: 640
+        sell: 160
         stack-size: 16
       feather:
         material: FEATHER
-        buy: 96
-        sell: 2
+        buy: 128
+        sell: 32
         stack-size: 16
       bone:
         material: BONE
-        buy: 96
-        sell: 10
+        buy: 640
+        sell: 160
         stack-size: 16
       wind_charge:
         material: WIND_CHARGE
@@ -33,23 +33,23 @@ pages:
         stack-size: 8
       spider_eye:
         material: SPIDER_EYE
-        buy: 56
-        sell: 8
+        buy: 256
+        sell: 64
         stack-size: 8
       ink_sac:
         material: INK_SAC
-        buy: 20
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       leather:
         material: LEATHER
         buy: 135
-        sell: 5
+        sell: 20
         stack-size: 4
       phantom_membrane:
         material: PHANTOM_MEMBRANE
         buy: 501
-        sell: 20
+        sell: 80
         stack-size: 4
       shulker_shell:
         material: SHULKER_SHELL
@@ -58,8 +58,8 @@ pages:
         stack-size: 4
       blaze_rod:
         material: BLAZE_ROD
-        buy: 480
-        sell: 120
+        buy: 1920
+        sell: 480
         stack-size: 4
       breeze_rod:
         material: BREEZE_ROD
@@ -73,18 +73,18 @@ pages:
         stack-size: 4
       magma_cream:
         material: MAGMA_CREAM
-        buy: 100
-        sell: 25
+        buy: 400
+        sell: 100
         stack-size: 4
       slime_ball:
         material: SLIME_BALL
-        buy: 60
-        sell: 15
+        buy: 240
+        sell: 60
         stack-size: 4
       ender_pearl:
         material: ENDER_PEARL
-        buy: 240
-        sell: 60
+        buy: 960
+        sell: 240
         stack-size: 4
       scute:
         material: SCUTE

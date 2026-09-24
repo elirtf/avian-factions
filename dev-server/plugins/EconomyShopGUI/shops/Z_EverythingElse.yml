@@ -561,7 +561,7 @@ pages:
         sell: -1
       deepslate_diamond_ore:
         material: DEEPSLATE_DIAMOND_ORE
-        buy: 400
+        buy: 600
         sell: -1
       deepslate_emerald_ore:
         material: DEEPSLATE_EMERALD_ORE
@@ -569,7 +569,7 @@ pages:
         sell: -1
       deepslate_gold_ore:
         material: DEEPSLATE_GOLD_ORE
-        buy: 30
+        buy: 32
         sell: -1
       deepslate_iron_ore:
         material: DEEPSLATE_IRON_ORE
@@ -669,7 +669,7 @@ pages:
         sell: -1
       gold_nugget:
         material: GOLD_NUGGET
-        buy: 3
+        buy: 4
         sell: -1
       granite_wall:
         material: GRANITE_WALL
@@ -831,7 +831,7 @@ pages:
         sell: -1
       nether_gold_ore:
         material: NETHER_GOLD_ORE
-        buy: 25
+        buy: 32
         sell: -1
       nether_sprouts:
         material: NETHER_SPROUTS
@@ -843,8 +843,8 @@ pages:
         sell: -1
       netherite_scrap:
         material: NETHERITE_SCRAP
-        buy: 2000
-        sell: 500
+        buy: 3000
+        sell: 750
       oak_door:
         material: OAK_DOOR
         buy: 3
@@ -997,11 +997,11 @@ pages:
         sell: -1
       raw_gold:
         material: RAW_GOLD
-        buy: 20
+        buy: 32
         sell: -1
       raw_gold_block:
         material: RAW_GOLD_BLOCK
-        buy: 180
+        buy: 288
         sell: -1
       raw_iron:
         material: RAW_IRON

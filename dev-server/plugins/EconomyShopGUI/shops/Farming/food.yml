@@ -18,23 +18,23 @@ pages:
         stack-size: 16
       cooked_beef:
         material: COOKED_BEEF
-        buy: 51
-        sell: 2
+        buy: 64
+        sell: 16
         stack-size: 8
       cooked_mutton:
         material: COOKED_MUTTON
-        buy: 51
-        sell: 2
+        buy: 64
+        sell: 16
         stack-size: 8
       cooked_porkchop:
         material: COOKED_PORKCHOP
-        buy: 51
-        sell: 2
+        buy: 64
+        sell: 16
         stack-size: 8
       cooked_chicken:
         material: COOKED_CHICKEN
-        buy: 51
-        sell: 2
+        buy: 64
+        sell: 16
         stack-size: 8
       cooked_cod:
         material: COOKED_COD
@@ -48,8 +48,8 @@ pages:
         stack-size: 8
       cooked_rabbit:
         material: COOKED_RABBIT
-        buy: 26
-        sell: 2
+        buy: 32
+        sell: 8
         stack-size: 4
       apple:
         material: APPLE

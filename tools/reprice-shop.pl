@@ -19,26 +19,26 @@ my %sell = (
   GUNPOWDER=>30, ENDER_PEARL=>60, SLIME_BALL=>15, MAGMA_CREAM=>25,
   BLAZE_ROD=>120, IRON_INGOT=>40, GHAST_TEAR=>50, PHANTOM_MEMBRANE=>20, INK_SAC=>2,
   # Ores: ingots/gems, and their storage blocks at exactly 9x.
-  COAL=>3, COAL_BLOCK=>27, IRON_BLOCK=>360, GOLD_INGOT=>5, GOLD_BLOCK=>45,
-  DIAMOND=>100, DIAMOND_BLOCK=>900, LAPIS_LAZULI=>2, LAPIS_BLOCK=>18, REDSTONE=>1,
-  REDSTONE_BLOCK=>9, QUARTZ=>3, AMETHYST_SHARD=>2,
-  NETHERITE_SCRAP=>500, ANCIENT_DEBRIS=>500, NETHERITE_INGOT=>2000, NETHERITE_BLOCK=>18000,
+  COAL=>5, COAL_BLOCK=>45, IRON_BLOCK=>360, GOLD_INGOT=>8, GOLD_BLOCK=>72,
+  DIAMOND=>150, DIAMOND_BLOCK=>1350, LAPIS_LAZULI=>4, LAPIS_BLOCK=>36, REDSTONE=>2,
+  REDSTONE_BLOCK=>18, QUARTZ=>6, AMETHYST_SHARD=>3,
+  NETHERITE_SCRAP=>750, ANCIENT_DEBRIS=>750, NETHERITE_INGOT=>3000, NETHERITE_BLOCK=>27000,
 );
 
 # --- things that craft or smelt INTO a sellable item: never cheaper to buy than to sell -------
 my %floor = (
   IRON_NUGGET=>18, RAW_IRON=>160, RAW_IRON_BLOCK=>1440, IRON_ORE=>160, DEEPSLATE_IRON_ORE=>160,
-  GOLD_NUGGET=>3, RAW_GOLD=>20, RAW_GOLD_BLOCK=>180, GOLD_ORE=>20, DEEPSLATE_GOLD_ORE=>20,
-  NETHER_GOLD_ORE=>20, DIAMOND_ORE=>400, DEEPSLATE_DIAMOND_ORE=>400, COAL_ORE=>12,
-  DEEPSLATE_COAL_ORE=>12, LAPIS_ORE=>8, DEEPSLATE_LAPIS_ORE=>8, REDSTONE_ORE=>4,
-  DEEPSLATE_REDSTONE_ORE=>4, NETHER_QUARTZ_ORE=>12, RAW_COPPER=>4, RAW_COPPER_BLOCK=>36,
+  GOLD_NUGGET=>4, RAW_GOLD=>32, RAW_GOLD_BLOCK=>288, GOLD_ORE=>32, DEEPSLATE_GOLD_ORE=>32,
+  NETHER_GOLD_ORE=>32, DIAMOND_ORE=>600, DEEPSLATE_DIAMOND_ORE=>600, COAL_ORE=>20,
+  DEEPSLATE_COAL_ORE=>20, LAPIS_ORE=>16, DEEPSLATE_LAPIS_ORE=>16, REDSTONE_ORE=>8,
+  DEEPSLATE_REDSTONE_ORE=>8, NETHER_QUARTZ_ORE=>24, RAW_COPPER=>4, RAW_COPPER_BLOCK=>36,
   COPPER_ORE=>4, DEEPSLATE_COPPER_ORE=>4, COPPER_NUGGET=>1, HAY_BLOCK=>72, SLIME_BLOCK=>540,
   MELON=>36, BONE_BLOCK=>1, QUARTZ_BLOCK=>48,
 );
 
-# --- never buyable: rare PvP consumables (#40) ------------------------------------------------
+# --- never buyable: rare PvP consumables (#40) and enchantments ---------------------------------
 my %nobuy = map { $_=>1 } qw(GOLDEN_APPLE ENCHANTED_GOLDEN_APPLE DRAGON_BREATH POTION
-  SPLASH_POTION LINGERING_POTION TIPPED_ARROW);
+  SPLASH_POTION LINGERING_POTION TIPPED_ARROW ENCHANTED_BOOK);
 
 # --- explicit buy prices: gear by tier, and a few specials ------------------------------------
 my %buy;
@@ -63,23 +63,28 @@ sub flush {
   my ($has_buy, $has_sell) = (0, 0);
   for (@item) { $has_buy++ if /^\s{8}buy:/; $has_sell++ if /^\s{8}sell:/; }
   my $m = $mat // '';
+  # EconomyShopGUI prices are for the item's stack-size (a diamond at stack-size 9 is priced per 9),
+  # while every table here is per ONE item: scale by the stack-size.
+  my $n = 1;
+  for (@item) { $n = $1 if /^\s{8}stack-size:\s*(\d+)/; }
+  my $sellp = exists $sell{$m} ? $sell{$m} * $n : undef;
   for (@item) {
     if (/^(\s{8})buy:\s*(\S+)/) {
       my ($ind, $v) = ($1, $2);
       my $b = $v;
       if ($nobuy{$m}) { $b = -1 }
-      elsif (exists $buy{$m}) { $b = $buy{$m} }
+      elsif (exists $buy{$m}) { $b = $buy{$m} * $n }
       elsif ($b != -1) { $b = ceil($b); $b = 1 if $b < 1; }
       if ($b != -1) {
-        $b = $floor{$m} if exists $floor{$m} && $b < $floor{$m};
-        $b = 4 * $sell{$m} if exists $sell{$m} && $b < 4 * $sell{$m};   # never buy low, sell high
+        $b = $floor{$m} * $n if exists $floor{$m} && $b < $floor{$m} * $n;
+        $b = 4 * $sellp if defined $sellp && $b < 4 * $sellp;   # never buy low, sell high
       }
       $_ = "${ind}buy: $b\n";
     } elsif (/^(\s{8})sell:/) {
-      $_ = "$1sell: " . (exists $sell{$m} ? $sell{$m} : -1) . "\n";
+      $_ = "$1sell: " . (defined $sellp ? $sellp : -1) . "\n";
     }
   }
-  if (!$has_sell && exists $sell{$m}) { push @item, "        sell: $sell{$m}\n"; }
+  if (!$has_sell && defined $sellp) { push @item, "        sell: $sellp\n"; }
   push @outl, @item; @item = (); $mat = undef;
 }
 for (@lines) {
