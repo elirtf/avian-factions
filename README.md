@@ -6,6 +6,7 @@ A modern, original competitive Factions server for Minecraft Java Edition (Paper
 - Glossary: [`CONTEXT.md`](CONTEXT.md)
 - **Running and developing: [`docs/DEVELOPING.md`](docs/DEVELOPING.md)**, the plain-language guide to `./dev`
 - **Changing settings: [`docs/CONFIGURATION.md`](docs/CONFIGURATION.md)** — plain-language guide to every option and which file it lives in
+- **Moving to a new machine / backups: [`docs/MIGRATION.md`](docs/MIGRATION.md)** — `./dev backup` and `./dev restore`, step by step
 - Decisions: [`docs/adr/`](docs/adr/)
 - Planning map: the GitHub issue labelled `wayfinder:map`
 

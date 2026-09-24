@@ -8,7 +8,7 @@ Minecraft Java Edition competitive Factions server (Paper). Product spec: `docs/
 means to that end, nothing more. So:
 
 - **Prefer an existing plugin** whenever one does the job. Already bought rather than built:
-  EssentialsX, LuckPerms, Vault, WorldEdit/WorldGuard, PlaceholderAPI, CoreProtect, Chunky, spark,
+  EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit/WorldGuard, PlaceholderAPI, CoreProtect, Chunky, spark,
   FactionsUUID (ADR-0007), CommandTimer, EconomyShopGUI (`/shop` + sell prices), and a stacking
   plugin for mobs and spawners (#19).
 - **Build only what is Avian-specific** and what nothing off the shelf provides: faction add-ons,
@@ -34,11 +34,13 @@ and the `mc.avian.club` identity.
 - Base package: `club.avian.factions`.
 - Database: **MariaDB everywhere** (Docker Compose locally), HikariCP + Flyway, portable SQL, all DB access behind per-module repository interfaces. No SQLite path.
 - Factions: **FactionsUUID 4.7.0** (ADR-0007), built from pinned source; `avian-factions` only adds what it lacks (base power, Claim Boost, upgrade list) through its API.
-- Third-party stack: EssentialsX, LuckPerms, Vault, WorldEdit+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer.
+- Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer.
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
 - V1 world border: 5,000 blocks diameter.
 
 ## Dev loop
+
+Backups and moving machines: `./dev backup` / `./dev restore <file>`, guide in `docs/MIGRATION.md`. Code and config are in git; the world, database and plugin data are not — they travel as a backup file.
 
 Everything goes through `./dev` (guide: `docs/DEVELOPING.md`): `./dev setup` once, then `./dev start` / `restart` / `stop`. The server runs in a tmux session named `avian`: `./dev console` attaches, `./dev cmd "<command>"` runs one console command and prints the reply (use this instead of attaching), `./dev check-log` fails on plugin errors. `./dev start` applies `dev-server/luckperms/ranks.lp` and the world border. Edit `dev-server/`, never `run/` (overwritten on every start). `./dev test` = `./gradlew build` (JDK 25 auto-provisioned; unit + MockBukkit + Testcontainers). Pins: `gradle.properties` + `gradle/libs.versions.toml`. CI boots the full stack with `./dev` on every push and PR.
 

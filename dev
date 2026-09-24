@@ -239,6 +239,82 @@ cmd_status() {
     fi
 }
 
+# Everything git cannot rebuild: the world, the database, and plugin data (factions, claims,
+# homes, warps, regions, crate locations). Code and config live in git; this is the other half.
+# Safe while the server runs: world saving is paused, flushed to disk, archived, then resumed.
+BACKUP_DIR="${AVIAN_BACKUP_DIR:-backups}"
+
+cmd_backup() {
+    load_env
+    db_healthy || fail "The database is not running. Start it with: ./dev start"
+    [[ -d run/world ]] || fail "There is no world in run/ to back up yet."
+    mkdir -p "$BACKUP_DIR"
+    local stamp work archive
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    work="$(mktemp -d)"
+    archive="$BACKUP_DIR/avian-backup-$stamp.tar.gz"
+
+    local live=false
+    if session_running; then
+        live=true
+        say "Server is running: pausing world saves and flushing to disk…"
+        send "save-off"
+        send "save-all flush"
+        sleep 5
+    fi
+
+    say "Dumping the database…"
+    docker exec avian-mariadb mariadb-dump -u"$AVIAN_DB_USER" -p"$AVIAN_DB_PASSWORD" \
+        --single-transaction --routines --triggers "$AVIAN_DB_NAME" > "$work/database.sql" \
+        || { $live && send "save-on"; rm -rf "$work"; fail "Database dump failed; nothing was written."; }
+
+    say "Archiving the world and plugin data…"
+    # Jars come back from downloadPlugins, libs/ from the plugins themselves, logs are not state.
+    tar -czf "$archive" \
+        --exclude='*.jar' --exclude='run/plugins/*/libs' --exclude='run/plugins/*/logs' \
+        --exclude='run/plugins/spark' --exclude='run/plugins/bStats' --exclude='session.lock' \
+        -C . run/world run/plugins \
+        $(cd run && ls -d world_* ops.json whitelist.json banned-players.json banned-ips.json 2>/dev/null | sed 's|^|run/|') \
+        -C "$work" database.sql \
+        || { $live && send "save-on"; rm -rf "$work"; fail "Archiving failed; the partial file is at $archive"; }
+
+    $live && send "save-on"
+    rm -rf "$work"
+    ok "Backup written: $archive ($(du -h "$archive" | cut -f1))"
+    echo "  Not included on purpose: .env (secrets — copy it separately and securely)."
+}
+
+cmd_restore() {
+    local archive="${1:-}"
+    [[ -n "$archive" && -f "$archive" ]] || fail "Usage: ./dev restore backups/avian-backup-<date>.tar.gz"
+    session_running && fail "Stop the server first: ./dev stop"
+    load_env
+    db_healthy || { say "Starting the database…"; docker compose up -d --wait >/dev/null || fail "Could not start the database."; }
+
+    echo "${RED}This REPLACES the current world, plugin data and database with the backup.${RESET}"
+    if [[ "${2:-}" != "--yes" ]]; then
+        read -r -p "Type 'restore' to continue: " answer
+        [[ "$answer" == "restore" ]] || fail "Cancelled; nothing changed."
+    fi
+
+    local work
+    work="$(mktemp -d)"
+    tar -xzf "$archive" -C "$work" || { rm -rf "$work"; fail "Could not read $archive"; }
+    [[ -f "$work/database.sql" && -d "$work/run/world" ]] || { rm -rf "$work"; fail "That archive is not an Avian backup."; }
+
+    say "Restoring the database…"
+    docker exec -i avian-mariadb mariadb -u"$AVIAN_DB_USER" -p"$AVIAN_DB_PASSWORD" "$AVIAN_DB_NAME" \
+        < "$work/database.sql" || { rm -rf "$work"; fail "Database restore failed; the world was not touched."; }
+
+    say "Restoring the world and plugin data…"
+    mkdir -p run
+    rm -rf run/world run/world_*
+    cp -a "$work/run/." run/
+    rm -rf "$work"
+    ok "Restored from $archive. Now: ./dev start"
+    echo "  Plugin jars are not in the backup; ./dev start downloads the pinned set."
+}
+
 cmd_db() {
     load_env
     db_healthy || fail "The database is not running. Start it with: ./dev start"
@@ -293,6 +369,8 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}logs${RESET}             Watch the server log (Ctrl-C to stop watching)
   ${BOLD}status${RESET}           Is the database and server running?
   ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this already)
+  ${BOLD}backup${RESET}           Save the world, database and plugin data to backups/ (safe while running)
+  ${BOLD}restore${RESET} <file>   Replace world, database and plugin data from a backup (server must be stopped)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
 EOF
@@ -308,6 +386,8 @@ case "${1:-help}" in
     logs)      shift; cmd_logs ;;
     status)    shift; cmd_status ;;
     ranks)     shift; cmd_setup_world ;;
+    backup)    shift; cmd_backup ;;
+    restore)   shift; cmd_restore "$@" ;;
     db)        shift; cmd_db ;;
     test)      shift; cmd_test ;;
     check-log) shift; cmd_check_log ;;
