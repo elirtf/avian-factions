@@ -16,7 +16,8 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/AuraSkills/config.yml` | `sql.enabled: true`, pointed at the Compose database (`auraskills_` tables) |
 | `plugins/AuraSkills/stats.yml`, `abilities.yml`, `mana_abilities.yml` | Combat stats and abilities capped for Factions PvP, still growing to level 100; the numbers and why are in `docs/research/skills-rpg.md` |
 | `server.properties` | `white-list=true`, `enforce-whitelist=true`: port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
-| `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"`, then copy `run/whitelist.json` back here |
+| `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"` (Bedrock players: `fwhitelist add <Gamertag>`), then copy `run/whitelist.json` back here |
+| `plugins/Geyser-Spigot/config.yml` | `java.auth-type: floodgate` (Bedrock players need no Java account); MOTD and `server-name` say Avian Factions. See `docs/research/bedrock-crossplay.md` |
 | `plugins/CarbonChat/channels/global.conf` | The chat line: name, rank tag, a dim ➜, the message. Hovering the name shows rank, balance, tokens, gems and faction; clicking it starts a `/msg`. `%avian_*%` placeholders come from our plugin (`AvianPlaceholders`) |
 | `plugins/CarbonChat/config.conf` | `use-carbon-nicknames=false`: nicknames stay with EssentialsX `/nick` (otherwise Carbon clears them on join). Storage is Carbon's default JSON (only ignores and channel choices) |
 | `plugins/CarbonChat/command-settings.conf` | Carbon's `/nick` is off so EssentialsX's answers. Carbon owns `/msg`, `/r` and `/ignore` |
