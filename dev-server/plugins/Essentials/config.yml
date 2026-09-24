@@ -34,7 +34,7 @@ ops-name-color: '4'
 nickname-prefix: '~'
 
 # The maximum length allowed in nicknames. The nickname prefix is not included in this.
-max-nick-length: 16
+max-nick-length: 20
 
 # The regex pattern used to determine if a requested nickname should be allowed for use.
 # If the requested nickname does not match this pattern, the nickname will be rejected.
@@ -49,7 +49,7 @@ nick-blacklist:
 
 # When this option is enabled, nickname length checking will exclude color codes in player names.
 # For example, if "&6Notch" has 7 characters (2 are part of a color code), a length of 5 is used when this option is set to true.
-ignore-colors-in-max-nick-length: false
+ignore-colors-in-max-nick-length: true
 
 # When this option is enabled, any nickname set by a player will be reset when their Minecraft account name changes.
 # This prevents old nicknames (including RGB-formatted ones) from persisting after a name change.
