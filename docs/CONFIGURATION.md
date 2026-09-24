@@ -141,7 +141,8 @@ Only spawners **placed by players** count. Naturally generated dungeon spawners 
 
 ### How fighting feels
 
-**File:** `run/plugins/AvianFactions/combat.conf`
+**File:** `dev-server/plugins/AvianFactions/combat.conf` — edit this one, not the copy in `run/`: every
+start copies `dev-server/` over `run/`, so a change made in `run/` is lost at the next restart.
 
 The quickest change is `preset`:
 
@@ -157,7 +158,7 @@ into the `knockback` block and set `preset = CUSTOM`.
 | `disable-attack-cooldown` | `true` = no waiting between hits (old style) | `true` |
 | `attack-speed` | How fast you can swing. 40 is instant, 4 is modern | `40` |
 | `disable-sweep-attack` | Stops swords hitting several things at once | `true` |
-| `hit-delay-ticks` | Invulnerable time after a hit. `0` = leave alone | `0` |
+| `hit-delay-ticks` | How often a hit can land. A hit counts every **half** this many ticks: 20 = vanilla, 16 = a bit faster (our setting), 14 = fast. Lower = easier combos | `16` |
 | `knockback.horizontal` | How far back a hit pushes someone | `0.4` |
 | `knockback.vertical` | How far up a hit pushes someone | `0.4` |
 | `knockback.vertical-limit` | Cap on upward push, stops people flying | `0.4` |

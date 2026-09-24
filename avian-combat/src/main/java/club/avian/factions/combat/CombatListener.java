@@ -60,15 +60,21 @@ public final class CombatListener implements Listener {
     /** Attribute base values do not survive respawn or a world change, so we reapply on each. */
     public void applyAttackSpeed(Player player) {
         var cfg = config.get();
+        // Hit delay first, and independent of the attribute below: Paper uses half of this as the
+        // window before the next hit counts (LivingEntity: damageCooldownTime > invulnerableDuration
+        // / 2). Always set, so turning the setting back to 0 restores vanilla instead of leaving the
+        // last custom value in place.
+        player.setMaximumNoDamageTicks(cfg.hitDelayTicks() > 0 ? cfg.hitDelayTicks() : VANILLA_HIT_DELAY_TICKS);
+
         var attribute = player.getAttribute(Attribute.ATTACK_SPEED);
         if (attribute == null) {
             return;
         }
         attribute.setBaseValue(cfg.disableAttackCooldown() ? cfg.attackSpeed() : 4.0);
-        if (cfg.hitDelayTicks() > 0) {
-            player.setMaximumNoDamageTicks(cfg.hitDelayTicks());
-        }
     }
+
+    /** Vanilla's invulnerability after a hit, in ticks: a new hit counts after half of it. */
+    static final int VANILLA_HIT_DELAY_TICKS = 20;
 
     // --- knockback -------------------------------------------------------------------------
 

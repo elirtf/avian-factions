@@ -42,8 +42,11 @@ public final class CombatConfig {
     @Comment("Cancel sweep-attack damage to bystanders (1.9+ mechanic, absent from 1.8 PvP).")
     private boolean disableSweepAttack = true;
 
-    @Comment("Ticks of invulnerability after a hit. Vanilla is 20; classic PvP servers often use\n"
-            + "less for faster trades. 0 keeps whatever the server/entity default is.")
+    @Comment("""
+            How often a hit can land on the same player. A new hit counts once HALF of this many
+            ticks have passed (20 ticks = 1 second):
+              20 = every 10 ticks (vanilla)   18 = every 9   16 = every 8   14 = every 7
+            Lower = faster combos; much below 14 starts to feel spammy. 0 = vanilla (20).""")
     private int hitDelayTicks = 0;
 
     private Knockback knockback = new Knockback();
