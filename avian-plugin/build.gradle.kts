@@ -115,6 +115,10 @@ val pluginStack = listOf(
     PinnedPlugin("PlaceholderAPI-2.12.3.jar",
         "https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.12.3/PlaceholderAPI-2.12.3.jar",
         "SHA-256", "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"),
+    // Server-list MOTD with MiniMessage colours (MIT, jpenilla: same author as CarbonChat).
+    PinnedPlugin("minimotd-paper-2.2.5.jar",
+        "https://cdn.modrinth.com/data/16vhQOQN/versions/Ch5nDFAs/minimotd-paper-2.2.5.jar",
+        "SHA-256", "a1f5bff3abf4c9c90bd4417ce26612e621c83a1564f3fc7aa39848996cbea6c6"),
     // Click menus (the /f faction menu). Modrinth's file for 1.14.1, listed for 26.1.2.
     PinnedPlugin("DeluxeMenus-1.14.1-Release.jar",
         "https://cdn.modrinth.com/data/kKZkPgJ7/versions/PNKQ6RMs/DeluxeMenus-1.14.1-Release.jar",

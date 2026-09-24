@@ -54,6 +54,14 @@ CoreProtect caveat noted below).
 | Caveat on 26.1.2 | None. Folia not supported (release notes). Does **not** support 26.2/26.3 in this release (see above). |
 | Source | https://github.com/EssentialsX/Essentials/releases/tag/2.22.0 |
 
+### MiniMOTD
+
+| | |
+|---|---|
+| Version | **2.2.5** (`minimotd-paper-2.2.5.jar`, Paper ≥ 1.21.8; Modrinth lists 26.1.2) |
+| Download | https://cdn.modrinth.com/data/16vhQOQN/versions/Ch5nDFAs/minimotd-paper-2.2.5.jar (sha256 `a1f5bff3abf4c9c90bd4417ce26612e621c83a1564f3fc7aa39848996cbea6c6`) |
+| License | MIT (https://github.com/jpenilla/MiniMOTD; jpenilla also maintains CarbonChat) |
+
 ### DeluxeMenus
 
 | | |
