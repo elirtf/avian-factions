@@ -16,6 +16,7 @@ public final class EconomyConfig {
     public static final ConfigSpec<EconomyConfig> SPEC = ConfigSpec.of("economy.conf", EconomyConfig.class)
             .version(1)
             .validate(EconomyConfig::validate)
+            .freeForm("sell-values")
             .build();
 
     @RequiresRestart
@@ -42,24 +43,40 @@ public final class EconomyConfig {
             price can never disagree with itself between features.""")
     private Map<String, Long> sellValues = defaultSellValues();
 
+    @Comment("""
+            Chance, per sugar cane block a player breaks by hand, of earning tokens (0.02 = 1 in 50).
+            Cane the player placed never pays, so place-and-break earns nothing; only grown cane
+            does. Auto-farms (pistons, observers) earn money but no tokens.""")
+    private double sugarCaneTokenChance = 0.02;
+
+    @Comment("Tokens earned each time that chance hits.")
+    private long sugarCaneTokens = 1;
+
+    @Comment("""
+            Whether villagers may summon iron golems. false stops vanilla iron farms, which would
+            otherwise produce free what iron golem spawners (the top spawner tier) are sold for.""")
+    private boolean villagerIronGolems = false;
+
     private static Map<String, Long> defaultSellValues() {
         var values = new LinkedHashMap<String, Long>();
-        // Farming (spec §30's main crops) — sugar cane is the headline farming economy.
-        values.put("SUGAR_CANE", 5L);
-        values.put("CACTUS", 5L);
-        values.put("WHEAT", 4L);
-        values.put("CARROT", 4L);
-        values.put("POTATO", 4L);
-        values.put("MELON_SLICE", 2L);
-        values.put("PUMPKIN", 6L);
-        // Mob drops (§29).
-        values.put("ROTTEN_FLESH", 2L);
-        values.put("BONE", 4L);
-        values.put("STRING", 4L);
-        values.put("SPIDER_EYE", 6L);
-        values.put("GUNPOWDER", 10L);
-        values.put("ENDER_PEARL", 25L);
-        values.put("BLAZE_ROD", 30L);
+        // Fallback only: with EconomyShopGUI installed its /shop prices win (docs/ECONOMY.md).
+        // Farming (spec §30): sugar cane is the headline farming economy.
+        values.put("SUGAR_CANE", 16L);
+        values.put("CACTUS", 4L);
+        values.put("PUMPKIN", 3L);
+        values.put("WHEAT", 2L);
+        values.put("CARROT", 2L);
+        values.put("POTATO", 2L);
+        values.put("MELON_SLICE", 1L);
+        // Mob drops (§29), by spawner tier.
+        values.put("ROTTEN_FLESH", 12L);
+        values.put("BONE", 10L);
+        values.put("STRING", 10L);
+        values.put("SPIDER_EYE", 8L);
+        values.put("GUNPOWDER", 30L);
+        values.put("ENDER_PEARL", 60L);
+        values.put("BLAZE_ROD", 120L);
+        values.put("IRON_INGOT", 40L);
         return values;
     }
 
@@ -87,11 +104,25 @@ public final class EconomyConfig {
         return sellValues;
     }
 
+    public double sugarCaneTokenChance() {
+        return sugarCaneTokenChance;
+    }
+
+    public long sugarCaneTokens() {
+        return sugarCaneTokens;
+    }
+
+    public boolean villagerIronGolems() {
+        return villagerIronGolems;
+    }
+
     static void validate(EconomyConfig cfg, ConfigErrors e) {
         e.check(cfg.seasonId >= 1, "season-id", "must be >= 1");
         e.check(cfg.startingMoney >= 0, "starting-money", "must be >= 0");
         e.check(cfg.startingTokens >= 0, "starting-tokens", "must be >= 0");
         e.check(cfg.startingGems >= 0, "starting-gems", "must be >= 0");
+        e.check(cfg.sugarCaneTokenChance >= 0 && cfg.sugarCaneTokenChance <= 1, "sugar-cane-token-chance", "must be 0-1");
+        e.check(cfg.sugarCaneTokens >= 0, "sugar-cane-tokens", "must be >= 0");
         for (var entry : cfg.sellValues.entrySet()) {
             if (org.bukkit.Material.matchMaterial(entry.getKey()) == null) {
                 e.add("sell-values." + entry.getKey(), "is not a Minecraft material");

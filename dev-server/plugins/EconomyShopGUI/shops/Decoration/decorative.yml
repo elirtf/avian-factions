@@ -1,0 +1,353 @@
+pages:
+  page1:
+    items:
+      glow_lichen:
+        material: GLOW_LICHEN
+        buy: 1
+        sell: -1
+      twisting_vines:
+        material: TWISTING_VINES
+        buy: 6
+        sell: -1
+      vine:
+        material: VINE
+        buy: 7
+        sell: -1
+      weeping_vines:
+        material: WEEPING_VINES
+        buy: 6
+        sell: -1
+      big_dripleaf:
+        material: BIG_DRIPLEAF
+        buy: 10
+        sell: -1
+      small_dripleaf:
+        material: SMALL_DRIPLEAF
+        buy: 10
+        sell: -1
+      spore_blossom:
+        material: SPORE_BLOSSOM
+        buy: 4
+        sell: -1
+      flower_pot:
+        material: FLOWER_POT
+        buy: 70
+        sell: -1
+      azalea:
+        material: AZALEA
+        buy: 3
+        sell: -1
+      flowering_azalea:
+        material: FLOWERING_AZALEA
+        buy: 3
+        sell: -1
+      acacia_sapling:
+        material: ACACIA_SAPLING
+        buy: 3
+        sell: -1
+      birch_sapling:
+        material: BIRCH_SAPLING
+        buy: 3
+        sell: -1
+      cherry_sapling:
+        material: CHERRY_SAPLING
+        buy: 3
+        sell: -1
+      dark_oak_sapling:
+        material: DARK_OAK_SAPLING
+        buy: 3
+        sell: -1
+      jungle_sapling:
+        material: JUNGLE_SAPLING
+        buy: 3
+        sell: -1
+      mangrove_propagule:
+        material: MANGROVE_PROPAGULE
+        buy: 3
+        sell: -1
+      oak_sapling:
+        material: OAK_SAPLING
+        buy: 3
+        sell: -1
+      spruce_sapling:
+        material: SPRUCE_SAPLING
+        buy: 3
+        sell: -1
+      brain_coral:
+        material: BRAIN_CORAL
+        buy: 5
+        sell: -1
+      brain_coral_fan:
+        material: BRAIN_CORAL_FAN
+        buy: 3
+        sell: -1
+      bubble_coral:
+        material: BUBBLE_CORAL
+        buy: 5
+        sell: -1
+      bubble_coral_fan:
+        material: BUBBLE_CORAL_FAN
+        buy: 3
+        sell: -1
+      dead_brain_coral:
+        material: DEAD_BRAIN_CORAL
+        buy: 5
+        sell: -1
+      dead_brain_coral_fan:
+        material: DEAD_BRAIN_CORAL_FAN
+        buy: 3
+        sell: -1
+      dead_bubble_coral:
+        material: DEAD_BUBBLE_CORAL
+        buy: 5
+        sell: -1
+      dead_bubble_coral_fan:
+        material: DEAD_BUBBLE_CORAL_FAN
+        buy: 3
+        sell: -1
+      dead_fire_coral:
+        material: DEAD_FIRE_CORAL
+        buy: 5
+        sell: -1
+      dead_fire_coral_fan:
+        material: DEAD_FIRE_CORAL_FAN
+        buy: 3
+        sell: -1
+  page2:
+    items:
+      dead_horn_coral:
+        material: DEAD_HORN_CORAL
+        buy: 5
+        sell: -1
+      dead_horn_coral_fan:
+        material: DEAD_HORN_CORAL_FAN
+        buy: 3
+        sell: -1
+      dead_tube_coral:
+        material: DEAD_TUBE_CORAL
+        buy: 5
+        sell: -1
+      dead_tube_coral_fan:
+        material: DEAD_TUBE_CORAL_FAN
+        buy: 3
+        sell: -1
+      fire_coral:
+        material: FIRE_CORAL
+        buy: 5
+        sell: -1
+      fire_coral_fan:
+        material: FIRE_CORAL_FAN
+        buy: 3
+        sell: -1
+      horn_coral:
+        material: HORN_CORAL
+        buy: 5
+        sell: -1
+      horn_coral_fan:
+        material: HORN_CORAL_FAN
+        buy: 3
+        sell: -1
+      tube_coral:
+        material: TUBE_CORAL
+        buy: 5
+        sell: -1
+      tube_coral_fan:
+        material: TUBE_CORAL_FAN
+        buy: 6
+        sell: -1
+      black_candle:
+        material: BLACK_CANDLE
+        buy: 17
+        sell: -1
+      blue_candle:
+        material: BLUE_CANDLE
+        buy: 13
+        sell: -1
+      brown_candle:
+        material: BROWN_CANDLE
+        buy: 18
+        sell: -1
+      candle:
+        material: CANDLE
+        buy: 11
+        sell: -1
+      cyan_candle:
+        material: CYAN_CANDLE
+        buy: 12
+        sell: -1
+      gray_candle:
+        material: GRAY_CANDLE
+        buy: 15
+        sell: -1
+      green_candle:
+        material: GREEN_CANDLE
+        buy: 12
+        sell: -1
+      light_blue_candle:
+        material: LIGHT_BLUE_CANDLE
+        buy: 13
+        sell: -1
+      light_gray_candle:
+        material: LIGHT_GRAY_CANDLE
+        buy: 13
+        sell: -1
+      lime_candle:
+        material: LIME_CANDLE
+        buy: 18
+        sell: -1
+      magenta_candle:
+        material: MAGENTA_CANDLE
+        buy: 13
+        sell: -1
+      orange_candle:
+        material: ORANGE_CANDLE
+        buy: 13
+        sell: -1
+      pink_candle:
+        material: PINK_CANDLE
+        buy: 13
+        sell: -1
+      purple_candle:
+        material: PURPLE_CANDLE
+        buy: 13
+        sell: -1
+      red_candle:
+        material: RED_CANDLE
+        buy: 13
+        sell: -1
+      white_candle:
+        material: WHITE_CANDLE
+        buy: 13
+        sell: -1
+      yellow_candle:
+        material: YELLOW_CANDLE
+        buy: 12
+        sell: -1
+      creeper_banner_pattern:
+        material: CREEPER_BANNER_PATTERN
+        buy: 631
+        sell: -1
+  page3:
+    items:
+      flow_banner_pattern:
+        material: FLOW_BANNER_PATTERN
+        buy: 1200
+        sell: -1
+      flower_banner_pattern:
+        material: FLOWER_BANNER_PATTERN
+        buy: 2
+        sell: -1
+      globe_banner_pattern:
+        material: GLOBE_BANNER_PATTERN
+        buy: 331
+        sell: -1
+      guster_banner_pattern:
+        material: GUSTER_BANNER_PATTERN
+        buy: 800
+        sell: -1
+      mojang_banner_pattern:
+        material: MOJANG_BANNER_PATTERN
+        buy: 10501
+        sell: -1
+      piglin_banner_pattern:
+        material: PIGLIN_BANNER_PATTERN
+        buy: 10000
+        sell: -1
+      skull_banner_pattern:
+        material: SKULL_BANNER_PATTERN
+        buy: 1051
+        sell: -1
+      angler_pottery_sherd:
+        material: ANGLER_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      archer_pottery_sherd:
+        material: ARCHER_POTTERY_SHERD
+        buy: 29
+        sell: -1
+      arms_up_pottery_sherd:
+        material: ARMS_UP_POTTERY_SHERD
+        buy: 25
+        sell: -1
+      blade_pottery_sherd:
+        material: BLADE_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      brewer_pottery_sherd:
+        material: BREWER_POTTERY_SHERD
+        buy: 25
+        sell: -1
+      burn_pottery_sherd:
+        material: BURN_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      danger_pottery_sherd:
+        material: DANGER_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      explorer_pottery_sherd:
+        material: EXPLORER_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      flow_pottery_sherd:
+        material: FLOW_POTTERY_SHERD
+        buy: 33
+        sell: -1
+      friend_pottery_sherd:
+        material: FRIEND_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      guster_pottery_sherd:
+        material: GUSTER_POTTERY_SHERD
+        buy: 33
+        sell: -1
+      heart_pottery_sherd:
+        material: HEART_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      heartbreak_pottery_sherd:
+        material: HEARTBREAK_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      howl_pottery_sherd:
+        material: HOWL_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      miner_pottery_sherd:
+        material: MINER_POTTERY_SHERD
+        buy: 29
+        sell: -1
+      mourner_pottery_sherd:
+        material: MOURNER_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      plenty_pottery_sherd:
+        material: PLENTY_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      prize_pottery_sherd:
+        material: PRIZE_POTTERY_SHERD
+        buy: 29
+        sell: -1
+      scrape_pottery_sherd:
+        material: SCRAPE_POTTERY_SHERD
+        buy: 33
+        sell: -1
+      sheaf_pottery_sherd:
+        material: SHEAF_POTTERY_SHERD
+        buy: 30
+        sell: -1
+      shelter_pottery_sherd:
+        material: SHELTER_POTTERY_SHERD
+        buy: 30
+        sell: -1
+  page4:
+    items:
+      skull_pottery_sherd:
+        material: SKULL_POTTERY_SHERD
+        buy: 29
+        sell: -1
+      snort_pottery_sherd:
+        material: SNORT_POTTERY_SHERD
+        buy: 30
+        sell: -1

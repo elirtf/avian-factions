@@ -1,6 +1,7 @@
 package club.avian.factions.api.economy;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -19,6 +20,15 @@ public interface SellValues {
     /** Price of a whole stack, before any multiplier. */
     default long price(ItemStack stack) {
         return unitPrice(stack.getType()) * stack.getAmount();
+    }
+
+    /**
+     * What {@code player} would actually be paid for {@code stack}: the figure a real sale must use.
+     * The shop-backed table applies the player's shop multipliers and sell limits; the plain table
+     * has none, so it is {@link #price}.
+     */
+    default long priceFor(OfflinePlayer player, ItemStack stack) {
+        return price(stack);
     }
 
     /**

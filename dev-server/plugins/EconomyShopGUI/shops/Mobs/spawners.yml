@@ -1,0 +1,76 @@
+# AVIAN: only the tiered farming spawners are sold. Each is priced to pay itself back in about
+# 8 hours of running (≈500 mobs/hour, drops at /shop sell prices); the ladder and the maths are
+# in docs/ECONOMY.md. F-Top values (plugins/AvianFactions/ftop.conf) match these prices.
+pages:
+  page1:
+    items:
+      chicken_spawner:
+        material: SPAWNER
+        spawnertype: CHICKEN
+        buy: 15000
+        sell: -1
+      pig_spawner:
+        material: SPAWNER
+        spawnertype: PIG
+        buy: 15000
+        sell: -1
+      sheep_spawner:
+        material: SPAWNER
+        spawnertype: SHEEP
+        buy: 15000
+        sell: -1
+      cow_spawner:
+        material: SPAWNER
+        spawnertype: COW
+        buy: 25000
+        sell: -1
+      zombie_spawner:
+        material: SPAWNER
+        spawnertype: ZOMBIE
+        buy: 50000
+        sell: -1
+      skeleton_spawner:
+        material: SPAWNER
+        spawnertype: SKELETON
+        buy: 50000
+        sell: -1
+      spider_spawner:
+        material: SPAWNER
+        spawnertype: SPIDER
+        buy: 50000
+        sell: -1
+      cave_spider_spawner:
+        material: SPAWNER
+        spawnertype: CAVE_SPIDER
+        buy: 50000
+        sell: -1
+      slime_spawner:
+        material: SPAWNER
+        spawnertype: SLIME
+        buy: 125000
+        sell: -1
+      creeper_spawner:
+        material: SPAWNER
+        spawnertype: CREEPER
+        buy: 125000
+        sell: -1
+      enderman_spawner:
+        material: SPAWNER
+        spawnertype: ENDERMAN
+        buy: 125000
+        sell: -1
+      magma_cube_spawner:
+        material: SPAWNER
+        spawnertype: MAGMA_CUBE
+        buy: 125000
+        sell: -1
+      blaze_spawner:
+        material: SPAWNER
+        spawnertype: BLAZE
+        buy: 250000
+        sell: -1
+      iron_golem_spawner:
+        material: SPAWNER
+        spawnertype: IRON_GOLEM
+        buy: 600000
+        sell: -1

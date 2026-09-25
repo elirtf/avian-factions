@@ -1,0 +1,10 @@
+# AVIAN: EssentialsX kits. Only ours; the plugin's examples are removed.
+#
+# harvester: a free Harvester Hoe once a week for every player (/kit harvester). The kit runs
+# /hoe give instead of storing the item, so each hoe is a fresh one with its own id. Another hoe
+# costs $25,000 from /hoe (hoe.conf price).
+kits:
+  harvester:
+    delay: 604800
+    items:
+      - /hoe give {USERNAME}

@@ -1,0 +1,263 @@
+pages:
+  page1:
+    items:
+      water_worker:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - WATER_WORKER:1
+      damage_arthropods:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DAMAGE_ARTHROPODS:5
+      binding_curse:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - BINDING_CURSE:1
+      breach:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - BREACH:4
+      protection_explosions:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PROTECTION_EXPLOSIONS:4
+      channeling:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - CHANNELING:1
+      density:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DENSITY:5
+      depth_strider:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DEPTH_STRIDER:3
+      dig_speed:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DIG_SPEED:5
+      protection_fall:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PROTECTION_FALL:4
+      fire_aspect:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - FIRE_ASPECT:2
+      protection_fire:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PROTECTION_FIRE:4
+      arrow_fire:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - ARROW_FIRE:1
+      loot_bonus_blocks:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - LOOT_BONUS_BLOCKS:3
+      frost_walker:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - FROST_WALKER:2
+      impaling:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - IMPALING:5
+      arrow_infinite:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - ARROW_INFINITE:1
+      knockback:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - KNOCKBACK:2
+      loot_bonus_mobs:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - LOOT_BONUS_MOBS:3
+      loyalty:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - LOYALTY:3
+      luck:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - LUCK:3
+      lure:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - LURE:3
+      mending:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - MENDING:1
+      multishot:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - MULTISHOT:1
+      piercing:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PIERCING:4
+      arrow_damage:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - ARROW_DAMAGE:5
+      protection_projectile:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PROTECTION_PROJECTILE:4
+      protection_environmental:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - PROTECTION_ENVIRONMENTAL:4
+  page2:
+    items:
+      arrow_knockback:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - ARROW_KNOCKBACK:2
+      quick_charge:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - QUICK_CHARGE:3
+      oxygen:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - OXYGEN:3
+      riptide:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - RIPTIDE:3
+      damage_all:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DAMAGE_ALL:5
+      silk_touch:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - SILK_TOUCH:1
+      damage_undead:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DAMAGE_UNDEAD:5
+      soul_speed:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - SOUL_SPEED:3
+      sweeping_edge:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - SWEEPING_EDGE:3
+      swift_sneak:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - SWIFT_SNEAK:3
+      thorns:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - THORNS:3
+      durability:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - DURABILITY:3
+      vanishing_curse:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - VANISHING_CURSE:1
+      wind_burst:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+        - WIND_BURST:3
+      lunge:
+        material: ENCHANTED_BOOK
+        buy: -1
+        sell: -1
+        enchantments:
+          - LUNGE:3

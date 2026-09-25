@@ -25,7 +25,9 @@
 lp creategroup hatchling
 lp group hatchling setweight 10
 lp group hatchling meta removeprefix 10
-lp group hatchling meta setsuffix 10 "&#9E9E9E ʜᴀᴛᴄʜʟɪɴɢ"
+# Rank tags are suffixes, shown after the name in chat via %avian_rank%. They are MiniMessage
+# (CarbonChat renders chat), not &-codes: <#RRGGBB> colours, <bold>, <gradient:#A:#B>.
+lp group hatchling meta setsuffix 10 "<#9E9E9E>ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
 lp group hatchling permission set betterrtp.use true
 lp group hatchling permission set essentials.tpa true
@@ -33,6 +35,23 @@ lp group hatchling permission set essentials.tpaccept true
 lp group hatchling permission set essentials.tpdeny true
 lp group hatchling permission set essentials.msg true
 lp group hatchling permission set essentials.r true
+# Chat is CarbonChat (hover card, ➜ arrow): speaking, private messages, ignoring.
+lp group hatchling permission set carbon.channel.global.see true
+lp group hatchling permission set carbon.channel.global.speak true
+lp group hatchling permission set carbon.whisper true
+lp group hatchling permission set carbon.whisper.send true
+lp group hatchling permission set carbon.whisper.receive true
+lp group hatchling permission set carbon.whisper.message true
+lp group hatchling permission set carbon.whisper.reply true
+lp group hatchling permission set carbon.whisper.continue true
+lp group hatchling permission set carbon.whisper.ping_sounds true
+lp group hatchling permission set carbon.ping_sounds true
+lp group hatchling permission set carbon.ignore true
+lp group hatchling permission set carbon.ignore.unignore true
+lp group hatchling permission set carbon.itemlink true
+# Kits: the weekly Harvester Hoe (/kit harvester, dev-server/plugins/Essentials/kits.yml).
+lp group hatchling permission set essentials.kit true
+lp group hatchling permission set essentials.kits.harvester true
 lp group hatchling permission set essentials.help true
 lp group hatchling permission set essentials.rules true
 lp group hatchling permission set essentials.balance true
@@ -50,7 +69,7 @@ lp group hatchling permission set factions.top false
 lp creategroup fledgling
 lp group fledgling setweight 20
 lp group fledgling meta removeprefix 20
-lp group fledgling meta setsuffix 20 "&#C9C9C9 ꜰʟᴇᴅɢʟɪɴɢ"
+lp group fledgling meta setsuffix 20 "<#C9C9C9>ꜰʟᴇᴅɢʟɪɴɢ"
 lp group fledgling parent add hatchling
 lp group fledgling permission set essentials.sethome.multiple.fledgling true
 lp group fledgling meta set homes 2
@@ -79,43 +98,47 @@ lp track free append fledgling
 lp creategroup finch
 lp group finch setweight 100
 lp group finch meta removeprefix 100
-lp group finch meta setsuffix 100 "&#F2D06B ꜰɪɴᴄʜ"
+lp group finch meta setsuffix 100 "<#F2D06B>ꜰɪɴᴄʜ"
 lp group finch permission set essentials.nick true
 lp group finch permission set essentials.nick.color true
-lp group finch permission set essentials.chat.color true
+# Chat colours are CarbonChat MiniMessage tags now (<red>hi, <#FF4FA3>hi); EssentialsXChat is gone.
+lp group finch permission unset essentials.chat.color
+lp group finch permission set carbon.messagetags.color true
 
 lp creategroup cardinal
 lp group cardinal setweight 110
 lp group cardinal meta removeprefix 110
-lp group cardinal meta setsuffix 110 "&#E0474C ᴄᴀʀᴅɪɴᴀʟ"
+lp group cardinal meta setsuffix 110 "<#E0474C>ᴄᴀʀᴅɪɴᴀʟ"
 lp group cardinal parent add finch
 lp group cardinal permission set essentials.hat true
-lp group cardinal permission set essentials.chat.format true
+lp group cardinal permission unset essentials.chat.format
+lp group cardinal permission set carbon.messagetags.decorations true
 lp group cardinal permission set essentials.nick.format true
 
 lp creategroup falcon
 lp group falcon setweight 120
 lp group falcon meta removeprefix 120
-lp group falcon meta setsuffix 120 "&#F0923A ꜰᴀʟᴄᴏɴ"
+lp group falcon meta setsuffix 120 "<#F0923A>ꜰᴀʟᴄᴏɴ"
 lp group falcon parent add cardinal
 # Hex colours. EssentialsX calls this "rgb"; an earlier version granted "essentials.nick.hex", which
 # does not exist, so the unset below cleans it out of databases that already have it.
 lp group falcon permission unset essentials.nick.hex
 lp group falcon permission set essentials.nick.rgb true
-lp group falcon permission set essentials.chat.rgb true
+lp group falcon permission unset essentials.chat.rgb
+lp group falcon permission set carbon.messagetags.gradient true
 lp group falcon permission set essentials.itemname true
 
 lp creategroup hawk
 lp group hawk setweight 130
 lp group hawk meta removeprefix 130
-lp group hawk meta setsuffix 130 "&#B07FE0 ʜᴀᴡᴋ"
+lp group hawk meta setsuffix 130 "<#B07FE0>ʜᴀᴡᴋ"
 lp group hawk parent add falcon
 lp group hawk permission set essentials.itemlore true
 
 lp creategroup raven
 lp group raven setweight 140
 lp group raven meta removeprefix 140
-lp group raven meta setsuffix 140 "&#8C5CFF&l ʀᴀᴠᴇɴ"
+lp group raven meta setsuffix 140 "<#8C5CFF><bold>ʀᴀᴠᴇɴ</bold>"
 lp group raven parent add hawk
 lp group raven permission set essentials.nick.others false
 
@@ -134,8 +157,12 @@ lp track paid append raven
 lp creategroup helper
 lp group helper setweight 200
 lp group helper meta removeprefix 200
-lp group helper meta setsuffix 200 "&#5FD3C7 ʜᴇʟᴘᴇʀ"
+lp group helper meta setsuffix 200 "<#5FD3C7>ʜᴇʟᴘᴇʀ"
 lp group helper permission set essentials.mute true
+lp group helper permission set carbon.mute true
+lp group helper permission set carbon.mute.unmute true
+lp group helper permission set carbon.mute.info true
+lp group helper permission set carbon.mute.notify true
 lp group helper permission set essentials.kick true
 lp group helper permission set essentials.tempban true
 lp group helper permission set essentials.vanish true
@@ -145,7 +172,7 @@ lp group helper permission set coreprotect.lookup true
 lp creategroup mod
 lp group mod setweight 210
 lp group mod meta removeprefix 210
-lp group mod meta setsuffix 210 "&#4DA3FF ᴍᴏᴅ"
+lp group mod meta setsuffix 210 "<#4DA3FF>ᴍᴏᴅ"
 lp group mod parent add helper
 lp group mod permission set essentials.ban true
 lp group mod permission set essentials.tp true
@@ -159,10 +186,14 @@ lp group mod permission set factions.kit.halfmod true
 lp creategroup admin
 lp group admin setweight 220
 lp group admin meta removeprefix 220
-lp group admin meta setsuffix 220 "&#3DDC84 ᴀᴅᴍɪɴ"
+lp group admin meta setsuffix 220 "<#3DDC84>ᴀᴅᴍɪɴ"
 lp group admin parent add mod
 lp group admin permission set essentials.gamemode true
 lp group admin permission set essentials.give true
+# /avian tokens|gems|money give|take|set and /avian balance (#26). Console always can.
+lp group admin permission set avian.admin.economy true
+lp group admin permission set avian.hoe.admin true
+lp group admin permission set avian.admin.chunkbuster true
 lp group admin permission set worldedit.* true
 lp group admin permission set worldguard.* true
 # FactionsUUID's mod kit adds /fa power, grace (raid windows by hand), disband any; and F-Top recalc.
@@ -172,7 +203,7 @@ lp group admin permission set avian.ftop.admin true
 lp creategroup owner
 lp group owner setweight 230
 lp group owner meta removeprefix 230
-lp group owner meta setsuffix 230 " &#FF4FA3&lᴏ&#FF6BB3&lᴡ&#FF87C3&lɴ&#FFA3D3&lᴇ&#FFBFE3&lʀ"
+lp group owner meta setsuffix 230 "<bold><gradient:#FF4FA3:#FFBFE3>ᴏᴡɴᴇʀ</gradient></bold>"
 lp group owner parent add admin
 lp group owner permission set * true
 

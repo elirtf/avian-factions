@@ -35,7 +35,7 @@ public final class EconomyModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(EconomyConfig.SPEC);
+        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC);
     }
 
     @Override
@@ -59,12 +59,32 @@ public final class EconomyModule implements AvianModule {
         ctx.services().provide(Economy.class, economy);
         ctx.services().provide(SellValues.class, sellValues);
         ctx.registerListener(new StartingBalanceListener(economy, ctx.logger()));
+        ctx.registerListener(new SugarCaneTokens(economy, config,
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
+        ctx.registerListener(new VillagerGolemGuard(config));
+
+        // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
+        var hoe = ctx.config(HoeConfig.SPEC);
+        java.util.function.ObjDoubleConsumer<org.bukkit.entity.Player> farmingXp =
+                Bukkit.getPluginManager().getPlugin("AuraSkills") != null ? AuraSkillsXp::addFarmingXp : (p, xp) -> { };
+        ctx.registerListener(new HoeHarvest(economy, sellValues, hoe, config,
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), farmingXp, ctx.logger()));
+        var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
+        ctx.registerListener(hoeMenu);
+        ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
+        // /avian tokens|gems|money give|take|set: how crates, votes and events pay out (#26).
+        ctx.commands().register(new EconomyCommand(economy).build(), "Give, take or set a player's money, tokens or gems");
 
         if (config.get().provideVault() && Bukkit.getPluginManager().getPlugin("Vault") != null) {
             var bridge = new VaultEconomyBridge(economy, "Avian");
             Bukkit.getServicesManager().register(net.milkbowl.vault.economy.Economy.class, bridge,
                     ctx.plugin(), ServicePriority.Highest);
             ctx.logger().info("Registered as Vault's economy provider");
+        }
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new AvianPlaceholders(economy).register();
+            ctx.logger().info("Registered %avian_...% placeholders");
         }
     }
 

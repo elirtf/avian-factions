@@ -85,9 +85,10 @@ val pluginStack = listOf(
     PinnedPlugin("EssentialsXSpawn-2.22.0.jar",
         "https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXSpawn-2.22.0.jar",
         "SHA-256", "dd5377c4c921b9b67814209f4f6646ffbb959729003e721ec5e63c47c7c010b8"),
-    PinnedPlugin("EssentialsXChat-2.22.0.jar",
-        "https://github.com/EssentialsX/Essentials/releases/download/2.22.0/EssentialsXChat-2.22.0.jar",
-        "SHA-256", "e5b0211f98af1eaba712d9294997639a39209db1fc842394a0923820073ec65a"),
+    // Chat formatting with hover tooltips (replaces EssentialsXChat, which cannot do hover).
+    PinnedPlugin("carbonchat-paper-3.0.0-beta.39.jar",
+        "https://github.com/Hexaoxide/Carbon/releases/download/v3.0.0-beta.39/carbonchat-paper-3.0.0-beta.39.jar",
+        "SHA-256", "bc79bba5b67f4ceeca531775970ce6e2922ddff87999e12e463cdffa8e6fe4f5"),
     PinnedPlugin("LuckPerms-Bukkit-5.5.84.jar",
         "https://download.luckperms.net/1671/bukkit/loader/LuckPerms-Bukkit-5.5.84.jar",
         "SHA-256", "ee57b908b415a22a770f0e1f5af1e43de9cb2b81b33715c6c60d0f6d89ee3a58"),
@@ -114,6 +115,14 @@ val pluginStack = listOf(
     PinnedPlugin("PlaceholderAPI-2.12.3.jar",
         "https://github.com/PlaceholderAPI/PlaceholderAPI/releases/download/2.12.3/PlaceholderAPI-2.12.3.jar",
         "SHA-256", "fde03259f5af6938f3c33eeb4d814000a1adabf1d2304ce14970be81f609a437"),
+    // Server-list MOTD with MiniMessage colours (MIT, jpenilla: same author as CarbonChat).
+    PinnedPlugin("minimotd-paper-2.2.5.jar",
+        "https://cdn.modrinth.com/data/16vhQOQN/versions/Ch5nDFAs/minimotd-paper-2.2.5.jar",
+        "SHA-256", "a1f5bff3abf4c9c90bd4417ce26612e621c83a1564f3fc7aa39848996cbea6c6"),
+    // Click menus (the /f faction menu). Modrinth's file for 1.14.1, listed for 26.1.2.
+    PinnedPlugin("DeluxeMenus-1.14.1-Release.jar",
+        "https://cdn.modrinth.com/data/kKZkPgJ7/versions/PNKQ6RMs/DeluxeMenus-1.14.1-Release.jar",
+        "SHA-256", "ec10a1317152aa57d76eec8cb3e1e7dc7f52e45c7a5d742c0baa1e394496ec20"),
     PinnedPlugin("CoreProtect-CE-24.0.jar",
         "https://cdn.modrinth.com/data/Lu3KuzdV/versions/Kma0kBsY/CoreProtect-CE-24.0.jar",
         "SHA-256", "66cd362089bb8430e5a018ee77e9b433bf0dc9e65590d5f1a043a78d60415696"),
@@ -163,6 +172,20 @@ val pluginStack = listOf(
     PinnedPlugin("FancyNpcs-2.12.1.jar",
         "https://cdn.modrinth.com/data/EeyAn23L/versions/LigxTtVw/FancyNpcs-2.12.1.jar",
         "SHA-256", "a3464906d6c797781a29831706ebd5cdfa6d076fa094da2f0e7574b436fb9532"),
+    // Bedrock crossplay: Geyser translates Bedrock clients (UDP 19132) into Java ones, Floodgate
+    // lets them in without a Java account. Geyser only speaks the newest Java protocol (26.2), so
+    // ViaVersion lets it — and 26.2 Java clients — join our 26.1.2 server. GeyserMC publishes every
+    // build as "latest"; the build-number URLs are stable and the hash is the pin. All three
+    // boot-tested clean on Paper 26.1.2 build 74; see docs/research/bedrock-crossplay.md.
+    PinnedPlugin("ViaVersion-5.12.0.jar",
+        "https://cdn.modrinth.com/data/P1OZGk5p/versions/FaishMnD/ViaVersion-5.12.0.jar",
+        "SHA-256", "c4d512fa9760fa41d17abaedde12aa1f4c9bde920d0a992fe0fc016962f126be"),
+    PinnedPlugin("Geyser-Spigot-2.11.3-b1246.jar",
+        "https://download.geysermc.org/v2/projects/geyser/versions/2.11.3/builds/1246/downloads/spigot",
+        "SHA-256", "d1607770723a740b4165afed56bcafe544ea2767d71eeda9867f985031812600"),
+    PinnedPlugin("floodgate-spigot-2.2.5-b141.jar",
+        "https://download.geysermc.org/v2/projects/floodgate/versions/2.2.5/builds/141/downloads/spigot",
+        "SHA-256", "21570aff9ce17d6983928e8552777760e1ede5050026b04c686b0ae112e6fd7e"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

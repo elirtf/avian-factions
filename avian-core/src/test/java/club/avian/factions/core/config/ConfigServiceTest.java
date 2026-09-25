@@ -133,6 +133,29 @@ class ConfigServiceTest {
         assertTrue(text.contains("kept"), text);
     }
 
+    @ConfigSerializable
+    public static final class Priced {
+        Map<String, Long> prices = new java.util.LinkedHashMap<>(Map.of("STONE", 1L, "DIRT", 2L));
+    }
+
+    static final ConfigSpec<Priced> PRICED = ConfigSpec.of("priced.conf", Priced.class)
+            .freeForm("prices")
+            .build();
+
+    @Test
+    void aFreeFormTableKeepsExactlyTheEntriesTheAdminWrote() throws IOException {
+        Files.writeString(dir.resolve("priced.conf"), "config-version = 1\nprices { STONE = 5, SAND = 3 }\n");
+        service.loadAll(List.of(new AvianModule() {
+            @Override public String id() { return "priced"; }
+            @Override public List<ConfigSpec<?>> configs() { return List.of(PRICED); }
+            @Override public void enable(ModuleContext ctx) { }
+        }));
+        assertEquals(Map.of("STONE", 5L, "SAND", 3L), service.handle(PRICED).get().prices,
+                "SAND is data, not a typo, and the DIRT the admin removed stays removed");
+        assertFalse(logged.stream().anyMatch(l -> l.contains("unknown key") || l.contains("added missing key")),
+                logged.toString());
+    }
+
     @Test
     void newerFileVersionIsRejected() throws IOException {
         env.put("SAMPLE_SECRET", "s");

@@ -1,0 +1,9 @@
+pages:
+  page1:
+    gui-rows: 3
+    items:
+      enchanted_book:
+        material: ENCHANTED_BOOK
+        displayname: <#AA00FF><bold>Enchantments
+        section: enchanting
+        slot: 12
