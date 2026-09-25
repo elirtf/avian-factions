@@ -1,0 +1,11 @@
+# Glyphs the pack draws. Use them in any title, message or lore as <image:avian:NAME>, with
+# <shift:N> for N pixels of space (negative moves left). CraftEngine rewrites the tags in outgoing
+# packets, so they work in every plugin's menus too. Art lives in resourcepack/assets/avian/textures/font/.
+# (Menu backgrounds go in their own font, e.g. avian:gui, as <shift:-8><image:avian:NAME> titles.)
+images:
+  # Icons sit on the text baseline, one per currency and rank.
+  avian:coin:
+    height: 8
+    ascent: 7
+    font: avian:icons
+    file: avian:font/icon/coin.png
