@@ -160,6 +160,18 @@ val pluginStack = listOf(
     PinnedPlugin("AuraSkills-2.4.0.jar",
         "https://cdn.modrinth.com/data/uDdZAVls/versions/9rSJ3THD/AuraSkills-2.4.0.jar",
         "SHA-256", "de54cbd2e33d65e8b1704751ae4121ed2f5b466ba89c63a1aadf3a3e629d6a40"),
+    // BetterRTP 3.6.13 (GPL-3.0): /rtp inside the world border, skipping WorldGuard regions. Its
+    // FactionsUUID hook predates 4.x and never enables, so claims are not avoided yet (#45). Last
+    // release was 2024-05 — spiget's "always latest" mirror, so the hash is the pin (Hangar only has
+    // 3.6.8). Boot-tested clean on 26.1.2. Config: dev-server/plugins/BetterRTP.
+    PinnedPlugin("BetterRTP-3.6.13.jar",
+        "https://cdn.spiget.org/file/spiget-resources/36081.jar",
+        "SHA-256", "960c49cb7c9a03f31d2dd751f83a78479b3465bcb5eb65789b19874e13d503f2"),
+    // FancyNpcs 2.12.1 (MIT): packet-based NPCs for the spawn NPC district (spec §21, §60). Built
+    // in-game with /npc; they live in run/plugins/FancyNpcs and travel with ./dev backup.
+    PinnedPlugin("FancyNpcs-2.12.1.jar",
+        "https://cdn.modrinth.com/data/EeyAn23L/versions/LigxTtVw/FancyNpcs-2.12.1.jar",
+        "SHA-256", "a3464906d6c797781a29831706ebd5cdfa6d076fa094da2f0e7574b436fb9532"),
     // Bedrock crossplay: Geyser translates Bedrock clients (UDP 19132) into Java ones, Floodgate
     // lets them in without a Java account. Geyser only speaks the newest Java protocol (26.2), so
     // ViaVersion lets it — and 26.2 Java clients — join our 26.1.2 server. GeyserMC publishes every

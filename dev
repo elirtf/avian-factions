@@ -10,7 +10,7 @@ SESSION="${AVIAN_DEV_SESSION:-avian}"
 LOG="$ROOT/run/logs/latest.log"
 RANKS="$ROOT/dev-server/luckperms/ranks.lp"
 SETUP_STAMP="$ROOT/run/.dev-setup-applied"
-WORLD_BORDER=5000
+WORLD_BORDER=20000
 START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
 STOP_TIMEOUT=90
 
