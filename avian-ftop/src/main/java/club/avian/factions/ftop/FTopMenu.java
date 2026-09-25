@@ -1,6 +1,7 @@
 package club.avian.factions.ftop;
 
 import club.avian.factions.api.text.Brand;
+import club.avian.factions.api.text.Ui;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -53,7 +54,7 @@ final class FTopMenu implements Listener {
     private static final int[] REST = {28, 29, 30, 31, 32, 33, 34};             // #4 – #10
     private static final int[] PAGE = {10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25,
             28, 29, 30, 31, 32, 33, 34, 37, 38, 39, 40, 41, 42, 43};             // 28 per later page
-    private static final int INFO = 45, PREV = 48, YOURS = 49, NEXT = 50, CLOSE = 53;
+    private static final int INFO = 4, PREV = 45, YOURS = 47, CLOSE = 49, NEXT = 53;
     private static final String[] PLACE = {"<sun>", "<soft>", "<hot>"};         // gold, silver, bronze
 
     private final Supplier<Ranking> ranking;
@@ -84,8 +85,7 @@ final class FTopMenu implements Listener {
 
     void open(Player player, int page) {
         var holder = new Holder();
-        holder.inventory = Bukkit.createInventory(holder, SIZE, Brand.mm(
-                "<bold><gradient:#FFD23F:#FF7A45:#FF5C5C>✦ F-TOP ✦</gradient></bold>"));
+        holder.inventory = Bukkit.createInventory(holder, SIZE, Ui.title(Ui.CROWN, "F-Top"));
         render(holder, player, page);
         player.openInventory(holder.inventory);
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 0.7f, 1.2f);
@@ -102,13 +102,12 @@ final class FTopMenu implements Listener {
         h.page = Math.max(1, Math.min(page, pages(r)));
         h.tagsBySlot.clear();
         inv.clear();
-        frame(inv);
+        Ui.accents(inv, Material.ORANGE_STAINED_GLASS_PANE, Material.YELLOW_STAINED_GLASS_PANE);
         var entries = r.entries();
         long top = entries.isEmpty() ? 0 : entries.getFirst().total();
         if (entries.isEmpty()) {
-            inv.setItem(22, icon(Material.SPAWNER, "<soft><bold>NO FACTION HAS VALUE YET</bold></soft>", List.of(
-                    "<soft>Place <cane>spawners</cane> and value blocks in",
-                    "<soft>your land to climb F-Top.")));
+            inv.setItem(22, Ui.item(Material.SPAWNER, "<soft><bold>No faction has value yet</bold></soft>",
+                    Ui.Tooltip.of("Place spawners and value blocks in", "your land to climb F-Top.").lines()));
         } else if (h.page == 1) {
             for (int i = 0; i < Math.min(3, entries.size()); i++) {
                 put(h, PODIUM[i], entries.get(i), top, true);
@@ -123,21 +122,19 @@ final class FTopMenu implements Listener {
             }
         }
         long minutes = Duration.between(r.calculatedAt(), clock.instant()).toMinutes();
-        inv.setItem(INFO, icon(Material.CLOCK, "<xp><bold>HOW F-TOP WORKS</bold></xp>", List.of(
-                "<soft>Factions are ranked by the value of the",
-                "<cane>spawners</cane> <soft>and</soft> <token>value blocks</token> <soft>in their land.",
-                "",
-                "<soft>Updated <sun>" + (r.calculatedAt().getEpochSecond() == 0 ? "soon"
-                        : minutes < 1 ? "just now" : minutes + " min ago") + "</sun>",
-                "<dim>Recalculates every " + recalculateMinutes.get() + " minutes.")));
+        String updated = r.calculatedAt().getEpochSecond() == 0 ? "soon" : minutes < 1 ? "just now" : minutes + " min ago";
+        inv.setItem(INFO, Ui.glow(Ui.item(Material.GOLDEN_HELMET, "<sun><bold>" + Ui.CROWN + " F-Top</bold></sun>",
+                Ui.Tooltip.of("Factions ranked by the value of the", "spawners and value blocks in their land.")
+                        .stat("Updated", updated, "sun")
+                        .stat("Every", recalculateMinutes.get() + " min", "soft").lines())));
         if (h.page > 1) {
-            inv.setItem(PREV, icon(Material.ARROW, "<cane><bold>← PREVIOUS</bold></cane>", List.of("<soft>Page " + (h.page - 1))));
+            inv.setItem(PREV, Ui.prev(h.page - 1));
         }
         if (h.page < pages(r)) {
-            inv.setItem(NEXT, icon(Material.ARROW, "<cane><bold>NEXT →</bold></cane>", List.of("<soft>Page " + (h.page + 1))));
+            inv.setItem(NEXT, Ui.next(h.page + 1));
         }
         inv.setItem(YOURS, yours(viewer, entries, top));
-        inv.setItem(CLOSE, icon(Material.BARRIER, "<bad><bold>CLOSE</bold></bad>", List.of()));
+        inv.setItem(CLOSE, Ui.close());
     }
 
     private void put(Holder h, int slot, Ranking.Entry e, long top, boolean podium) {
@@ -148,56 +145,45 @@ final class FTopMenu implements Listener {
     private ItemStack entryIcon(Ranking.Entry e, long top, boolean podium) {
         String c = e.rank() <= 3 ? PLACE[e.rank() - 1] : "<gem>";
         String end = c.replace("<", "</");
-        var lore = new ArrayList<String>();
-        lore.add("<soft>Worth  <money><bold>" + money.apply(e.total()) + "</bold></money>");
-        lore.add(bar(e.total(), top) + (e.rank() > 1 && top > 0 ? "  <dim>" + (100 * e.total() / top) + "% of #1</dim>" : ""));
-        lore.add("");
-        lore.add("<soft>Spawners  <cane>" + money.apply(e.spawnerValue()) + "</cane>");
-        lore.add("<soft>Blocks    <token>" + money.apply(e.blockValue()) + "</token>");
-        var biggest = e.units().entrySet().stream()
+        var tip = Ui.Tooltip.of()
+                .stat("Worth", "<bold>" + money.apply(e.total()) + "</bold>", "money")
+                .line(bar(e.total(), top) + (e.rank() > 1 && top > 0 ? "  <dim>" + (100 * e.total() / top) + "% of #1</dim>" : ""))
+                .stat("Spawners", money.apply(e.spawnerValue()), "cane")
+                .stat("Blocks", money.apply(e.blockValue()), "token");
+        e.units().entrySet().stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .limit(4).toList();
-        if (!biggest.isEmpty()) {
-            lore.add("");
-            for (var u : biggest) {
-                lore.add("<dim>•</dim> <soft>" + pretty(u.getKey()) + " <xp>x" + String.format("%,d", u.getValue()) + "</xp>");
-            }
-        }
-        lore.add("");
-        lore.add("<soft>Members  <sun>" + factions.onlineMembers(e.owner().id()) + "</sun><soft> online / "
-                + factions.members(e.owner().id()));
-        lore.add("<cane>➜ Click to view the faction</cane>");
-        String name = c + "<bold>#" + e.rank() + "  " + e.owner().tag() + "</bold>" + end;
+                .limit(4)
+                .forEach(u -> tip.line("   <soft>" + pretty(u.getKey()) + " <xp>x" + String.format("%,d", u.getValue()) + "</xp>"));
+        tip.stat("Online", factions.onlineMembers(e.owner().id()) + " / " + factions.members(e.owner().id()), "sun")
+                .action("Click", "View the faction");
+        String name = c + "<bold>" + (e.rank() <= 3 ? Ui.CROWN + " " : "") + "#" + e.rank() + "  " + e.owner().tag() + "</bold>" + end;
         var leader = factions.leader(e.owner().id());
         ItemStack item;
         if (leader != null) {
-            item = icon(Material.PLAYER_HEAD, name, lore);
+            item = Ui.item(Material.PLAYER_HEAD, name, tip.lines());
             item.editMeta(SkullMeta.class, meta -> meta.setOwningPlayer(leader));
         } else {
-            item = icon(e.rank() == 1 ? Material.GOLD_BLOCK : e.rank() == 2 ? Material.IRON_BLOCK
-                    : e.rank() == 3 ? Material.COPPER_BLOCK : Material.AMETHYST_BLOCK, name, lore);
+            item = Ui.item(e.rank() == 1 ? Material.GOLD_BLOCK : e.rank() == 2 ? Material.IRON_BLOCK
+                    : e.rank() == 3 ? Material.COPPER_BLOCK : Material.AMETHYST_BLOCK, name, tip.lines());
         }
-        if (podium) {
-            item.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
-        }
-        return item;
+        return podium ? Ui.glow(item) : item;
     }
 
     private ItemStack yours(Player viewer, List<Ranking.Entry> entries, long top) {
         Integer id = factions.factionOf(viewer);
         if (id == null) {
-            return icon(Material.WHITE_BANNER, "<soft><bold>YOUR FACTION</bold></soft>", List.of(
-                    "<soft>You're not in a faction.", "<cane>➜ /f</cane> <soft>to create or join one."));
+            return Ui.item(Material.WHITE_BANNER, "<soft><bold>Your faction</bold></soft>",
+                    Ui.Tooltip.of("You're not in a faction yet.").action("Type /f", "Create or join one").lines());
         }
         for (var e : entries) {
             if (e.owner().id() == id) {
                 var item = entryIcon(e, top, false);
-                item.editMeta(meta -> meta.displayName(Brand.mm("<cane><bold>YOUR FACTION  #" + e.rank() + "</bold></cane>")));
+                item.editMeta(meta -> meta.displayName(Brand.mm("<cane><bold>" + Ui.STAR + " Your faction  #" + e.rank() + "</bold></cane>")));
                 return item;
             }
         }
-        return icon(Material.WHITE_BANNER, "<soft><bold>YOUR FACTION</bold></soft>", List.of(
-                "<soft>Not ranked yet: no spawners or value", "<soft>blocks in your land."));
+        return Ui.item(Material.WHITE_BANNER, "<soft><bold>Your faction</bold></soft>",
+                Ui.Tooltip.of("Not ranked yet: no spawners or", "value blocks in your land.").lines());
     }
 
     /** Ten cells against first place. */
@@ -218,16 +204,6 @@ final class FTopMenu implements Listener {
         return out.toString();
     }
 
-    private static void frame(Inventory inv) {
-        var inside = icon(Material.BLACK_STAINED_GLASS_PANE, " ", List.of());
-        var a = icon(Material.ORANGE_STAINED_GLASS_PANE, " ", List.of());
-        var b = icon(Material.YELLOW_STAINED_GLASS_PANE, " ", List.of());
-        for (int slot = 0; slot < SIZE; slot++) {
-            int row = slot / 9, col = slot % 9;
-            boolean edge = row == 0 || row == SIZE / 9 - 1 || col == 0 || col == 8;
-            inv.setItem(slot, edge ? ((row + col) % 2 == 0 ? a : b) : inside);
-        }
-    }
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
@@ -263,13 +239,4 @@ final class FTopMenu implements Listener {
         }
     }
 
-    private static ItemStack icon(Material material, String name, List<String> lore) {
-        var item = new ItemStack(material);
-        item.editMeta(meta -> {
-            meta.displayName(Brand.mm(name));
-            meta.lore(lore.stream().map(l -> l.isEmpty() ? Component.empty() : Brand.mm(l)).toList());
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        });
-        return item;
-    }
 }

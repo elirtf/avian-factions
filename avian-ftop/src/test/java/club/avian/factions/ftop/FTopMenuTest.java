@@ -63,9 +63,9 @@ class FTopMenuTest {
     @Test
     void thePodiumHoldsTheTopThreeAndTheRowBelowHoldsFourToTen() {
         menu.open(viewer, 1);
-        assertEquals("#1  Faction1", name(13));
-        assertEquals("#2  Faction2", name(21));
-        assertEquals("#3  Faction3", name(23));
+        assertEquals("♛ #1  Faction1", name(13));
+        assertEquals("♛ #2  Faction2", name(21));
+        assertEquals("♛ #3  Faction3", name(23));
         assertEquals("#4  Faction4", name(28));
         assertEquals("#10  Faction10", name(34));
         assertEquals(Material.GOLD_BLOCK, viewer.getOpenInventory().getTopInventory().getItem(13).getType(),
@@ -83,16 +83,16 @@ class FTopMenuTest {
     @Test
     void yourFactionIsShownWhateverItsRank() {
         menu.open(viewer, 1);
-        assertEquals("YOUR FACTION  #12", name(49));
+        assertEquals("★ Your faction  #12", name(47));
     }
 
     @Test
     void anEmptyRankingSaysHowToGetOnIt() {
         ranking = new Ranking(java.util.List.of(), Instant.EPOCH);
         menu.open(viewer, 1);
-        assertEquals("NO FACTION HAS VALUE YET", name(22));
-        assertNull(viewer.getOpenInventory().getTopInventory().getItem(50) == null ? null
-                : viewer.getOpenInventory().getTopInventory().getItem(50).getType() == Material.ARROW ? "arrow" : null,
+        assertEquals("No faction has value yet", name(22));
+        assertNull(viewer.getOpenInventory().getTopInventory().getItem(53) == null ? null
+                : viewer.getOpenInventory().getTopInventory().getItem(53).getType() == Material.ARROW ? "arrow" : null,
                 "no next page");
     }
 

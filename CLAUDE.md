@@ -46,7 +46,7 @@ Everything goes through `./dev` (guide: `docs/DEVELOPING.md`): `./dev setup` onc
 
 ## Development rules
 
-Follow `docs/SPEC.md` §2 (Development Rules), §65 (async/sync), §74 (security), §81 (Definition of Done). In particular: never block the main thread on DB I/O; identify custom items by PersistentDataContainer, never display name; UUIDs internally; every gameplay value configurable. Everything custom players see (menus, item names, lore, messages) is **bright, colourful and engaging**: write it with `club.avian.factions.api.text.Brand` (shared palette, gradients, progress bars) and give menus clear buttons, arrows and click sounds.
+Follow `docs/SPEC.md` §2 (Development Rules), §65 (async/sync), §74 (security), §81 (Definition of Done). In particular: never block the main thread on DB I/O; identify custom items by PersistentDataContainer, never display name; UUIDs internally; every gameplay value configurable. Everything custom players see (menus, item names, lore, messages) is **bright, colourful and engaging**: write it with `club.avian.factions.api.text.Brand` (palette, gradients, bars) and build menus with `club.avian.factions.api.text.Ui` (the menu kit): colour on the top and bottom rows only with the middle open, the subject top-centre, tooltips in the order purpose → `◆ Label  value` stats → `▶ Click · what happens`, `◀`/`▶`/`✖ Close` footer, glyph icons, click sounds. Engaging, never overbearing.
 
 ## Agent skills
 
