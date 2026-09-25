@@ -4,6 +4,7 @@ import club.avian.factions.api.config.ConfigHandle;
 import club.avian.factions.api.economy.Currency;
 import club.avian.factions.api.economy.Economy;
 import club.avian.factions.api.text.Brand;
+import club.avian.factions.api.text.Ui;
 import club.avian.factions.economy.HarvesterHoe.Track;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -80,7 +81,7 @@ final class HoeMenu implements Listener {
 
     void open(Player player) {
         var holder = new Holder();
-        holder.inventory = Bukkit.createInventory(holder, SIZE, Brand.title("✦ Harvester Hoe ✦"));
+        holder.inventory = Bukkit.createInventory(holder, SIZE, Ui.title(Ui.PICK, "Harvester Hoe"));
         render(holder.inventory, player);
         player.openInventory(holder.inventory);
         player.playSound(player.getLocation(), Sound.BLOCK_ENDER_CHEST_OPEN, 0.6f, 1.4f);
@@ -96,109 +97,93 @@ final class HoeMenu implements Listener {
 
     private void render(Inventory inv, Player player) {
         inv.clear();
-        frame(inv);
+        Ui.accents(inv, Material.YELLOW_STAINED_GLASS_PANE, Material.LIME_STAINED_GLASS_PANE);
         var held = player.getInventory().getItemInMainHand();
         var cfg = config.get();
+        long tokens = economy.balance(player.getUniqueId(), Currency.TOKENS);
         if (HarvesterHoe.is(held)) {
             // early hoes were diamond
             var hand = held.getType() == Material.NETHERITE_HOE ? held : held.withType(Material.NETHERITE_HOE);
             HarvesterHoe.refreshLore(hand, cfg);   // older hoes pick up the current look
             player.getInventory().setItemInMainHand(hand);
-            var preview = hand.clone();
-            preview.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
-            inv.setItem(PREVIEW, preview);
+            inv.setItem(PREVIEW, Ui.glow(hand.clone()));
             ICON_SLOTS.forEach((slot, track) -> {
                 inv.setItem(slot, upgradeIcon(hand, track, cfg));
-                inv.setItem(slot + 9, arrow(hand, track, cfg));
+                inv.setItem(slot + 9, arrow(hand, track, cfg, tokens));
             });
             inv.setItem(AUTO_SELL, autoSellButton(HarvesterHoe.autoSell(hand, cfg)));
         } else {
-            inv.setItem(KIT, icon(Material.CHEST_MINECART, "<cane><bold>FREE WEEKLY HOE</bold></cane>", List.of(
-                    "<soft>Every player gets one each week.",
-                    "",
-                    "<cane>➜ Click to claim</cane> <dim>(/kit harvester)</dim>")));
-            inv.setItem(BUY, glow(icon(Material.DIAMOND_HOE, "<sun><bold>BUY A HARVESTER HOE</bold></sun>",
-                    cfg.price() > 0 ? List.of(
-                            "<soft>Harvests <cane>sugar cane</cane> in an area,",
-                            "<soft>sells it on the spot and finds <token>tokens</token>.",
-                            "",
-                            "<soft>Price  <money>" + economy.format(Currency.MONEY, cfg.price()) + "</money>",
-                            "",
-                            "<sun>➜ Click to buy</sun>")
-                            : List.of("<bad>Not for sale.</bad> <soft>Claim the weekly one."))));
+            inv.setItem(PREVIEW, Ui.item(Material.NETHERITE_HOE, "<sun><bold>" + Ui.PICK + " Harvester Hoe</bold></sun>",
+                    Ui.Tooltip.of("Harvests sugar cane in an area and",
+                            "sells it on the spot. Upgrade it with tokens.").lines()));
+            inv.setItem(KIT, Ui.item(Material.CHEST_MINECART, "<cane><bold>" + Ui.SPARK + " Free weekly hoe</bold></cane>",
+                    Ui.Tooltip.of("Every player can claim one each week.")
+                            .action("Click", "Claim it (/kit harvester)").lines()));
+            inv.setItem(BUY, cfg.price() > 0
+                    ? Ui.glow(Ui.item(Material.NETHERITE_HOE, "<sun><bold>" + Ui.PICK + " Buy a hoe</bold></sun>",
+                            Ui.Tooltip.of("Need another one?")
+                                    .stat("Price", economy.format(Currency.MONEY, cfg.price()), "money")
+                                    .action("Click", "Buy").lines()))
+                    : Ui.item(Material.GRAY_DYE, "<dim><bold>Not for sale</bold></dim>",
+                            Ui.Tooltip.of("Claim the weekly one instead.").lines()));
         }
-        long tokens = economy.balance(player.getUniqueId(), Currency.TOKENS);
-        inv.setItem(BALANCE, icon(Material.SUNFLOWER, "<token><bold>YOUR TOKENS</bold></token>", List.of(
-                "<token>" + economy.format(Currency.TOKENS, tokens) + "</token>",
-                "",
-                "<soft>Earn them by harvesting grown cane.")));
-        inv.setItem(HELP, icon(Material.KNOWLEDGE_BOOK, "<xp><bold>HOW IT WORKS</bold></xp>", List.of(
-                "<soft>Break sugar cane with the hoe:",
-                "<soft>everything above the <cane>root</cane> is harvested,",
-                "<soft>so nothing needs replanting.",
-                "",
-                "<soft>Each grown block can drop <token>tokens</token>",
-                "<soft>and gives <xp>farming XP</xp>. Upgrades",
-                "<soft>cost tokens and stay on the hoe.")));
-        inv.setItem(CLOSE, icon(Material.BARRIER, "<bad><bold>CLOSE</bold></bad>", List.of()));
-    }
-
-    /** A two-colour frame: yellow and lime glass alternating, black glass inside so colours pop. */
-    private static void frame(Inventory inv) {
-        var inside = icon(Material.BLACK_STAINED_GLASS_PANE, " ", List.of());
-        var a = icon(Material.YELLOW_STAINED_GLASS_PANE, " ", List.of());
-        var b = icon(Material.LIME_STAINED_GLASS_PANE, " ", List.of());
-        for (int slot = 0; slot < SIZE; slot++) {
-            int row = slot / 9;
-            int col = slot % 9;
-            boolean edge = row == 0 || row == SIZE / 9 - 1 || col == 0 || col == 8;
-            inv.setItem(slot, edge ? ((row + col) % 2 == 0 ? a : b) : inside);
-        }
+        inv.setItem(BALANCE, Ui.item(Material.SUNFLOWER, "<token><bold>" + Ui.TOKEN + " "
+                        + economy.format(Currency.TOKENS, tokens) + "</bold></token>",
+                Ui.Tooltip.of("Your tokens. Earn them by harvesting", "grown sugar cane.").lines()));
+        inv.setItem(HELP, Ui.item(Material.KNOWLEDGE_BOOK, "<xp><bold>" + Ui.INFO + " How it works</bold></xp>",
+                Ui.Tooltip.of("Break sugar cane with the hoe: everything",
+                                "above the root is harvested, so nothing",
+                                "needs replanting.")
+                        .line("<dim>" + Ui.DOT + "</dim> <soft>Grown blocks can drop <token>tokens</token>")
+                        .line("<dim>" + Ui.DOT + "</dim> <soft>and give <xp>farming XP</xp>.")
+                        .line("<dim>" + Ui.DOT + "</dim> <soft>Upgrades stay on the hoe.")
+                        .action("Right-click the hoe", "Open this menu").lines()));
+        inv.setItem(CLOSE, Ui.close());
     }
 
     private ItemStack upgradeIcon(ItemStack hoe, Track track, HoeConfig cfg) {
         var upgrade = track.upgrade(cfg);
         int level = HarvesterHoe.level(hoe, track);
         String c = COLOURS.get(track);
-        var lore = new ArrayList<String>();
-        lore.add(Brand.bar(level, upgrade.maxLevel()) + "  <soft>" + level + "/" + upgrade.maxLevel());
-        lore.add("");
-        lore.add("<soft>Now  <" + c + ">" + effect(track, level, cfg) + "</" + c + ">");
+        var tip = Ui.Tooltip.of()
+                .line(Brand.bar(level, upgrade.maxLevel()) + "  <soft>" + level + "/" + upgrade.maxLevel())
+                .stat("Now", effect(track, level, cfg), c);
         if (level < upgrade.maxLevel()) {
-            lore.add("<soft>Next <" + c + ">" + effect(track, level + 1, cfg) + "</" + c + ">");
+            tip.stat("Next", effect(track, level + 1, cfg), c);
         }
         if (track == Track.MONEY_MULTIPLIER) {
-            lore.add("");
-            lore.add("<dim>Applies when auto-sell is on.</dim>");
+            tip.line("<dim>Applies when auto-sell is on.");
         }
-        var item = icon(ICONS.get(track), "<" + c + "><bold>" + track.label.toUpperCase() + "</bold></" + c + ">", lore);
-        return level == upgrade.maxLevel() ? glow(item) : item;
+        var item = Ui.item(ICONS.get(track), "<" + c + "><bold>" + track.label + "</bold></" + c + ">", tip.lines());
+        return level == upgrade.maxLevel() ? Ui.glow(item) : item;
     }
 
-    /** The big button under each upgrade: a green arrow with the price, or a star when maxed. */
-    private ItemStack arrow(ItemStack hoe, Track track, HoeConfig cfg) {
+    /** The button under each upgrade: a green "⬆ Upgrade" with its price, or a star when maxed. */
+    private ItemStack arrow(ItemStack hoe, Track track, HoeConfig cfg, long tokens) {
         int level = HarvesterHoe.level(hoe, track);
         long cost = track.upgrade(cfg).costToUpgradeFrom(level);
         if (cost < 0) {
-            return glow(icon(Material.NETHER_STAR, "<sun><bold>✔ MAXED</bold></sun>", List.of("<soft>Nothing left to buy here.")));
+            return Ui.glow(Ui.item(Material.NETHER_STAR, "<sun><bold>" + Ui.STAR + " Maxed</bold></sun>",
+                    Ui.Tooltip.of("Nothing left to buy here.").lines()));
         }
-        return icon(Material.LIME_STAINED_GLASS_PANE, "<cane><bold>➜ UPGRADE</bold></cane>", List.of(
-                "<soft>Cost  <token>" + economy.format(Currency.TOKENS, cost) + "</token>",
-                "",
-                "<cane>Click to buy level " + (level + 1) + "</cane>"));
+        boolean affordable = tokens >= cost;
+        return Ui.item(affordable ? Material.LIME_STAINED_GLASS_PANE : Material.RED_STAINED_GLASS_PANE,
+                (affordable ? "<cane>" : "<bad>") + "<bold>" + Ui.UP + " Upgrade</bold>" + (affordable ? "</cane>" : "</bad>"),
+                Ui.Tooltip.of()
+                        .stat("Cost", economy.format(Currency.TOKENS, cost), affordable ? "token" : "bad")
+                        .stat("Level", level + " " + Ui.ARROW + " " + (level + 1), "soft")
+                        .action("Click", affordable ? "Buy" : "Not enough tokens yet").lines());
     }
 
     private static ItemStack autoSellButton(boolean on) {
         return on
-                ? glow(icon(Material.LIME_DYE, "<money><bold>AUTO-SELL: ON</bold></money>", List.of(
-                        "<soft>Harvested cane is sold on the spot.",
-                        "",
-                        "<cane>➜ Click to keep cane instead</cane>")))
-                : icon(Material.GRAY_DYE, "<bad><bold>AUTO-SELL: OFF</bold></bad>", List.of(
-                        "<soft>Harvested cane goes to your inventory",
-                        "<soft>(and drops at your feet when full).",
-                        "",
-                        "<cane>➜ Click to sell on the spot</cane>"));
+                ? Ui.glow(Ui.item(Material.LIME_DYE, "<money><bold>" + Ui.CHECK + " Auto-sell on</bold></money>",
+                        Ui.Tooltip.of("Harvested cane is sold on the spot.")
+                                .action("Click", "Keep the cane instead").lines()))
+                : Ui.item(Material.GRAY_DYE, "<bad><bold>" + Ui.CROSS + " Auto-sell off</bold></bad>",
+                        Ui.Tooltip.of("Harvested cane goes to your inventory",
+                                        "(and drops at your feet when full).")
+                                .action("Click", "Sell on the spot").lines());
     }
 
     static String effect(Track track, int level, HoeConfig cfg) {
@@ -360,18 +345,4 @@ final class HoeMenu implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_NO, 0.7f, 1.0f);
     }
 
-    private static ItemStack icon(Material material, String name, List<String> lore) {
-        var item = new ItemStack(material);
-        item.editMeta(meta -> {
-            meta.displayName(Brand.mm(name));
-            meta.lore(lore.stream().map(line -> line.isEmpty() ? Component.empty() : Brand.mm(line)).toList());
-            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        });
-        return item;
-    }
-
-    private static ItemStack glow(ItemStack item) {
-        item.editMeta(meta -> meta.setEnchantmentGlintOverride(true));
-        return item;
-    }
 }

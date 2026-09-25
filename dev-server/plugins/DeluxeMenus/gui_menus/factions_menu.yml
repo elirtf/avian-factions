@@ -1,10 +1,12 @@
-# AVIAN: the faction menu. Opens with /fmenu, and with a bare /f, /f menu or /f gui (the /f
-# rewrite in avian-factions SimpleCommands). /f help still lists every command.
+# AVIAN: the faction menu, in the menu kit's style (club.avian.factions.api.text.Ui): colour on the
+# top and bottom rows only, the middle open; tooltips read purpose, then "◆ Label  value" stats,
+# then "▶ Click · what happens". Opens with /fmenu and a bare /f, /f menu or /f gui (the /f rewrite
+# in avian-factions SimpleCommands). /f help still lists every command.
 #
-# Buttons run FactionsUUID's own commands in their exact form (flags included), so the menu never
-# depends on the /f rewrite. Players in a faction and players without one see different buttons:
-# %factionsuuid_player_factionless% is empty for someone in a faction, hence the "[]" checks.
-menu_title: '&#FFD23F&l✦ &#FFC23F&lꜰ&#FFB240&lᴀ&#FFA241&lᴄ&#FF9242&lᴛ&#FF8243&lɪ&#FF7A45&lᴏ&#FF6A48&lɴ &#FF5C5C&l✦'
+# Buttons run FactionsUUID's own commands in their exact form (flags included). Players in a faction
+# and players without one see different buttons: %factionsuuid_player_factionless% is empty for
+# someone in a faction, hence the "[]" checks. Rows: 1 land, 2 faction, 3 people; close at the bottom.
+menu_title: '&#FFD23F&l⚑ &#FFC23F&lF&#FFB240&la&#FFA241&lc&#FF9242&lt&#FF8243&li&#FF7A45&lo&#FF6A48&ln'
 register_command: true
 open_command:
   - fmenu
@@ -12,41 +14,38 @@ size: 45
 update_interval: 2
 
 items:
-
-  # --- frame ---------------------------------------------------------------------------------
   'frame_a':
     material: ORANGE_STAINED_GLASS_PANE
     display_name: ' '
-    slots: [0, 2, 6, 8, 18, 26, 36, 38, 40, 42, 44]
+    slots: [0, 2, 6, 8, 36, 38, 42, 44]
     priority: 9
   'frame_b':
     material: YELLOW_STAINED_GLASS_PANE
     display_name: ' '
-    slots: [1, 3, 5, 7, 9, 17, 27, 35, 37, 39, 41, 43]
+    slots: [1, 3, 5, 7, 37, 39, 41, 43]
     priority: 9
-  'inside':
-    material: BLACK_STAINED_GLASS_PANE
-    display_name: ' '
-    slots: [14, 30]
-    priority: 9
-
-  # --- info card (slot 4) ---------------------------------------------------------------------
+  'close':
+    material: BARRIER
+    slot: 40
+    display_name: '&#FF5C5C&l✖ Close'
+    left_click_commands:
+      - '[close]'
   'info_member':
     material: head-%factionsuuid_player_name%
     slot: 4
     priority: 1
     update: true
-    display_name: '&#E0B44A&l%factionsuuid_faction_name%'
+    display_name: '&#FFD23F&l⚑ %factionsuuid_faction_name%'
     lore:
-      - '&#9E9E9E%factionsuuid_faction_description%'
+      - '&#B8B8C8%factionsuuid_faction_description%'
       - ''
-      - '&#9E9E9EYour role  &f%factionsuuid_player_role_name%'
-      - '&#9E9E9EMembers  &f%factionsuuid_faction_online%&#9E9E9E online / &f%factionsuuid_faction_size%'
-      - '&#9E9E9EPower  &f%factionsuuid_faction_power%&#9E9E9E / &f%factionsuuid_faction_powermax%'
-      - '&#9E9E9ELand  &f%factionsuuid_faction_claims%&#9E9E9E / &f%factionsuuid_faction_maxclaims% &#9E9E9Echunks'
-      - '&#9E9E9EBank  &f%factionsuuid_faction_bank_balance%'
+      - '&#6E6E80◆ &#B8B8C8Role  &#FFD23F%factionsuuid_player_role_name%'
+      - '&#6E6E80◆ &#B8B8C8Online  &#FFD23F%factionsuuid_faction_online%&#6E6E80 / &#B8B8C8%factionsuuid_faction_size%'
+      - '&#6E6E80◆ &#B8B8C8Power  &#C58CFF%factionsuuid_faction_power%&#6E6E80 / &#B8B8C8%factionsuuid_faction_powermax%'
+      - '&#6E6E80◆ &#B8B8C8Land  &#7CFF4F%factionsuuid_faction_claims%&#6E6E80 / &#B8B8C8%factionsuuid_faction_maxclaims% chunks'
+      - '&#6E6E80◆ &#B8B8C8Bank  &#4CE08A%factionsuuid_faction_bank_balance%'
       - ''
-      - '&#E0B44AClick for the full faction page'
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Full faction page'
     view_requirement:
       requirements:
         in_faction:
@@ -60,33 +59,33 @@ items:
     material: head-%factionsuuid_player_name%
     slot: 4
     priority: 2
-    display_name: '&#9E9E9E&lNo faction yet'
+    display_name: '&#B8B8C8&l⚑ No faction yet'
     lore:
-      - '&#9E9E9ECreate your own, or join one'
-      - '&#9E9E9Ethat invites you.'
+      - '&#B8B8C8Create your own, or join one'
+      - '&#B8B8C8that invites you.'
       - ''
-      - '&#9E9E9EYour power  &f%factionsuuid_player_power%&#9E9E9E / &f%factionsuuid_player_maxpower%'
-
-  # --- no faction: create / browse / join -----------------------------------------------------
+      - '&#6E6E80◆ &#B8B8C8Your power  &#C58CFF%factionsuuid_player_power%&#6E6E80 / &#B8B8C8%factionsuuid_player_maxpower%'
   'create':
     material: WHITE_BANNER
     slot: 20
     priority: 2
-    display_name: '&#E0B44A&lCreate a faction'
+    display_name: '&#FFD23F&l✦ Create a faction'
     lore:
-      - '&#9E9E9EStart your own and claim land.'
+      - '&#B8B8C8Start your own and claim land.'
       - ''
-      - '&fType: &#E0B44A/f create <name>'
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See how'
     left_click_commands:
       - '[close]'
-      - '[message] &#E0B44AType &f/f create <name> &#E0B44Ato found your faction.'
+      - '[message] &#FFD23FType &f/f create <name> &#FFD23Fto found your faction.'
   'browse':
     material: BOOK
     slot: 22
     priority: 2
-    display_name: '&#E0B44A&lBrowse factions'
+    display_name: '&#FFD23F&l☰ Browse factions'
     lore:
-      - '&#9E9E9ESee who is recruiting.'
+      - '&#B8B8C8See who is recruiting.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Open the list'
     left_click_commands:
       - '[close]'
       - '[player] f list'
@@ -94,23 +93,25 @@ items:
     material: OAK_DOOR
     slot: 24
     priority: 2
-    display_name: '&#E0B44A&lJoin a faction'
+    display_name: '&#FFD23F&l➜ Join a faction'
     lore:
-      - '&#9E9E9EOpen factions, or ones that invited you.'
+      - '&#B8B8C8Open factions, or ones that invited you.'
       - ''
-      - '&fType: &#E0B44A/f join <faction>'
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See how'
     left_click_commands:
       - '[close]'
-      - '[message] &#E0B44AType &f/f join <faction> &#E0B44Ato join. Open factions and invites only.'
+      - '[message] &#FFD23FType &f/f join <faction> &#FFD23Fto join. Open factions and invites only.'
 
-  # --- land (row 2) ---------------------------------------------------------------------------
+  # --- row 1: land ---
   'claim':
     material: GRASS_BLOCK
     slot: 10
     priority: 1
-    display_name: '&#E0B44A&lClaim this chunk'
+    display_name: '&#7CFF4F&l⬛ Claim this chunk'
     lore:
-      - '&#9E9E9EClaims the chunk you stand in.'
+      - '&#B8B8C8Claims the chunk you stand in.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Claim'
     view_requirement:
       requirements:
         in_faction:
@@ -124,10 +125,12 @@ items:
     material: MOSS_BLOCK
     slot: 11
     priority: 1
-    display_name: '&#E0B44A&lClaim around you'
+    display_name: '&#7CFF4F&l⬛ Claim around you'
     lore:
-      - '&#9E9E9ELeft-click: 3x3 chunks'
-      - '&#9E9E9ERight-click: 5x5 chunks'
+      - '&#B8B8C8Claims a square centred on you.'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C83x3 chunks'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C85x5 chunks'
     view_requirement:
       requirements:
         in_faction:
@@ -144,10 +147,11 @@ items:
     material: COMPASS
     slot: 12
     priority: 1
-    display_name: '&#E0B44A&lAuto-claim'
+    display_name: '&#7CFF4F&l⟳ Auto-claim'
     lore:
-      - '&#9E9E9EClaims each chunk you walk into.'
-      - '&#9E9E9EClick again to stop.'
+      - '&#B8B8C8Claims each chunk you walk into.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Turn on &#6E6E80(again to stop)'
     view_requirement:
       requirements:
         in_faction:
@@ -161,11 +165,13 @@ items:
     material: FILLED_MAP
     slot: 13
     priority: 1
-    display_name: '&#E0B44A&lMap'
+    display_name: '&#5FF3E0&l⌖ Map'
     lore:
-      - '&#9E9E9ELeft-click: show the map once'
-      - '&#9E9E9ERight-click: keep it updating as you walk'
-      - '&#9E9E9EShift-click: stop updating'
+      - '&#B8B8C8Who owns the land around you.'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Show once'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Keep updating'
+      - '&#7CFF4F▶ Shift-click &#6E6E80· &#B8B8C8Stop updating'
     left_click_commands:
       - '[close]'
       - '[player] f map'
@@ -179,7 +185,11 @@ items:
     material: DIRT
     slot: 15
     priority: 1
-    display_name: '&#E0474C&lUnclaim this chunk'
+    display_name: '&#FF7A45&l⬚ Unclaim this chunk'
+    lore:
+      - '&#B8B8C8Gives up the chunk you stand in.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Unclaim'
     view_requirement:
       requirements:
         in_faction:
@@ -193,11 +203,11 @@ items:
     material: TNT
     slot: 16
     priority: 1
-    display_name: '&#E0474C&lUnclaim all land'
+    display_name: '&#FF5C5C&l⚠ Unclaim all land'
     lore:
-      - '&#9E9E9EGives up every chunk your faction owns.'
+      - '&#B8B8C8Gives up every chunk your faction owns.'
       - ''
-      - '&#E0474CShift-click to confirm'
+      - '&#FF5C5C▶ Shift-click &#6E6E80· &#B8B8C8Confirm'
     view_requirement:
       requirements:
         in_faction:
@@ -208,15 +218,17 @@ items:
       - '[close]'
       - '[player] f unclaim --all-territory'
 
-  # --- home, chat, faction (row 3) ------------------------------------------------------------
+  # --- row 2: faction ---
   'home':
     material: RED_BED
     slot: 19
     priority: 1
-    display_name: '&#E0B44A&lFaction home'
+    display_name: '&#FFD23F&l⌂ Faction home'
     lore:
-      - '&#9E9E9ELeft-click: go home'
-      - '&#9E9E9EShift-click: set home here'
+      - '&#B8B8C8Your faction''s teleport point.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Go home'
+      - '&#7CFF4F▶ Shift-click &#6E6E80· &#B8B8C8Set home here'
     view_requirement:
       requirements:
         in_faction:
@@ -233,10 +245,12 @@ items:
     material: PLAYER_HEAD
     slot: 20
     priority: 1
-    display_name: '&#E0B44A&lMembers'
+    display_name: '&#FFD23F&l☺ Members'
     lore:
-      - '&#9E9E9E%factionsuuid_faction_online% online, %factionsuuid_faction_size% in total'
-      - '&#9E9E9ELeader: &f%factionsuuid_faction_leader%'
+      - '&#6E6E80◆ &#B8B8C8Online  &#FFD23F%factionsuuid_faction_online%&#6E6E80 / &#B8B8C8%factionsuuid_faction_size%'
+      - '&#6E6E80◆ &#B8B8C8Leader  &f%factionsuuid_faction_leader%'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See everyone'
     view_requirement:
       requirements:
         in_faction:
@@ -250,11 +264,15 @@ items:
     material: NETHER_STAR
     slot: 21
     priority: 1
-    display_name: '&#E0B44A&lPower'
+    display_name: '&#C58CFF&l✦ Power'
     lore:
-      - '&#9E9E9EYours: &f%factionsuuid_player_power% / %factionsuuid_player_maxpower%'
-      - '&#9E9E9EFaction: &f%factionsuuid_faction_power% / %factionsuuid_faction_powermax%'
-      - '&#9E9E9ERaidable: &f%factionsuuid_faction_raidable%'
+      - '&#B8B8C8Power decides how much land you hold.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Yours  &#C58CFF%factionsuuid_player_power%&#6E6E80 / &#B8B8C8%factionsuuid_player_maxpower%'
+      - '&#6E6E80◆ &#B8B8C8Faction  &#C58CFF%factionsuuid_faction_power%&#6E6E80 / &#B8B8C8%factionsuuid_faction_powermax%'
+      - '&#6E6E80◆ &#B8B8C8Raidable  &f%factionsuuid_faction_raidable%'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Details'
     view_requirement:
       requirements:
         in_faction:
@@ -268,11 +286,13 @@ items:
     material: WRITABLE_BOOK
     slot: 22
     priority: 1
-    display_name: '&#E0B44A&lChat mode'
+    display_name: '&#5FF3E0&l✎ Chat mode'
     lore:
-      - '&#9E9E9ELeft-click: faction chat'
-      - '&#9E9E9ERight-click: ally chat'
-      - '&#9E9E9EShift-click: back to public chat'
+      - '&#B8B8C8Who hears what you type.'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Faction chat'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Ally chat'
+      - '&#7CFF4F▶ Shift-click &#6E6E80· &#B8B8C8Public chat'
     view_requirement:
       requirements:
         in_faction:
@@ -292,9 +312,11 @@ items:
     material: ENCHANTING_TABLE
     slot: 23
     priority: 1
-    display_name: '&#8C5CFF&lUpgrades'
+    display_name: '&#C58CFF&l⬆ Upgrades'
     lore:
-      - '&#9E9E9EClaim Boost and the other faction upgrades.'
+      - '&#B8B8C8Claim Boost and the other faction upgrades.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Open upgrades'
     view_requirement:
       requirements:
         in_faction:
@@ -308,9 +330,11 @@ items:
     material: FEATHER
     slot: 24
     priority: 1
-    display_name: '&#E0B44A&lFaction fly'
+    display_name: '&#5FF3E0&l☁ Faction fly'
     lore:
-      - '&#9E9E9EFly in your own land. Click to toggle.'
+      - '&#B8B8C8Fly inside your own land.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Toggle'
     view_requirement:
       requirements:
         in_faction:
@@ -324,7 +348,11 @@ items:
     material: SPYGLASS
     slot: 25
     priority: 1
-    display_name: '&#E0B44A&lNearby members'
+    display_name: '&#5FF3E0&l⌖ Nearby members'
+    lore:
+      - '&#B8B8C8Who from your faction is close by.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Show'
     view_requirement:
       requirements:
         in_faction:
@@ -335,14 +363,16 @@ items:
       - '[close]'
       - '[player] f near'
 
-  # --- people and rankings (row 4) ------------------------------------------------------------
+  # --- row 3: people and rankings ---
   'invite':
-    material: WRITABLE_BOOK
+    material: PAPER
     slot: 28
     priority: 1
-    display_name: '&#E0B44A&lInvite a player'
+    display_name: '&#FFD23F&l✉ Invite a player'
     lore:
-      - '&fType: &#E0B44A/f invite <player>'
+      - '&#B8B8C8Bring someone into your faction.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See how'
     view_requirement:
       requirements:
         in_faction:
@@ -351,17 +381,17 @@ items:
           output: '[]'
     left_click_commands:
       - '[close]'
-      - '[message] &#E0B44AType &f/f invite <player>&#E0B44A. To take it back: &f/f deinvite <player>'
+      - '[message] &#FFD23FType &f/f invite <player>&#FFD23F. To take it back: &f/f deinvite <player>'
   'relations':
     material: SHIELD
     slot: 29
     priority: 1
-    display_name: '&#E0B44A&lAllies and enemies'
+    display_name: '&#FFD23F&l⚔ Allies & enemies'
     lore:
-      - '&#9E9E9EAllies: &f%factionsuuid_faction_allies%&#9E9E9E  Enemies: &f%factionsuuid_faction_enemies%'
+      - '&#6E6E80◆ &#B8B8C8Allies  &f%factionsuuid_faction_allies%'
+      - '&#6E6E80◆ &#B8B8C8Enemies  &f%factionsuuid_faction_enemies%'
       - ''
-      - '&fType: &#E0B44A/f ally <faction>&f, &#E0B44A/f enemy <faction>'
-      - '&for &#E0B44A/f neutral <faction>'
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See how'
     view_requirement:
       requirements:
         in_faction:
@@ -370,13 +400,16 @@ items:
           output: '[]'
     left_click_commands:
       - '[close]'
-      - '[message] &#E0B44AType &f/f ally <faction>&#E0B44A, &f/f enemy <faction> &#E0B44Aor &f/f neutral <faction>&#E0B44A.'
+      - '[message] &#FFD23FType &f/f ally <faction>&#FFD23F, &f/f enemy <faction> &#FFD23For &f/f neutral <faction>&#FFD23F.'
   'ftop':
     material: GOLD_BLOCK
     slot: 31
-    display_name: '&#E0B44A&lF-Top'
+    priority: 1
+    display_name: '&#FFD23F&l♛ F-Top'
     lore:
-      - '&#9E9E9EThe richest factions, by spawners and blocks.'
+      - '&#B8B8C8The richest factions, by spawners and blocks.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Open F-Top'
     left_click_commands:
       - '[close]'
       - '[player] ftop'
@@ -384,7 +417,11 @@ items:
     material: BOOK
     slot: 32
     priority: 1
-    display_name: '&#E0B44A&lAll factions'
+    display_name: '&#FFD23F&l☰ All factions'
+    lore:
+      - '&#B8B8C8Every faction on the server.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Open the list'
     view_requirement:
       requirements:
         in_faction:
@@ -397,19 +434,24 @@ items:
   'help':
     material: OAK_SIGN
     slot: 33
-    display_name: '&#E0B44A&lEvery command'
+    priority: 1
+    display_name: '&#5FF3E0&lⓘ Every command'
     lore:
-      - '&#9E9E9EThe full /f command list.'
+      - '&#B8B8C8The full /f command list.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Show'
     left_click_commands:
       - '[close]'
       - '[player] f help'
   'leave':
-    material: BARRIER
+    material: IRON_DOOR
     slot: 34
     priority: 1
-    display_name: '&#E0474C&lLeave faction'
+    display_name: '&#FF5C5C&l⚠ Leave faction'
     lore:
-      - '&#E0474CShift-click to confirm'
+      - '&#B8B8C8Leave your faction.'
+      - ''
+      - '&#FF5C5C▶ Shift-click &#6E6E80· &#B8B8C8Confirm'
     view_requirement:
       requirements:
         in_faction:
