@@ -1,0 +1,2 @@
+bar-color: yellow
+disable-level-text: true  # Avian: layouts/avian-level.yml draws it instead

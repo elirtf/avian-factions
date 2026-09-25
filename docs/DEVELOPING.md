@@ -22,8 +22,10 @@ Connect Minecraft to **`localhost`**.
 
 ## First time only
 
-You need **Java** (any version 17 or newer; the right one, 25, is downloaded for you), **Docker** and
-**tmux**. Then:
+You need **Java** (any version 17 or newer; the right one, 25, is downloaded for you), **Docker**,
+**tmux**, and **at least one system font** (`dejavu-fonts-ttf` on Void, `fonts-dejavu-core` on
+Debian/Ubuntu). The font matters because BetterHud draws the HUD's text with Java's font system,
+which won't start on a machine with no fonts at all. Then:
 
 ```sh
 ./dev setup
@@ -117,6 +119,32 @@ Our own plugin's settings (`run/plugins/AvianFactions/*.conf`) are the exception
 created with their defaults on first start. [`CONFIGURATION.md`](CONFIGURATION.md) explains every
 setting in plain words.
 
+### The resource pack and the HUD
+
+Players download one resource pack on join (required; Bedrock players via Geyser are never kicked).
+CraftEngine builds it and serves it on the game port, so no extra port is needed. Research and
+reasoning: [`research/resource-pack.md`](research/resource-pack.md).
+
+| What | Where |
+|---|---|
+| Our pack: icons (`<image:avian:coin>`), later menu backgrounds | `dev-server/plugins/CraftEngine/resources/avian/` |
+| The HUD: bars, orbs, level (BetterHud; its pack merges into CraftEngine's) | `dev-server/plugins/BetterHud/` |
+| The HUD art itself, and the scripts that draw it | `dev-server/plugins/BetterHud/assets/avian_*.png`, made by `tools/hud-art/build.sh` |
+
+CraftEngine only builds the pack on `/ce reload`, never at startup, so `./dev start` rebuilds it
+whenever those folders changed. To see a HUD or pack change **without a restart**:
+
+```sh
+./gradlew -q :avian-plugin:syncDevConfig   # copy dev-server/ into run/
+./dev cmd "hud reload"                     # BetterHud re-reads its files
+./dev pack                                 # rebuild the pack and send it to online players
+```
+
+The HUD art is a remix of pxlpunkt's "Pulsing Heart" (itch.io: commercial use and changes allowed,
+redistributing the asset pack itself is not), so its source files are not in the repo. To redraw,
+put the unzipped asset in `~/projects/minecraft/art-reference/pulsing-heart/` and run
+`tools/hud-art/build.sh`.
+
 ### Changing code
 
 1. Edit the Java code.
@@ -203,6 +231,7 @@ None of these touch git.
 | `dev` | The script this guide is about |
 | `dev-server/` | Tracked config for the third-party plugins; see its README |
 | `avian-*/` | Our plugin's modules (listed in the main [README](../README.md#layout)) |
+| `tools/hud-art/` | Scripts that draw the HUD art (see [The resource pack and the HUD](#the-resource-pack-and-the-hud)) |
 | `docs/CONFIGURATION.md` | Every setting, in plain words |
 | `docs/adr/` | Why things are the way they are |
 | `.github/workflows/ci.yml` | The CI checks above |

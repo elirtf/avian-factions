@@ -1,0 +1,18 @@
+# The XP level: a gold-rimmed emerald orb (40 texels at scale 0.75 = 30 px, centred with x -15) with
+# the number in Cinzel inside it. Replaces the vanilla level number (shader.yml disable-level-text).
+# offset: left stops BetterHud shifting the group, so align: center centres the number on x 0
+# whatever its digit count.
+avian_level:
+  offset: left
+  images:
+    1: {name: avian_orb_level, x: -15, scale: 0.75}
+  texts:
+    1:
+      name: avian_level_font
+      pattern: "<#FFE58A>[level]"
+      align: center
+      y: 9
+      scale: 0.75
+      outline: true
+      layer: 1
+      number-format: "#"

@@ -1,5 +1,6 @@
 import java.net.URI
 import java.security.MessageDigest
+import java.util.zip.ZipFile
 
 plugins {
     id("avian.java-conventions")
@@ -186,6 +187,18 @@ val pluginStack = listOf(
     PinnedPlugin("floodgate-spigot-2.2.5-b141.jar",
         "https://download.geysermc.org/v2/projects/floodgate/versions/2.2.5/builds/141/downloads/spigot",
         "SHA-256", "21570aff9ce17d6983928e8552777760e1ede5050026b04c686b0ae112e6fd7e"),
+    // The resource pack (#41): CraftEngine 26.9.1 (GPL-3.0) builds the pack from
+    // dev-server/plugins/CraftEngine/resources/ and serves it on the game port; it rewrites
+    // <image:…>/<shift:…> in outgoing titles, chat and lore, so every plugin's menus can have a drawn
+    // background. The author tags every build "beta" — there is no release channel — so the hash is
+    // the pin. BetterHud 2.0.0 (MIT) draws the hotbar HUD and merges its pack into CraftEngine's.
+    // See docs/research/resource-pack.md.
+    PinnedPlugin("craft-engine-paper-plugin-26.9.1.jar",
+        "https://cdn.modrinth.com/data/tRX6FMfQ/versions/EDh6mvv2/craft-engine-paper-plugin-26.9.1.jar",
+        "SHA-256", "021260c87e3546730d321f4360b1744e6e33caa1d68e98ae30dcdbbdc347ae0f"),
+    PinnedPlugin("BetterHud-bukkit-2.0.0.jar",
+        "https://cdn.modrinth.com/data/JUl6WIK2/versions/bedIGBtb/BetterHud-bukkit-2.0.0.jar",
+        "SHA-256", "4ff7892b474870adf5f3fc9b2419fe80fcdb5a7f895fadd0f9de91bebbd3307b"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
@@ -232,9 +245,35 @@ tasks.register("downloadPlugins") {
 
 // Copies the tracked third-party plugin config (dev-server/) into the git-ignored run/ directory.
 // Without this a fresh clone boots the stack on defaults: SQLite/H2 storage and vanilla enchant caps.
+// CraftEngine unpacks its built-in packs (including `internal`, which provides <shift:N>) only when
+// plugins/CraftEngine/resources/ does not exist yet — and syncDevConfig creates it with our pack.
+// So do its first-run unpack ourselves, before the copy, never overwriting what is already there.
+val unpackCraftEngineDefaults = tasks.register("unpackCraftEngineDefaults") {
+    description = "Unpacks CraftEngine's bundled resource packs into run/ on a fresh server."
+    group = "avian"
+    dependsOn("downloadPlugins")
+    val jar = layout.projectDirectory.file("../run/plugins/" + pluginStack.single { it.file.startsWith("craft-engine") }.file)
+    val target = layout.projectDirectory.dir("../run/plugins/CraftEngine")
+    doLast {
+        val root = target.asFile
+        if (!root.resolve("resources").exists()) {
+            ZipFile(jar.asFile).use { zip ->
+                zip.entries().asSequence()
+                    .filter { it.name.startsWith("resources/") && !it.isDirectory && !it.name.endsWith("/_index.json") }
+                    .forEach { entry ->
+                        val out = root.resolve(entry.name)
+                        out.parentFile.mkdirs()
+                        zip.getInputStream(entry).use { input -> out.outputStream().use { input.copyTo(it) } }
+                    }
+            }
+        }
+    }
+}
+
 val syncDevConfig = tasks.register<Copy>("syncDevConfig") {
     description = "Copies tracked dev-server config into run/."
     group = "avian"
+    dependsOn(unpackCraftEngineDefaults)
     from(layout.projectDirectory.dir("../dev-server")) {
         exclude("README.md")
     }

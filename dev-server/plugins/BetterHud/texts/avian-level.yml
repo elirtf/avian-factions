@@ -1,0 +1,5 @@
+# Cinzel Bold (SIL OFL 1.1, fonts/Cinzel-OFL.txt), pinned at NDISCOVER/Cinzel@8271e16: a classical
+# serif for the XP level, so it reads as ours rather than Minecraft's pixel font.
+avian_level_font:
+  file: Cinzel-Bold.ttf
+  scale: 16

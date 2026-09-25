@@ -39,7 +39,9 @@ That's all. Everything else comes from git.
 
 ## On the NEW machine
 
-You need **Docker**, **git** and **Java 17 or newer** installed (Java 25 downloads by itself).
+You need **Docker**, **git**, **Java 17 or newer** (Java 25 downloads by itself) and **at least
+one system font** (`dejavu-fonts-ttf` on Void, `fonts-dejavu-core` on Debian/Ubuntu; without any,
+the HUD's text fails to load).
 
 **1. Get the code:**
 

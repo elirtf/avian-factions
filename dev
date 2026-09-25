@@ -10,6 +10,7 @@ SESSION="${AVIAN_DEV_SESSION:-avian}"
 LOG="$ROOT/run/logs/latest.log"
 RANKS="$ROOT/dev-server/luckperms/ranks.lp"
 SETUP_STAMP="$ROOT/run/.dev-setup-applied"
+PACK_STAMP="$ROOT/run/.dev-pack-built"
 WORLD_BORDER=20000
 START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
 STOP_TIMEOUT=90
@@ -167,6 +168,11 @@ cmd_start() {
         else
             cmd_setup_world
         fi
+        if [[ -f run/plugins/CraftEngine/generated/resource_pack.zip && "$(cat "$PACK_STAMP" 2>/dev/null || true)" == "$(pack_fingerprint)" ]]; then
+            ok "Resource pack unchanged since last built (force it with: ./dev pack)"
+        else
+            cmd_pack
+        fi
     fi
     echo "  Console: ${BOLD}./dev console${RESET}   Logs: ${BOLD}./dev logs${RESET}   Stop: ${BOLD}./dev stop${RESET}"
 }
@@ -196,6 +202,34 @@ cmd_setup_world() {
     ok "Applied $count rank commands and the world border"
 }
 
+
+# CraftEngine builds the resource pack only on /ce reload, never at startup, so start rebuilds it
+# when its sources (our pack, BetterHud's layouts, the plugin jars) changed or no pack exists yet.
+# The built pack survives restarts, so an unchanged start skips this.
+pack_fingerprint() {
+    {
+        { find "$ROOT/dev-server/plugins/CraftEngine" "$ROOT/dev-server/plugins/BetterHud" -type f 2>/dev/null || true; } \
+            | sort | xargs -r sha256sum
+        ls "$ROOT/run/plugins" | grep -i "craft-engine\|betterhud" || true
+    } | sha256sum | cut -d" " -f1
+}
+
+cmd_pack() {
+    session_running || fail "The server is not running. Start it with: ./dev start"
+    say "Building the resource pack…"
+    local log="$ROOT/run/logs/latest.log" before
+    before="$(grep -c 'Resource pack generated' "$log" 2>/dev/null || true)"
+    send "ce reload all"
+    for _ in $(seq 1 120); do
+        if (( $(grep -c 'Resource pack generated' "$log" 2>/dev/null || true) > before )); then
+            pack_fingerprint > "$PACK_STAMP"
+            ok "Resource pack built and served on the game port"
+            return
+        fi
+        sleep 1
+    done
+    fail "The resource pack did not finish building in 120s. Look with: ./dev logs"
+}
 cmd_stop() {
     if ! session_running; then
         local stray
@@ -431,6 +465,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}logs${RESET}             Watch the server log (Ctrl-C to stop watching)
   ${BOLD}status${RESET}           Is the database and server running?
   ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this when they changed)
+  ${BOLD}pack${RESET}             Rebuild the resource pack (start does this when dev-server/ pack files changed)
   ${BOLD}backup${RESET}           Save the world, database and plugin data to backups/ (safe while running)
   ${BOLD}restore${RESET} <file>   Replace world, database and plugin data from a backup (server must be stopped)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
@@ -448,6 +483,7 @@ case "${1:-help}" in
     logs)      shift; cmd_logs ;;
     status)    shift; cmd_status ;;
     ranks)     shift; cmd_setup_world ;;
+    pack)      shift; cmd_pack ;;
     backup)    shift; cmd_backup ;;
     restore)   shift; cmd_restore "$@" ;;
     db)        shift; cmd_db ;;
