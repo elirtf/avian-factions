@@ -45,6 +45,10 @@ public final class SimpleCommands implements Listener {
             return Optional.of("/" + MENU_COMMAND);
         }
         String sub = parts[1].toLowerCase(Locale.ROOT);
+        // F-Top is ours (/ftop: a menu, by spawner and block value); FactionsUUID's /f top ranks by money.
+        if (sub.equals("top") && (parts.length == 2 || (parts.length == 3 && parts[2].chars().allMatch(Character::isDigit)))) {
+            return Optional.of("/ftop" + (parts.length == 3 ? " " + parts[2] : ""));
+        }
         List<String> args = Arrays.asList(parts).subList(2, parts.length);
         List<String> out = switch (sub) {
             case "claim", "unclaim" -> claim(sub, args);

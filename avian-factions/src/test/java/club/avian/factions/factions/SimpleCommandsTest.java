@@ -43,6 +43,8 @@ class SimpleCommandsTest {
             "/factions             | /fmenu",
             "/f menu               | /fmenu",
             "/f gui                | /fmenu",
+            "/f top                | /ftop",
+            "/f top 2              | /ftop 2",
     })
     void plainFormsBecomeFlags(String typed, String expected) {
         assertEquals(Optional.of(expected), SimpleCommands.rewrite(typed));

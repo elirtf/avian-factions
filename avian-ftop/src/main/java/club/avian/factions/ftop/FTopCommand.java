@@ -23,19 +23,22 @@ final class FTopCommand {
     private final ConfigHandle<FTopConfig> config;
     private final LongFunction<String> money;
     private final Clock clock;
+    private final FTopMenu menu;
 
-    FTopCommand(FTopService service, ConfigHandle<FTopConfig> config, LongFunction<String> money, Clock clock) {
+    FTopCommand(FTopService service, ConfigHandle<FTopConfig> config, LongFunction<String> money, Clock clock,
+                FTopMenu menu) {
         this.service = service;
         this.config = config;
         this.money = money;
         this.clock = clock;
+        this.menu = menu;
     }
 
     LiteralCommandNode<CommandSourceStack> build() {
         return Commands.literal("ftop")
-                .executes(ctx -> show(ctx.getSource().getSender(), 1))
+                .executes(ctx -> open(ctx.getSource().getSender(), 1))
                 .then(Commands.argument("page", IntegerArgumentType.integer(1))
-                        .executes(ctx -> show(ctx.getSource().getSender(), IntegerArgumentType.getInteger(ctx, "page"))))
+                        .executes(ctx -> open(ctx.getSource().getSender(), IntegerArgumentType.getInteger(ctx, "page"))))
                 .then(Commands.literal("recalc")
                         .requires(src -> src.getSender().hasPermission(ADMIN_PERMISSION))
                         .executes(ctx -> {
@@ -45,6 +48,15 @@ final class FTopCommand {
                             return 1;
                         }))
                 .build();
+    }
+
+    /** Players get the menu; the console gets the chat list. */
+    private int open(CommandSender sender, int page) {
+        if (sender instanceof org.bukkit.entity.Player player) {
+            menu.open(player, page);
+            return 1;
+        }
+        return show(sender, page);
     }
 
     private int show(CommandSender sender, int page) {
