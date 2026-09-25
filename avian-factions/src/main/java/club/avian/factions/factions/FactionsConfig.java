@@ -49,6 +49,10 @@ public final class FactionsConfig {
                 "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
         e.check(cfg.chunkBuster.layersPerTick >= 1 && cfg.chunkBuster.layersPerTick <= 16,
                 "chunk-buster.layers-per-tick", "must be 1-16");
+        for (var env : cfg.chunkBuster.environments) {
+            e.check(java.util.Arrays.stream(org.bukkit.World.Environment.values()).anyMatch(v -> v.name().equals(env)),
+                    "chunk-buster.environments", "%s is not NORMAL, NETHER or THE_END", env);
+        }
         for (var name : cfg.chunkBuster.keep) {
             e.check(org.bukkit.Material.matchMaterial(name) != null, "chunk-buster.keep", "%s is not a block", name);
         }
@@ -72,6 +76,12 @@ public final class FactionsConfig {
         @Comment("Seconds a player has to click [BUST CHUNK] after placing one.")
         private int confirmSeconds = 15;
 
+        @Comment("""
+                Worlds busters work in, by type: NORMAL (overworld), NETHER, THE_END. In the Nether they
+                never reach the roof, bedrock is never removed, and edges touching lava or water are
+                sealed with netherrack (stone in the overworld) so nothing floods in.""")
+        private List<String> environments = List.of("NORMAL", "NETHER");
+
         public boolean enabled() {
             return enabled;
         }
@@ -86,6 +96,10 @@ public final class FactionsConfig {
 
         public int confirmSeconds() {
             return confirmSeconds;
+        }
+
+        public List<String> environments() {
+            return environments;
         }
     }
 }
