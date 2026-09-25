@@ -139,7 +139,7 @@ class HarvesterHoeTest {
         var root = column(0, 0, 2);
         var placed = root.getRelative(0, 2, 0);
         placed.setType(Material.SUGAR_CANE);   // a player stacked one on top
-        new SugarCaneTokens(economy, new VaultEconomyBridgeTest.Handle(), () -> 1, Logger.getAnonymousLogger())
+        new SugarCaneTokens(economy, new VaultEconomyBridgeTest.Handle(), () -> 1, Runnable::run, Logger.getAnonymousLogger())
                 .onPlace(new BlockPlaceEvent(placed, placed.getState(), root.getRelative(0, 1, 0),
                         new ItemStack(Material.SUGAR_CANE), farmer, true, EquipmentSlot.HAND));
         roll = 0;   // every roll wins

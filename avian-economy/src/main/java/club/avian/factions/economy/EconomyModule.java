@@ -58,9 +58,12 @@ public final class EconomyModule implements AvianModule {
 
         ctx.services().provide(Economy.class, economy);
         ctx.services().provide(SellValues.class, sellValues);
+        // Deposits and withdrawals complete on the DB thread; anything they tell a player hops back here.
+        java.util.concurrent.Executor mainThread = task -> Bukkit.getScheduler().runTask(ctx.plugin(), task);
         ctx.registerListener(new StartingBalanceListener(economy, ctx.logger()));
         ctx.registerListener(new SugarCaneTokens(economy, config,
-                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), ctx.logger()));
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(),
+                mainThread, ctx.logger()));
         ctx.registerListener(new VillagerGolemGuard(config));
 
         // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
@@ -72,8 +75,10 @@ public final class EconomyModule implements AvianModule {
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
-        // /avian tokens|gems|money give|take|set: how crates, votes and events pay out (#26).
-        ctx.commands().register(new EconomyCommand(economy).build(), "Give, take or set a player's money, tokens or gems");
+        // /tokens and /gems: your balance; give|take|set is how crates, votes and events pay out (#26).
+        for (var node : new EconomyCommand(economy, mainThread).build()) {
+            ctx.commands().register(node, "Your " + node.getLiteral() + "; admins give, take or set them");
+        }
 
         if (config.get().provideVault() && Bukkit.getPluginManager().getPlugin("Vault") != null) {
             var bridge = new VaultEconomyBridge(economy, "Avian");

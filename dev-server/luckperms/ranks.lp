@@ -190,7 +190,7 @@ lp group admin meta setsuffix 220 "<#3DDC84>ᴀᴅᴍɪɴ"
 lp group admin parent add mod
 lp group admin permission set essentials.gamemode true
 lp group admin permission set essentials.give true
-# /avian tokens|gems|money give|take|set and /avian balance (#26). Console always can.
+# /tokens and /gems give|take|set and /tokens|gems <player> (#26); money is EssentialsX /eco. Console always can.
 lp group admin permission set avian.admin.economy true
 lp group admin permission set avian.hoe.admin true
 lp group admin permission set avian.admin.chunkbuster true

@@ -42,8 +42,8 @@ it*. And today, most do not:
 can pay out anything Avian-specific we need something like:
 
 ```
-/avian tokens give <player> <amount> [reason]
-/avian gems give <player> <amount> [reason]
+/tokens give <player> <amount> [reason]
+/gems give <player> <amount> [reason]
 ```
 
 which is small work — `Economy.deposit` already exists, audited, with a reason parameter. It is

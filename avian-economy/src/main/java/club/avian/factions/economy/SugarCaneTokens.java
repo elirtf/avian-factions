@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
+import java.util.concurrent.Executor;
 import java.util.function.DoubleSupplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,12 +39,16 @@ final class SugarCaneTokens implements Listener {
     private final Economy economy;
     private final ConfigHandle<EconomyConfig> config;
     private final DoubleSupplier random;
+    private final Executor mainThread;
     private final Logger log;
 
-    SugarCaneTokens(Economy economy, ConfigHandle<EconomyConfig> config, DoubleSupplier random, Logger log) {
+    /** {@code mainThread} runs the payout message on the server thread; deposits complete on the DB thread. */
+    SugarCaneTokens(Economy economy, ConfigHandle<EconomyConfig> config, DoubleSupplier random,
+                    Executor mainThread, Logger log) {
         this.economy = economy;
         this.config = config;
         this.random = random;
+        this.mainThread = mainThread;
         this.log = log;
     }
 
@@ -83,11 +88,11 @@ final class SugarCaneTokens implements Listener {
         }
         long amount = earned;
         economy.deposit(player.getUniqueId(), Currency.TOKENS, amount, "farming:sugar_cane")
-                .thenAccept(result -> {
-                    if (result.ok()) {
+                .thenAcceptAsync(result -> {
+                    if (result.ok() && player.isOnline()) {
                         player.sendActionBar(Component.text("+" + amount + (amount == 1 ? " token" : " tokens"), TOKEN_GOLD));
                     }
-                })
+                }, mainThread)
                 .exceptionally(t -> {
                     log.log(Level.WARNING, "Could not pay sugar cane tokens to " + player.getName(), t);
                     return null;

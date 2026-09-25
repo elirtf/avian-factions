@@ -34,7 +34,7 @@ class SugarCaneTokensTest {
     void setUp() {
         server = MockBukkit.mock();
         economy = new EconomyService(new EconomyServiceTest.MemoryRepository(), new VaultEconomyBridgeTest.Handle(), 1);
-        listener = new SugarCaneTokens(economy, new VaultEconomyBridgeTest.Handle(), () -> roll, Logger.getAnonymousLogger());
+        listener = new SugarCaneTokens(economy, new VaultEconomyBridgeTest.Handle(), () -> roll, Runnable::run, Logger.getAnonymousLogger());
         world = server.addSimpleWorld("world");
         farmer = server.addPlayer("Farmer");
         farmer.setGameMode(GameMode.SURVIVAL);
