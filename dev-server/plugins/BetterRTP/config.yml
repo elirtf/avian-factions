@@ -70,16 +70,17 @@ Settings:
     LogToConsole: false
     Format: 'yyyy-MM-dd HH:mm:ss'
 
-## Avian: the world border (WORLD_BORDER in ./dev, 5,000 wide) is the outer edge. MinRadius 400
-## keeps players out of the ~550x570 spawn build around 0,0; MaxRadius only matters if the border
-## is ever removed.
+## Avian: /rtp lands 5,000 to 9,800 blocks from spawn (0,0), in a square like the border. The border
+## (WORLD_BORDER in ./dev) is 20,000 wide, i.e. 10,000 out, so MaxRadius stays 200 inside it: nobody
+## lands against the wall. Explicit radii (UseWorldBorder false) because the border setting would use
+## the full 10,000.
 Default:
-  UseWorldBorder: true
+  UseWorldBorder: false
   ## "Biomes: []" means all biomes are allowed! #
   ## Biomes are optional, more biomes at https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/block/Biome.html #
   Biomes: []
-  MaxRadius: 2500
-  MinRadius: 400
+  MaxRadius: 9800
+  MinRadius: 5000
   ## If "UseWorldBorder" is set to true above, Center X and Z will be ignored! #
   CenterX: 0
   CenterZ: 0

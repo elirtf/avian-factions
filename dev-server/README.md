@@ -15,7 +15,7 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
 | `plugins/AuraSkills/config.yml` | `sql.enabled: true`, pointed at the Compose database (`auraskills_` tables) |
 | `plugins/AuraSkills/stats.yml`, `abilities.yml`, `mana_abilities.yml` | Combat stats and abilities capped for Factions PvP, still growing to level 100; the numbers and why are in `docs/research/skills-rpg.md` |
-| `plugins/BetterRTP/config.yml` | `/rtp` lands inside the world border but at least 400 blocks from 0,0 (clear of spawn), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
+| `plugins/BetterRTP/config.yml` | `/rtp` lands 5,000–9,800 blocks from 0,0 (the border is 20,000 wide), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
 | `server.properties` | `white-list=true`, `enforce-whitelist=true`: port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
 | `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"` (Bedrock players: `fwhitelist add <Gamertag>`), then copy `run/whitelist.json` back here |
 | `plugins/MiniMOTD/main.conf` | The server-list message: three bright, bird-themed MOTDs picked at random. Icons are off until the sigil is ready |
@@ -31,8 +31,8 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 
 Credentials here are the local dev ones from `.env.example`. A real deployment supplies its own.
 
-The 5,000-block world border is world state, not config: it lives in `run/world/level.dat` after
-`worldborder set 5000` on the console. A fresh world needs that command once (or Chunky's
+The 20,000-block world border is world state, not config: it lives in `run/world/level.dat` after
+`worldborder set 20000` on the console. A fresh world needs that command once (or Chunky's
 `/chunky worldborder`); the README's dev-loop section says so.
 
 `plugins/EconomyShopGUI/` — EconomyShopGUI owns sell prices when installed (see `ShopSellValues`). `config.yml` holds the settings we changed; `shops/` is the whole Avian price sheet (sell list, gear by tier, spawner ladder) and `sections/Magic/potions.yml` turns the potion shop off. Numbers and reasoning: `docs/ECONOMY.md`.
