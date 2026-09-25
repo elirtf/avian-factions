@@ -16,6 +16,8 @@ import java.util.logging.Logger;
  */
 public final class FactionsModule implements AvianModule {
 
+    private ClaimLoader claimLoader;
+
     static final String FACTIONS_PLUGIN = "FactionsUUID";
 
     @Override
@@ -62,10 +64,32 @@ public final class FactionsModule implements AvianModule {
             return member.hasFaction() && member.faction().equals(owner);
         }, System::currentTimeMillis, ChunkBusters.tickets(ctx.plugin()));
         ctx.registerListener(busters);
+
+        // Faction land stays loaded while a member is online, so crops grow while they are away.
+        claimLoader = new ClaimLoader(ctx.plugin(), config,
+                player -> {
+                    var member = dev.kitteh.factions.FPlayers.fPlayers().get(player);
+                    return member.hasFaction() && member.faction().isNormal() ? member.faction().id() : null;
+                },
+                id -> {
+                    var faction = dev.kitteh.factions.Factions.factions().get(id);
+                    return faction == null ? java.util.List.of() : faction.claims().stream()
+                            .map(c -> new ClaimLoader.ChunkRef(c.worldName(), c.x(), c.z())).toList();
+                },
+                ClaimLoader.tickets(ctx.plugin()));
+        ctx.registerListener(claimLoader);
+        claimLoader.start();
         ctx.commands().register(new ChunkBusterCommand(busters).build(), "Chunk busters: confirm one, or give them (admins)");
         UpgradeSwitch.apply(config.get().enabledUpgrades(), ctx.logger());
         config.onReload(c -> UpgradeSwitch.apply(c.enabledUpgrades(), ctx.logger()));
         ctx.logger().info("Hooked " + FACTIONS_PLUGIN + ": new factions start with "
                 + config.get().factionBasePower() + " base power");
+    }
+
+    @Override
+    public void disable() {
+        if (claimLoader != null) {
+            claimLoader.releaseAll();
+        }
     }
 }

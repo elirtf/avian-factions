@@ -32,6 +32,8 @@ public final class FactionsConfig {
 
     private ChunkBuster chunkBuster = new ChunkBuster();
 
+    private ClaimLoading claimLoading = new ClaimLoading();
+
     public double factionBasePower() {
         return factionBasePower;
     }
@@ -44,11 +46,17 @@ public final class FactionsConfig {
         return chunkBuster;
     }
 
+    public ClaimLoading claimLoading() {
+        return claimLoading;
+    }
+
     static void validate(FactionsConfig cfg, ConfigErrors e) {
         e.check(Double.isFinite(cfg.factionBasePower) && cfg.factionBasePower >= 0, "faction-base-power",
                 "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
         e.check(cfg.chunkBuster.layersPerTick >= 1 && cfg.chunkBuster.layersPerTick <= 16,
                 "chunk-buster.layers-per-tick", "must be 1-16");
+        e.check(cfg.claimLoading.maxChunksPerFaction >= 0, "claim-loading.max-chunks-per-faction", "must be >= 0");
+        e.check(cfg.claimLoading.reconcileSeconds >= 5, "claim-loading.reconcile-seconds", "must be >= 5");
         for (var env : cfg.chunkBuster.environments) {
             e.check(java.util.Arrays.stream(org.bukkit.World.Environment.values()).anyMatch(v -> v.name().equals(env)),
                     "chunk-buster.environments", "%s is not NORMAL, NETHER or THE_END", env);
@@ -100,6 +108,34 @@ public final class FactionsConfig {
 
         public List<String> environments() {
             return environments;
+        }
+    }
+
+    /** Keeping a faction's land loaded while a member is online, so crops grow while they are away. */
+    @ConfigSerializable
+    public static final class ClaimLoading {
+
+        @Comment("""
+                Keep a faction's claimed chunks loaded while any of its members is online, so crops,
+                cane and farms keep growing while they are elsewhere. Unloaded when the last one leaves.""")
+        private boolean enabled = true;
+
+        @Comment("At most this many of one faction's chunks are held (the lag safety valve).")
+        private int maxChunksPerFaction = 128;
+
+        @Comment("How often, in seconds, held chunks are brought in line with claims and who is online.")
+        private int reconcileSeconds = 30;
+
+        public boolean enabled() {
+            return enabled;
+        }
+
+        public int maxChunksPerFaction() {
+            return maxChunksPerFaction;
+        }
+
+        public int reconcileSeconds() {
+            return reconcileSeconds;
         }
     }
 }
