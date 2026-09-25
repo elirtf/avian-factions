@@ -8,6 +8,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
+import org.bukkit.World;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 import org.bukkit.entity.Player;
@@ -114,6 +117,14 @@ final class ChunkBusters implements Listener {
             player.sendMessage(Brand.mm("<bad>Chunk busters are switched off.</bad>"));
             return;
         }
+        if (!cfg.environments().contains(at.getWorld().getEnvironment().name())) {
+            deny(player, "<bad>Chunk busters don't work in this world.</bad>");
+            return;
+        }
+        if (at.getBlockY() > ceiling(at.getWorld())) {
+            deny(player, "<bad>Chunk busters can't be used on or above the Nether roof.</bad>");
+            return;
+        }
         if (!ownsChunk.test(player, at.getChunk())) {
             deny(player, "<bad>Chunk busters only work in <sun>your faction's land</sun>.</bad>");
             return;
@@ -178,15 +189,18 @@ final class ChunkBusters implements Listener {
             }
         }
         int perTick = config.get().chunkBuster().layersPerTick();
-        int bottom = chunk.getWorld().getMinHeight();
+        var world = chunk.getWorld();
+        int bottom = world.getMinHeight();
+        int top = Math.min(topY, ceiling(world));
+        Material seal = world.getEnvironment() == World.Environment.NETHER ? Material.NETHERRACK : Material.STONE;
         keepLoaded.accept(chunk, true);
         var task = new BukkitTask[1];
-        int[] y = {topY};
+        int[] y = {top};
         task[0] = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             for (int layer = 0; layer < perTick && y[0] > bottom; layer++, y[0]--) {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
-                        clear(chunk.getBlock(x, y[0], z), keep);
+                        clear(chunk.getBlock(x, y[0], z), keep, seal, y[0] == top);
                     }
                 }
             }
@@ -199,12 +213,50 @@ final class ChunkBusters implements Listener {
         }, 1L, 1L);
     }
 
-    static void clear(Block block, Set<Material> keep) {
+    /**
+     * Clears one block. Where the hole would let liquid in (lava or water across the chunk border,
+     * or sitting on top of the cleared area) it becomes {@code seal} instead of air, so busting never
+     * floods a chunk or starts a lava flow. Liquid inside the chunk is simply removed.
+     */
+    static void clear(Block block, Set<Material> keep, Material seal, boolean topLayer) {
         var type = block.getType();
         if (type.isAir() || keep.contains(type) || block.getState(false) instanceof Container) {
             return;
         }
-        block.setType(Material.AIR, false);
+        block.setType(leaks(block, topLayer) ? seal : Material.AIR, false);
+    }
+
+    /** Whether liquid outside the cleared area touches this block. Unknown (unloaded) counts as yes. */
+    static boolean leaks(Block block, boolean topLayer) {
+        if (topLayer && liquid(block.getRelative(BlockFace.UP))) {
+            return true;
+        }
+        int lx = block.getX() & 15;
+        int lz = block.getZ() & 15;
+        for (var face : new BlockFace[] {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+            boolean crossesBorder = (face == BlockFace.WEST && lx == 0) || (face == BlockFace.EAST && lx == 15)
+                    || (face == BlockFace.NORTH && lz == 0) || (face == BlockFace.SOUTH && lz == 15);
+            if (!crossesBorder) {
+                continue;
+            }
+            int nx = block.getX() + face.getModX();
+            int nz = block.getZ() + face.getModZ();
+            if (!block.getWorld().isChunkLoaded(nx >> 4, nz >> 4) || liquid(block.getWorld().getBlockAt(nx, block.getY(), nz))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean liquid(Block block) {
+        var type = block.getType();
+        return type == Material.LAVA || type == Material.WATER || type == Material.BUBBLE_COLUMN
+                || (block.getBlockData() instanceof Waterlogged w && w.isWaterlogged());
+    }
+
+    /** The highest Y a buster may clear: below the Nether roof, else the build limit. */
+    static int ceiling(World world) {
+        return world.getEnvironment() == World.Environment.NETHER ? world.getLogicalHeight() - 2 : world.getMaxHeight() - 1;
     }
 
     private static void deny(Player player, String message) {
