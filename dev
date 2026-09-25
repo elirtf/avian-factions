@@ -210,7 +210,9 @@ pack_fingerprint() {
     {
         { find "$ROOT/dev-server/plugins/CraftEngine" "$ROOT/dev-server/plugins/BetterHud" -type f 2>/dev/null || true; } \
             | sort | xargs -r sha256sum
-        ls "$ROOT/run/plugins" | grep -i "craft-engine\|betterhud" || true
+        for jar in "$ROOT"/run/plugins/craft-engine*.jar "$ROOT"/run/plugins/BetterHud*.jar; do
+            if [[ -e "$jar" ]]; then basename "$jar"; fi
+        done
     } | sha256sum | cut -d" " -f1
 }
 
