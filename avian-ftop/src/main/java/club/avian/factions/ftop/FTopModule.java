@@ -73,7 +73,34 @@ public final class FTopModule implements AvianModule {
         LongFunction<String> money = economy != null
                 ? amount -> economy.format(Currency.MONEY, amount)
                 : amount -> "$" + String.format("%,d", amount);
-        ctx.commands().register(new FTopCommand(service, config, money, clock).build(),
+        var menu = new FTopMenu(service::latest, new FTopMenu.Factions() {
+            @Override
+            public org.bukkit.OfflinePlayer leader(int id) {
+                var f = dev.kitteh.factions.Factions.factions().get(id);
+                var admin = f == null ? null : f.admin();
+                return admin == null ? null : Bukkit.getOfflinePlayer(admin.uniqueId());
+            }
+
+            @Override
+            public int onlineMembers(int id) {
+                var f = dev.kitteh.factions.Factions.factions().get(id);
+                return f == null ? 0 : f.membersOnline(true).size();
+            }
+
+            @Override
+            public int members(int id) {
+                var f = dev.kitteh.factions.Factions.factions().get(id);
+                return f == null ? 0 : f.members().size();
+            }
+
+            @Override
+            public Integer factionOf(org.bukkit.entity.Player player) {
+                var member = dev.kitteh.factions.FPlayers.fPlayers().get(player);
+                return member.hasFaction() ? member.faction().id() : null;
+            }
+        }, money, clock, () -> config.get().recalculateMinutes());
+        ctx.registerListener(menu);
+        ctx.commands().register(new FTopCommand(service, config, money, clock, menu).build(),
                 "Faction value ranking", List.of("factiontop"));
     }
 }

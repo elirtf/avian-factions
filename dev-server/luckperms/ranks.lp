@@ -62,7 +62,7 @@ lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
 lp group hatchling permission set EconomyShopGUI.sellall true
-# F-Top is /ftop (value of spawners and blocks). FactionsUUID's own /f top ranks by money and
+# F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
 
