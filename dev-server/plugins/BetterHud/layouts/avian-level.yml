@@ -1,11 +1,19 @@
-# The XP level: a gold-rimmed emerald orb (40 texels at scale 0.75 = 30 px, centred with x -15) with
-# the number in Cinzel inside it. Replaces the vanilla level number (shader.yml disable-level-text).
-# offset: left stops BetterHud shifting the group, so align: center centres the number on x 0
-# whatever its digit count.
+# The XP level: a gold-rimmed orb (40 texels at scale 0.75 = 30 px, centred with x -15) in gold
+# filigree (42x36 px, the orb sits at 6,3 in it), the number in Cinzel inside. Glass and gems change
+# with level: emerald 0-29, sapphire 30-59, amethyst 60-99, ruby 100+. Replaces the vanilla level
+# number (shader.yml disable-level-text). offset: left stops BetterHud shifting the group, so
+# align: center centres the number on x 0 whatever its digit count. Layers: filigree 0, orb 1, text 2.
 avian_level:
   offset: left
   images:
-    1: {name: avian_orb_level, x: -15, scale: 0.75}
+    1: {name: avian_ornament_emerald, x: -21, y: -3, scale: 0.75, conditions: {1: {first: level, second: "30", operation: "<"}}}
+    2: {name: avian_ornament_sapphire, x: -21, y: -3, scale: 0.75, conditions: {1: {first: level, second: "30", operation: ">="}, 2: {first: level, second: "60", operation: "<"}}}
+    3: {name: avian_ornament_amethyst, x: -21, y: -3, scale: 0.75, conditions: {1: {first: level, second: "60", operation: ">="}, 2: {first: level, second: "100", operation: "<"}}}
+    4: {name: avian_ornament_ruby, x: -21, y: -3, scale: 0.75, conditions: {1: {first: level, second: "100", operation: ">="}}}
+    5: {name: avian_orb_level_emerald, x: -15, scale: 0.75, layer: 1, conditions: {1: {first: level, second: "30", operation: "<"}}}
+    6: {name: avian_orb_level_sapphire, x: -15, scale: 0.75, layer: 1, conditions: {1: {first: level, second: "30", operation: ">="}, 2: {first: level, second: "60", operation: "<"}}}
+    7: {name: avian_orb_level_amethyst, x: -15, scale: 0.75, layer: 1, conditions: {1: {first: level, second: "60", operation: ">="}, 2: {first: level, second: "100", operation: "<"}}}
+    8: {name: avian_orb_level_ruby, x: -15, scale: 0.75, layer: 1, conditions: {1: {first: level, second: "100", operation: ">="}}}
   texts:
     1:
       name: avian_level_font
@@ -14,5 +22,26 @@ avian_level:
       y: 9
       scale: 0.75
       outline: true
-      layer: 1
+      layer: 2
       number-format: "#"
+
+# Popup layouts (popups/avian-popups.yml). The burst is 64 texels (48 px), centred on the orb.
+avian_levelup_burst:
+  offset: left
+  images:
+    1: {name: avian_levelup, x: -24, scale: 0.75, layer: 3}
+  texts:
+    1:
+      name: avian_level_font
+      pattern: "<#FFE58A>LEVEL UP"
+      align: center
+      y: -4
+      scale: 0.45
+      outline: true
+      layer: 3
+
+# Under the health fill (layer 1), where the health group's fill sits.
+avian_damage_trail:
+  offset: left
+  images:
+    1: {name: avian_fill_trail, x: 21, scale: 0.75, layer: 0}

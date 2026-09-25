@@ -20,6 +20,6 @@ java "$T/Strip.java" "$tmp" "$tmp/strip.png"             # composited back to re
 java "$T/HeartRemix.java" "$tmp" "$OUT"                  # heart orb frames: plum glass, red for low health
 java "$T/FoodOrb.java" "$OUT"                            # food orb, from the heart orb's rim and glass
 java "$T/BarRemix.java" "$ART" "$OUT"                    # casings and every status fill, left and mirrored
-java "$T/LevelOrb.java" "$OUT"                           # the XP level orb
+java "$T/LevelArt.java" "$OUT"                           # level orbs + ornaments per tier, level-up burst
 java "$T/Pin.java" "$OUT"                                # corner pins, so BetterHud keeps one scale
 echo "Wrote $(ls "$OUT"/avian_*.png | wc -l) images to $OUT"
