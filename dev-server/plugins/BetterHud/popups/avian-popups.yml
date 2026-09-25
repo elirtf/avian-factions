@@ -1,0 +1,25 @@
+# Short HUD effects. Positions match huds/default-hud.yml (the level orb's centre is 0,-47; the
+# health group's top-left is -106,-66).
+
+# Played by our plugin on each level gained (core.conf level-up-popup; BetterHud has no level trigger).
+avian_levelup:
+  duration: 16
+  unique: true
+  layouts:
+    1:
+      name: avian_levelup_burst
+      gui: {x: 50, y: 100}
+      pixel: {x: 0, y: -71}
+
+# One second of damage trail after a hit from a mob, player or projectile.
+avian_damage_trail:
+  duration: 20
+  unique: true
+  triggers:
+    1:
+      class: entity_damage
+  layouts:
+    1:
+      name: avian_damage_trail
+      gui: {x: 50, y: 100}
+      pixel: {x: -106, y: -66}

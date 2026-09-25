@@ -60,6 +60,7 @@ public class BarRemix {
         pair(map(fillB, c -> hue(c, 215, 0.12, 1.25)), "avian_fill_armor", false);
         pair(map(fillB, c -> c), "avian_fill_mana", true);
         pair(map(fillB, c -> hue(c, 188, 0.8, 1.35)), "avian_fill_air", true);
+        pair(map(fillA, c -> hue(c, 350, 0.25, 1.6)), "avian_fill_trail", false);   // the pale damage trail
     }
 
     /** Writes a fill: top row unless the name is a lower-row bar; mirrored for the right side. */

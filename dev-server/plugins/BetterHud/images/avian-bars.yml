@@ -6,7 +6,6 @@
 avian_casing_l: {type: single, file: avian_casing_l.png}
 avian_casing_r: {type: single, file: avian_casing_r.png}
 avian_orb_food: {type: single, file: avian_orb_food.png}
-avian_orb_level: {type: single, file: avian_orb_level.png}
 
 # "file:N" holds a frame for N ticks (100 ms a frame). Low health keeps the tempo and turns the glass red.
 avian_orb_heart:
@@ -40,3 +39,32 @@ avian_fill_mana:
       class: placeholder
       value: "(number)papi:auraskills_mana"
       max: "(number)papi:auraskills_mana_max"
+
+# The level orb and its gold filigree, one per tier (emerald 0-29, sapphire 30-59, amethyst 60-99,
+# ruby 100+); layouts/avian-level.yml picks by level. Drawn by tools/hud-art/LevelArt.java.
+avian_orb_level_emerald: {type: single, file: avian_orb_level_emerald.png}
+avian_orb_level_sapphire: {type: single, file: avian_orb_level_sapphire.png}
+avian_orb_level_amethyst: {type: single, file: avian_orb_level_amethyst.png}
+avian_orb_level_ruby: {type: single, file: avian_orb_level_ruby.png}
+avian_ornament_emerald: {type: single, file: avian_ornament_emerald.png}
+avian_ornament_sapphire: {type: single, file: avian_ornament_sapphire.png}
+avian_ornament_amethyst: {type: single, file: avian_ornament_amethyst.png}
+avian_ornament_ruby: {type: single, file: avian_ornament_ruby.png}
+
+# Level-up burst (popups/avian-popups.yml): a gold ring and sparkles, 16 frames of one tick.
+avian_levelup:
+  type: sequence
+  files: [avian_levelup_00.png:1, avian_levelup_01.png:1, avian_levelup_02.png:1, avian_levelup_03.png:1, avian_levelup_04.png:1, avian_levelup_05.png:1, avian_levelup_06.png:1, avian_levelup_07.png:1, avian_levelup_08.png:1, avian_levelup_09.png:1, avian_levelup_10.png:1, avian_levelup_11.png:1, avian_levelup_12.png:1, avian_levelup_13.png:1, avian_levelup_14.png:1, avian_levelup_15.png:1]
+
+# Damage trail: a pale health fill at last_health (health + the last hit), shown briefly under the
+# red fill after a hit, so the chunk just lost stays visible for a moment.
+avian_fill_trail:
+  type: listener
+  file: avian_fill_trail.png
+  split: 20
+  split-type: left
+  setting:
+    listener:
+      class: placeholder
+      value: last_health
+      max: max_health

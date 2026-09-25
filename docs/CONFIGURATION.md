@@ -50,6 +50,7 @@ run/
 | `database.name` | Which database to use | `avian` |
 | `database.user` | Database username | `avian` |
 | `database.pool-size` | How many database connections at once | `8` |
+| `level-up-popup` | The HUD effect played around the level orb when someone gains a level (a BetterHud popup). Leave it empty to turn it off | `avian_levelup` |
 
 The database **password** is not in this file on purpose — it lives in a separate file called
 `.env` so it never gets shared by accident. Copy `.env.example` to `.env` and put the password there.
