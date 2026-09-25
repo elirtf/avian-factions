@@ -24,12 +24,23 @@ public final class CoreConfig {
     private Server server = new Server();
     private Database database = new Database();
 
+    @Comment("""
+            Make old chunks' bedrock flat: the first time a chunk generated before flat bedrock was
+            switched on (paper-world-defaults generator.generate-flat-bedrock) loads, bedrock above the
+            bottom layer becomes deepslate (Nether: netherrack) and the Nether roof is flattened too.
+            Each chunk is done once and marked. The End is left alone.""")
+    private boolean flattenOldBedrock = true;
+
     public Server server() {
         return server;
     }
 
     public Database database() {
         return database;
+    }
+
+    public boolean flattenOldBedrock() {
+        return flattenOldBedrock;
     }
 
     static void validate(CoreConfig cfg, ConfigErrors e) {

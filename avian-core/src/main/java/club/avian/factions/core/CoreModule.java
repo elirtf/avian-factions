@@ -49,6 +49,11 @@ public final class CoreModule implements AvianModule {
         ctx.registerListener(new PlayerListener(players, ctx.logger()));
         ctx.services().provide(Players.class, players);
 
+        // Flat bedrock for chunks generated before it was switched on (new ones come flat from Paper).
+        var config = ctx.config(CoreConfig.SPEC);
+        ctx.registerListener(new club.avian.factions.core.world.BedrockFlattener(ctx.plugin(),
+                () -> config.get().flattenOldBedrock()));
+
         ctx.logger().info(cfg.server().name() + " core ready (" + cfg.server().address() + ")");
     }
 
