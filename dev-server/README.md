@@ -26,6 +26,7 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/CarbonChat/channels/global.conf` | The chat line: name, rank tag, a dim ➜, the message. Hovering the name shows rank, balance, tokens, gems and faction; clicking it starts a `/msg`. `%avian_*%` placeholders come from our plugin (`AvianPlaceholders`) |
 | `plugins/CarbonChat/config.conf` | `use-carbon-nicknames=false`: nicknames stay with EssentialsX `/nick` (otherwise Carbon clears them on join). Storage is Carbon's default JSON (only ignores and channel choices) |
 | `plugins/CarbonChat/command-settings.conf` | Carbon's `/nick` is off so EssentialsX's answers. Carbon owns `/msg`, `/r` and `/ignore` |
+| `plugins/AvianFactions/factions.conf` (defaults) | `claim-loading`: a faction's claimed chunks stay loaded while any member is online, so crops and farms grow while they are elsewhere (max 128 per faction); `chunk-buster` settings |
 | `plugins/AvianFactions/combat.conf` | `hit-delay-ticks=16` (faster PvP combos); `clear-stacked-mob-corpses=true` (a mob killed out of a stack vanishes at once so the next hit on the stack lands) ; gapple, notch apple and totem cooldowns (docs/ECONOMY.md) |
 | `plugins/AvianFactions/economy.conf` | Sugar cane tokens (2 % per grown block harvested by hand), villagers cannot summon iron golems, fallback sell values |
 | `plugins/AvianFactions/ftop.conf` | Spawner and block values equal to their /shop prices |
