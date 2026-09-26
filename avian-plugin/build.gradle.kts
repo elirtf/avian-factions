@@ -162,7 +162,7 @@ val pluginStack = listOf(
         "https://cdn.modrinth.com/data/uDdZAVls/versions/9rSJ3THD/AuraSkills-2.4.0.jar",
         "SHA-256", "de54cbd2e33d65e8b1704751ae4121ed2f5b466ba89c63a1aadf3a3e629d6a40"),
     // BetterRTP 3.6.13 (GPL-3.0): /rtp inside the world border, skipping WorldGuard regions. Its
-    // FactionsUUID hook predates 4.x and never enables, so claims are not avoided yet (#45). Last
+    // FactionsUUID hook predates 4.x and never enables; avian-factions vetoes claimed spots (#45). Last
     // release was 2024-05 — spiget's "always latest" mirror, so the hash is the pin (Hangar only has
     // 3.6.8). Boot-tested clean on 26.1.2. Config: dev-server/plugins/BetterRTP.
     PinnedPlugin("BetterRTP-3.6.13.jar",
