@@ -9,7 +9,6 @@ import club.avian.factions.core.player.JdbcPlayerRepository;
 import club.avian.factions.core.player.PlayerListener;
 import club.avian.factions.core.player.PlayerService;
 
-import org.bukkit.Bukkit;
 
 import java.time.Clock;
 import java.util.List;
@@ -55,13 +54,6 @@ public final class CoreModule implements AvianModule {
         var config = ctx.config(CoreConfig.SPEC);
         ctx.registerListener(new club.avian.factions.core.world.BedrockFlattener(ctx.plugin(),
                 () -> config.get().flattenOldBedrock()));
-
-        // The HUD's level-up burst (BetterHud has no level-up trigger of its own).
-        if (Bukkit.getPluginManager().getPlugin("BetterHud") != null) {
-            var quiet = Bukkit.createCommandSender(feedback -> { });
-            ctx.registerListener(new club.avian.factions.core.hud.LevelUpPopup(
-                    () -> config.get().levelUpPopup(), command -> Bukkit.dispatchCommand(quiet, command)));
-        }
 
         ctx.logger().info(cfg.server().name() + " core ready (" + cfg.server().address() + ")");
     }

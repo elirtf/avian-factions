@@ -84,7 +84,7 @@ hooks:
     enabled: true
 action_bar:
   enabled: true
-  idle: false  # Avian: the BetterHud HUD shows health; the idle "20/20 ❤ 36/36 Mana" bar overlapped it
+  idle: true   # Avian: back on with the custom HUD gone (2026-09-26): the only place mana shows
   ability: true
   xp: false
   maxed: false

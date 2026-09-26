@@ -31,11 +31,6 @@ public final class CoreConfig {
             Each chunk is done once and marked. The End is left alone.""")
     private boolean flattenOldBedrock = true;
 
-    @Comment("""
-            BetterHud popup played around the level orb when a player gains a level (defined in
-            plugins/BetterHud/popups/). Blank turns the level-up burst off.""")
-    private String levelUpPopup = "avian_levelup";
-
     public Server server() {
         return server;
     }
@@ -46,10 +41,6 @@ public final class CoreConfig {
 
     public boolean flattenOldBedrock() {
         return flattenOldBedrock;
-    }
-
-    public String levelUpPopup() {
-        return levelUpPopup;
     }
 
     static void validate(CoreConfig cfg, ConfigErrors e) {
