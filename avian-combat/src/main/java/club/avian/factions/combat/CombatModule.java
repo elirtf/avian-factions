@@ -6,11 +6,14 @@ import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.core.CoreModule;
 import org.bukkit.Bukkit;
 
+import java.time.Clock;
 import java.util.List;
 import java.util.Set;
 
-/** Classic PvP feel: no attack cooldown, 1.8 knockback, no sweep (spec §44). */
+/** Classic PvP feel (spec §44) and the combat tag with logout bodies (spec §43). */
 public final class CombatModule implements AvianModule {
+
+    private LogoutBodies bodies;
 
     @Override
     public String id() {
@@ -33,6 +36,13 @@ public final class CombatModule implements AvianModule {
         var listener = new CombatListener(config);
         ctx.registerListener(listener);
         ctx.registerListener(new ConsumableCooldowns(config, System::currentTimeMillis));
+        bodies = new LogoutBodies(ctx.plugin(), config,
+                new LogoutDeathRepository.Jdbc(ctx.database(), Clock.systemUTC()), System::currentTimeMillis);
+        var tags = new CombatTagListener(config, new CombatTags(System::currentTimeMillis), bodies);
+        ctx.registerListener(bodies);
+        ctx.registerListener(tags);
+        Bukkit.getScheduler().runTaskTimer(ctx.plugin(), tags::tick, 5, 5);
+        Bukkit.getScheduler().runTaskTimer(ctx.plugin(), bodies::tick, 20, 20);
         if (Bukkit.getPluginManager().getPlugin("RoseStacker") != null) {
             ctx.registerListener(new StackedCorpseListener(ctx.plugin(), config, StackedCorpseListener.roseStacker()));
         }
@@ -44,6 +54,14 @@ public final class CombatModule implements AvianModule {
         var cfg = config.get();
         ctx.logger().info("Combat: preset " + cfg.preset() + ", attack-speed "
                 + (cfg.disableAttackCooldown() ? cfg.attackSpeed() : "vanilla")
-                + ", sweep " + (cfg.disableSweepAttack() ? "off" : "on"));
+                + ", sweep " + (cfg.disableSweepAttack() ? "off" : "on")
+                + ", combat tag " + cfg.combatTagSeconds() + "s, logout body " + cfg.logoutBodySeconds() + "s");
+    }
+
+    @Override
+    public void disable() {
+        if (bodies != null) {
+            bodies.removeAll();
+        }
     }
 }

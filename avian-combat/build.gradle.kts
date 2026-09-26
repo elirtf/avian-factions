@@ -8,4 +8,6 @@ dependencies {
     implementation(libs.configurate.hocon)
     // RoseStacker provides these at runtime: which dying mob still has a stack behind it.
     compileOnly(libs.rosestacker)
+
+    "integrationTestImplementation"(project(":avian-testing"))
 }
