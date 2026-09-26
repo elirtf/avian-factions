@@ -112,6 +112,23 @@ keeps them when traded or stored. Neighbouring columns are only harvested where 
 break them (claims, WorldGuard). Admins can give one with `/hoe give <player>`
 (`avian.hoe.admin`).
 
+## Sell wands
+
+Right-click a chest, barrel, hopper or any container with a sell wand: everything `/shop` buys is
+sold at the player's own shop price, times the wand's multiplier, and paid as `sellwand:<tier>` in
+the audit trail. Sneak and right-click to see what it's worth without selling. It only works on
+containers the player could open, so another faction's chests are safe. Our own items (the
+Harvester Hoe, wands) are never sold.
+
+| Tier | Item | Uses | Multiplier |
+|---|---|---|---|
+| `basic` | Stick | 100 | ×1 |
+| `gilded` | Blaze rod | 500 | ×1.1 |
+| `eternal` | End rod | unlimited | ×1.25 |
+
+Tiers live in `sellwand.conf`. Admins, crates and shops hand them out with
+`/sellwand give <player> <tier> [amount]` (`avian.sellwand.admin`).
+
 ## PvP consumables
 
 Cooldowns in `combat.conf`:
