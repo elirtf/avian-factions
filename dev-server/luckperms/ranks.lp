@@ -168,6 +168,8 @@ lp group helper permission set essentials.tempban true
 lp group helper permission set essentials.vanish true
 lp group helper permission set coreprotect.inspect true
 lp group helper permission set coreprotect.lookup true
+# GrimAC: see cheat alerts in chat (and toggle them with /grim alerts).
+lp group helper permission set grim.alerts true
 
 lp creategroup mod
 lp group mod setweight 210

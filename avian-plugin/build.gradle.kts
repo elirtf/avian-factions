@@ -199,6 +199,13 @@ val pluginStack = listOf(
     PinnedPlugin("BetterHud-bukkit-2.0.0.jar",
         "https://cdn.modrinth.com/data/JUl6WIK2/versions/bedIGBtb/BetterHud-bukkit-2.0.0.jar",
         "SHA-256", "4ff7892b474870adf5f3fc9b2419fe80fcdb5a7f895fadd0f9de91bebbd3307b"),
+    // GrimAC 2.3.74 (GPL-3.0): prediction-based anticheat (spec §45) — movement, reach, knockback,
+    // timer. Out of the box it only alerts staff and logs; no kicks or bans until we tune it. It
+    // detects Geyser players itself (GeyserUtil). Boot-tested clean on 26.1.2 with Floodgate and
+    // ViaVersion; see docs/research/anticheat.md.
+    PinnedPlugin("grimac-bukkit-2.3.74-8eb5f28.jar",
+        "https://cdn.modrinth.com/data/LJNGWSvH/versions/Gd6BG1HA/grimac-bukkit-2.3.74-8eb5f28.jar",
+        "SHA-256", "91c06e7ae7da53636bc5e500d5af3d36a6180247e155fa5b4340da5a72f9eeb7"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
