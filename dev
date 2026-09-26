@@ -216,21 +216,40 @@ pack_fingerprint() {
     } | sha256sum | cut -d" " -f1
 }
 
+# BetterHud builds its HUD pack on its own after boot and merges it into CraftEngine's. A build
+# asked for before that merge ships without the HUD ("BetterHud is still on reload!" in the log):
+# a 45 KB pack instead of ~4.7 MB, which players saw as a glitched HUD on 2026-09-26. So wait for
+# the merge first, and build again if BetterHud was still busy anyway.
 cmd_pack() {
     session_running || fail "The server is not running. Start it with: ./dev start"
-    say "Building the resource pack…"
-    local log="$ROOT/run/logs/latest.log" before
-    before="$(grep -c 'Resource pack generated' "$log" 2>/dev/null || true)"
-    send "ce reload all"
-    for _ in $(seq 1 120); do
-        if (( $(grep -c 'Resource pack generated' "$log" 2>/dev/null || true) > before )); then
-            pack_fingerprint > "$PACK_STAMP"
-            ok "Resource pack built and served on the game port"
-            return
+    local log="$ROOT/run/logs/latest.log" attempt before
+    if compgen -G "$ROOT/run/plugins/BetterHud*.jar" > /dev/null; then
+        say "Waiting for BetterHud to finish building the HUD…"
+        for _ in $(seq 1 120); do
+            grep -q 'BetterHud\] Successfully merged with CraftEngine' "$log" 2>/dev/null && break
+            sleep 1
+        done
+    fi
+    for attempt in 1 2; do
+        say "Building the resource pack…"
+        before="$(wc -l < "$log")"
+        send "ce reload all"
+        local built=0
+        for _ in $(seq 1 120); do
+            if tail -n +"$((before + 1))" "$log" | grep -q 'Resource pack generated'; then built=1; break; fi
+            sleep 1
+        done
+        (( built )) || fail "The resource pack did not finish building in 120s. Look with: ./dev logs"
+        if tail -n +"$((before + 1))" "$log" | grep -q 'BetterHud is still on reload'; then
+            say "BetterHud was still busy, so the HUD is missing from that build; building again…"
+            sleep 5
+            continue
         fi
-        sleep 1
+        pack_fingerprint > "$PACK_STAMP"
+        ok "Resource pack built and served on the game port"
+        return
     done
-    fail "The resource pack did not finish building in 120s. Look with: ./dev logs"
+    fail "BetterHud was still busy after two builds; the HUD may be missing. Try again with: ./dev pack"
 }
 cmd_stop() {
     if ! session_running; then
