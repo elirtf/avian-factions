@@ -277,18 +277,32 @@ val unpackCraftEngineDefaults = tasks.register("unpackCraftEngineDefaults") {
     }
 }
 
+// Our resource pack is mirrored exactly, not copied over: a texture deleted in git must leave the
+// served pack too (parked sword art lingered in run/ and would have shipped with the next build).
+// Nothing else writes there; the rest of run/plugins holds live plugin data and is never pruned.
+val avianPack = "plugins/CraftEngine/resources/avian"
+
 val syncDevConfig = tasks.register<Copy>("syncDevConfig") {
     description = "Copies tracked dev-server config into run/."
     group = "avian"
     dependsOn(unpackCraftEngineDefaults)
     from(layout.projectDirectory.dir("../dev-server")) {
         exclude("README.md")
+        exclude("$avianPack/**")
     }
     into(layout.projectDirectory.dir("../run"))
 }
 
+val syncAvianPack = tasks.register<Sync>("syncAvianPack") {
+    description = "Mirrors our resource pack (dev-server/$avianPack) into run/, deleting stale files."
+    group = "avian"
+    dependsOn(unpackCraftEngineDefaults)
+    from(layout.projectDirectory.dir("../dev-server/$avianPack"))
+    into(layout.projectDirectory.dir("../run/$avianPack"))
+}
+
 tasks.runServer {
-    dependsOn(syncDevConfig)
+    dependsOn(syncDevConfig, syncAvianPack)
 }
 
 // Prints the rank setup as console commands. LuckPerms has no "apply a file" command, so this
