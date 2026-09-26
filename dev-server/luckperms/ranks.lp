@@ -25,7 +25,7 @@
 lp creategroup hatchling
 lp group hatchling setweight 10
 lp group hatchling meta removeprefix 10
-# Rank tags are suffixes, shown after the name in chat via %avian_rank%. They are MiniMessage
+# Rank tags are suffixes, shown before the name in chat via %avian_rank%. They are MiniMessage
 # (CarbonChat renders chat), not &-codes: <#RRGGBB> colours, <bold>, <gradient:#A:#B>.
 lp group hatchling meta setsuffix 10 "<#9E9E9E>ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
