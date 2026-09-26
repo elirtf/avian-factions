@@ -5,6 +5,8 @@ import club.avian.factions.api.config.ConfigSpec;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.util.List;
+
 /**
  * {@code combat.conf} — 1.8-style combat feel (spec §44).
  *
@@ -69,6 +71,23 @@ public final class CombatConfig {
             while this is running does nothing and the player dies. 0 = none.""")
     private int totemCooldownSeconds = 60;
 
+    @Comment("""
+            Seconds a player stays in combat after hitting, or being hit by, another player. Every
+            hit restarts it. While in combat they cannot teleport, fly or use the commands below,
+            and logging out leaves a body behind. 0 = no combat tag at all.""")
+    private int combatTagSeconds = 20;
+
+    @Comment("""
+            Seconds a logged-out player's body stands where they left, in their armour, with their
+            health. Anyone who kills it gets everything they carried, and the player dies when they
+            next join. If the body survives this long, or the player comes back first, they keep it all.""")
+    private int logoutBodySeconds = 30;
+
+    @Comment("Commands refused while in combat (the first word, or the first two for sub-commands like \"f home\").")
+    private List<String> blockedCommands = List.of(
+            "spawn", "home", "homes", "warp", "warps", "back", "tpa", "tpahere", "tpaccept", "tpyes",
+            "rtp", "wild", "f home", "f fly", "f warp", "fly", "ec", "enderchest", "pv", "vault");
+
     private Knockback knockback = new Knockback();
 
     public Preset preset() {
@@ -107,6 +126,18 @@ public final class CombatConfig {
         return totemCooldownSeconds;
     }
 
+    public int combatTagSeconds() {
+        return combatTagSeconds;
+    }
+
+    public int logoutBodySeconds() {
+        return logoutBodySeconds;
+    }
+
+    public List<String> blockedCommands() {
+        return blockedCommands;
+    }
+
     /** The knockback values in effect: the preset's, unless the preset is {@code CUSTOM}. */
     public Knockback knockback() {
         return switch (preset) {
@@ -122,6 +153,8 @@ public final class CombatConfig {
         e.check(cfg.enchantedGoldenAppleCooldownSeconds >= 0, "enchanted-golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.goldenAppleCooldownSeconds >= 0, "golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.totemCooldownSeconds >= 0, "totem-cooldown-seconds", "must be >= 0");
+        e.check(cfg.combatTagSeconds >= 0, "combat-tag-seconds", "must be >= 0");
+        e.check(cfg.logoutBodySeconds >= 0 && cfg.logoutBodySeconds <= 600, "logout-body-seconds", "must be 0-600");
         var kb = cfg.knockback;
         e.check(kb.horizontal >= 0, "knockback.horizontal", "must be >= 0");
         e.check(kb.vertical >= 0, "knockback.vertical", "must be >= 0");
