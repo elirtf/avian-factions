@@ -17,7 +17,7 @@ Settings:
     RedProtect: false
     ## Respect FactionsUUID areas (https://www.spigotmc.org/resources/factionsuuid.1035/)
     ## Avian: off — this hook looks for a plugin named "Factions" and the pre-4.x massivecraft API,
-    ## so it never enables with FactionsUUID 4.7.0. Claim avoidance is issue #45.
+    ## so it never enables with FactionsUUID 4.7.0. AvianFactions keeps /rtp out of claims instead (#45).
     FactionsUUID: false
     ## Respect Lands areas (https://www.spigotmc.org/resources/lands.53313/)
     Lands: false

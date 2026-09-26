@@ -79,6 +79,10 @@ public final class FactionsModule implements AvianModule {
                 ClaimLoader.tickets(ctx.plugin()));
         ctx.registerListener(claimLoader);
         claimLoader.start();
+
+        // /rtp never lands in faction land (#45).
+        RtpClaimGuard.register(ctx.plugin(), location -> !dev.kitteh.factions.Board.board()
+                .factionAt(new dev.kitteh.factions.FLocation(location)).isWilderness(), ctx.logger());
         ctx.commands().register(new ChunkBusterCommand(busters).build(), "Chunk busters: confirm one, or give them (admins)");
         UpgradeSwitch.apply(config.get().enabledUpgrades(), ctx.logger());
         config.onReload(c -> UpgradeSwitch.apply(c.enabledUpgrades(), ctx.logger()));
