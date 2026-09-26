@@ -191,14 +191,11 @@ val pluginStack = listOf(
     // dev-server/plugins/CraftEngine/resources/ and serves it on the game port; it rewrites
     // <image:…>/<shift:…> in outgoing titles, chat and lore, so every plugin's menus can have a drawn
     // background. The author tags every build "beta" — there is no release channel — so the hash is
-    // the pin. BetterHud 2.0.0 (MIT) draws the hotbar HUD and merges its pack into CraftEngine's.
-    // See docs/research/resource-pack.md.
+    // the pin. Kept for custom weapons, tools and armour to come; the BetterHud HUD was removed
+    // 2026-09-26 (owner). See docs/research/resource-pack.md.
     PinnedPlugin("craft-engine-paper-plugin-26.9.1.jar",
         "https://cdn.modrinth.com/data/tRX6FMfQ/versions/EDh6mvv2/craft-engine-paper-plugin-26.9.1.jar",
         "SHA-256", "021260c87e3546730d321f4360b1744e6e33caa1d68e98ae30dcdbbdc347ae0f"),
-    PinnedPlugin("BetterHud-bukkit-2.0.0.jar",
-        "https://cdn.modrinth.com/data/JUl6WIK2/versions/bedIGBtb/BetterHud-bukkit-2.0.0.jar",
-        "SHA-256", "4ff7892b474870adf5f3fc9b2419fe80fcdb5a7f895fadd0f9de91bebbd3307b"),
     // GrimAC 2.3.74 (GPL-3.0): prediction-based anticheat (spec §45) — movement, reach, knockback,
     // timer. Out of the box it only alerts staff and logs; no kicks or bans until we tune it. It
     // detects Geyser players itself (GeyserUtil). Boot-tested clean on 26.1.2 with Floodgate and

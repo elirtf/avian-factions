@@ -204,52 +204,33 @@ cmd_setup_world() {
 
 
 # CraftEngine builds the resource pack only on /ce reload, never at startup, so start rebuilds it
-# when its sources (our pack, BetterHud's layouts, the plugin jars) changed or no pack exists yet.
+# when its sources (our pack, the plugin jar) changed or no pack exists yet.
 # The built pack survives restarts, so an unchanged start skips this.
 pack_fingerprint() {
     {
-        { find "$ROOT/dev-server/plugins/CraftEngine" "$ROOT/dev-server/plugins/BetterHud" -type f 2>/dev/null || true; } \
+        { find "$ROOT/dev-server/plugins/CraftEngine" -type f 2>/dev/null || true; } \
             | sort | xargs -r sha256sum
-        for jar in "$ROOT"/run/plugins/craft-engine*.jar "$ROOT"/run/plugins/BetterHud*.jar; do
+        for jar in "$ROOT"/run/plugins/craft-engine*.jar; do
             if [[ -e "$jar" ]]; then basename "$jar"; fi
         done
     } | sha256sum | cut -d" " -f1
 }
 
-# BetterHud builds its HUD pack on its own after boot and merges it into CraftEngine's. A build
-# asked for before that merge ships without the HUD ("BetterHud is still on reload!" in the log):
-# a 45 KB pack instead of ~4.7 MB, which players saw as a glitched HUD on 2026-09-26. So wait for
-# the merge first, and build again if BetterHud was still busy anyway.
 cmd_pack() {
     session_running || fail "The server is not running. Start it with: ./dev start"
-    local log="$ROOT/run/logs/latest.log" attempt before
-    if compgen -G "$ROOT/run/plugins/BetterHud*.jar" > /dev/null; then
-        say "Waiting for BetterHud to finish building the HUD…"
-        for _ in $(seq 1 120); do
-            grep -q 'BetterHud\] Successfully merged with CraftEngine' "$log" 2>/dev/null && break
-            sleep 1
-        done
-    fi
-    for attempt in 1 2; do
-        say "Building the resource pack…"
-        before="$(wc -l < "$log")"
-        send "ce reload all"
-        local built=0
-        for _ in $(seq 1 120); do
-            if tail -n +"$((before + 1))" "$log" | grep -q 'Resource pack generated'; then built=1; break; fi
-            sleep 1
-        done
-        (( built )) || fail "The resource pack did not finish building in 120s. Look with: ./dev logs"
-        if tail -n +"$((before + 1))" "$log" | grep -q 'BetterHud is still on reload'; then
-            say "BetterHud was still busy, so the HUD is missing from that build; building again…"
-            sleep 5
-            continue
+    say "Building the resource pack…"
+    local log="$ROOT/run/logs/latest.log" before
+    before="$(wc -l < "$log")"
+    send "ce reload all"
+    for _ in $(seq 1 120); do
+        if tail -n +"$((before + 1))" "$log" | grep -q 'Resource pack generated'; then
+            pack_fingerprint > "$PACK_STAMP"
+            ok "Resource pack built and served on the game port"
+            return
         fi
-        pack_fingerprint > "$PACK_STAMP"
-        ok "Resource pack built and served on the game port"
-        return
+        sleep 1
     done
-    fail "BetterHud was still busy after two builds; the HUD may be missing. Try again with: ./dev pack"
+    fail "The resource pack did not finish building in 120s. Look with: ./dev logs"
 }
 cmd_stop() {
     if ! session_running; then
