@@ -159,6 +159,9 @@ command or a player who logged out). Both halves land in the audit trail as `sho
 give a reward from a separate line: it would pay out whether or not the charge succeeded.
 `gems charge` works the same way for a future gem shop.
 
+**The Enchanter** (`/enchanter`) sells random custom-enchant books the same way: Common 150,
+Rare 500, Legendary 1,500 tokens. See [ENCHANTS.md](ENCHANTS.md).
+
 ## PvP consumables
 
 Cooldowns in `combat.conf`:

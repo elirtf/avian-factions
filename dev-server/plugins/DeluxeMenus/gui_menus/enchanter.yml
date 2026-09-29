@@ -1,0 +1,106 @@
+# AVIAN: the Enchanter (/enchanter). Tokens buy a random custom-enchant book from one of three tiers
+# (docs/ENCHANTS.md). A button charges the tokens and, only if that worked, rolls the tier's book crate
+# for the player (`crazycrates forceopen`: the spin animation, then the book). See token_shop.yml for
+# how `tokens charge` works; never give the reward on a separate line.
+#
+# Layout: the menu kit (club.avian.factions.api.text.Ui). Colour on the top and bottom rows, the
+# subject top-centre, the three tiers in the middle row. Left-click rolls, right-click shows every prize.
+menu_title: '&#C58CFF&l✦ &#C58CFF&lE&#BE86FF&ln&#B780FF&lc&#B07AFF&lh&#A974FF&la&#A16EFF&ln&#9A68FF&lt&#9362FF&le&#8C5CFF&lr'
+register_command: true
+open_command:
+  - enchanter
+size: 45
+update_interval: 1
+
+items:
+  'frame_a':
+    material: PURPLE_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [0, 2, 6, 8, 36, 38, 42, 44]
+  'frame_b':
+    material: MAGENTA_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [1, 3, 5, 7, 37, 39, 41, 43]
+  'close':
+    material: BARRIER
+    slot: 40
+    display_name: '&#FF5C5C&l✖ Close'
+    left_click_commands:
+      - '[close]'
+  'about':
+    material: ENCHANTING_TABLE
+    slot: 4
+    update: true
+    display_name: '&#C58CFF&l✦ Enchanter'
+    lore:
+      - '&#B8B8C8Trade tokens for a random custom'
+      - '&#B8B8C8enchant book, then add it to gear'
+      - '&#B8B8C8in an anvil.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Your tokens  &#FFE66D%avian_tokens%'
+      - '&#6E6E80◆ &#B8B8C8Custom enchants per item  &#FFFFFFup to 5'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See what every enchant does'
+    left_click_commands:
+      - '[close]'
+      - '[player] eenchants list'
+
+  # --- the three tiers ---
+  'common':
+    material: BOOK
+    slot: 20
+    display_name: '&#C9C9C9&lCommon Book'
+    lore:
+      - '&#B8B8C8Utility and grinding enchants:'
+      - '&#B8B8C8Smelter, Haste, Wisdom, Night Vision…'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D150 tokens'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF23'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_commands:
+      - '[close]'
+      - '[console] tokens charge %player_name% 150 enchanter:common crazycrates forceopen EnchantCommon %player_name%'
+    right_click_commands:
+      - '[close]'
+      - '[console] crazycrates preview EnchantCommon %player_name%'
+  'rare':
+    material: ENCHANTED_BOOK
+    slot: 22
+    display_name: '&#4DA3FF&lRare Book'
+    lore:
+      - '&#B8B8C8Combat effects, arrows and better'
+      - '&#B8B8C8tools: Venom, Veinminer, Telekinesis…'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D500 tokens'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF28'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_commands:
+      - '[close]'
+      - '[console] tokens charge %player_name% 500 enchanter:rare crazycrates forceopen EnchantRare %player_name%'
+    right_click_commands:
+      - '[close]'
+      - '[console] crazycrates preview EnchantRare %player_name%'
+  'legendary':
+    material: ENCHANTED_BOOK
+    slot: 24
+    enchantment_glint_override: true
+    display_name: '&#FFB84D&lLegendary Book'
+    lore:
+      - '&#B8B8C8The strongest enchants on the server:'
+      - '&#B8B8C8Vampire, Temper, Thunder, Regrowth…'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D1,500 tokens'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF13'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_commands:
+      - '[close]'
+      - '[console] tokens charge %player_name% 1500 enchanter:legendary crazycrates forceopen EnchantLegendary %player_name%'
+    right_click_commands:
+      - '[close]'
+      - '[console] crazycrates preview EnchantLegendary %player_name%'

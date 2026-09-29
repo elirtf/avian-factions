@@ -81,6 +81,16 @@ CoreProtect caveat noted below).
 | Why | Sidebar, tab list and nametags from YAML with PlaceholderAPI. The sidebar shows balance, tokens and faction; names read "rank ┃ name" as in chat. It works behind Velocity too (`proxy-support`), for when the hub comes. |
 | Checked on 26.1.2 | 2026-09-29, on a scratch Paper 26.1.2 build 74 server with a mineflayer (26.1) bot reading the packets. It boots clean. MiniMessage in the config and in placeholder output renders: gradients, hex colours, and a LuckPerms suffix like `<#8C5CFF><bold>ʀᴀᴠᴇɴ</bold>`. Right-aligned sidebar values (`label‖value`) arrive as fixed number formats. |
 
+### ExcellentEnchants, nightcore, packetevents
+
+| | |
+|---|---|
+| Versions | **ExcellentEnchants 5.4.3** (2026-06-02, lists 26.1.2), **nightcore 2.16.6** (2026-09-24, its library), **packetevents 2.14.0** (2026-09-23) |
+| Downloads | https://cdn.modrinth.com/data/QufNAmjx/versions/AT68K28Z/ExcellentEnchants-5.4.3.jar (sha256 `01991c6dcf3030e736db69b9d5fd49ac6ab030d3c09feabdf1bd7674d9570133`); https://cdn.modrinth.com/data/Y4NRwMW5/versions/AIeSQerQ/nightcore-2.16.6.jar (sha256 `9c82a7d2e76277c0cf490e7c85b2ce827d953ec0a7977337c25690c56b472c5a`); https://cdn.modrinth.com/data/HYKaKraK/versions/m78nFxYg/packetevents-spigot-2.14.0.jar (sha256 `060087c58ec268eae7dd0eb1f17ac3bea1eaadda1693414141ff64e506091bd7`) |
+| License | GPL-3.0 all three (https://github.com/nulli0n/ExcellentEnchants-spigot, https://github.com/retrooper/packetevents) |
+| Why | 81 vanilla-style custom enchants from config; the token Enchanter sells them by tier (docs/ENCHANTS.md). packetevents is optional for EE but without it enchant descriptions never show in tooltips, and EE logs an ERROR at boot. |
+| Checked on 26.1.2 | 2026-09-29, scratch server with GrimAC, ViaVersion, CrazyCrates, Vault, EssentialsX: 69 enchants load, no errors; GrimAC loads its own shaded packetevents beside the plugin without conflict; a force-opened book crate gives a real book whose tooltip shows its description; nightcore connects to MariaDB. |
+
 ### LuckPerms
 
 | | |

@@ -1,0 +1,14 @@
+# AVIAN: the chat prefix in the Brand palette (gem purple); the rest is the plugin's default.
+Plugin:
+  # Localized plugin name. It's used in messages and with internal placeholders.
+  Name: Enchants
+  # Plugin prefix. Used in messages.
+  Prefix: '<#C58CFF>✦</#C58CFF> <#B8B8C8>'
+  # Command names that will be registered as main plugin commands.
+  # Do not leave this empty. Split multiple names with a comma.
+  Command_Aliases: eenchants,excellentenchants
+  # Sets the plugin language.
+  # Basically it tells the plugin to use certain messages config from the '/lang/' sub-folder.
+  # If specified language is not available, default one (English) will be used instead.
+  # [Default is System Locale]
+  Language: en
