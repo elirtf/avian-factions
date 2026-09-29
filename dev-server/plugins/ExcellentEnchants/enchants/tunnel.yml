@@ -51,8 +51,7 @@ Definition:
   # [*] Excellent enchantments must be specified as: 'excellentenchants:enchant_name.
   #     If custom namespace is disabled, use the vanilla (minecraft) one.
   # [*] Reboot required when changed.
-  Exclusives:
-  - excellentenchants:blast_mining
+  Exclusives: []
 Distribution:
   # Sets whether this enchantment is a treasure enchantment.
   # Treasure enchantments are those that can't be obtained using an enchantment table, and won't be generated on randomly enchanted equipment sold by villagers or worn by mobs.

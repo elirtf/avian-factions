@@ -83,22 +83,38 @@ final class EconomyCommand {
                 .requires(src -> src.getSender().hasPermission(PERMISSION))
                 .then(Commands.argument("player", StringArgumentType.word())
                         .then(Commands.argument("cost", LongArgumentType.longArg(1))
-                                .then(Commands.argument("reason", StringArgumentType.word())
-                                        .then(Commands.argument("reward", StringArgumentType.greedyString())
-                                                .executes(ctx -> charge(ctx, currency)))))));
+                                // One greedy argument, split in charge(): a word argument rejects the
+                                // ':' in reasons like shop:key-common, which broke every purchase.
+                                .then(Commands.argument("reason and reward", StringArgumentType.greedyString())
+                                        .executes(ctx -> charge(ctx, currency))))));
         return node;
     }
 
     private int charge(CommandContext<CommandSourceStack> ctx, Currency currency) {
+        var sender = ctx.getSource().getSender();
+        var parts = splitReasonAndReward(StringArgumentType.getString(ctx, "reason and reward"));
+        if (parts == null) {
+            sender.sendMessage(Component.text("Usage: charge <player> <cost> <reason> <reward command>", NamedTextColor.RED));
+            return 0;
+        }
         var name = StringArgumentType.getString(ctx, "player");
         var player = Bukkit.getPlayerExact(name);
         if (player == null) {
-            ctx.getSource().getSender().sendMessage(Component.text(name + " is not online.", NamedTextColor.RED));
+            sender.sendMessage(Component.text(name + " is not online.", NamedTextColor.RED));
             return 0;
         }
-        purchase.buy(player, currency, LongArgumentType.getLong(ctx, "cost"),
-                StringArgumentType.getString(ctx, "reason"), StringArgumentType.getString(ctx, "reward"));
+        purchase.buy(player, currency, LongArgumentType.getLong(ctx, "cost"), parts[0], parts[1]);
         return 1;
+    }
+
+    /** {@code "shop:key-common crazycrates give …"} → reason, reward command; null if either is missing. */
+    static String[] splitReasonAndReward(String rest) {
+        var trimmed = rest.strip();
+        int space = trimmed.indexOf(' ');
+        if (space < 1 || trimmed.substring(space + 1).isBlank()) {
+            return null;
+        }
+        return new String[] {trimmed.substring(0, space), trimmed.substring(space + 1).strip()};
     }
 
     enum Action { GIVE, TAKE, SET }

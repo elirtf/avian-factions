@@ -47,6 +47,12 @@ class AvianPlaceholdersTest {
     }
 
     @Test
+    void levelIsTheXpLevelForTheEnchanter() {
+        ((org.bukkit.entity.Player) alice).setLevel(27);
+        assertEquals("27", placeholders.onRequest(alice, "level"));
+    }
+
+    @Test
     void withoutLuckPermsTheRankIsBlankRatherThanBroken() {
         assertEquals("", placeholders.onRequest(alice, "rank"));
     }

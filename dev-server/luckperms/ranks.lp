@@ -68,6 +68,17 @@ lp group hatchling permission set excellentenchants.command.list true
 # Auction house (CrazyAuctions, /ah): the most listings a player may have at once is the HIGHEST
 # crazyauctions.sell.<n> / bid.<n> they hold. With none at all the limit is unlimited, so every rank
 # needs one. Paid ranks inherit Fledgling's.
+# The player commands. CrazyAuctions declares these without registering them, so they are not true
+# by default: without these lines only ops could sell, bid or collect (found in testing, 2026-09-29).
+lp group hatchling permission set crazyauctions.access true
+lp group hatchling permission set crazyauctions.use true
+lp group hatchling permission set crazyauctions.help true
+lp group hatchling permission set crazyauctions.view true
+lp group hatchling permission set crazyauctions.sell true
+lp group hatchling permission set crazyauctions.bid true
+lp group hatchling permission set crazyauctions.listed true
+lp group hatchling permission set crazyauctions.expired true
+lp group hatchling permission set crazyauctions.collect true
 lp group hatchling permission set crazyauctions.sell.5 true
 lp group hatchling permission set crazyauctions.bid.5 true
 # F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and

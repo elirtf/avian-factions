@@ -4,14 +4,18 @@
 # Colours are the Brand palette: sun #FFD23F, hot #FF7A45, money #4CE08A, soft #B8B8C8, dim #6E6E80,
 # click green #7CFF4F, bad #FF5C5C. Slots here count from 1 (54 = bottom-right).
 Settings:
-  Prefix: '<#FFD23F>⚖</#FFD23F> ' #Prefix of when you get Crazy Auctions Messages.
-  # The page number is appended to the title.
-  GUIName: '#FFD23F&lA#FFCB40&lu#FFC340&lc#FFBC41&lt#FFB541&li#FFAD42&lo#FFA642&ln #FF9743&lH#FF9043&lo#FF8944&lu#FF8144&ls#FF7A45&le #6E6E80· ' #Name of the Main GUI.
-  Players-Current-Items: '#FFD23F&lYour listings' #The Name of the Player Current Items GUI.
-  Cancelled/Expired-Items: '#FFD23F&lCollect your items' #Name of the Cancelled/Expired GUI.
-  Buying-Item: '#FFD23F&lBuy this item?' #Name of the Buying GUI.
-  Bidding-On-Item: '#FFD23F&lPlace a bid' #Name of the Bidding GUI.
-  Categories: '#FFD23F&lCategories' #Name of the Category GUI.
+  # No hex here: CrazyAuctions turns every bare #RRGGBB in config.yml into legacy codes, and a legacy
+  # code inside a MiniMessage message crashes the command (seen 2026-09-29). Named colours only.
+  Prefix: '<gold>⚖</gold> ' #Prefix of when you get Crazy Auctions Messages.
+  # Menu TITLES take &-codes only, never hex: CrazyAuctions finds its own menus by checking that the
+  # colourised title contains this raw text, and hex breaks that match, so no click in /ah worked
+  # (found 2026-09-29). Item names and lore can use bare hex. The page number is appended.
+  GUIName: '&6&lAuction &e&lHouse &8· ' #Name of the Main GUI.
+  Players-Current-Items: '&6&lYour listings' #The Name of the Player Current Items GUI.
+  Cancelled/Expired-Items: '&6&lCollect your items' #Name of the Cancelled/Expired GUI.
+  Buying-Item: '&6&lBuy this item?' #Name of the Buying GUI.
+  Bidding-On-Item: '&6&lPlace a bid' #Name of the Bidding GUI.
+  Categories: '&6&lCategories' #Name of the Category GUI.
   Sell-Time: 2d #The time that each item will sell for.
   Bid-Time: 2m 30s #Time for each item that is biddable.
   Full-Expire-Time: 10d #The full time the item is in the crazy auctions.
@@ -35,15 +39,15 @@ Settings:
     # If true, a message is sent if a player has an item in Expired/Canceled Inventory
     Toggle: true
     # The message to send.
-    Message: "<#FFD23F>⚖</#FFD23F> <#B8B8C8>Some of your auction items came back. Collect them with</#B8B8C8> <#7CFF4F>/ah collect</#7CFF4F>"
+    Message: "<gold>⚖</gold> <gray>Some of your auction items came back. Collect them with</gray> <green>/ah collect</green>"
     # The interval in ticks(20 ticks = 1 second), if set to 0 will only send once when they join.
     Interval: 0
   Patches:
     Macro-Dupe: true #Turn to false if you have an issue, but it should patch the bug.
   Sounds:
     Toggle: true #Disable the clicking sound.
-    Sound: 'UI_BUTTON_CLICK' #Make sure if you use 1.8 or lower you use the 1.8 sound and 1.9 and up use 1.9 sounds. The default sound is 1.8.
-  Sold-Item-Sound: 'ENTITY_PLAYER_LEVELUP'
+    Sound: 'ui.button.click' # AVIAN: a sound KEY (lowercase, dots); the old UI_BUTTON_CLICK name crashes every click.
+  Sold-Item-Sound: 'entity.player.levelup'
     #Sounds are found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
   GUISettings: #Settings for things in the gui.
     SellingItemLore: #The lore on items that are being sold.

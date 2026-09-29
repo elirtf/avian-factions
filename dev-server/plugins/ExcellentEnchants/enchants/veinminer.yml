@@ -52,7 +52,6 @@ Definition:
   #     If custom namespace is disabled, use the vanilla (minecraft) one.
   # [*] Reboot required when changed.
   Exclusives:
-  - excellentenchants:blast_mining
   - excellentenchants:tunnel
 Distribution:
   # Sets whether this enchantment is a treasure enchantment.

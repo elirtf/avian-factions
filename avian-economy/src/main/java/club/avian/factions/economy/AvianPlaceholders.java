@@ -62,6 +62,7 @@ public final class AvianPlaceholders extends PlaceholderExpansion {
             case "gems" -> number(economy.balance(player.getUniqueId(), Currency.GEMS));
             case "rank" -> rank(player);
             case "name" -> player.getName() == null ? "" : player.getName();
+            case "level" -> player.getPlayer() == null ? "" : String.valueOf(player.getPlayer().getLevel());   // XP level (the Enchanter)
             default -> null;   // unknown: PlaceholderAPI leaves the text as typed
         };
     }

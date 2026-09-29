@@ -29,7 +29,7 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 | `plugins/ExcellentEnchants/engine.yml` | Chat prefix in the Brand palette |
 | `plugins/nightcore/engine.yml` | nightcore (ExcellentEnchants' library) on MariaDB, settings from `${AVIAN_DB_*}` |
 | `plugins/CrazyCrates/crates/Enchant*.yml` | The Enchanter's three book rolls, hidden from `/crates` (generated; see docs/ENCHANTS.md) |
-| `plugins/DeluxeMenus/gui_menus/enchanter.yml` | `/enchanter`: tokens for a random book by tier |
+| `plugins/DeluxeMenus/gui_menus/enchanter.yml` | `/enchanter`: XP levels for a random book by tier (10 / 20 / 30) |
 | `plugins/CrazyAuctions/config.yml`, `messages.yml` | The auction house (`/ah`): $100 listing fee, 5 % tax, prices $10 to $10M, menus and messages in the Brand palette. Menu text takes BARE `#RRGGBB` hex (not `&#`) and no MiniMessage; messages are MiniMessage. See docs/ECONOMY.md |
 | `plugins/FancyAnalytics/config.json` | FancyNpcs' telemetry off (`send_metrics`, `send_errors`). Its uploads sometimes fail and log an ERROR, which failed CI's log check (PR #80, 2026-09-29) |
 | `plugins/Geyser-Spigot/config.yml` | `java.auth-type: floodgate` (Bedrock players need no Java account); MOTD and `server-name` say Avian Factions. See `docs/research/bedrock-crossplay.md` |
