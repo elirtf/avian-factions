@@ -209,6 +209,19 @@ val pluginStack = listOf(
     PinnedPlugin("TAB-6.2.0.jar",
         "https://cdn.modrinth.com/data/gG7VFbG0/versions/UDraViyI/TAB%20v6.2.0.jar",
         "SHA-256", "f94331947134242efa478b9b9bf04b29e37861721dee58c32b7ea57779aa735e"),
+    // Custom enchants (docs/ENCHANTS.md): ExcellentEnchants 5.4.3 (GPL-3.0) on nightcore 2.16.6 (its library,
+    // data in MariaDB). packetevents 2.14.0 (GPL-3.0) lets EE draw enchant descriptions in item
+    // tooltips; GrimAC keeps its own shaded copy and the two coexist. All three boot-tested together
+    // with GrimAC, ViaVersion and CrazyCrates on a scratch 26.1.2 server: 69 enchants, no errors.
+    PinnedPlugin("nightcore-2.16.6.jar",
+        "https://cdn.modrinth.com/data/Y4NRwMW5/versions/AIeSQerQ/nightcore-2.16.6.jar",
+        "SHA-256", "9c82a7d2e76277c0cf490e7c85b2ce827d953ec0a7977337c25690c56b472c5a"),
+    PinnedPlugin("ExcellentEnchants-5.4.3.jar",
+        "https://cdn.modrinth.com/data/QufNAmjx/versions/AT68K28Z/ExcellentEnchants-5.4.3.jar",
+        "SHA-256", "01991c6dcf3030e736db69b9d5fd49ac6ab030d3c09feabdf1bd7674d9570133"),
+    PinnedPlugin("packetevents-spigot-2.14.0.jar",
+        "https://cdn.modrinth.com/data/HYKaKraK/versions/m78nFxYg/packetevents-spigot-2.14.0.jar",
+        "SHA-256", "060087c58ec268eae7dd0eb1f17ac3bea1eaadda1693414141ff64e506091bd7"),
     // CrazyAuctions (MIT, same team as CrazyCrates): the auction house, /ah. Its only release (1.7.0)
     // predates 26.x; this is the 26.1.2 build from 2026-07-27, tagged beta like every CrazyCrates build,
     // so the hash is the pin. Boot-tested on a scratch 26.1.2 server. Config: dev-server/plugins/CrazyAuctions.

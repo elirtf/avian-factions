@@ -62,6 +62,9 @@ lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
 lp group hatchling permission set EconomyShopGUI.sellall true
+# Custom enchants (ExcellentEnchants): /eenchants list shows every enchant and what it does. Books
+# come from /enchanter (tokens), crates, enchanting tables, loot and villagers.
+lp group hatchling permission set excellentenchants.command.list true
 # Auction house (CrazyAuctions, /ah): the most listings a player may have at once is the HIGHEST
 # crazyauctions.sell.<n> / bid.<n> they hold. With none at all the limit is unlimited, so every rank
 # needs one. Paid ranks inherit Fledgling's.

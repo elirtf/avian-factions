@@ -6,3 +6,5 @@ gui_menus:
     file: factions_menu.yml
   token_shop:
     file: token_shop.yml
+  enchanter:
+    file: enchanter.yml
