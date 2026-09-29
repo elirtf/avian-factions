@@ -39,7 +39,7 @@ Crate:
     Rewards:
       Re-Roll-Spin: false
       Permission: {Toggle: false, Persist: false, Max-Cap: 20}
-  Item: "yellow_shulker_box"
+  Item: "orange_shulker_box"
   Hide-Flags: true
   Components: []
   Custom-Model-Data: -1

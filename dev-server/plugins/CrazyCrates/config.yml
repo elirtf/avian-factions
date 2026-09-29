@@ -147,11 +147,14 @@ gui:
         override:
           # This will disable our current functionality of our main menu button in crate previews.
           # It allows you to override and use a menu of your choice from your plugin using a command.
-          toggle: false
+          # AVIAN: on, so the Enchanter's book previews go back to /enchanter (avian-economy
+          # CratesBackCommand); every other crate still goes to /crates. %player% and %crate% (file name)
+          # are CrazyCrates' placeholders here, not {player}.
+          toggle: true
 
           # A list of commands to run when the main menu button is clicked. The override option above has to be set to true.
           list:
-           - "see {player}"
+           - "cratesback %player% %crate%"
 
         # The custom model data for the item, -1 is disabled.
         custom-model-data: -1
@@ -323,7 +326,7 @@ crate:
     # This will switch how previews/opening the virtual crates are handled.
     #  true -> Right click to open, Left click to preview
     #  false -> Left click to open, Right click to preview
-    virtual: true
+    virtual: false
 
     # This will switch how previews/opening the physical crates are handled.
     #  true -> Right click to open, Left click to preview

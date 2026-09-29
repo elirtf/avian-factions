@@ -193,7 +193,9 @@ never resets a pearl.
 
 ## Crates
 
-Six tiers in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). They are virtual:
+Six tiers in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). Each is a shulker box in its
+tier colour: Common lime, Rare blue, Epic purple, Legendary orange, Mythic red (owner, 2026-09-29).
+Left-click opens a crate, right-click previews its prizes. They are virtual:
 keys are held on the player and a crate opens from the menu, so no crate blocks are placed and they
 work in whichever world spawn ends up in. Every crate can also drop a key for the tier above.
 

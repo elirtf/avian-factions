@@ -5,8 +5,9 @@
 # Player names in console commands are %avian_name% (our PlaceholderAPI expansion); %player_name%
 # needs PlaceholderAPI's separate "Player" expansion, which we don't install.
 #
-# Right-click has no [close]: DeluxeMenus runs it a tick later and it shut the prize preview the
-# moment it opened (bot-tested 2026-09-29). Opening the preview replaces this menu anyway.
+# Right-click: [close] first, then the preview two ticks later (<delay=2>). Without the delay the close
+# shut the preview the moment it opened; without the close, DeluxeMenus still thought the player was
+# in this menu and swallowed their clicks in the preview (bot-tested 2026-09-29).
 #
 # Layout: the menu kit (club.avian.factions.api.text.Ui). Colour on the top and bottom rows, the
 # subject top-centre, the three tiers in the middle row. Left-click rolls, right-click shows every prize.
@@ -78,7 +79,8 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantCommon %avian_name%'
     right_click_commands:
-      - '[console] crazycrates preview-others EnchantCommon %avian_name%'
+      - '[close]'
+      - '[console] crazycrates preview-others EnchantCommon %avian_name% <delay=2>'
   'rare':
     material: ENCHANTED_BOOK
     slot: 21
@@ -106,7 +108,8 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantRare %avian_name%'
     right_click_commands:
-      - '[console] crazycrates preview-others EnchantRare %avian_name%'
+      - '[close]'
+      - '[console] crazycrates preview-others EnchantRare %avian_name% <delay=2>'
   'legendary':
     material: ENCHANTED_BOOK
     slot: 23
@@ -135,7 +138,8 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantLegendary %avian_name%'
     right_click_commands:
-      - '[console] crazycrates preview-others EnchantLegendary %avian_name%'
+      - '[close]'
+      - '[console] crazycrates preview-others EnchantLegendary %avian_name% <delay=2>'
   'mythic':
     material: ENCHANTED_BOOK
     slot: 25
@@ -165,4 +169,5 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantMythic %avian_name%'
     right_click_commands:
-      - '[console] crazycrates preview-others EnchantMythic %avian_name%'
+      - '[close]'
+      - '[console] crazycrates preview-others EnchantMythic %avian_name% <delay=2>'

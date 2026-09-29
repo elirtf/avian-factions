@@ -254,7 +254,7 @@ for (const [tier, t] of Object.entries(TIERS)) {
     .replace(/Rare Key/g, `${tier} Book`)
     .replace(/#4DA3FF/g, t.colour)
     .replace(/^  InGUI: true$/m, '  InGUI: false')
-    .replace(/^  Item: "barrel"$/m, '  Item: "enchanted_book"')
+    .replace(/^  Item: "[a-z_]+"$/m, '  Item: "enchanted_book"')
     .replace(/Diamond gear, tokens and your first spawner\./g, blurb[tier])
     .replace(/Opens one [^.]*\./g, 'Rolled by the Enchanter.');
   fs.writeFileSync(path.join(crates, `Enchant${tier}.yml`),
