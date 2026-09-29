@@ -5,6 +5,9 @@
 # Player names in console commands are %avian_name% (our PlaceholderAPI expansion); %player_name%
 # needs PlaceholderAPI's separate "Player" expansion, which we don't install.
 #
+# Right-click has no [close]: DeluxeMenus runs it a tick later and it shut the prize preview the
+# moment it opened (bot-tested 2026-09-29). Opening the preview replaces this menu anyway.
+#
 # Layout: the menu kit (club.avian.factions.api.text.Ui). Colour on the top and bottom rows, the
 # subject top-centre, the three tiers in the middle row. Left-click rolls, right-click shows every prize.
 menu_title: '&#C58CFF&l✦ &#C58CFF&lE&#BE86FF&ln&#B780FF&lc&#B07AFF&lh&#A974FF&la&#A16EFF&ln&#9A68FF&lt&#9362FF&le&#8C5CFF&lr'
@@ -75,7 +78,6 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantCommon %avian_name%'
     right_click_commands:
-      - '[close]'
       - '[console] crazycrates preview-others EnchantCommon %avian_name%'
   'rare':
     material: ENCHANTED_BOOK
@@ -104,7 +106,6 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantRare %avian_name%'
     right_click_commands:
-      - '[close]'
       - '[console] crazycrates preview-others EnchantRare %avian_name%'
   'legendary':
     material: ENCHANTED_BOOK
@@ -134,7 +135,6 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantLegendary %avian_name%'
     right_click_commands:
-      - '[close]'
       - '[console] crazycrates preview-others EnchantLegendary %avian_name%'
   'mythic':
     material: ENCHANTED_BOOK
@@ -165,5 +165,4 @@ items:
       - '[close]'
       - '[console] crazycrates forceopen EnchantMythic %avian_name%'
     right_click_commands:
-      - '[close]'
       - '[console] crazycrates preview-others EnchantMythic %avian_name%'
