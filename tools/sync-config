@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# sync-config TEMPLATE_DIR SERVER_DIR — lays the tracked server config over a server directory.
+#
+# One implementation for both ways the server runs: the dev loop (Gradle's syncDevConfig, into
+# run/) and the container image (its entrypoint, into /data). Three steps:
+#
+#   1. CraftEngine's bundled packs are unpacked on a fresh server. CraftEngine only unpacks them when
+#      plugins/CraftEngine/resources/ doesn't exist yet, and step 2 creates that folder with our pack.
+#   2. The template is copied over the server directory. Only files we track are touched; worlds and
+#      plugin data are left alone. Our resource pack (plugins/CraftEngine/resources/avian) is
+#      mirrored exactly instead, so a texture deleted in git also leaves the served pack.
+#   3. Placeholders are filled in: ${AVIAN_NAME} or ${AVIAN_NAME:-default} in the copied config files
+#      takes the environment variable's value. That's how one tracked config serves this machine,
+#      another machine and Kubernetes: database hosts and passwords come from .env or a Secret, never
+#      from git. An unset variable with no default stops the sync, so a server never boots
+#      half-configured. Values may not contain quotes, backslashes or newlines, because they're
+#      pasted into YAML and HOCON unescaped.
+set -euo pipefail
+
+src="${1:?usage: sync-config TEMPLATE_DIR SERVER_DIR}"
+dest="${2:?usage: sync-config TEMPLATE_DIR SERVER_DIR}"
+pack="plugins/CraftEngine/resources/avian"
+
+[[ -d "$src" ]] || { echo "sync-config: no template directory $src" >&2; exit 1; }
+mkdir -p "$dest"
+
+# 1. CraftEngine's first-run unpack, never overwriting what is already there.
+if [[ ! -d "$dest/plugins/CraftEngine/resources" ]]; then
+    for jar in "$dest"/plugins/craft-engine*.jar; do
+        [[ -f "$jar" ]] || continue
+        mkdir -p "$dest/plugins/CraftEngine"
+        # Entries listed and named explicitly: whether unzip's * crosses a / differs between builds.
+        unzip -Z1 "$jar" | grep '^resources/.*[^/]$' | grep -v '/_index\.json$' \
+            | tr '\n' '\0' | xargs -0 unzip -q -n "$jar" -d "$dest/plugins/CraftEngine"
+    done
+fi
+
+# 2. Copy the template (everything but the README and our pack), then mirror our pack.
+tar -C "$src" --anchored --exclude=./README.md --exclude="./$pack" -cf - . | tar -C "$dest" -xf -
+if [[ -d "$src/$pack" ]]; then
+    rm -rf "${dest:?}/$pack"
+    mkdir -p "$(dirname "$dest/$pack")"
+    cp -R "$src/$pack" "$dest/$pack"
+fi
+
+# 3. Fill in ${AVIAN_*} placeholders in the config files that carry any.
+# shellcheck disable=SC2016  # '${AVIAN_' is the literal text searched for
+{ grep -rlZ --include='*.yml' --include='*.yaml' --include='*.conf' --include='*.properties' \
+        --include='*.json' --include='*.toml' -e '${AVIAN_' "$src" 2>/dev/null || true; } \
+    | while IFS= read -r -d '' file; do
+        target="$dest/${file#"$src"/}"
+        perl -i -pe '
+            s#\$\{(AVIAN_[A-Z0-9_]+)(?::-([^\}]*))?\}#
+                my ($name, $default) = ($1, $2);
+                my $value = exists $ENV{$name} ? $ENV{$name} : $default;
+                die "sync-config: $name is not set and has no default ($ARGV)\n" unless defined $value;
+                die "sync-config: $name contains a quote, backslash or newline; use letters, digits and -_.:/@\n"
+                    if $value =~ /[\x27"\\\n]/;
+                $value;
+            #ge' "$target"
+    done

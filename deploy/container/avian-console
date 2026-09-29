@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# avian-console "<command>": runs one console command in the server in this container and prints
+# what it logged in reply. The container's version of `./dev cmd`.
+#   docker compose exec server avian-console "list"
+#   kubectl exec avian-0 -- avian-console "tps"
+set -euo pipefail
+
+[[ $# -gt 0 ]] || { echo 'usage: avian-console "<command>"' >&2; exit 2; }
+pipe=/data/.console
+log=/data/logs/latest.log
+[[ -p "$pipe" ]] || { echo "The server is not running (no $pipe)." >&2; exit 1; }
+
+before=$(wc -l < "$log" 2>/dev/null || echo 0)
+# Opening the pipe waits for the server to read it; a server still starting up never will.
+# shellcheck disable=SC2016  # $1 and $2 belong to the inner bash
+if ! timeout 10 bash -c 'printf "%s\n" "$2" > "$1"' _ "$pipe" "$*"; then
+    echo "The server is not reading its console yet (still starting?). Try again shortly." >&2
+    exit 1
+fi
+sleep "${AVIAN_CONSOLE_WAIT:-2}"
+tail -n +"$((before + 1))" "$log"

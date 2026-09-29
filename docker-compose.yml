@@ -1,4 +1,4 @@
-# Local MariaDB for the dev server and manual testing (ADR-0002). Testcontainers uses the same
+# Local MariaDB for the dev server and manual testing (ADR-0002), and the server container. Testcontainers uses the same
 # image tag (see gradle.properties `mariadbImage`) so tests and dev never drift.
 #   docker compose up -d      # start
 #   docker compose down -v    # stop and wipe data
@@ -24,5 +24,36 @@ services:
       timeout: 3s
       retries: 20
 
+
+  # The whole server in a container (docs/DEPLOYMENT.md). Off unless asked for, so it never fights
+  # the dev server (./dev start) for port 25565:
+  #   ./dev image                                 # build avian-factions:dev from this checkout
+  #   docker compose --profile server up -d       # start it (EULA=true in .env accepts the EULA)
+  #   docker compose exec server avian-console "list"
+  server:
+    profiles: [server]
+    image: ${AVIAN_IMAGE:-avian-factions:dev}
+    container_name: avian-server
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      EULA: ${EULA:-false}
+      MEMORY: ${AVIAN_MEMORY:-8G}
+      AVIAN_DB_HOST: mariadb
+      AVIAN_DB_PORT: 3306
+      AVIAN_DB_NAME: ${AVIAN_DB_NAME:-avian}
+      AVIAN_DB_USER: ${AVIAN_DB_USER:-avian}
+      AVIAN_DB_PASSWORD: ${AVIAN_DB_PASSWORD:-avian}
+    ports:
+      - "${AVIAN_GAME_PORT:-25565}:25565/tcp"
+      - "${AVIAN_BEDROCK_PORT:-19132}:19132/udp"
+    volumes:
+      - server-data:/data
+    # The entrypoint turns SIGTERM into `stop`; saving a big world takes a while.
+    stop_grace_period: 120s
+
 volumes:
   mariadb-data:
+  server-data:

@@ -1,0 +1,50 @@
+# MariaDB for one server (or, later, the hub and every backend). A managed database or an operator
+# works too: point AVIAN_DB_HOST in server.yaml at it and drop this file.
+apiVersion: v1
+kind: Service
+metadata:
+  name: avian-mariadb
+  labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+spec:
+  clusterIP: None
+  selector: {app.kubernetes.io/name: avian-mariadb}
+  ports:
+    - {name: mysql, port: 3306}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: avian-mariadb
+  labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+spec:
+  serviceName: avian-mariadb
+  replicas: 1
+  selector:
+    matchLabels: {app.kubernetes.io/name: avian-mariadb}
+  template:
+    metadata:
+      labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:11.8.9          # same tag as docker-compose.yml and the tests
+          env:
+            - {name: MARIADB_DATABASE, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_NAME}}}
+            - {name: MARIADB_USER, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_USER}}}
+            - {name: MARIADB_PASSWORD, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_PASSWORD}}}
+            - {name: MARIADB_ROOT_PASSWORD, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_ROOT_PASSWORD}}}
+          ports:
+            - {name: mysql, containerPort: 3306}
+          readinessProbe:
+            exec: {command: [healthcheck.sh, --connect, --innodb_initialized]}
+            periodSeconds: 10
+          resources:
+            requests: {cpu: 250m, memory: 1Gi}
+            limits: {memory: 2Gi}
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/mysql}
+  volumeClaimTemplates:
+    - metadata: {name: data}
+      spec:
+        accessModes: [ReadWriteOnce]
+        resources: {requests: {storage: 20Gi}}

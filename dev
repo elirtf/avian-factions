@@ -7,11 +7,12 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SESSION="${AVIAN_DEV_SESSION:-avian}"
-LOG="$ROOT/run/logs/latest.log"
+LOG="${AVIAN_LOG:-$ROOT/run/logs/latest.log}"   # AVIAN_LOG: check another log (the container's)
 RANKS="$ROOT/dev-server/luckperms/ranks.lp"
 SETUP_STAMP="$ROOT/run/.dev-setup-applied"
 PACK_STAMP="$ROOT/run/.dev-pack-built"
 WORLD_BORDER=20000
+ENV_FILE="${AVIAN_ENV_FILE:-./.env}"   # AVIAN_ENV_FILE: another settings file (restore-container, a prod .env)
 START_TIMEOUT=300   # seconds; the first start also downloads Paper and builds FactionsUUID
 STOP_TIMEOUT=90
 
@@ -44,10 +45,10 @@ stray_server_pid() {
 }
 
 load_env() {
-    [[ -f .env ]] || fail "No .env file. Run ${BOLD}./dev setup${RESET} first."
+    [[ -f "$ENV_FILE" ]] || fail "No $ENV_FILE file. Run ${BOLD}./dev setup${RESET} first."
     set -a
-    # shellcheck disable=SC1091
-    . ./.env
+    # shellcheck disable=SC1090
+    . "$ENV_FILE"
     set +a
 }
 
@@ -216,6 +217,22 @@ pack_fingerprint() {
     } | sha256sum | cut -d" " -f1
 }
 
+# The whole server as a container image: the same Paper, plugins and config as ./dev start.
+cmd_image() {
+    need docker "Install Docker to build the image."
+    say "Staging the image (plugin downloads, our jar, config)…"
+    ./gradlew --quiet :avian-plugin:stageImage
+    docker build -t "${AVIAN_IMAGE:-avian-factions:dev}" avian-plugin/build/image
+    ok "Built ${AVIAN_IMAGE:-avian-factions:dev}. Run it: docker compose --profile server up -d (docs/DEPLOYMENT.md)"
+}
+
+# Lays dev-server/ over run/ with .env loaded, so the placeholders get this machine's values.
+cmd_sync() {
+    load_env
+    ./gradlew --quiet :avian-plugin:syncDevConfig
+    ok "Config copied into run/. Reload the plugin that changed, or ./dev restart"
+}
+
 cmd_pack() {
     session_running || fail "The server is not running. Start it with: ./dev start"
     say "Building the resource pack…"
@@ -373,6 +390,15 @@ cmd_backup() {
     echo "  Not included on purpose: .env (secrets — copy it separately and securely)."
 }
 
+# Replaces the database with a dump. It is emptied first: a dump only drops and recreates its own
+# tables, so a table added after the backup would survive while the migration history rolls back,
+# and the plugin would then refuse to start (a migration re-creating it fails; seen 2026-09-29).
+load_database() {
+    local mariadb=(docker exec -i avian-mariadb mariadb -u"$AVIAN_DB_USER" -p"$AVIAN_DB_PASSWORD")
+    "${mariadb[@]}" -e "DROP DATABASE IF EXISTS \`$AVIAN_DB_NAME\`; CREATE DATABASE \`$AVIAN_DB_NAME\`;" \
+        && "${mariadb[@]}" "$AVIAN_DB_NAME" < "$1"
+}
+
 cmd_restore() {
     local archive="${1:-}"
     [[ -n "$archive" && -f "$archive" ]] || fail "Usage: ./dev restore backups/avian-backup-<date>.tar.gz"
@@ -392,8 +418,7 @@ cmd_restore() {
     [[ -f "$work/database.sql" && -d "$work/run/world" ]] || { rm -rf "$work"; fail "That archive is not an Avian backup."; }
 
     say "Restoring the database…"
-    docker exec -i avian-mariadb mariadb -u"$AVIAN_DB_USER" -p"$AVIAN_DB_PASSWORD" "$AVIAN_DB_NAME" \
-        < "$work/database.sql" || { rm -rf "$work"; fail "Database restore failed; the world was not touched."; }
+    load_database "$work/database.sql" || { rm -rf "$work"; fail "Database restore failed; the world was not touched."; }
 
     say "Restoring the world and plugin data…"
     mkdir -p run
@@ -405,6 +430,44 @@ cmd_restore() {
     rm -f "$SETUP_STAMP"
     ok "Restored from $archive. Now: ./dev start"
     echo "  Plugin jars are not in the backup; ./dev start downloads the pinned set."
+}
+
+# Moves the game into the server container (docs/DEPLOYMENT.md): the same backup file as
+# `./dev restore`, loaded into the database and the container's /data volume instead of run/.
+# This is the step for switching this machine from ./dev start to the container, or setting up a
+# new machine that runs the container.
+cmd_restore_container() {
+    local archive="${1:-}"
+    [[ -n "$archive" && -f "$archive" ]] || fail "Usage: ./dev restore-container backups/avian-backup-<date>.tar.gz"
+    archive="$(cd "$(dirname "$archive")" && pwd)/$(basename "$archive")"
+    load_env
+    local compose=(docker compose --env-file "$ENV_FILE" --profile server)
+    [[ -z "$("${compose[@]}" ps -q --status running server 2>/dev/null)" ]] \
+        || fail "Stop the server container first: docker compose --profile server stop server"
+    db_healthy || { say "Starting the database…"; "${compose[@]}" up -d --wait mariadb >/dev/null || fail "Could not start the database."; }
+
+    echo "${RED}This REPLACES the container's world and plugin data, and database '$AVIAN_DB_NAME', with the backup.${RESET}"
+    if [[ "${2:-}" != "--yes" ]]; then
+        read -r -p "Type 'restore' to continue: " answer
+        [[ "$answer" == "restore" ]] || fail "Cancelled; nothing changed."
+    fi
+
+    local work
+    work="$(mktemp -d)"
+    tar -xzf "$archive" -C "$work" || { rm -rf "$work"; fail "Could not read $archive"; }
+    [[ -f "$work/database.sql" && -d "$work/run/world" ]] || { rm -rf "$work"; fail "That archive is not an Avian backup."; }
+
+    say "Restoring the database…"
+    load_database "$work/database.sql" || { rm -rf "$work"; fail "Database restore failed; the world was not touched."; }
+
+    say "Restoring the world and plugin data into the container's volume…"
+    # Runs in the image as root only to copy and hand the files to the server's own user.
+    "${compose[@]}" run --rm --no-deps -T --user root --entrypoint bash -v "$work/run:/restore:ro" server \
+        -c 'rm -rf /data/world /data/world_* && cp -a /restore/. /data/ && chown -R avian:avian /data' \
+        || { rm -rf "$work"; fail "Copying into the volume failed. The database is already restored; re-run to retry."; }
+    rm -rf "$work"
+    ok "Restored from $archive into the container. Start it: docker compose --profile server up -d"
+    echo "  Ranks come with the database. A fresh world needs the border once: avian-console \"worldborder set $WORLD_BORDER\""
 }
 
 cmd_db() {
@@ -468,8 +531,11 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}status${RESET}           Is the database and server running?
   ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this when they changed)
   ${BOLD}pack${RESET}             Rebuild the resource pack (start does this when dev-server/ pack files changed)
+  ${BOLD}sync${RESET}             Copy dev-server/ config into run/ now (then reload the plugin, or restart)
+  ${BOLD}image${RESET}            Build the server container image (avian-factions:dev); see docs/DEPLOYMENT.md
   ${BOLD}backup${RESET}           Save the world, database and plugin data to backups/ (safe while running)
   ${BOLD}restore${RESET} <file>   Replace world, database and plugin data from a backup (server must be stopped)
+  ${BOLD}restore-container${RESET} <file>  Load a backup into the server container instead (docs/DEPLOYMENT.md)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
 EOF
@@ -486,8 +552,11 @@ case "${1:-help}" in
     status)    shift; cmd_status ;;
     ranks)     shift; cmd_setup_world ;;
     pack)      shift; cmd_pack ;;
+    sync)      shift; cmd_sync ;;
+    image)     shift; cmd_image ;;
     backup)    shift; cmd_backup ;;
     restore)   shift; cmd_restore "$@" ;;
+    restore-container) shift; cmd_restore_container "$@" ;;
     db)        shift; cmd_db ;;
     test)      shift; cmd_test ;;
     check-log) shift; cmd_check_log ;;

@@ -1,0 +1,10 @@
+# AVIAN: only the settings we change; Paper fills in every other key with its default on start.
+_version: 31
+proxies:
+  # Behind a Velocity proxy (the hub plan, docs/DEPLOYMENT.md): set AVIAN_VELOCITY=true, the proxy's
+  # forwarding secret in AVIAN_VELOCITY_SECRET, and AVIAN_ONLINE_MODE=false (server.properties). The
+  # proxy then authenticates players, and this server must not be reachable except through it.
+  velocity:
+    enabled: ${AVIAN_VELOCITY:-false}
+    online-mode: true
+    secret: '${AVIAN_VELOCITY_SECRET:-}'

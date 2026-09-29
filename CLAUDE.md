@@ -42,6 +42,8 @@ and the `mc.avian.club` identity.
 
 Backups and moving machines: `./dev backup` / `./dev restore <file>`, guide in `docs/MIGRATION.md`. Code and config are in git; the world, database and plugin data are not — they travel as a backup file.
 
+Container and Kubernetes: `./dev image` builds the whole server as one image, `./dev restore-container <file>` loads a backup into it; guide in `docs/DEPLOYMENT.md`. Tracked config never holds machine values: write `${AVIAN_NAME:-default}` and `tools/sync-config` fills it from `.env` or the environment.
+
 Everything goes through `./dev` (guide: `docs/DEVELOPING.md`): `./dev setup` once, then `./dev start` / `restart` / `stop`. The server runs in a tmux session named `avian`: `./dev console` attaches, `./dev cmd "<command>"` runs one console command and prints the reply (use this instead of attaching), `./dev check-log` fails on plugin errors. `./dev start` applies `dev-server/luckperms/ranks.lp` and the world border. Edit `dev-server/`, never `run/` (overwritten on every start). `./dev test` = `./gradlew build` (JDK 25 auto-provisioned; unit + MockBukkit + Testcontainers). Pins: `gradle.properties` + `gradle/libs.versions.toml`. CI boots the full stack with `./dev` on every push and PR.
 
 ## Development rules

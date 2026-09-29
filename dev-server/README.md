@@ -1,22 +1,24 @@
 # Tracked dev-server config
 
 `run/` is git-ignored (Paper jar, worlds, plugin data), so the third-party plugin settings we
-actually changed live here and are copied into `run/` by `./gradlew syncDevConfig`, which
-`runServer` depends on. Only files we edited are tracked; everything else is each plugin's default.
+actually changed live here and are copied into `run/` by `tools/sync-config` (`./dev start`, `./dev sync`; the container image
+runs it at every start). Only files we edited are tracked; everything else is each plugin's default.
 
 | File | What we changed |
 |---|---|
 | `plugins/Essentials/config.yml` | `unsafe-enchantments: true` (spec §22 custom enchants need levels above vanilla caps) |
-| `plugins/LuckPerms/config.yml` | `storage-method: mariadb`, pointed at the Compose database (`luckperms_` tables) |
-| `plugins/CoreProtect/config.yml` | `use-mysql: true`, pointed at the Compose database (`co_` tables) |
+| `plugins/LuckPerms/config.yml` | `storage-method: mariadb`, database settings from `${AVIAN_DB_*}` (`luckperms_` tables) |
+| `plugins/CoreProtect/config.yml` | `use-mysql: true`, database settings from `${AVIAN_DB_*}` (`co_` tables) |
 | `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007) |
 | `plugins/FactionsUUID/config/translations.conf` | Role names: Leader, Co-Leader, Officer, Member, Recruit |
 | `plugins/RoseStacker/config.yml` | Only spawners stack (block stacking off); spawners are raidable: TNT drops 75% as items, destroys the rest |
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
-| `plugins/AuraSkills/config.yml` | `sql.enabled: true`, pointed at the Compose database (`auraskills_` tables) |
+| `plugins/AuraSkills/config.yml` | `sql.enabled: true`, database settings from `${AVIAN_DB_*}` (`auraskills_` tables) |
 | `plugins/AuraSkills/stats.yml`, `abilities.yml`, `mana_abilities.yml` | Combat stats and abilities capped for Factions PvP, still growing to level 100; the numbers and why are in `docs/research/skills-rpg.md` |
 | `plugins/BetterRTP/config.yml` | `/rtp` lands 5,000–9,800 blocks from 0,0 (the border is 20,000 wide), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
-| `server.properties` | `white-list=true`, `enforce-whitelist=true`: port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
+| `server.properties` | `white-list=true`, `enforce-whitelist=true`: `online-mode` from `${AVIAN_ONLINE_MODE}` (false only behind Velocity); port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
+| `config/paper-global.yml` | Only the Velocity proxy settings, off unless `AVIAN_VELOCITY=true` (the hub plan, docs/DEPLOYMENT.md). Paper fills in every other key |
+| `plugins/CraftEngine/config.yml` | Storage on MariaDB, database settings from `${AVIAN_DB_*}` |
 | `whitelist.json` | Players allowed to join. Add with `./dev cmd "whitelist add <name>"` (Bedrock players: `fwhitelist add <Gamertag>`), then copy `run/whitelist.json` back here |
 | `plugins/MiniMOTD/main.conf` | The server-list message: just "✦ AVIAN FACTIONS ✦", and the player count shows "x/1" (display only; the real limit is 20). Icons are off until the sigil is ready |
 | `plugins/DeluxeMenus/` | The faction menu (`gui_menus/factions_menu.yml`): opens on `/f`, `/f menu`, `/f gui` or `/fmenu`. Buttons run FactionsUUID's exact commands; members and factionless players see different buttons. `config.yml` registers only our menu, so the plugin's examples are never created |
@@ -33,7 +35,10 @@ actually changed live here and are copied into `run/` by `./gradlew syncDevConfi
 | `plugins/AvianFactions/economy.conf` | Sugar cane tokens (2 % per grown block harvested by hand), villagers cannot summon iron golems, fallback sell values |
 | `plugins/AvianFactions/ftop.conf` | Spawner and block values equal to their /shop prices |
 
-Credentials here are the local dev ones from `.env.example`. A real deployment supplies its own.
+**Placeholders.** `${AVIAN_NAME:-default}` in a file here is filled in from the environment when it is copied
+(`tools/sync-config`; `./dev` loads `.env`, the container gets real variables). That is how one
+config serves this machine, another machine and Kubernetes: database hosts and passwords never live
+in git. The defaults are the local dev values from `.env.example`. See docs/DEPLOYMENT.md.
 
 The 20,000-block world border is world state, not config: it lives in `run/world/level.dat` after
 `worldborder set 20000` on the console. A fresh world needs that command once (or Chunky's
