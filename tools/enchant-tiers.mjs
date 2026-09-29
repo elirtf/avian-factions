@@ -78,6 +78,69 @@ const TIERS = {
 // Curses were kept as shipped until the owner removed them (2026-09-29); none left.
 const CURSES = [];
 
+// One plain line per enchant for the Enchanter's prize previews (owner, 2026-09-29: "say what the
+// enchantment does simply"). Effects checked against ExcellentEnchants' source.
+const SIMPLE = {
+  glassbreaker: 'Breaks glass instantly.',
+  lightweight: 'Walk on crops and turtle eggs without breaking them.',
+  lucky_miner: 'Chance for extra XP from ores.',
+  smelter: 'Chance to smelt what you mine.',
+  haste: 'Mine faster.',
+  replanter: 'Replants crops for you.',
+  river_master: 'Cast your line farther.',
+  seasoned_angler: 'More XP from fishing.',
+  double_catch: 'Chance to double your catch.',
+  sniper: 'Arrows fly faster.',
+  jumping: 'Jump higher.',
+  saturation: 'Slowly refills your hunger.',
+  night_vision: 'See in the dark.',
+  water_breathing: 'Breathe underwater.',
+  wisdom: 'Mobs drop more XP.',
+  village_defender: 'Extra damage to pillagers.',
+  bane_of_netherspawn: 'Extra damage to Nether mobs.',
+  cure: 'Chance to cure zombie villagers and piglins.',
+  survivalist: 'Cooks the fish you catch.',
+  lingering: 'Tipped arrows leave a lingering cloud.',
+  venom: 'Chance to poison your target.',
+  blindness: 'Chance to blind your target.',
+  confusion: 'Chance to make your target dizzy.',
+  exhaust: 'Chance to drain your target\'s hunger.',
+  cold_steel: 'Chance to slow your attacker\'s swings.',
+  hardened: 'Chance to gain Resistance when hit.',
+  poisoned_arrows: 'Chance for arrows to poison.',
+  withered_arrows: 'Chance for arrows to wither.',
+  darkness_arrows: 'Chance for arrows to bring darkness.',
+  confusing_arrows: 'Chance for arrows to make targets dizzy.',
+  electrified_arrows: 'Chance for arrows to call lightning.',
+  vampiric_arrows: 'Chance to heal when your arrow hits.',
+  veinminer: 'Mines a whole ore vein at once.',
+  treefeller: 'Cuts down a whole tree at once.',
+  speed: 'Move faster.',
+  restore: 'Chance to save your item from breaking.',
+  elemental_protection: 'Less damage from potions and the elements.',
+  decapitator: 'Chance to drop your victim\'s head.',
+  swiper: 'Chance to steal XP from players.',
+  rage: 'Chance to gain Strength when you hit.',
+  wither: 'Chance to wither your target.',
+  infernus: 'Thrown tridents set targets on fire.',
+  vampire: 'Chance to heal when you hit.',
+  double_strike: 'Chance to deal double damage.',
+  temper: 'Hit harder the lower your health.',
+  thunder: 'Chance to strike your target with lightning.',
+  paralyze: 'Chance to slow your target\'s swings.',
+  dragon_heart: 'Extra hearts.',
+  regrowth: 'Slowly heals you.',
+  darkness_cloak: 'Chance to bring darkness on your attacker.',
+  tunnel: 'Mines several blocks at once.',
+  flame_walker: 'Walk on lava; no magma damage.',
+  rebound: 'Bounce when you land.',
+  dragonfire_arrows: 'Chance for arrows to leave dragon fire.',
+  auto_reel: 'Reels in your catch automatically.',
+  ice_aspect: 'Freezes and slows your target.',
+  ice_shield: 'Chance to freeze and slow your attacker.',
+  stopping_force: 'Chance to take less knockback.',
+};
+
 // Trigger chance overrides (percent at level I, added per level).
 const TRIGGER_CHANCE = { stopping_force: { base: 25, perLevel: 10 } };   // was 100 % on every hit
 
@@ -107,6 +170,11 @@ const tierOf = {};
 for (const [tier, t] of Object.entries(TIERS)) for (const e of t.enchants) tierOf[e] = tier;
 const unplaced = all.filter((e) => !tierOf[e] && !DISABLED[e] && !CURSES.includes(e));
 const unknown = [...Object.keys(tierOf), ...Object.keys(DISABLED), ...CURSES].filter((e) => !all.includes(e));
+const noSimple = Object.keys(tierOf).filter((e) => !SIMPLE[e]);
+if (noSimple.length) {
+  console.error('Every tiered enchant needs a plain description in SIMPLE: ' + noSimple.join(', '));
+  process.exit(1);
+}
 if (unplaced.length || unknown.length) {
   console.error('Every default enchant needs a tier, a curse or a reason to disable it.');
   if (unplaced.length) console.error('  not placed: ' + unplaced.join(', '));
@@ -175,6 +243,7 @@ for (const [tier, t] of Object.entries(TIERS)) {
       prizes += `    "${n}":\n`
         + `      DisplayName: "<bold><${t.colour}>${label}</${t.colour}></bold>"\n`
         + `      DisplayItem: "enchanted_book"\n`
+        + `      DisplayLore: ["<#B8B8C8>${SIMPLE[e].replace(/"/g, '\\"')}</#B8B8C8>"]\n`
         + `      DisplayAmount: 1\n`
         + `      Weight: ${max - lvl + 1}\n`
         + `      Commands: ["eenchants book excellentenchants:${e} ${lvl} %player%"]\n`;

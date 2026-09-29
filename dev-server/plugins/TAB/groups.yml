@@ -1,8 +1,26 @@
 # AVIAN: tab-list names and nametags read "rank ┃ name", as in chat (CarbonChat). The rank tag is
 # the LuckPerms suffix (ranks.lp) through %avian_rank%, so ranks are changed there, not here.
+#
+# Name colours (owner, 2026-09-29): light gray for everyone, a colour per staff rank. A nametag's name
+# takes the LAST colour in tagprefix, and must be one of Minecraft's 16 team colours (named colours
+# like <gray>, not hex), so every tagprefix ends with the name colour. Groups are LuckPerms primary
+# groups (highest weight wins).
 _DEFAULT_:
   tabprefix: "%avian_rank% <#5A5A5A>┃ "
-  customtabname: "<#FFFFFF>%player%"
+  customtabname: "<gray>%player%"
   tabsuffix: ""
-  tagprefix: "%avian_rank% <#5A5A5A>┃ "
+  tagprefix: "%avian_rank% <#5A5A5A>┃ <gray>"
   tagsuffix: ""
+
+owner:
+  customtabname: "<light_purple>%player%"
+  tagprefix: "%avian_rank% <#5A5A5A>┃ <light_purple>"
+admin:
+  customtabname: "<green>%player%"
+  tagprefix: "%avian_rank% <#5A5A5A>┃ <green>"
+mod:
+  customtabname: "<blue>%player%"
+  tagprefix: "%avian_rank% <#5A5A5A>┃ <blue>"
+helper:
+  customtabname: "<aqua>%player%"
+  tagprefix: "%avian_rank% <#5A5A5A>┃ <aqua>"
