@@ -36,6 +36,7 @@ public final class CombatModule implements AvianModule {
         var listener = new CombatListener(config);
         ctx.registerListener(listener);
         ctx.registerListener(new ConsumableCooldowns(config, System::currentTimeMillis));
+        ctx.registerListener(new EnchantLimit(config));   // at most max-enchantments-per-item per item
         bodies = new LogoutBodies(ctx.plugin(), config,
                 new LogoutDeathRepository.Jdbc(ctx.database(), Clock.systemUTC()), System::currentTimeMillis);
         var tags = new CombatTagListener(config, new CombatTags(System::currentTimeMillis), bodies);

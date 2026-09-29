@@ -40,7 +40,7 @@ items:
       - '&#B8B8C8in an anvil.'
       - ''
       - '&#6E6E80◆ &#B8B8C8Your levels  &#7CFF4F%avian_level%'
-      - '&#6E6E80◆ &#B8B8C8Custom enchants per item  &#FFFFFFup to 5'
+      - '&#6E6E80◆ &#B8B8C8Enchantments per item  &#FFFFFFup to 6'
       - ''
       - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See what every enchant does'
     left_click_commands:
@@ -76,7 +76,7 @@ items:
       - '[console] crazycrates forceopen EnchantCommon %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantCommon %avian_name%'
+      - '[console] crazycrates preview-others EnchantCommon %avian_name%'
   'rare':
     material: ENCHANTED_BOOK
     slot: 21
@@ -105,7 +105,7 @@ items:
       - '[console] crazycrates forceopen EnchantRare %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantRare %avian_name%'
+      - '[console] crazycrates preview-others EnchantRare %avian_name%'
   'legendary':
     material: ENCHANTED_BOOK
     slot: 23
@@ -135,7 +135,7 @@ items:
       - '[console] crazycrates forceopen EnchantLegendary %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantLegendary %avian_name%'
+      - '[console] crazycrates preview-others EnchantLegendary %avian_name%'
   'mythic':
     material: ENCHANTED_BOOK
     slot: 25
@@ -166,4 +166,4 @@ items:
       - '[console] crazycrates forceopen EnchantMythic %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantMythic %avian_name%'
+      - '[console] crazycrates preview-others EnchantMythic %avian_name%'

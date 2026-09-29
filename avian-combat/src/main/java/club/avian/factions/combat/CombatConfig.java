@@ -77,6 +77,12 @@ public final class CombatConfig {
     private int enderPearlCooldownSeconds = 16;
 
     @Comment("""
+            Most enchantments one item may carry, vanilla and custom together (owner, 2026-09-29: spread
+            power across sets instead of one overpowered set). An anvil that would go over shows no
+            result. 0 = no limit.""")
+    private int maxEnchantmentsPerItem = 6;
+
+    @Comment("""
             Seconds a player stays in combat after hitting, or being hit by, another player. Every
             hit restarts it. While in combat they cannot teleport, fly or use the commands below,
             and logging out leaves a body behind. 0 = no combat tag at all.""")
@@ -135,6 +141,10 @@ public final class CombatConfig {
         return enderPearlCooldownSeconds;
     }
 
+    public int maxEnchantmentsPerItem() {
+        return maxEnchantmentsPerItem;
+    }
+
     public int combatTagSeconds() {
         return combatTagSeconds;
     }
@@ -163,6 +173,7 @@ public final class CombatConfig {
         e.check(cfg.goldenAppleCooldownSeconds >= 0, "golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.totemCooldownSeconds >= 0, "totem-cooldown-seconds", "must be >= 0");
         e.check(cfg.enderPearlCooldownSeconds >= 0, "ender-pearl-cooldown-seconds", "must be >= 0");
+        e.check(cfg.maxEnchantmentsPerItem >= 0, "max-enchantments-per-item", "must be >= 0");
         e.check(cfg.combatTagSeconds >= 0, "combat-tag-seconds", "must be >= 0");
         e.check(cfg.logoutBodySeconds >= 0 && cfg.logoutBodySeconds <= 600, "logout-body-seconds", "must be 0-600");
         var kb = cfg.knockback;
