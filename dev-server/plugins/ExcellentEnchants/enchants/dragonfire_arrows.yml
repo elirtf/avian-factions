@@ -8,7 +8,7 @@ Definition:
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>%enchantment_trigger_chance%% chance for arrow to have Dragonfire Effect (R=%radius%, %duration%s).</gray>
+  - <gray>Chance for arrow to have Dragonfire Effect (R=%radius%, %duration%s).</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.

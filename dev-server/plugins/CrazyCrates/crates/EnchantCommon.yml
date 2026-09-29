@@ -244,210 +244,180 @@ Crate:
       Weight: 1
       Commands: ["eenchants book excellentenchants:double_catch 3 %player%"]
     "26":
-      DisplayName: "<bold><#C9C9C9>Auto Reel</#C9C9C9></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:auto_reel 1 %player%"]
-    "27":
-      DisplayName: "<bold><#C9C9C9>Flare</#C9C9C9></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:flare 1 %player%"]
-    "28":
       DisplayName: "<bold><#C9C9C9>Sniper I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:sniper 1 %player%"]
-    "29":
+    "27":
       DisplayName: "<bold><#C9C9C9>Sniper II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:sniper 2 %player%"]
-    "30":
-      DisplayName: "<bold><#C9C9C9>Hover I</#C9C9C9></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:hover 1 %player%"]
-    "31":
-      DisplayName: "<bold><#C9C9C9>Hover II</#C9C9C9></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:hover 2 %player%"]
-    "32":
-      DisplayName: "<bold><#C9C9C9>Hover III</#C9C9C9></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:hover 3 %player%"]
-    "33":
+    "28":
       DisplayName: "<bold><#C9C9C9>Jumping I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:jumping 1 %player%"]
-    "34":
+    "29":
       DisplayName: "<bold><#C9C9C9>Jumping II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:jumping 2 %player%"]
-    "35":
+    "30":
       DisplayName: "<bold><#C9C9C9>Saturation I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:saturation 1 %player%"]
-    "36":
+    "31":
       DisplayName: "<bold><#C9C9C9>Saturation II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:saturation 2 %player%"]
-    "37":
+    "32":
       DisplayName: "<bold><#C9C9C9>Night Vision</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:night_vision 1 %player%"]
-    "38":
+    "33":
       DisplayName: "<bold><#C9C9C9>Water Breathing</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:water_breathing 1 %player%"]
-    "39":
+    "34":
       DisplayName: "<bold><#C9C9C9>Wisdom I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:wisdom 1 %player%"]
-    "40":
+    "35":
       DisplayName: "<bold><#C9C9C9>Wisdom II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:wisdom 2 %player%"]
-    "41":
+    "36":
       DisplayName: "<bold><#C9C9C9>Wisdom III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:wisdom 3 %player%"]
-    "42":
+    "37":
       DisplayName: "<bold><#C9C9C9>Wisdom IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:wisdom 4 %player%"]
-    "43":
+    "38":
       DisplayName: "<bold><#C9C9C9>Wisdom V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:wisdom 5 %player%"]
-    "44":
+    "39":
       DisplayName: "<bold><#C9C9C9>Village Defender I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:village_defender 1 %player%"]
-    "45":
+    "40":
       DisplayName: "<bold><#C9C9C9>Village Defender II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:village_defender 2 %player%"]
-    "46":
+    "41":
       DisplayName: "<bold><#C9C9C9>Village Defender III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:village_defender 3 %player%"]
-    "47":
+    "42":
       DisplayName: "<bold><#C9C9C9>Village Defender IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:village_defender 4 %player%"]
-    "48":
+    "43":
       DisplayName: "<bold><#C9C9C9>Village Defender V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:village_defender 5 %player%"]
-    "49":
+    "44":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 1 %player%"]
-    "50":
+    "45":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 2 %player%"]
-    "51":
+    "46":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 3 %player%"]
-    "52":
+    "47":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 4 %player%"]
-    "53":
+    "48":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 5 %player%"]
-    "54":
+    "49":
       DisplayName: "<bold><#C9C9C9>Cure I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:cure 1 %player%"]
-    "55":
+    "50":
       DisplayName: "<bold><#C9C9C9>Cure II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:cure 2 %player%"]
-    "56":
+    "51":
       DisplayName: "<bold><#C9C9C9>Cure III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:cure 3 %player%"]
-    "57":
+    "52":
       DisplayName: "<bold><#C9C9C9>Survivalist</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:survivalist 1 %player%"]
-    "58":
+    "53":
       DisplayName: "<bold><#C9C9C9>Lingering I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:lingering 1 %player%"]
-    "59":
+    "54":
       DisplayName: "<bold><#C9C9C9>Lingering II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:lingering 2 %player%"]
-    "60":
+    "55":
       DisplayName: "<bold><#C9C9C9>Lingering III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1

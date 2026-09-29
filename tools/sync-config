@@ -43,6 +43,16 @@ if [[ -d "$src/$pack" ]]; then
     cp -R "$src/$pack" "$dest/$pack"
 fi
 
+# 2b. ExcellentEnchants: an enchant disabled in the template (its file in enchants/_disabled_/) must lose
+#     its enabled copy from an earlier run, or both exist and it stays on. Copying never deletes, so do it here.
+ee="plugins/ExcellentEnchants/enchants"
+if [[ -d "$src/$ee/_disabled_" ]]; then
+    for disabled in "$src/$ee/_disabled_"/*.yml; do
+        [[ -e "$disabled" ]] || continue
+        rm -f "$dest/$ee/$(basename "$disabled")"
+    done
+fi
+
 # 3. Fill in ${AVIAN_*} placeholders in the config files that carry any.
 # shellcheck disable=SC2016  # '${AVIAN_' is the literal text searched for
 { grep -rlZ --include='*.yml' --include='*.yaml' --include='*.conf' --include='*.properties' \

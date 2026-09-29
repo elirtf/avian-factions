@@ -1,31 +1,31 @@
-# AVIAN: Rare tier (docs/ENCHANTS.md).
+# AVIAN: disabled: curses removed (owner).
 Definition:
   # Enchantment display name.
   # https://docs.advntr.dev/minimessage/format.html#standard-tags
   # [*] Only one color and decorations are allowed.
   # [*] Reboot required when changed.
-  DisplayName: <c:#4DA3FF>Fire Shield</c>
+  DisplayName: <c:#279CF5>Curse of Drowned</c>
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>%enchantment_trigger_chance%% chance to ignite attackers for %duration%s.</gray>
+  - <gray>%enchantment_trigger_chance%% chance to fish up a Drowned Zombie.</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.
-  Weight: 2
+  Weight: 5
   # The maximum level of this enchantment.
   # Value between 1 and 255 (inclusive).
   # [*] Reboot required when changed.
-  MaxLevel: 4
+  MaxLevel: 3
   # The minimum possible cost of this enchantment in levels.
   # Explanation: https://minecraft.wiki/w/Enchanting_mechanics#How_enchantments_are_chosen
   # Vanilla costs: https://minecraft.wiki/w/Enchanting/Levels
   # [*] Reboot required when changed.
   MinCost:
     # The cost for a level I enchantment.
-    Base: 3
+    Base: 4
     # The amount of levels added to the Base for each level above level I
-    Per_Level: 14
+    Per_Level: 20
   # The maximum possible cost of this enchantment in levels.
   # Explanation: https://minecraft.wiki/w/Enchanting_mechanics#How_enchantments_are_chosen
   # Vanilla costs: https://minecraft.wiki/w/Enchanting/Levels
@@ -34,18 +34,18 @@ Definition:
     # The cost for a level I enchantment.
     Base: 7
     # The amount of levels added to the Base for each level above level I
-    Per_Level: 14
+    Per_Level: 20
   # The base cost when applying this enchantment to another item using an anvil. Halved when adding using a book, multiplied by the level of the enchantment.
   # [*] Reboot required when changed.
-  AnvilCost: 1
+  AnvilCost: 0
   # Items on which this enchantment can be applied using an anvil or using the /enchant command.
   # https://nightexpressdev.com/excellentenchants/features/item-sets
   # [*] Reboot required when changed.
-  SupportedItems: chestplate_elytra
+  SupportedItems: fishing_rod
   # Items for which this enchantment appears in an enchanting table.
   # https://nightexpressdev.com/excellentenchants/features/item-sets
   # [*] Reboot required when changed.
-  PrimaryItems: chestplate
+  PrimaryItems: fishing_rod
   # Enchantments that are incompatible with this enchantment.
   # [*] Vanilla enchantments must be specified as: 'minecraft:enchant_name'.
   # [*] Excellent enchantments must be specified as: 'excellentenchants:enchant_name.
@@ -58,7 +58,7 @@ Distribution:
   # Treasure enchantments can only be received via looting, trading, or fishing.
   # If a treasure enchantment is tradable, it will have double the price (before capping to 64 emeralds) compared to a non-treasure enchantment of the same level.
   # [*] Reboot required when changed.
-  Treasure: false
+  Treasure: true
   # Controls if this enchantment can be sold by villagers.
   # https://minecraft.wiki/w/Trading#Librarian
   # [*] Reboot required when changed.
@@ -69,17 +69,17 @@ Distribution:
   # [*] Reboot required when changed.
   # [*] Has no effect if 'Tradeable' is set on 'false' and Villager Trade Rebalance is disabled.
   TradeTypes:
-  - DESERT_COMMON
+  - SWAMP_COMMON
   # Controls if this enchantment can be found on spawned mobs' equipment.
   # https://minecraft.wiki/w/Armor#Armor_equipped_on_mobs
   # [*] Reboot required when changed.
   # [*] Has no effect if 'Treasure' is set on 'true'.
-  On_Mob_Spawn_Equipment: true
+  On_Mob_Spawn_Equipment: false
   # Controls if this enchantment can be found on equipment sold by villagers.
   # https://minecraft.wiki/w/Trading#Trade_offers
   # [*] Reboot required when changed.
   # [*] Has no effect if 'Treasure' is set on 'true' or Villager Trade Rebalance is ENABLED.
-  On_Traded_Equipment: true
+  On_Traded_Equipment: false
   # Controls if this enchantment can be found on naturally generated equipment from loot tables.
   # https://minecraft.wiki/w/Loot_table
   # [*] Reboot required when changed.
@@ -88,7 +88,7 @@ Distribution:
   # https://minecraft.wiki/w/Enchanting#Enchanting_table
   # [*] Reboot required when changed.
   # [*] Has no effect if 'Treasure' is set on 'true'.
-  Discoverable: true
+  Discoverable: false
 Settings:
   # Sets whether or not this enchantment will be hidden from Enchants GUI.
   Hide_From_List: false
@@ -97,16 +97,7 @@ Settings:
     Enabled: true
 Probability:
   Trigger_Chance:
-    Base: 4.0
-    Per_Level: 2.0
+    Base: 5.0
+    Per_Level: 5.0
     Capacity: 100.0
     Action: ADD
-FireShield:
-  # Sets the fire duration (in seconds).
-  Duration:
-    Base: 4.0
-    Per_Level: 1.0
-    Capacity: 10.0
-    Action: ADD
-  # Controls whether Fire Resistance effect should be added to the enchantment's wearer.
-  AddResistance: true

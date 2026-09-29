@@ -8,7 +8,7 @@ Definition:
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>%enchantment_trigger_chance%% chance to save item from breaking back to %amount%%</gray>
+  - <gray>Chance to save item from breaking back to %amount%%</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.

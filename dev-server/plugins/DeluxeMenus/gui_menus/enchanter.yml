@@ -47,17 +47,17 @@ items:
       - '[close]'
       - '[player] eenchants list'
 
-  # --- the three tiers ---
+  # --- the four tiers ---
   'common':
     material: BOOK
-    slot: 20
+    slot: 19
     display_name: '&#C9C9C9&lCommon Book'
     lore:
       - '&#B8B8C8Utility and grinding enchants:'
       - '&#B8B8C8Smelter, Haste, Wisdom, Night Vision…'
       - ''
       - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F10 levels'
-      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF23'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF20'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
@@ -79,14 +79,14 @@ items:
       - '[console] crazycrates preview EnchantCommon %avian_name%'
   'rare':
     material: ENCHANTED_BOOK
-    slot: 22
+    slot: 21
     display_name: '&#4DA3FF&lRare Book'
     lore:
       - '&#B8B8C8Combat effects, arrows and better'
-      - '&#B8B8C8tools: Venom, Veinminer, Telekinesis…'
+      - '&#B8B8C8tools: Venom, Veinminer, Treefeller…'
       - ''
       - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F20 levels'
-      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF28'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF22'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
@@ -108,7 +108,7 @@ items:
       - '[console] crazycrates preview EnchantRare %avian_name%'
   'legendary':
     material: ENCHANTED_BOOK
-    slot: 24
+    slot: 23
     enchantment_glint_override: true
     display_name: '&#FFB84D&lLegendary Book'
     lore:
@@ -116,7 +116,7 @@ items:
       - '&#B8B8C8Vampire, Temper, Thunder, Regrowth…'
       - ''
       - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F30 levels'
-      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF13'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF12'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
@@ -136,3 +136,34 @@ items:
     right_click_commands:
       - '[close]'
       - '[console] crazycrates preview EnchantLegendary %avian_name%'
+  'mythic':
+    material: ENCHANTED_BOOK
+    slot: 25
+    enchantment_glint_override: true
+    display_name: '&#FF4F7A&lMythic Book'
+    lore:
+      - '&#B8B8C8The rarest enchants of all:'
+      - '&#B8B8C8Ice Aspect, Ice Shield, Stopping Force,'
+      - '&#B8B8C8Auto Reel.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F40 levels'
+      - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF4'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_requirement:
+      requirements:
+        levels:
+          type: has exp
+          amount: 40
+          level: true
+      deny_commands:
+        - '[sound] ENTITY_VILLAGER_NO'
+        - '[message] &#FF5C5C✖ &#B8B8C8A Mythic Book costs &#7CFF4F40 levels&#B8B8C8.'
+    left_click_commands:
+      - '[takeexp] 40L'
+      - '[close]'
+      - '[console] crazycrates forceopen EnchantMythic %avian_name%'
+    right_click_commands:
+      - '[close]'
+      - '[console] crazycrates preview EnchantMythic %avian_name%'

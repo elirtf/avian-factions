@@ -1,4 +1,4 @@
-# AVIAN: curse, as shipped; loot only.
+# AVIAN: disabled: curses removed (owner).
 Definition:
   # Enchantment display name.
   # https://docs.advntr.dev/minimessage/format.html#standard-tags

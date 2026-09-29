@@ -1,0 +1,106 @@
+package club.avian.factions.economy;
+
+import club.avian.factions.api.config.ConfigHandle;
+import dev.aurelium.auraskills.api.AuraSkillsApi;
+import dev.aurelium.auraskills.api.event.skill.XpGainEvent;
+import dev.aurelium.auraskills.api.skill.Skills;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Fishing skill XP for the custom fishing enchants (owner, 2026-09-29: enchants that gather should
+ * feed the RPG side). Block enchants need nothing: Veinminer, Tunnel and Treefeller break each block
+ * through {@code Player#breakBlock}, and AuraSkills counts every one (checked on a scratch server).
+ * Fishing is different: AuraSkills pays once per catch, so a Double Catch fish and Seasoned Angler
+ * earn nothing extra. This adds it:
+ *
+ * <ol>
+ *   <li>at the start of every fish event, forget the player's last fishing XP;</li>
+ *   <li>record the fishing XP AuraSkills grants during it ({@link XpGainEvent});</li>
+ *   <li>at its end, read the rod and whether the catch was doubled, and one tick later (whatever the
+ *       listener order, AuraSkills has paid by then) add the bonus, raw, so multipliers aren't
+ *       applied twice.</li>
+ * </ol>
+ *
+ * Its own class so the AuraSkills API only loads when the plugin is installed.
+ */
+final class FishingEnchantXp implements Listener {
+
+    static final NamespacedKey DOUBLE_CATCH = NamespacedKey.fromString("excellentenchants:double_catch");
+    static final NamespacedKey SEASONED_ANGLER = NamespacedKey.fromString("excellentenchants:seasoned_angler");
+
+    private final Plugin plugin;
+    private final ConfigHandle<EconomyConfig> config;
+    private final Map<UUID, Double> fishingXp = new HashMap<>();
+
+    FishingEnchantXp(Plugin plugin, ConfigHandle<EconomyConfig> config) {
+        this.plugin = plugin;
+        this.config = config;
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onFishStart(PlayerFishEvent event) {
+        fishingXp.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onXp(XpGainEvent event) {
+        if (event.getSkill() == Skills.FISHING) {
+            fishingXp.merge(event.getPlayer().getUniqueId(), event.getAmount(), Double::sum);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFish(PlayerFishEvent event) {
+        if (event.getState() != PlayerFishEvent.State.CAUGHT_FISH || !(event.getCaught() instanceof Item caught)) {
+            return;
+        }
+        var player = event.getPlayer();
+        var rod = rod(player.getInventory().getItem(event.getHand() == null ? EquipmentSlot.HAND : event.getHand()),
+                player.getInventory().getItemInMainHand());
+        boolean doubled = caught.getItemStack().getAmount() >= 2 && level(rod, DOUBLE_CATCH) > 0;
+        int angler = level(rod, SEASONED_ANGLER);
+        if (!doubled && angler == 0) {
+            return;
+        }
+        var uuid = player.getUniqueId();
+        var cfg = config.get();
+        plugin.getServer().getScheduler().runTask(plugin, () -> {
+            Double paid = fishingXp.remove(uuid);
+            if (paid == null || paid <= 0 || !player.isOnline()) {
+                return;
+            }
+            double extra = FishingXpBonus.of(paid, doubled, angler, cfg.doubleCatchSkillXp(), cfg.seasonedAnglerSkillXpPerLevel());
+            var user = AuraSkillsApi.get().getUser(uuid);
+            if (extra > 0 && user != null) {
+                user.addSkillXpRaw(Skills.FISHING, extra);
+            }
+        });
+    }
+
+    private static ItemStack rod(ItemStack hand, ItemStack fallback) {
+        return hand != null && hand.getType() == Material.FISHING_ROD ? hand : fallback;
+    }
+
+    private static int level(ItemStack item, NamespacedKey key) {
+        if (item == null || key == null) {
+            return 0;
+        }
+        var enchantment = RegistryAccess.registryAccess().getRegistry(RegistryKey.ENCHANTMENT).get(key);
+        return enchantment == null ? 0 : item.getEnchantmentLevel(enchantment);
+    }
+}

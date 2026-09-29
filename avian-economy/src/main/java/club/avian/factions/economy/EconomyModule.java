@@ -72,6 +72,10 @@ public final class EconomyModule implements AvianModule {
                 Bukkit.getPluginManager().getPlugin("AuraSkills") != null ? AuraSkillsXp::addFarmingXp : (p, xp) -> { };
         ctx.registerListener(new HoeHarvest(economy, sellValues, hoe, config,
                 () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(), farmingXp, ctx.logger()));
+        // Fishing skill XP for Double Catch and Seasoned Angler (custom enchants); block enchants need nothing.
+        if (Bukkit.getPluginManager().getPlugin("AuraSkills") != null) {
+            ctx.registerListener(new FishingEnchantXp(ctx.plugin(), config));
+        }
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");

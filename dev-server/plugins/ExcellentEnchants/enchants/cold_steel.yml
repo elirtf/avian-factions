@@ -8,7 +8,7 @@ Definition:
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>%enchantment_trigger_chance%% chance to apply %enchantment_potion_type% %enchantment_potion_level% (%enchantment_potion_duration%s.) on attacker.</gray>
+  - <gray>Chance to apply %enchantment_potion_type% %enchantment_potion_level% (%enchantment_potion_duration%s.) on attacker.</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.

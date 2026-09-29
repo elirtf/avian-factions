@@ -1,14 +1,14 @@
-# AVIAN: Rare tier (docs/ENCHANTS.md).
+# AVIAN: Mythic tier (docs/ENCHANTS.md).
 Definition:
   # Enchantment display name.
   # https://docs.advntr.dev/minimessage/format.html#standard-tags
   # [*] Only one color and decorations are allowed.
   # [*] Reboot required when changed.
-  DisplayName: <c:#4DA3FF>Stopping Force</c>
+  DisplayName: <c:#FF4F7A>Stopping Force</c>
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>%enchantment_trigger_chance%% chance to reduce knockback for %amount%%.</gray>
+  - <gray>Chance to reduce knockback for %amount%%.</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.
@@ -58,7 +58,7 @@ Distribution:
   # Treasure enchantments can only be received via looting, trading, or fishing.
   # If a treasure enchantment is tradable, it will have double the price (before capping to 64 emeralds) compared to a non-treasure enchantment of the same level.
   # [*] Reboot required when changed.
-  Treasure: false
+  Treasure: true
   # Controls if this enchantment can be sold by villagers.
   # https://minecraft.wiki/w/Trading#Librarian
   # [*] Reboot required when changed.
@@ -97,8 +97,8 @@ Settings:
     Enabled: true
 Probability:
   Trigger_Chance:
-    Base: 100.0
-    Per_Level: 0.0
+    Base: 25.0
+    Per_Level: 10.0
     Capacity: 100.0
     Action: ADD
 Knockback:
