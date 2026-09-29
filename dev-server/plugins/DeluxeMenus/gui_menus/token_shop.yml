@@ -1,0 +1,195 @@
+# AVIAN: the token shop (/tokenshop, /tshop). This is where tokens are spent, and it's the in-game
+# route to every crate key and sell wand that the store also sells (ADR-0006). Prices and the
+# reasoning behind them are in docs/ECONOMY.md → Token shop.
+#
+# Every button runs one console command: `tokens charge <player> <cost> <reason> <reward>`. It takes
+# the tokens atomically and runs the reward only if the payment went through, refunding it if the
+# reward fails (avian-economy Purchase). It also tells the player the outcome, so buttons send no
+# message of their own. Never give the reward from a separate line: it would pay out on a failed charge.
+#
+# The layout follows the menu kit (club.avian.factions.api.text.Ui): colour on the top and bottom rows,
+# the balance top-centre, keys on row 1 and wands on row 3. Left-click buys one key, right-click buys five.
+menu_title: '&#FFE66D&l⛃ &#FFE66D&lT&#FFD84F&lo&#FFCA3F&lk&#FFBC3F&le&#FFAE40&ln &#FFA041&lS&#FF9242&lh&#FF8443&lo&#FF7A45&lp'
+register_command: true
+open_command:
+  - tokenshop
+  - tshop
+size: 45
+update_interval: 1
+
+items:
+  'frame_a':
+    material: YELLOW_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [0, 2, 6, 8, 36, 38, 42, 44]
+  'frame_b':
+    material: LIME_STAINED_GLASS_PANE
+    display_name: ' '
+    slots: [1, 3, 5, 7, 37, 39, 41, 43]
+  'close':
+    material: BARRIER
+    slot: 40
+    display_name: '&#FF5C5C&l✖ Close'
+    left_click_commands:
+      - '[close]'
+  'balance':
+    material: SUNFLOWER
+    slot: 4
+    update: true
+    enchantment_glint_override: true
+    display_name: '&#FFE66D&l⛃ %avian_tokens% tokens'
+    lore:
+      - '&#B8B8C8Spend tokens on crate keys and sell wands.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Hand-harvest grown cane  &#FFE66D2% a block'
+      - '&#6E6E80◆ &#B8B8C8Harvester Hoe  &#FFE66Dmore with Token Boost'
+      - '&#6E6E80◆ &#B8B8C8Crates  &#FFE66Dtoken prizes in every tier'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Upgrade your hoe'
+    left_click_commands:
+      - '[close]'
+      - '[player] hoe'
+
+  # --- row 1: crate keys (open them in /crates) ---
+  'key_common':
+    material: CHEST
+    slot: 11
+    display_name: '&#C9C9C9&lCommon Key'
+    lore:
+      - '&#B8B8C8Starter gear and a cash boost.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D200 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D1,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 200 shop:key-common crazycrates give virtual Common 1 %player_name%'
+    right_click_commands:
+      - '[console] tokens charge %player_name% 1000 shop:key-common crazycrates give virtual Common 5 %player_name%'
+  'key_rare':
+    material: BARREL
+    slot: 12
+    display_name: '&#4DA3FF&lRare Key'
+    lore:
+      - '&#B8B8C8Diamond gear, tokens and your first spawner.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D600 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D3,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 600 shop:key-rare crazycrates give virtual Rare 1 %player_name%'
+    right_click_commands:
+      - '[console] tokens charge %player_name% 3000 shop:key-rare crazycrates give virtual Rare 5 %player_name%'
+  'key_epic':
+    material: ENDER_CHEST
+    slot: 13
+    display_name: '&#B07FE0&lEpic Key'
+    lore:
+      - '&#B8B8C8Top enchants, netherite and better spawners.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D1,500 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D7,500 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 1500 shop:key-epic crazycrates give virtual Epic 1 %player_name%'
+    right_click_commands:
+      - '[console] tokens charge %player_name% 7500 shop:key-epic crazycrates give virtual Epic 5 %player_name%'
+  'key_legendary':
+    material: YELLOW_SHULKER_BOX
+    slot: 14
+    enchantment_glint_override: true
+    display_name: '&#FFB84D&lLegendary Key'
+    lore:
+      - '&#B8B8C8Netherite, blaze spawners and the rarest apples.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D4,000 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D20,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 4000 shop:key-legendary crazycrates give virtual Legendary 1 %player_name%'
+    right_click_commands:
+      - '[console] tokens charge %player_name% 20000 shop:key-legendary crazycrates give virtual Legendary 5 %player_name%'
+  'key_mythic':
+    material: RED_SHULKER_BOX
+    slot: 15
+    enchantment_glint_override: true
+    display_name: '&#FF4F7A&lMythic Key'
+    lore:
+      - '&#B8B8C8The top of the ladder. Rare, loud and worth it.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D10,000 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D50,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 10000 shop:key-mythic crazycrates give virtual Mythic 1 %player_name%'
+    right_click_commands:
+      - '[console] tokens charge %player_name% 50000 shop:key-mythic crazycrates give virtual Mythic 5 %player_name%'
+  'crates_link':
+    material: TRIPWIRE_HOOK
+    slot: 22
+    display_name: '&#FFD23F&l✦ Open your crates'
+    lore:
+      - '&#B8B8C8Keys land on you, not in your inventory.'
+      - '&#B8B8C8Open them from the crates menu.'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Go to /crates'
+    left_click_commands:
+      - '[close]'
+      - '[player] crates'
+
+  # --- row 3: sell wands (right-click a chest to sell it all at /shop prices) ---
+  'wand_basic':
+    material: STICK
+    slot: 29
+    display_name: '&#B8B8C8&lSell Wand'
+    lore:
+      - '&#B8B8C8Right-click a chest to sell everything'
+      - '&#B8B8C8in it at /shop prices.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Uses  &#FFFFFF100'
+      - '&#6E6E80◆ &#B8B8C8Sell price  &#4CE08A×1'
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D250 tokens'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 250 shop:wand-basic sellwand give %player_name% basic'
+  'wand_gilded':
+    material: BLAZE_ROD
+    slot: 31
+    display_name: '&#FFD23F&lGilded Sell Wand'
+    lore:
+      - '&#B8B8C8Right-click a chest to sell everything'
+      - '&#B8B8C8in it at /shop prices, plus a bonus.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Uses  &#FFFFFF500'
+      - '&#6E6E80◆ &#B8B8C8Sell price  &#4CE08A×1.1'
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D1,500 tokens'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 1500 shop:wand-gilded sellwand give %player_name% gilded'
+  'wand_eternal':
+    material: END_ROD
+    slot: 33
+    enchantment_glint_override: true
+    display_name: '&#C58CFF&lEternal Sell Wand'
+    lore:
+      - '&#B8B8C8Never breaks. Sells every chest'
+      - '&#B8B8C8at a quarter over /shop prices.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Uses  &#FFFFFFunlimited'
+      - '&#6E6E80◆ &#B8B8C8Sell price  &#4CE08A×1.25'
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D12,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
+    left_click_commands:
+      - '[console] tokens charge %player_name% 12000 shop:wand-eternal sellwand give %player_name% eternal'

@@ -4,3 +4,5 @@ check_updates: false
 gui_menus:
   factions_menu:
     file: factions_menu.yml
+  token_shop:
+    file: token_shop.yml
