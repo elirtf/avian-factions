@@ -96,330 +96,385 @@ Crate:
     "1":
       DisplayName: "<bold><#C9C9C9>Glass Breaker</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Breaks glass instantly.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:glassbreaker 1 %player%"]
     "2":
       DisplayName: "<bold><#C9C9C9>Lightweight</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Walk on crops and turtle eggs without breaking them.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:lightweight 1 %player%"]
     "3":
       DisplayName: "<bold><#C9C9C9>Lucky Miner I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance for extra XP from ores.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:lucky_miner 1 %player%"]
     "4":
       DisplayName: "<bold><#C9C9C9>Lucky Miner II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance for extra XP from ores.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:lucky_miner 2 %player%"]
     "5":
       DisplayName: "<bold><#C9C9C9>Lucky Miner III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance for extra XP from ores.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:lucky_miner 3 %player%"]
     "6":
       DisplayName: "<bold><#C9C9C9>Smelter I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to smelt what you mine.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:smelter 1 %player%"]
     "7":
       DisplayName: "<bold><#C9C9C9>Smelter II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to smelt what you mine.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:smelter 2 %player%"]
     "8":
       DisplayName: "<bold><#C9C9C9>Smelter III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to smelt what you mine.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:smelter 3 %player%"]
     "9":
       DisplayName: "<bold><#C9C9C9>Smelter IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to smelt what you mine.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:smelter 4 %player%"]
     "10":
       DisplayName: "<bold><#C9C9C9>Smelter V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to smelt what you mine.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:smelter 5 %player%"]
     "11":
       DisplayName: "<bold><#C9C9C9>Haste I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mine faster.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:haste 1 %player%"]
     "12":
       DisplayName: "<bold><#C9C9C9>Haste II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mine faster.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:haste 2 %player%"]
     "13":
       DisplayName: "<bold><#C9C9C9>Haste III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mine faster.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:haste 3 %player%"]
     "14":
       DisplayName: "<bold><#C9C9C9>Replanter</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Replants crops for you.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:replanter 1 %player%"]
     "15":
       DisplayName: "<bold><#C9C9C9>River Master I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cast your line farther.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:river_master 1 %player%"]
     "16":
       DisplayName: "<bold><#C9C9C9>River Master II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cast your line farther.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:river_master 2 %player%"]
     "17":
       DisplayName: "<bold><#C9C9C9>River Master III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cast your line farther.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:river_master 3 %player%"]
     "18":
       DisplayName: "<bold><#C9C9C9>River Master IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cast your line farther.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:river_master 4 %player%"]
     "19":
       DisplayName: "<bold><#C9C9C9>River Master V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cast your line farther.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:river_master 5 %player%"]
     "20":
       DisplayName: "<bold><#C9C9C9>Seasoned Angler I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>More XP from fishing.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:seasoned_angler 1 %player%"]
     "21":
       DisplayName: "<bold><#C9C9C9>Seasoned Angler II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>More XP from fishing.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:seasoned_angler 2 %player%"]
     "22":
       DisplayName: "<bold><#C9C9C9>Seasoned Angler III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>More XP from fishing.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:seasoned_angler 3 %player%"]
     "23":
       DisplayName: "<bold><#C9C9C9>Double Catch I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to double your catch.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:double_catch 1 %player%"]
     "24":
       DisplayName: "<bold><#C9C9C9>Double Catch II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to double your catch.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:double_catch 2 %player%"]
     "25":
       DisplayName: "<bold><#C9C9C9>Double Catch III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to double your catch.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:double_catch 3 %player%"]
     "26":
       DisplayName: "<bold><#C9C9C9>Sniper I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Arrows fly faster.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:sniper 1 %player%"]
     "27":
       DisplayName: "<bold><#C9C9C9>Sniper II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Arrows fly faster.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:sniper 2 %player%"]
     "28":
       DisplayName: "<bold><#C9C9C9>Jumping I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Jump higher.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:jumping 1 %player%"]
     "29":
       DisplayName: "<bold><#C9C9C9>Jumping II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Jump higher.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:jumping 2 %player%"]
     "30":
       DisplayName: "<bold><#C9C9C9>Saturation I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Slowly refills your hunger.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:saturation 1 %player%"]
     "31":
       DisplayName: "<bold><#C9C9C9>Saturation II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Slowly refills your hunger.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:saturation 2 %player%"]
     "32":
       DisplayName: "<bold><#C9C9C9>Night Vision</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>See in the dark.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:night_vision 1 %player%"]
     "33":
       DisplayName: "<bold><#C9C9C9>Water Breathing</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Breathe underwater.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:water_breathing 1 %player%"]
     "34":
       DisplayName: "<bold><#C9C9C9>Wisdom I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mobs drop more XP.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:wisdom 1 %player%"]
     "35":
       DisplayName: "<bold><#C9C9C9>Wisdom II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mobs drop more XP.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:wisdom 2 %player%"]
     "36":
       DisplayName: "<bold><#C9C9C9>Wisdom III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mobs drop more XP.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:wisdom 3 %player%"]
     "37":
       DisplayName: "<bold><#C9C9C9>Wisdom IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mobs drop more XP.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:wisdom 4 %player%"]
     "38":
       DisplayName: "<bold><#C9C9C9>Wisdom V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Mobs drop more XP.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:wisdom 5 %player%"]
     "39":
       DisplayName: "<bold><#C9C9C9>Village Defender I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to pillagers.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:village_defender 1 %player%"]
     "40":
       DisplayName: "<bold><#C9C9C9>Village Defender II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to pillagers.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:village_defender 2 %player%"]
     "41":
       DisplayName: "<bold><#C9C9C9>Village Defender III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to pillagers.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:village_defender 3 %player%"]
     "42":
       DisplayName: "<bold><#C9C9C9>Village Defender IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to pillagers.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:village_defender 4 %player%"]
     "43":
       DisplayName: "<bold><#C9C9C9>Village Defender V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to pillagers.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:village_defender 5 %player%"]
     "44":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to Nether mobs.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 5
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 1 %player%"]
     "45":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to Nether mobs.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 2 %player%"]
     "46":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to Nether mobs.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 3 %player%"]
     "47":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn IV</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to Nether mobs.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 4 %player%"]
     "48":
       DisplayName: "<bold><#C9C9C9>Bane of Netherspawn V</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Extra damage to Nether mobs.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:bane_of_netherspawn 5 %player%"]
     "49":
       DisplayName: "<bold><#C9C9C9>Cure I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to cure zombie villagers and piglins.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:cure 1 %player%"]
     "50":
       DisplayName: "<bold><#C9C9C9>Cure II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to cure zombie villagers and piglins.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:cure 2 %player%"]
     "51":
       DisplayName: "<bold><#C9C9C9>Cure III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to cure zombie villagers and piglins.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:cure 3 %player%"]
     "52":
       DisplayName: "<bold><#C9C9C9>Survivalist</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Cooks the fish you catch.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:survivalist 1 %player%"]
     "53":
       DisplayName: "<bold><#C9C9C9>Lingering I</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Tipped arrows leave a lingering cloud.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:lingering 1 %player%"]
     "54":
       DisplayName: "<bold><#C9C9C9>Lingering II</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Tipped arrows leave a lingering cloud.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:lingering 2 %player%"]
     "55":
       DisplayName: "<bold><#C9C9C9>Lingering III</#C9C9C9></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Tipped arrows leave a lingering cloud.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:lingering 3 %player%"]

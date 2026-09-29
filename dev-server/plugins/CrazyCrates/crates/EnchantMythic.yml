@@ -96,60 +96,70 @@ Crate:
     "1":
       DisplayName: "<bold><#FF4F7A>Auto Reel</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Reels in your catch automatically.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:auto_reel 1 %player%"]
     "2":
       DisplayName: "<bold><#FF4F7A>Ice Aspect I</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Freezes and slows your target.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:ice_aspect 1 %player%"]
     "3":
       DisplayName: "<bold><#FF4F7A>Ice Aspect II</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Freezes and slows your target.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:ice_aspect 2 %player%"]
     "4":
       DisplayName: "<bold><#FF4F7A>Ice Aspect III</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Freezes and slows your target.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:ice_aspect 3 %player%"]
     "5":
       DisplayName: "<bold><#FF4F7A>Ice Shield I</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to freeze and slow your attacker.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:ice_shield 1 %player%"]
     "6":
       DisplayName: "<bold><#FF4F7A>Ice Shield II</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to freeze and slow your attacker.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:ice_shield 2 %player%"]
     "7":
       DisplayName: "<bold><#FF4F7A>Ice Shield III</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to freeze and slow your attacker.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:ice_shield 3 %player%"]
     "8":
       DisplayName: "<bold><#FF4F7A>Stopping Force I</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to take less knockback.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:stopping_force 1 %player%"]
     "9":
       DisplayName: "<bold><#FF4F7A>Stopping Force II</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to take less knockback.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:stopping_force 2 %player%"]
     "10":
       DisplayName: "<bold><#FF4F7A>Stopping Force III</#FF4F7A></bold>"
       DisplayItem: "enchanted_book"
+      DisplayLore: ["<#B8B8C8>Chance to take less knockback.</#B8B8C8>"]
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:stopping_force 3 %player%"]
