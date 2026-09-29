@@ -216,6 +216,13 @@ pack_fingerprint() {
     } | sha256sum | cut -d" " -f1
 }
 
+# Lays dev-server/ over run/ with .env loaded, so the placeholders get this machine's values.
+cmd_sync() {
+    load_env
+    ./gradlew --quiet :avian-plugin:syncDevConfig
+    ok "Config copied into run/. Reload the plugin that changed, or ./dev restart"
+}
+
 cmd_pack() {
     session_running || fail "The server is not running. Start it with: ./dev start"
     say "Building the resource pack…"
@@ -468,6 +475,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}status${RESET}           Is the database and server running?
   ${BOLD}ranks${RESET}            Re-apply ranks and the world border (start does this when they changed)
   ${BOLD}pack${RESET}             Rebuild the resource pack (start does this when dev-server/ pack files changed)
+  ${BOLD}sync${RESET}             Copy dev-server/ config into run/ now (then reload the plugin, or restart)
   ${BOLD}backup${RESET}           Save the world, database and plugin data to backups/ (safe while running)
   ${BOLD}restore${RESET} <file>   Replace world, database and plugin data from a backup (server must be stopped)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
@@ -486,6 +494,7 @@ case "${1:-help}" in
     status)    shift; cmd_status ;;
     ranks)     shift; cmd_setup_world ;;
     pack)      shift; cmd_pack ;;
+    sync)      shift; cmd_sync ;;
     backup)    shift; cmd_backup ;;
     restore)   shift; cmd_restore "$@" ;;
     db)        shift; cmd_db ;;

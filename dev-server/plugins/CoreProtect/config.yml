@@ -7,11 +7,11 @@ donation-key:
 # If you prefer to use MySQL, enable the following and fill out the fields.
 use-mysql: true
 table-prefix: co_
-mysql-host: 127.0.0.1
-mysql-port: 3306
-mysql-database: avian
-mysql-username: avian
-mysql-password: avian
+mysql-host: ${AVIAN_DB_HOST:-127.0.0.1}
+mysql-port: ${AVIAN_DB_PORT:-3306}
+mysql-database: ${AVIAN_DB_NAME:-avian}
+mysql-username: ${AVIAN_DB_USER:-avian}
+mysql-password: '${AVIAN_DB_PASSWORD:-avian}'
 
 # If modified, will automatically attempt to translate languages phrases.
 # List of language codes: https://coreprotect.net/languages/

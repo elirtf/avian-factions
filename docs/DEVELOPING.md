@@ -131,7 +131,7 @@ CraftEngine only builds the pack on `/ce reload`, never at startup, so `./dev st
 whenever that folder changed. To see a pack change **without a restart**:
 
 ```sh
-./gradlew -q :avian-plugin:syncDevConfig :avian-plugin:syncAvianPack   # copy dev-server/ into run/
+./dev sync                                 # copy dev-server/ into run/
 ./dev pack                                 # rebuild the pack and send it to online players
 ```
 

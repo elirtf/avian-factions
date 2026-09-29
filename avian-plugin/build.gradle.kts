@@ -1,6 +1,5 @@
 import java.net.URI
 import java.security.MessageDigest
-import java.util.zip.ZipFile
 
 plugins {
     id("avian.java-conventions")
@@ -254,59 +253,22 @@ tasks.register("downloadPlugins") {
     }
 }
 
-// Copies the tracked third-party plugin config (dev-server/) into the git-ignored run/ directory.
-// Without this a fresh clone boots the stack on defaults: SQLite/H2 storage and vanilla enchant caps.
-// CraftEngine unpacks its built-in packs (including `internal`, which provides <shift:N>) only when
-// plugins/CraftEngine/resources/ does not exist yet — and syncDevConfig creates it with our pack.
-// So do its first-run unpack ourselves, before the copy, never overwriting what is already there.
-val unpackCraftEngineDefaults = tasks.register("unpackCraftEngineDefaults") {
-    description = "Unpacks CraftEngine's bundled resource packs into run/ on a fresh server."
+// Lays the tracked config (dev-server/) over the git-ignored run/ directory: tools/sync-config, the
+// same script the container image runs at start, so the dev server and a deployed one are configured
+// identically. It unpacks CraftEngine's bundled packs on a fresh server, copies the config, mirrors our
+// resource pack, and fills ${AVIAN_*} placeholders (database settings) from the environment: ./dev
+// exports .env, and every placeholder has a default matching .env.example. Without this a fresh clone
+// boots the stack on defaults: SQLite/H2 storage and vanilla enchant caps.
+val syncDevConfig = tasks.register<Exec>("syncDevConfig") {
+    description = "Lays tracked dev-server config over run/ (tools/sync-config)."
     group = "avian"
     dependsOn("downloadPlugins")
-    val jar = layout.projectDirectory.file("../run/plugins/" + pluginStack.single { it.file.startsWith("craft-engine") }.file)
-    val target = layout.projectDirectory.dir("../run/plugins/CraftEngine")
-    doLast {
-        val root = target.asFile
-        if (!root.resolve("resources").exists()) {
-            ZipFile(jar.asFile).use { zip ->
-                zip.entries().asSequence()
-                    .filter { it.name.startsWith("resources/") && !it.isDirectory && !it.name.endsWith("/_index.json") }
-                    .forEach { entry ->
-                        val out = root.resolve(entry.name)
-                        out.parentFile.mkdirs()
-                        zip.getInputStream(entry).use { input -> out.outputStream().use { input.copyTo(it) } }
-                    }
-            }
-        }
-    }
-}
-
-// Our resource pack is mirrored exactly, not copied over: a texture deleted in git must leave the
-// served pack too (parked sword art lingered in run/ and would have shipped with the next build).
-// Nothing else writes there; the rest of run/plugins holds live plugin data and is never pruned.
-val avianPack = "plugins/CraftEngine/resources/avian"
-
-val syncDevConfig = tasks.register<Copy>("syncDevConfig") {
-    description = "Copies tracked dev-server config into run/."
-    group = "avian"
-    dependsOn(unpackCraftEngineDefaults)
-    from(layout.projectDirectory.dir("../dev-server")) {
-        exclude("README.md")
-        exclude("$avianPack/**")
-    }
-    into(layout.projectDirectory.dir("../run"))
-}
-
-val syncAvianPack = tasks.register<Sync>("syncAvianPack") {
-    description = "Mirrors our resource pack (dev-server/$avianPack) into run/, deleting stale files."
-    group = "avian"
-    dependsOn(unpackCraftEngineDefaults)
-    from(layout.projectDirectory.dir("../dev-server/$avianPack"))
-    into(layout.projectDirectory.dir("../run/$avianPack"))
+    workingDir = layout.projectDirectory.dir("..").asFile
+    commandLine("tools/sync-config", "dev-server", "run")
 }
 
 tasks.runServer {
-    dependsOn(syncDevConfig, syncAvianPack)
+    dependsOn(syncDevConfig)
 }
 
 // Prints the rank setup as console commands. LuckPerms has no "apply a file" command, so this

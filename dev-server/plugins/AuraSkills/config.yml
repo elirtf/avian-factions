@@ -10,11 +10,11 @@
 sql:
   enabled: true
   type: mysql
-  host: 127.0.0.1
-  port: 3306
-  database: avian
-  username: avian
-  password: avian
+  host: ${AVIAN_DB_HOST:-127.0.0.1}
+  port: ${AVIAN_DB_PORT:-3306}
+  database: ${AVIAN_DB_NAME:-avian}
+  username: ${AVIAN_DB_USER:-avian}
+  password: '${AVIAN_DB_PASSWORD:-avian}'
   load_delay: 0
   always_load_on_join: false
   ssl: false
