@@ -44,6 +44,7 @@ if [[ -d "$src/$pack" ]]; then
 fi
 
 # 3. Fill in ${AVIAN_*} placeholders in the config files that carry any.
+# shellcheck disable=SC2016  # '${AVIAN_' is the literal text searched for
 { grep -rlZ --include='*.yml' --include='*.yaml' --include='*.conf' --include='*.properties' \
         --include='*.json' --include='*.toml' -e '${AVIAN_' "$src" 2>/dev/null || true; } \
     | while IFS= read -r -d '' file; do

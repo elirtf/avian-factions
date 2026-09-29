@@ -2,6 +2,10 @@
 
 Plain-language guide. Follow it top to bottom.
 
+> **Running it as a container instead** (one image, the same on any machine or on Kubernetes)? See
+> [DEPLOYMENT.md](DEPLOYMENT.md). The backup file below works for both: `./dev restore-container`
+> loads it into the container.
+
 ## The big idea: two halves
 
 Everything the server needs is in one of two places:

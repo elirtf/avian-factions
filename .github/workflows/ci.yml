@@ -30,8 +30,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/v')
         run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
       # The dev script is part of the workflow (CI below runs it), so lint it like code.
-      - name: Lint the ./dev script
-        run: shellcheck dev
+      - name: Lint the shell scripts (./dev, config sync, container entrypoint)
+        run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console
       # Unit + MockBukkit tests, Testcontainers integration tests (Docker is on ubuntu-latest), shadowJar.
       - run: ./gradlew build --console=plain ${VERSION_FLAG:-}
       - uses: actions/upload-artifact@v7
@@ -83,6 +83,51 @@ jobs:
         with:
           name: server-log
           path: run/logs/latest.log
+          if-no-files-found: ignore
+
+  container:
+    # Builds the server image (docs/DEPLOYMENT.md) and boots it against the Compose database: the same
+    # log check as the dev boot, then a clean stop. Guards the way we'd run it on another machine or
+    # Kubernetes, so the image never drifts from ./dev.
+    name: Build and boot the container image
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Build the image
+        run: ./dev image
+      - name: Boot it with the database
+        run: |
+          cp .env.example .env
+          docker compose up -d --wait mariadb
+          EULA=true AVIAN_MEMORY=3G docker compose --profile server up -d --no-deps server
+          for _ in $(seq 1 100); do
+            docker exec avian-server grep -q ']: Done (' /data/logs/latest.log 2>/dev/null && break
+            sleep 3
+          done
+          docker cp avian-server:/data/logs/latest.log container.log
+      - name: Check the log for plugin errors and missing hooks
+        run: AVIAN_LOG=container.log ./dev check-log
+      - name: Stop it cleanly
+        run: |
+          docker compose --profile server stop server
+          docker logs avian-server 2>&1 | grep -q '\[avian\] Server exited (0)' || { echo '::error::server did not stop cleanly'; exit 1; }
+      - name: Show the end of the log
+        if: failure()
+        run: docker logs --tail 150 avian-server || true
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: container-log
+          path: container.log
           if-no-files-found: ignore
 
   release:

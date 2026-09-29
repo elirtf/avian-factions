@@ -285,3 +285,54 @@ tasks.register("printRanks") {
             .forEach { println(it) }
     }
 }
+
+// --- Container image (docs/DEPLOYMENT.md) ------------------------------------------------------
+// The image carries the same Paper build, the same pinned plugins and the same tracked config as the
+// dev server; only the world and plugin data differ, and those live in its /data volume.
+
+val paperJarSha256 = providers.gradleProperty("paperJarSha256").get()
+
+val downloadPaper = tasks.register("downloadPaper") {
+    description = "Downloads the pinned Paper server jar for the container image and verifies it."
+    group = "avian"
+    val sha = paperJarSha256
+    val label = "Paper $mcVersion build $paperBuild"
+    val url = "https://fill-data.papermc.io/v1/objects/$sha/paper-$mcVersion-$paperBuild.jar"
+    val out = layout.buildDirectory.file("paper/paper-$mcVersion-$paperBuild.jar")
+    inputs.property("sha256", sha)
+    outputs.file(out)
+    doLast {
+        val file = out.get().asFile.apply { parentFile.mkdirs() }
+        URI.create(url).toURL().openStream().use { input -> file.outputStream().use { input.copyTo(it) } }
+        val digest = MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString("") { "%02x".format(it) }
+        if (digest != sha) {
+            file.delete()
+            throw GradleException("$label: SHA-256 mismatch, expected $sha, got $digest")
+        }
+    }
+}
+
+// build/image: the Docker build context. Plugin jars come from run/plugins, where downloadPlugins
+// has just verified every hash and removed anything unpinned.
+tasks.register<Sync>("stageImage") {
+    description = "Stages the container image's build context in build/image (then: docker build)."
+    group = "avian"
+    dependsOn("downloadPlugins")
+    val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name }
+    from(layout.projectDirectory.dir("../deploy/container")) {
+        include("Dockerfile")
+    }
+    from(layout.projectDirectory.dir("../deploy/container")) {
+        exclude("Dockerfile")
+        into("bin")
+    }
+    from(layout.projectDirectory.file("../tools/sync-config")) { into("bin") }
+    from(downloadPaper) { rename { "paper.jar" } }
+    from(layout.projectDirectory.dir("../run/plugins")) {
+        include(pinned)
+        into("plugins")
+    }
+    from(tasks.shadowJar) { into("plugins") }
+    from(layout.projectDirectory.dir("../dev-server")) { into("template") }
+    into(layout.buildDirectory.dir("image"))
+}

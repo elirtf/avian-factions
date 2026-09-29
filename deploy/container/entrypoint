@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# Container start: bring /data in line with the image, then run Paper and stop it cleanly.
+#
+#   - Plugin jars in /data/plugins become exactly the image's set: stale ones are removed, so an
+#     upgraded or dropped plugin never loads twice.
+#   - tools/sync-config lays the tracked config over /data and fills ${AVIAN_*} placeholders from
+#     the environment (database host and password from .env or a Kubernetes Secret).
+#   - The console reads from the /data/.console pipe, so `avian-console "<command>"` works from
+#     `docker exec` or `kubectl exec`. Paper's log goes to stdout as usual.
+#   - SIGTERM (docker stop, a Kubernetes rollout) is turned into the `stop` command: Paper saves the
+#     worlds and exits. Give it time: stop_grace_period / terminationGracePeriodSeconds of 120 s.
+set -euo pipefail
+
+app=/opt/avian
+data=/data
+
+if [[ "${EULA:-}" != "true" ]]; then
+    echo "Set EULA=true to accept the Minecraft EULA (https://aka.ms/MinecraftEULA)." >&2
+    exit 1
+fi
+
+# A pipe left by the last run has no reader until the server is up again; remove it now so a console
+# command sent during start-up fails fast instead of waiting on it forever.
+rm -f "$data/.console"
+
+mkdir -p "$data/plugins"
+for jar in "$data"/plugins/*.jar; do
+    [[ -e "$jar" ]] || continue
+    if [[ ! -e "$app/plugins/$(basename "$jar")" ]]; then
+        echo "[avian] Removing $(basename "$jar"): no longer in the image"
+        rm -f "$jar"
+    fi
+done
+cp "$app"/plugins/*.jar "$data/plugins/"
+
+"$app/bin/sync-config" "$app/template" "$data"
+echo "[avian] Config synced into $data"
+
+# The console pipe. The server holds its own write end (fd 3), so it never sees end-of-input when
+# a writer goes away.
+mkfifo -m 0600 "$data/.console"
+exec 3<>"$data/.console"
+
+# MEMORY sets the heap (Xms = Xmx, as Paper recommends); JAVA_OPTS adds any other JVM flags.
+# shellcheck disable=SC2086
+java -Xms"$MEMORY" -Xmx"$MEMORY" ${JAVA_OPTS:-} \
+    -Dcom.mojang.eula.agree=true \
+    -jar "$app/paper.jar" --nogui <&3 &
+server=$!
+
+# Stop the way ./dev does: the `stop` command. Paper's own SIGTERM handling stops the server from a
+# shutdown hook off the main thread, which deadlocks at "Saving players" (seen 2026-09-29, Paper
+# 26.1.2 build 74) until the container is killed, maybe before the last save.
+trap 'echo "[avian] Stop requested: sending stop to the server"; printf "stop\n" >&3' TERM INT
+status=0
+while :; do
+    wait "$server" && status=0 || status=$?
+    kill -0 "$server" 2>/dev/null || break      # still running: wait was interrupted by the trap
+done
+echo "[avian] Server exited ($status)"
+exit "$status"

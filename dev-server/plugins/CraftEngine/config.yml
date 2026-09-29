@@ -12,12 +12,12 @@ forced-locale: ''
 # https://xiao-momi.github.io/craft-engine-wiki/getting_start/database
 storage:
   # json, sqlite, h2, mysql, mariadb, postgresql, mongodb
-  type: mariadb  # Avian: MariaDB everywhere (dev credentials; production overrides)
+  type: mariadb  # Avian: MariaDB everywhere (settings from .env via tools/sync-config)
   # Required JDBC URL. Relative paths start at the server working directory.
   # SQLite needs no credentials and uses one connection.
-  url: 'jdbc:mariadb://127.0.0.1:3306/avian'
-  username: avian
-  password: avian
+  url: 'jdbc:mariadb://${AVIAN_DB_HOST:-127.0.0.1}:${AVIAN_DB_PORT:-3306}/${AVIAN_DB_NAME:-avian}'
+  username: ${AVIAN_DB_USER:-avian}
+  password: '${AVIAN_DB_PASSWORD:-avian}'
 
 resource-pack:
   # Run a workflow explicitly with /ce workflow <name>, or set its trigger below.
