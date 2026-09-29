@@ -39,7 +39,7 @@ Crate:
     Rewards:
       Re-Roll-Spin: false
       Permission: {Toggle: false, Persist: false, Max-Cap: 20}
-  Item: "barrel"
+  Item: "blue_shulker_box"
   Hide-Flags: true
   Components: []
   Custom-Model-Data: -1

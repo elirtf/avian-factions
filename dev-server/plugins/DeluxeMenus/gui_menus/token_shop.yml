@@ -52,7 +52,7 @@ items:
 
   # --- row 1: crate keys (open them in /crates) ---
   'key_common':
-    material: CHEST
+    material: LIME_SHULKER_BOX
     slot: 11
     display_name: '&#C9C9C9&lCommon Key'
     lore:
@@ -68,7 +68,7 @@ items:
     right_click_commands:
       - '[console] tokens charge %avian_name% 1000 shop:key-common crazycrates give virtual Common 5 %avian_name%'
   'key_rare':
-    material: BARREL
+    material: BLUE_SHULKER_BOX
     slot: 12
     display_name: '&#4DA3FF&lRare Key'
     lore:
@@ -84,7 +84,7 @@ items:
     right_click_commands:
       - '[console] tokens charge %avian_name% 3000 shop:key-rare crazycrates give virtual Rare 5 %avian_name%'
   'key_epic':
-    material: ENDER_CHEST
+    material: PURPLE_SHULKER_BOX
     slot: 13
     display_name: '&#B07FE0&lEpic Key'
     lore:
@@ -100,7 +100,7 @@ items:
     right_click_commands:
       - '[console] tokens charge %avian_name% 7500 shop:key-epic crazycrates give virtual Epic 5 %avian_name%'
   'key_legendary':
-    material: YELLOW_SHULKER_BOX
+    material: ORANGE_SHULKER_BOX
     slot: 14
     enchantment_glint_override: true
     display_name: '&#FFB84D&lLegendary Key'
