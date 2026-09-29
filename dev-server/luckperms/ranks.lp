@@ -195,6 +195,7 @@ lp group admin permission set essentials.give true
 # /tokens and /gems give|take|set and /tokens|gems <player> (#26); money is EssentialsX /eco. Console always can.
 lp group admin permission set avian.admin.economy true
 lp group admin permission set avian.hoe.admin true
+lp group admin permission set avian.sellwand.admin true
 lp group admin permission set avian.admin.chunkbuster true
 lp group admin permission set worldedit.* true
 lp group admin permission set worldguard.* true
