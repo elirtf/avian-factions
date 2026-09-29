@@ -1,8 +1,10 @@
 # Custom enchants
 
 Custom enchants come from **ExcellentEnchants** 5.4.3 (GPL-3.0, running on the nightcore library):
-81 vanilla-style enchants, of which we run 58. Players add them to gear with books in an anvil, up
-to 5 custom enchants per item. `/eenchants list` shows every enchant and what it does, and each
+81 vanilla-style enchants, of which we run 58. Players add them to gear with books in an anvil. An
+item holds **at most 6 enchantments in total**, vanilla and custom together (owner, 2026-09-29:
+spread power across sets instead of one overpowered set; `combat.conf` `max-enchantments-per-item`,
+enforced at the anvil by `EnchantLimit`). `/eenchants list` shows every enchant and what it does, and each
 book's tooltip carries its description (drawn through packetevents). Descriptions say "Chance to…"
 and never show the percentage (owner, 2026-09-29), so the numbers can be tuned freely.
 
