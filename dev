@@ -501,6 +501,7 @@ cmd_check_log() {
         'Enabling RoseStacker' \
         'ExcellentEnchants\] Loaded [0-9]+ enchantments' \
         'ExcellentEnchants\] Using tooltip handler: packetevents' \
+        'Enabling CrazyAuctions' \
         'auraskills-hikari - Start completed' \
         'AuraSkills\] Loaded [0-9]+ skills' \
         'ViaVersion detected server version' \

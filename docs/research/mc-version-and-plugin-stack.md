@@ -90,6 +90,15 @@ CoreProtect caveat noted below).
 | License | GPL-3.0 all three (https://github.com/nulli0n/ExcellentEnchants-spigot, https://github.com/retrooper/packetevents) |
 | Why | 81 vanilla-style custom enchants from config; the token Enchanter sells them by tier (docs/ENCHANTS.md). packetevents is optional for EE but without it enchant descriptions never show in tooltips, and EE logs an ERROR at boot. |
 | Checked on 26.1.2 | 2026-09-29, scratch server with GrimAC, ViaVersion, CrazyCrates, Vault, EssentialsX: 69 enchants load, no errors; GrimAC loads its own shaded packetevents beside the plugin without conflict; a force-opened book crate gives a real book whose tooltip shows its description; nightcore connects to MariaDB. |
+### CrazyAuctions
+
+| | |
+|---|---|
+| Version | **26.1.2-f6e007a** (Modrinth, 2026-07-27, tagged beta; the only release, 1.7.0, is from January 2025) |
+| Download | https://cdn.modrinth.com/data/U3Q9GAst/versions/iFnIal8K/CrazyAuctions-26.1.2-f6e007a.jar (sha256 `5ffe51d35a758bb274beb8b9cd8c7fead4c750b2288708122f3fd9004e1ba80b`) |
+| License | MIT (https://github.com/Crazy-Crew/CrazyAuctions, last push 2026-09-23) |
+| Why | Auction house with a listing fee and sale tax (a money sink), from the CrazyCrates team. Fadah (Apache-2.0, MariaDB-backed) was the alternative, but its last release (2025-09) stops at 1.21.8. Storage is flat files, fine because the hub won't share the market. |
+| Checked on 26.1.2 | 2026-09-29, scratch server with Vault + EssentialsX economy: boots clean; a bot listed an item; `/ah` renders our menus (bare `#RRGGBB` hex works, `&#` and MiniMessage don't). Buying, the fee and the tax still need a live test. |
 
 ### LuckPerms
 

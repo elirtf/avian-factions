@@ -9,7 +9,7 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 | `plugins/Essentials/config.yml` | `unsafe-enchantments: true` (spec §22 custom enchants need levels above vanilla caps) |
 | `plugins/LuckPerms/config.yml` | `storage-method: mariadb`, database settings from `${AVIAN_DB_*}` (`luckperms_` tables) |
 | `plugins/CoreProtect/config.yml` | `use-mysql: true`, database settings from `${AVIAN_DB_*}` (`co_` tables) |
-| `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007) |
+| `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007); `factionMemberLimit = 10` (hard cap, HCF-style) |
 | `plugins/FactionsUUID/config/translations.conf` | Role names: Leader, Co-Leader, Officer, Member, Recruit |
 | `plugins/RoseStacker/config.yml` | Only spawners stack (block stacking off); spawners are raidable: TNT drops 75% as items, destroys the rest |
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
@@ -30,6 +30,7 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 | `plugins/nightcore/engine.yml` | nightcore (ExcellentEnchants' library) on MariaDB, settings from `${AVIAN_DB_*}` |
 | `plugins/CrazyCrates/crates/Enchant*.yml` | The Enchanter's three book rolls, hidden from `/crates` (generated; see docs/ENCHANTS.md) |
 | `plugins/DeluxeMenus/gui_menus/enchanter.yml` | `/enchanter`: tokens for a random book by tier |
+| `plugins/CrazyAuctions/config.yml`, `messages.yml` | The auction house (`/ah`): $100 listing fee, 5 % tax, prices $10 to $10M, menus and messages in the Brand palette. Menu text takes BARE `#RRGGBB` hex (not `&#`) and no MiniMessage; messages are MiniMessage. See docs/ECONOMY.md |
 | `plugins/FancyAnalytics/config.json` | FancyNpcs' telemetry off (`send_metrics`, `send_errors`). Its uploads sometimes fail and log an ERROR, which failed CI's log check (PR #80, 2026-09-29) |
 | `plugins/Geyser-Spigot/config.yml` | `java.auth-type: floodgate` (Bedrock players need no Java account); MOTD and `server-name` say Avian Factions. See `docs/research/bedrock-crossplay.md` |
 | `plugins/CarbonChat/channels/global.conf` | The chat line: name, rank tag, a dim ➜, the message. Hovering the name shows rank, balance, tokens, gems and faction; clicking it starts a `/msg`. `%avian_*%` placeholders come from our plugin (`AvianPlaceholders`) |

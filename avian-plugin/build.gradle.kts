@@ -222,6 +222,12 @@ val pluginStack = listOf(
     PinnedPlugin("packetevents-spigot-2.14.0.jar",
         "https://cdn.modrinth.com/data/HYKaKraK/versions/m78nFxYg/packetevents-spigot-2.14.0.jar",
         "SHA-256", "060087c58ec268eae7dd0eb1f17ac3bea1eaadda1693414141ff64e506091bd7"),
+    // CrazyAuctions (MIT, same team as CrazyCrates): the auction house, /ah. Its only release (1.7.0)
+    // predates 26.x; this is the 26.1.2 build from 2026-07-27, tagged beta like every CrazyCrates build,
+    // so the hash is the pin. Boot-tested on a scratch 26.1.2 server. Config: dev-server/plugins/CrazyAuctions.
+    PinnedPlugin("CrazyAuctions-26.1.2-f6e007a.jar",
+        "https://cdn.modrinth.com/data/U3Q9GAst/versions/iFnIal8K/CrazyAuctions-26.1.2-f6e007a.jar",
+        "SHA-256", "5ffe51d35a758bb274beb8b9cd8c7fead4c750b2288708122f3fd9004e1ba80b"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

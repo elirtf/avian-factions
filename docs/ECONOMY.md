@@ -161,6 +161,23 @@ give a reward from a separate line: it would pay out whether or not the charge s
 
 **The Enchanter** (`/enchanter`) sells random custom-enchant books the same way: Common 150,
 Rare 500, Legendary 1,500 tokens. See [ENCHANTS.md](ENCHANTS.md).
+## Auction house
+
+`/ah` (CrazyAuctions, `dev-server/plugins/CrazyAuctions/`): players sell to players, at a fixed price
+(`/ah sell <price>`) or by auction (`/ah bid <start price>`). It's the money sink the shop can't be,
+because the money changes hands between players:
+
+| | |
+|---|---|
+| Listing fee | **$100**, paid up front and kept if the item doesn't sell, so listings aren't spam |
+| Tax | **5 %** of every sale |
+| Price range | $10 to $10,000,000 (the plugin's default $1M cap was below an iron golem spawner) |
+| Listings at once | Hatchling 5, Fledgling 8 (`crazyauctions.sell.<n>` / `bid.<n>` in `ranks.lp`; paid ranks inherit 8) |
+| Duration | 2 days for a fixed-price listing, 2.5 minutes for an auction; unsold items wait 10 days in `/ah collect` |
+
+Damaged items can't be listed. Every player needs a `crazyauctions.sell.<n>` permission: with none,
+the plugin allows **unlimited** listings. Listings are stored in the plugin's own files, not
+MariaDB. That's fine, since the hub won't share this market (owner, 2026-09-29).
 
 ## PvP consumables
 
@@ -169,8 +186,10 @@ Cooldowns in `combat.conf`:
 - Enchanted golden apple: 60 s.
 - Golden apple: 10 s.
 - Totem of undying: 60 s. A totem that pops during its cooldown does not save the player.
+- Ender pearl: 16 s (vanilla is 1 s), as on HCF servers.
 
-The cooldown shows on the item like a vanilla one and survives relogging and dying.
+The cooldown shows on the item like a vanilla one and survives relogging and dying, so relogging
+never resets a pearl.
 
 ## Crates
 

@@ -1,0 +1,320 @@
+# AVIAN: the auction house (/ah), CrazyAuctions 26.1.2-f6e007a. Prices and the reasoning are in
+# docs/ECONOMY.md → Auction house. Menu text is legacy: &-codes plus BARE #RRGGBB hex (not &#RRGGBB,
+# which leaves a stray "&"; not MiniMessage, which prints raw). Messages (messages.yml) are MiniMessage.
+# Colours are the Brand palette: sun #FFD23F, hot #FF7A45, money #4CE08A, soft #B8B8C8, dim #6E6E80,
+# click green #7CFF4F, bad #FF5C5C. Slots here count from 1 (54 = bottom-right).
+Settings:
+  Prefix: '<#FFD23F>⚖</#FFD23F> ' #Prefix of when you get Crazy Auctions Messages.
+  # The page number is appended to the title.
+  GUIName: '#FFD23F&lA#FFCB40&lu#FFC340&lc#FFBC41&lt#FFB541&li#FFAD42&lo#FFA642&ln #FF9743&lH#FF9043&lo#FF8944&lu#FF8144&ls#FF7A45&le #6E6E80· ' #Name of the Main GUI.
+  Players-Current-Items: '#FFD23F&lYour listings' #The Name of the Player Current Items GUI.
+  Cancelled/Expired-Items: '#FFD23F&lCollect your items' #Name of the Cancelled/Expired GUI.
+  Buying-Item: '#FFD23F&lBuy this item?' #Name of the Buying GUI.
+  Bidding-On-Item: '#FFD23F&lPlace a bid' #Name of the Bidding GUI.
+  Categories: '#FFD23F&lCategories' #Name of the Category GUI.
+  Sell-Time: 2d #The time that each item will sell for.
+  Bid-Time: 2m 30s #Time for each item that is biddable.
+  Full-Expire-Time: 10d #The full time the item is in the crazy auctions.
+  Bid-Winner-Time: 20d #The time the winner of a bid has to claim their prize.
+  # AVIAN: the money sinks. The fee is paid up front and kept even if the item doesn't sell, so
+  # listings aren't spam; the tax comes off every sale.
+  Auction-List-Fee: 100 # The amount the player has to pay to list an item.
+  Percent-Tax: 5.0 # The amount of tax the player has to pay when the item is purchased.
+  # AVIAN: $10M ceiling so iron golem spawners ($600k in /shop) and end-game gear fit. Keep the
+  # Sell-Price-To-High / Bid-Price-To-High messages in step.
+  Minimum-Sell-Price: 10 #Minimum amount you can sell an item for.
+  Max-Beginning-Sell-Price: 10000000 #Max amount you can sell an item for.
+  Minimum-Bid-Price: 100 #Minimum starting bid.
+  Max-Beginning-Bid-Price: 10000000 #Maximum starting bid.
+  Allow-Damaged-Items: false #Allow items that have been damaged.
+  Category-Page-Opens-First: false #If set to true the categories' page will open when they do /CA.
+  Feature-Toggle: #Toggle if a feature is on or off.
+    Selling: true #Able to use the selling part of the auction house.
+    Bidding: true #Able to use the bidding part of the auction house.
+  Repeating-Message:
+    # If true, a message is sent if a player has an item in Expired/Canceled Inventory
+    Toggle: true
+    # The message to send.
+    Message: "<#FFD23F>⚖</#FFD23F> <#B8B8C8>Some of your auction items came back. Collect them with</#B8B8C8> <#7CFF4F>/ah collect</#7CFF4F>"
+    # The interval in ticks(20 ticks = 1 second), if set to 0 will only send once when they join.
+    Interval: 0
+  Patches:
+    Macro-Dupe: true #Turn to false if you have an issue, but it should patch the bug.
+  Sounds:
+    Toggle: true #Disable the clicking sound.
+    Sound: 'UI_BUTTON_CLICK' #Make sure if you use 1.8 or lower you use the 1.8 sound and 1.9 and up use 1.9 sounds. The default sound is 1.8.
+  Sold-Item-Sound: 'ENTITY_PLAYER_LEVELUP'
+    #Sounds are found here: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+  GUISettings: #Settings for things in the gui.
+    SellingItemLore: #The lore on items that are being sold.
+      - ''
+      - '#6E6E80◆ #B8B8C8Price  #4CE08A$%price%'
+      - '#6E6E80◆ #B8B8C8Seller  #FFFFFF%seller%'
+      - ''
+      - '#7CFF4F▶ Click #6E6E80· #B8B8C8Buy it'
+    CurrentLore: #Lore on items that are in your current items GUI.
+      - ''
+      - '#6E6E80◆ #B8B8C8Price  #4CE08A$%price%'
+      - '#6E6E80◆ #B8B8C8Expires in  #FFFFFF%time%'
+      - ''
+      - '#FF5C5C▶ Click #6E6E80· #B8B8C8Take it off the market'
+    Cancelled/ExpiredLore: #Lore on items that are in your canceled/expired GUI.
+      - ''
+      - '#6E6E80◆ #B8B8C8Gone for good in  #FF7A45%time%'
+      - ''
+      - '#7CFF4F▶ Click #6E6E80· #B8B8C8Take it back'
+    Bidding: #Lore on Bidding Items.
+      - ''
+      - '#6E6E80◆ #B8B8C8Seller  #FFFFFF%seller%'
+      - '#6E6E80◆ #B8B8C8Top bid  #4CE08A$%topbid%'
+      - '#6E6E80◆ #B8B8C8Top bidder  #FFFFFF%topbidder%'
+      - '#6E6E80◆ #B8B8C8Ends in  #FF7A45%time%'
+      - ''
+      - '#7CFF4F▶ Click #6E6E80· #B8B8C8Bid'
+    Category-Settings:
+      Armor:
+        Item: 'NETHERITE_CHESTPLATE'
+        Toggle: true
+        Slot: 11
+        Name: '#FFD23F&lArmor'
+        Lore:
+          - '#B8B8C8Armor for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Weapons:
+        Item: 'NETHERITE_SWORD'
+        Toggle: true
+        Slot: 12
+        Name: '#FFD23F&lWeapons'
+        Lore:
+          - '#B8B8C8Weapons for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Tools:
+        Item: 'DIAMOND_PICKAXE'
+        Toggle: true
+        Slot: 13
+        Name: '#FFD23F&lTools'
+        Lore:
+          - '#B8B8C8Tools for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Food:
+        Item: 'GOLDEN_CARROT'
+        Toggle: true
+        Slot: 14
+        Name: '#FFD23F&lFood'
+        Lore:
+          - '#B8B8C8Food for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Potions:
+        Item: 'POTION'
+        Toggle: true
+        Slot: 15
+        Name: '#FFD23F&lPotions'
+        Lore:
+          - '#B8B8C8Potions for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Blocks:
+        Item: 'SPAWNER'
+        Toggle: true
+        Slot: 16
+        Name: '#FFD23F&lBlocks'
+        Lore:
+          - '#B8B8C8Blocks and spawners for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      Other:
+        Item: 'SUGAR_CANE'
+        Toggle: true
+        Slot: 17
+        Name: '#FFD23F&lEverything else'
+        Lore:
+          - '#B8B8C8Items that fit no other category.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+      None:
+        Item: 'COMPASS'
+        Toggle: true
+        Slot: 23
+        Name: '#FFD23F&lAll items'
+        Lore:
+          - '#B8B8C8Every listing, no filter.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Browse'
+    OtherSettings: #Other Settings for the GUIs.
+      SellingItems: #The button for your current items.
+        Item: 'GOLD_INGOT' #The item that this button is.
+        Toggle: true #If the item is in the gui or not.
+        Slot: 46 #The slot it is in. I recommend not changing these. If you do make sure they are still in the bottom row.
+        Name: '#FFD23F&lYour listings' #Name of the item.
+        Lore: #Lore of the item.
+          - '#B8B8C8What you have for sale right now.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Open'
+      Cancelled/ExpiredItems: #The button for Cancelled/Expired Items.
+        Item: 'HOPPER'
+        Toggle: true
+        Slot: 47
+        Name: '#FFD23F&lCollect'
+        Lore:
+          - '#B8B8C8Items that expired or you took down.'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Get them back'
+      PreviousPage: #The button for Previous Page.
+        Item: 'ARROW'
+        Toggle: true
+        Slot: 49
+        Name: '#FFD23F&l◀ Previous page'
+        Lore: { }
+      Refresh: #The button for Refresh Page.
+        Item: 'SUNFLOWER'
+        Toggle: true
+        Slot: 50
+        Name: '#FFD23F&l⟳ Refresh'
+        Lore: { }
+      NextPage: #The button for Next Page.
+        Item: 'ARROW'
+        Toggle: true
+        Slot: 51
+        Name: '#FFD23F&lNext page ▶'
+        Lore: { }
+      Category1: #The button for Next Page.
+        Item: 'CHEST'
+        Toggle: true
+        Slot: 52
+        Name: '#FFD23F&lCategories'
+        Lore:
+          - '#6E6E80◆ #B8B8C8Showing  #FFFFFF%category%'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Pick a category'
+      Category2: #The button for Next Page.
+        Item: 'CHEST'
+        Toggle: true
+        Slot: 48
+        Name: '#FFD23F&lCategories'
+        Lore:
+          - '#6E6E80◆ #B8B8C8Showing  #FFFFFF%category%'
+          - ''
+          - '#7CFF4F▶ Click #6E6E80· #B8B8C8Pick a category'
+      Bidding/Selling: #Switch between Bidding and Selling.
+        Selling:
+          Item: 'EMERALD'
+          Toggle: true
+          Slot: 53
+          Name: '#FFD23F&lBuy now'
+          Lore:
+            - '#B8B8C8You''re looking at fixed-price items.'
+            - ''
+            - '#7CFF4F▶ Click #6E6E80· #B8B8C8Show auctions to bid on'
+        Bidding:
+          Item: 'CLOCK'
+          Toggle: true
+          Slot: 53
+          Name: '#FFD23F&lAuctions'
+          Lore:
+            - '#B8B8C8You''re looking at items to bid on.'
+            - ''
+            - '#7CFF4F▶ Click #6E6E80· #B8B8C8Show fixed-price items'
+      WhatIsThis: #The info on all the Books buttons.
+        SellingShop: #The Book in the main shop.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 54
+          Name: '#FFD23F&l? How it works'
+          Lore:
+            - '#B8B8C8Players sell to players here.'
+            - ''
+            - '#6E6E80◆ #B8B8C8Sell what you hold  #FFFFFF/ah sell <price>'
+            - '#6E6E80◆ #B8B8C8Auction it  #FFFFFF/ah bid <start price>'
+            - '#6E6E80◆ #B8B8C8Listing fee  #4CE08A$100'
+            - '#6E6E80◆ #B8B8C8Tax on a sale  #4CE08A5%'
+        BiddingShop: #The Book in the main shop.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 54
+          Name: '#FFD23F&l? How it works'
+          Lore:
+            - '#B8B8C8Bid on items; the top bid when the'
+            - '#B8B8C8timer ends wins.'
+            - ''
+            - '#6E6E80◆ #B8B8C8Auction what you hold  #FFFFFF/ah bid <start price>'
+            - '#6E6E80◆ #B8B8C8Collect winnings  #FFFFFF/ah collect'
+        CurrentItems: #The Book in the Current items GUI.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 54
+          Name: '#FFD23F&l? Your listings'
+          Lore:
+            - '#B8B8C8Everything you have for sale.'
+            - '#B8B8C8Click one to take it off the market.'
+        Cancelled/ExpiredItems: #The Book in the Canceled/Expired Items GUI.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 54
+          Name: '#FFD23F&l? Collect'
+          Lore:
+            - '#B8B8C8Items that expired or you took down.'
+            - '#B8B8C8Click one to take it back; it needs'
+            - '#B8B8C8room in your inventory.'
+        Viewing: #The Book in the Viewing Items GUI.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 50
+          Name: '#FFD23F&l? This player''s items'
+          Lore:
+            - '#B8B8C8Everything this player is selling'
+            - '#B8B8C8or auctioning right now.'
+        Categories: #The Book in the Viewing Items GUI.
+          Item: 'BOOK'
+          Toggle: true
+          Slot: 54
+          Name: '#FFD23F&l? Categories'
+          Lore:
+            - '#B8B8C8Pick one to see only those items.'
+      Back: #The Back Buttons.
+        Item: 'ARROW'
+        Slot: 46
+        Name: '#FFD23F&l◀ Back'
+      Return: #The Return Buttons.
+        Item: 'HOPPER'
+        Slot: 50
+        Name: '#7CFF4F&lTake everything back'
+        Lore:
+          - '#B8B8C8Returns all your expired and'
+          - '#B8B8C8taken-down items at once.'
+      Confirm: #The Confirm Buttons.
+        Item: 'LIME_STAINED_GLASS_PANE'
+        Name: '#7CFF4F&l✔ Confirm'
+      Cancel: #The Cancel Buttons.
+        Item: 'RED_STAINED_GLASS_PANE'
+        Name: '#FF5C5C&l✖ Cancel'
+      Your-Item: #The item that shows when you try to buy/bid on your item.
+        Item: 'BARRIER'
+        Name: '#FF5C5C&lThat''s your own item'
+      Cant-Afford: #The item that shows when you can't afford this item.
+        Item: 'BARRIER'
+        Name: '#FF5C5C&lYou can''t afford this'
+      Top-Bidder: #The item for when a player is already the top bidder.
+        Item: 'BARRIER'
+        Name: '#FF5C5C&lYou''re already the top bidder'
+      Bidding: #The item in the middle when bidding on an item.
+        Item: 'GOLD_INGOT'
+        Name: '#FFD23F&lYour bid'
+        Lore:
+          - '#6E6E80◆ #B8B8C8Your bid  #4CE08A$%Bid%'
+          - '#6E6E80◆ #B8B8C8Top bid  #4CE08A$%topbid%'
+          - ''
+          - '#7CFF4F◀ Add #6E6E80· #FF5C5CRemove ▶'
+      Bid: #The button for when you want to confirm your bid.
+        Item: 'LIME_STAINED_GLASS_PANE'
+        Name: '#7CFF4F&l✔ Bid now'
+        Lore:
+          - '#B8B8C8Places your bid.'
+  BlackList:
+    - 'bedrock'
+    - 'end_portal_frame'
+  PDC-BlackList:
+    - 'mcmmo:super_ability_boosted'

@@ -1,6 +1,9 @@
 package club.avian.factions.combat;
 
+import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import io.papermc.paper.event.player.PlayerItemCooldownEvent;
 import org.bukkit.Material;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -16,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Gapple and totem cooldowns, with the defaults: notch 60 s, golden 10 s, totem 60 s. */
+/** Gapple, totem and pearl cooldowns, with the defaults: notch 60 s, golden 10 s, totem 60 s, pearl 16 s. */
 class ConsumableCooldownsTest {
 
     ServerMock server;
@@ -53,6 +56,42 @@ class ConsumableCooldownsTest {
             cooldowns.onTotemUsed(event);
         }
         return !event.isCancelled();
+    }
+
+    /** Throws one, as the server would: the check, then (if allowed) the record and vanilla's 1 s cooldown. */
+    private boolean throwPearl() {
+        var pearl = player.getWorld().spawn(player.getLocation(), EnderPearl.class);
+        var event = new PlayerLaunchProjectileEvent(player, new ItemStack(Material.ENDER_PEARL), pearl);
+        cooldowns.onPearl(event);
+        if (!event.isCancelled()) {
+            cooldowns.onPearlThrown(event);
+        }
+        return !event.isCancelled();
+    }
+
+    @Test
+    void aSecondPearlWaitsSixteenSeconds() {
+        assertTrue(throwPearl());
+        now += 15_000;
+        assertFalse(throwPearl(), "still cooling down at 15 s");
+        now += 1_000;
+        assertTrue(throwPearl());
+    }
+
+    @Test
+    void vanillasOneSecondPearlCooldownIsStretchedToOurs() {
+        assertTrue(throwPearl());
+        now += 4_000;
+        var vanilla = new PlayerItemCooldownEvent(player, Material.ENDER_PEARL, Material.ENDER_PEARL.getKey(), 20);
+        cooldowns.onVanillaCooldown(vanilla);
+        assertEquals(12 * 20, vanilla.getCooldown(), "12 s left, in ticks");
+    }
+
+    @Test
+    void otherItemCooldownsAreLeftAlone() {
+        var shield = new PlayerItemCooldownEvent(player, Material.SHIELD, Material.SHIELD.getKey(), 100);
+        cooldowns.onVanillaCooldown(shield);
+        assertEquals(100, shield.getCooldown());
     }
 
     @Test
