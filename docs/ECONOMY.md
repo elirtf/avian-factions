@@ -112,6 +112,36 @@ keeps them when traded or stored. Neighbouring columns are only harvested where 
 break them (claims, WorldGuard). Admins can give one with `/hoe give <player>`
 (`avian.hoe.admin`).
 
+## Token shop
+
+`/tokenshop` (or `/tshop`) is where tokens are spent. It's a DeluxeMenus menu
+(`dev-server/plugins/DeluxeMenus/gui_menus/token_shop.yml`), and it's the in-game route to every
+key and wand the store sells (ADR-0006).
+
+| Item | Tokens | Why this price |
+|---|---|---|
+| Common key | 200 | About 5–10 hours of hand farming: a first goal for a new player |
+| Rare key | 600 | |
+| Epic key | 1,500 | |
+| Legendary key | 4,000 | |
+| Mythic key | 10,000 | Hoe-farming territory; also reached through the crate chain |
+| Sell wand | 250 | Cheap enough to be a new player's first auto-farm tool |
+| Gilded sell wand | 1,500 | |
+| Eternal sell wand | 12,000 | Permanent ×1.25 on every chest: the long-term token sink |
+
+Each key costs 2½ to 3 times the one below. A key never returns more tokens on average than it
+costs. A Mythic crate averages about 500 tokens in prizes, plus a 1-in-9 chance of two Legendary
+keys: about 1,500 tokens in all against a 10,000 price. So buying keys can never be a token farm. Right-click a key to buy five at
+the same unit price.
+
+Every button runs `tokens charge <player> <cost> <reason> <reward command>` as the console. The
+withdrawal is atomic, so a double-click can't spend the same tokens twice. The reward runs only
+if the payment went through, and it's refunded if the reward fails (for example, an unknown
+command or a player who logged out). Both halves land in the audit trail as `shop:<item>` and
+`refund:shop:<item>`. To add an item, copy a button and change the cost, reason and command. Never
+give a reward from a separate line: it would pay out whether or not the charge succeeded.
+`gems charge` works the same way for a future gem shop.
+
 ## PvP consumables
 
 Cooldowns in `combat.conf`:

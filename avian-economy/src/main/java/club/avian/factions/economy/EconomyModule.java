@@ -76,7 +76,9 @@ public final class EconomyModule implements AvianModule {
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
         // /tokens and /gems: your balance; give|take|set is how crates, votes and events pay out (#26).
-        for (var node : new EconomyCommand(economy, mainThread).build()) {
+        var purchase = new Purchase(economy, mainThread,
+                command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), ctx.logger());
+        for (var node : new EconomyCommand(economy, mainThread, purchase).build()) {
             ctx.commands().register(node, "Your " + node.getLiteral() + "; admins give, take or set them");
         }
 

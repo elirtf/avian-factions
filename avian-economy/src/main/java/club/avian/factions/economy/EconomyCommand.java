@@ -31,7 +31,11 @@ import java.util.concurrent.Executor;
  * <pre>
  * /tokens|gems give|take|set &lt;player&gt; &lt;amount&gt; [reason]
  * /tokens|gems &lt;player&gt;
+ * /tokens|gems charge &lt;player&gt; &lt;cost&gt; &lt;reason&gt; &lt;reward command&gt;
  * </pre>
+ *
+ * <p>{@code charge} is for click menus (the token shop): it takes the cost from an online player and
+ * runs the reward command only if the payment went through; see {@link Purchase}.
  *
  * <p>Money has no command here: it is Vault's economy (see {@link VaultEconomyBridge}), so
  * EssentialsX's {@code /bal} and {@code /eco give|take|set} already read and write it.
@@ -46,11 +50,13 @@ final class EconomyCommand {
 
     private final Economy economy;
     private final Executor mainThread;
+    private final Purchase purchase;
 
     /** {@code mainThread} runs replies on the server thread; transactions complete on the DB thread. */
-    EconomyCommand(Economy economy, Executor mainThread) {
+    EconomyCommand(Economy economy, Executor mainThread, Purchase purchase) {
         this.mainThread = mainThread;
         this.economy = economy;
+        this.purchase = purchase;
     }
 
     /** One root command per currency players carry besides money: {@code /tokens}, {@code /gems}. */
@@ -73,7 +79,26 @@ final class EconomyCommand {
                                     .then(Commands.argument("reason", StringArgumentType.greedyString())
                                             .executes(ctx -> run(ctx, currency, action, StringArgumentType.getString(ctx, "reason")))))));
         }
+        node.then(Commands.literal("charge")
+                .requires(src -> src.getSender().hasPermission(PERMISSION))
+                .then(Commands.argument("player", StringArgumentType.word())
+                        .then(Commands.argument("cost", LongArgumentType.longArg(1))
+                                .then(Commands.argument("reason", StringArgumentType.word())
+                                        .then(Commands.argument("reward", StringArgumentType.greedyString())
+                                                .executes(ctx -> charge(ctx, currency)))))));
         return node;
+    }
+
+    private int charge(CommandContext<CommandSourceStack> ctx, Currency currency) {
+        var name = StringArgumentType.getString(ctx, "player");
+        var player = Bukkit.getPlayerExact(name);
+        if (player == null) {
+            ctx.getSource().getSender().sendMessage(Component.text(name + " is not online.", NamedTextColor.RED));
+            return 0;
+        }
+        purchase.buy(player, currency, LongArgumentType.getLong(ctx, "cost"),
+                StringArgumentType.getString(ctx, "reason"), StringArgumentType.getString(ctx, "reward"));
+        return 1;
     }
 
     enum Action { GIVE, TAKE, SET }
@@ -119,7 +144,8 @@ final class EconomyCommand {
                     "Players only; use /" + currency.name().toLowerCase(Locale.ROOT) + " <player>.", NamedTextColor.RED));
             return 0;
         }
-        player.sendMessage(Brand.mm("<soft>You have " + tagged(currency, economy.balance(player.getUniqueId(), currency)) + ".</soft>"));
+        String spend = currency == Currency.TOKENS ? " <dim>·</dim> <cane>/tokenshop</cane> <soft>to spend them</soft>" : "";
+        player.sendMessage(Brand.mm("<soft>You have " + tagged(currency, economy.balance(player.getUniqueId(), currency)) + ".</soft>" + spend));
         return 1;
     }
 
