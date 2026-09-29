@@ -57,6 +57,13 @@ public final class EconomyConfig {
             otherwise produce free what iron golem spawners (the top spawner tier) are sold for.""")
     private boolean villagerIronGolems = false;
 
+    @Comment("""
+            Fishing skill XP (AuraSkills) for custom-enchant catches. A Double Catch that doubles the fish
+            earns the catch's XP again when true; Seasoned Angler adds this fraction per level
+            (0.10 = +10 % a level). Vanilla XP orbs are the enchant's own business.""")
+    private boolean doubleCatchSkillXp = true;
+    private double seasonedAnglerSkillXpPerLevel = 0.10;
+
     private static Map<String, Long> defaultSellValues() {
         var values = new LinkedHashMap<String, Long>();
         // Fallback only: with EconomyShopGUI installed its /shop prices win (docs/ECONOMY.md).
@@ -116,6 +123,14 @@ public final class EconomyConfig {
         return villagerIronGolems;
     }
 
+    public boolean doubleCatchSkillXp() {
+        return doubleCatchSkillXp;
+    }
+
+    public double seasonedAnglerSkillXpPerLevel() {
+        return seasonedAnglerSkillXpPerLevel;
+    }
+
     static void validate(EconomyConfig cfg, ConfigErrors e) {
         e.check(cfg.seasonId >= 1, "season-id", "must be >= 1");
         e.check(cfg.startingMoney >= 0, "starting-money", "must be >= 0");
@@ -123,6 +138,7 @@ public final class EconomyConfig {
         e.check(cfg.startingGems >= 0, "starting-gems", "must be >= 0");
         e.check(cfg.sugarCaneTokenChance >= 0 && cfg.sugarCaneTokenChance <= 1, "sugar-cane-token-chance", "must be 0-1");
         e.check(cfg.sugarCaneTokens >= 0, "sugar-cane-tokens", "must be >= 0");
+        e.check(cfg.seasonedAnglerSkillXpPerLevel >= 0, "seasoned-angler-skill-xp-per-level", "must be >= 0");
         for (var entry : cfg.sellValues.entrySet()) {
             if (org.bukkit.Material.matchMaterial(entry.getKey()) == null) {
                 e.add("sell-values." + entry.getKey(), "is not a Minecraft material");

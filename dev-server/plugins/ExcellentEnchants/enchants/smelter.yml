@@ -8,7 +8,7 @@ Definition:
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:
-  - <gray>Smelts mined blocks with %enchantment_trigger_chance%% chance.</gray>
+  - <gray>Chance to smelt mined blocks.</gray>
   # Weight affects the chance of getting an enchantment from enchanting or loots.
   # Value between 1 and 1024 (inclusive).
   # [*] Reboot required when changed.

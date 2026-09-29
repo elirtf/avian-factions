@@ -32,38 +32,74 @@ const DISABLED = {
   rocket: 'launches players into the sky: fall-damage kills',
   soulbound: 'keeps items on death: PvP loot has to drop',
   curse_of_death: 'kills the killer: no place in factions PvP',
+  // Owner, 2026-09-29: curses and these don't earn their place.
+  curse_of_breaking: 'curses removed (owner)',
+  curse_of_drowned: 'curses removed (owner)',
+  curse_of_fragility: 'curses removed (owner)',
+  curse_of_mediocrity: 'curses removed (owner)',
+  curse_of_misfortune: 'curses removed (owner)',
+  cutter: 'removed (owner)',
+  fire_shield: 'removed (owner)',
+  flare: 'removed (owner)',
+  hover: 'removed (owner)',
+  nimble: 'removed (owner)',
+  telekinesis: 'removed (owner)',
 };
 
-// Tiers. Colours match the crates (docs/ECONOMY.md): Common #C9C9C9, Rare #4DA3FF, Legendary #FFB84D.
+// Tiers. Colours match the crates (docs/ECONOMY.md): Common #C9C9C9, Rare #4DA3FF, Legendary #FFB84D,
+// Mythic #FF4F7A.
 const TIERS = {
   Common: {
     colour: '#C9C9C9',
     enchants: ['glassbreaker', 'lightweight', 'lucky_miner', 'smelter', 'haste', 'replanter', 'river_master',
-      'seasoned_angler', 'double_catch', 'auto_reel', 'flare', 'sniper', 'hover', 'jumping', 'saturation',
-      'night_vision', 'water_breathing', 'wisdom', 'village_defender', 'bane_of_netherspawn', 'cure',
-      'survivalist', 'lingering'],
+      'seasoned_angler', 'double_catch', 'sniper', 'jumping', 'saturation', 'night_vision', 'water_breathing',
+      'wisdom', 'village_defender', 'bane_of_netherspawn', 'cure', 'survivalist', 'lingering'],
   },
   Rare: {
     colour: '#4DA3FF',
-    enchants: ['venom', 'blindness', 'confusion', 'exhaust', 'ice_aspect', 'cold_steel', 'ice_shield',
-      'fire_shield', 'hardened', 'stopping_force', 'poisoned_arrows', 'withered_arrows', 'darkness_arrows',
-      'confusing_arrows', 'electrified_arrows', 'vampiric_arrows', 'telekinesis', 'nimble', 'veinminer',
-      'treefeller', 'speed', 'restore', 'elemental_protection', 'decapitator', 'swiper', 'rage', 'wither',
-      'infernus'],
+    enchants: ['venom', 'blindness', 'confusion', 'exhaust', 'cold_steel', 'hardened', 'poisoned_arrows',
+      'withered_arrows', 'darkness_arrows', 'confusing_arrows', 'electrified_arrows', 'vampiric_arrows',
+      'veinminer', 'treefeller', 'speed', 'restore', 'elemental_protection', 'decapitator', 'swiper', 'rage',
+      'wither', 'infernus'],
   },
   Legendary: {
     colour: '#FFB84D',
     treasure: true,   // not from enchanting tables; loot, fishing, trades and the Enchanter only
-    enchants: ['vampire', 'double_strike', 'temper', 'thunder', 'paralyze', 'cutter', 'dragon_heart',
-      'regrowth', 'darkness_cloak', 'tunnel', 'flame_walker', 'rebound', 'dragonfire_arrows'],
+    enchants: ['vampire', 'double_strike', 'temper', 'thunder', 'paralyze', 'dragon_heart', 'regrowth',
+      'darkness_cloak', 'tunnel', 'flame_walker', 'rebound', 'dragonfire_arrows'],
+  },
+  // Owner, 2026-09-29: these four are too strong or too good for their old tier.
+  Mythic: {
+    colour: '#FF4F7A',
+    treasure: true,
+    enchants: ['auto_reel', 'ice_aspect', 'ice_shield', 'stopping_force'],
   },
 };
-// Curses stay as the plugin ships them: loot-only downsides, never sold.
-const CURSES = ['curse_of_breaking', 'curse_of_drowned', 'curse_of_fragility', 'curse_of_mediocrity',
-  'curse_of_misfortune'];
+// Curses were kept as shipped until the owner removed them (2026-09-29); none left.
+const CURSES = [];
+
+// Trigger chance overrides (percent at level I, added per level).
+const TRIGGER_CHANCE = { stopping_force: { base: 25, perLevel: 10 } };   // was 100 % on every hit
 
 // Max level overrides: strong permanent effects.
 const MAX_LEVEL = { dragon_heart: 2, speed: 1 };
+
+// Players see "Chance to …", never the percentage (owner, 2026-09-29): the numbers stay tunable
+// without the descriptions promising them. Only the Description lines change.
+function hideChances(e, text) {
+  const chance = '%enchantment_trigger_chance%%';
+  const out = text.replace(/^(  Description:\n)((?:  - .*\n)+)/m, (m, head, lines) => head + lines
+    .replaceAll(`Smelts mined blocks with ${chance} chance.`, 'Chance to smelt mined blocks.')
+    .replaceAll(`Increases amount of caught item by x2 with ${chance} chance.`, 'Chance to double the caught item.')
+    .replaceAll(`${chance} chance to `, 'Chance to ')
+    .replaceAll(`${chance} chance for `, 'Chance for '));
+  const desc = out.match(/^  Description:\n((?:  - .*\n)+)/m)?.[1] ?? '';
+  if (desc.includes('%enchantment_trigger_chance%')) {
+    console.error(`${e}: a description still shows a chance percentage; add a rewrite for it:\n${desc}`);
+    process.exit(1);
+  }
+  return out;
+}
 
 const files = fs.readdirSync(defaults).filter((f) => f.endsWith('.yml'));
 const all = files.map((f) => f.replace(/\.yml$/, ''));
@@ -101,10 +137,21 @@ for (const e of all) {
   for (const d of Object.keys(DISABLED)) text = text.replace(new RegExp(`^  - excellentenchants:${d}\\n`, 'gm'), '');
   text = text.replace(/^  Exclusives:\n(?!  - )/m, '  Exclusives: []\n');
   if (MAX_LEVEL[e]) text = text.replace(/^  MaxLevel: \d+$/m, `  MaxLevel: ${MAX_LEVEL[e]}`);
+  if (TRIGGER_CHANCE[e]) {
+    const { base, perLevel } = TRIGGER_CHANCE[e];
+    text = text.replace(/^(Probability:\n  Trigger_Chance:\n    Base: )[\d.]+(\n    Per_Level: )[\d.]+/m, `$1${base}.0$2${perLevel}.0`);
+  }
+  text = hideChances(e, text);
   levels[e] = +text.match(/^  MaxLevel: (\d+)$/m)[1];
   const header = tier ? `# AVIAN: ${tier} tier (docs/ENCHANTS.md).` : '# AVIAN: curse, as shipped; loot only.';
   fs.writeFileSync(path.join(out, e + '.yml'), header + (MAX_LEVEL[e] ? ` Max level capped at ${MAX_LEVEL[e]}.` : '') + '\n' + text);
 }
+
+// --- item types: the plugin ships "Brekable" as the display name of the breakable set ----------
+const itemTypes = fs.readFileSync(path.join(defaults, '..', 'item_types.yml'), 'utf8');
+fs.writeFileSync(path.join(out, '..', 'item_types.yml'),
+  '# AVIAN: the plugin\'s default item sets, with its "Brekable" typo fixed (tools/enchant-tiers.mjs).\n'
+  + itemTypes.replace(/^    Name: Brekable$/m, '    Name: Breakable'));
 
 // --- the Enchanter's crates -------------------------------------------------------------------
 const roman = ['', 'I', 'II', 'III', 'IV', 'V'];
@@ -115,6 +162,7 @@ const blurb = {
   Common: 'Utility and grinding enchants.',
   Rare: 'Combat effects, arrows and better tools.',
   Legendary: 'The strongest enchants on the server.',
+  Mythic: 'The rarest enchants of all.',
 };
 for (const [tier, t] of Object.entries(TIERS)) {
   let prizes = '';

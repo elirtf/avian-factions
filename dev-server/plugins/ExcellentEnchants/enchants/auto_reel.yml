@@ -1,10 +1,10 @@
-# AVIAN: Common tier (docs/ENCHANTS.md).
+# AVIAN: Mythic tier (docs/ENCHANTS.md).
 Definition:
   # Enchantment display name.
   # https://docs.advntr.dev/minimessage/format.html#standard-tags
   # [*] Only one color and decorations are allowed.
   # [*] Reboot required when changed.
-  DisplayName: <c:#C9C9C9>Auto Reel</c>
+  DisplayName: <c:#FF4F7A>Auto Reel</c>
   # Enchantment description.
   # [*] Reboot required when changed.
   Description:

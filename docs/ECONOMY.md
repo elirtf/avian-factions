@@ -160,7 +160,7 @@ give a reward from a separate line: it would pay out whether or not the charge s
 `gems charge` works the same way for a future gem shop.
 
 **The Enchanter** (`/enchanter`) sells random custom-enchant books for **XP levels**, not tokens:
-Common 10, Rare 20, Legendary 30. See [ENCHANTS.md](ENCHANTS.md).
+Common 10, Rare 20, Legendary 30, Mythic 40. See [ENCHANTS.md](ENCHANTS.md).
 ## Auction house
 
 `/ah` (CrazyAuctions, `dev-server/plugins/CrazyAuctions/`): players sell to players, at a fixed price

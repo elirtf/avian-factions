@@ -154,372 +154,282 @@ Crate:
       Weight: 1
       Commands: ["eenchants book excellentenchants:exhaust 4 %player%"]
     "11":
-      DisplayName: "<bold><#4DA3FF>Ice Aspect I</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:ice_aspect 1 %player%"]
-    "12":
-      DisplayName: "<bold><#4DA3FF>Ice Aspect II</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:ice_aspect 2 %player%"]
-    "13":
-      DisplayName: "<bold><#4DA3FF>Ice Aspect III</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:ice_aspect 3 %player%"]
-    "14":
       DisplayName: "<bold><#4DA3FF>Cold Steel I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:cold_steel 1 %player%"]
-    "15":
+    "12":
       DisplayName: "<bold><#4DA3FF>Cold Steel II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:cold_steel 2 %player%"]
-    "16":
+    "13":
       DisplayName: "<bold><#4DA3FF>Cold Steel III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:cold_steel 3 %player%"]
-    "17":
-      DisplayName: "<bold><#4DA3FF>Ice Shield I</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:ice_shield 1 %player%"]
-    "18":
-      DisplayName: "<bold><#4DA3FF>Ice Shield II</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:ice_shield 2 %player%"]
-    "19":
-      DisplayName: "<bold><#4DA3FF>Ice Shield III</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:ice_shield 3 %player%"]
-    "20":
-      DisplayName: "<bold><#4DA3FF>Fire Shield I</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 4
-      Commands: ["eenchants book excellentenchants:fire_shield 1 %player%"]
-    "21":
-      DisplayName: "<bold><#4DA3FF>Fire Shield II</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:fire_shield 2 %player%"]
-    "22":
-      DisplayName: "<bold><#4DA3FF>Fire Shield III</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:fire_shield 3 %player%"]
-    "23":
-      DisplayName: "<bold><#4DA3FF>Fire Shield IV</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:fire_shield 4 %player%"]
-    "24":
+    "14":
       DisplayName: "<bold><#4DA3FF>Hardened I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:hardened 1 %player%"]
-    "25":
+    "15":
       DisplayName: "<bold><#4DA3FF>Hardened II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:hardened 2 %player%"]
-    "26":
-      DisplayName: "<bold><#4DA3FF>Stopping Force I</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:stopping_force 1 %player%"]
-    "27":
-      DisplayName: "<bold><#4DA3FF>Stopping Force II</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:stopping_force 2 %player%"]
-    "28":
-      DisplayName: "<bold><#4DA3FF>Stopping Force III</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:stopping_force 3 %player%"]
-    "29":
+    "16":
       DisplayName: "<bold><#4DA3FF>Poisoned Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:poisoned_arrows 1 %player%"]
-    "30":
+    "17":
       DisplayName: "<bold><#4DA3FF>Poisoned Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:poisoned_arrows 2 %player%"]
-    "31":
+    "18":
       DisplayName: "<bold><#4DA3FF>Poisoned Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:poisoned_arrows 3 %player%"]
-    "32":
+    "19":
       DisplayName: "<bold><#4DA3FF>Withered Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:withered_arrows 1 %player%"]
-    "33":
+    "20":
       DisplayName: "<bold><#4DA3FF>Withered Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:withered_arrows 2 %player%"]
-    "34":
+    "21":
       DisplayName: "<bold><#4DA3FF>Withered Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:withered_arrows 3 %player%"]
-    "35":
+    "22":
       DisplayName: "<bold><#4DA3FF>Darkness Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:darkness_arrows 1 %player%"]
-    "36":
+    "23":
       DisplayName: "<bold><#4DA3FF>Darkness Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:darkness_arrows 2 %player%"]
-    "37":
+    "24":
       DisplayName: "<bold><#4DA3FF>Darkness Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:darkness_arrows 3 %player%"]
-    "38":
+    "25":
       DisplayName: "<bold><#4DA3FF>Confusing Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:confusing_arrows 1 %player%"]
-    "39":
+    "26":
       DisplayName: "<bold><#4DA3FF>Confusing Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:confusing_arrows 2 %player%"]
-    "40":
+    "27":
       DisplayName: "<bold><#4DA3FF>Confusing Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:confusing_arrows 3 %player%"]
-    "41":
+    "28":
       DisplayName: "<bold><#4DA3FF>Electrified Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:electrified_arrows 1 %player%"]
-    "42":
+    "29":
       DisplayName: "<bold><#4DA3FF>Electrified Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:electrified_arrows 2 %player%"]
-    "43":
+    "30":
       DisplayName: "<bold><#4DA3FF>Electrified Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:electrified_arrows 3 %player%"]
-    "44":
+    "31":
       DisplayName: "<bold><#4DA3FF>Vampiric Arrows I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:vampiric_arrows 1 %player%"]
-    "45":
+    "32":
       DisplayName: "<bold><#4DA3FF>Vampiric Arrows II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:vampiric_arrows 2 %player%"]
-    "46":
+    "33":
       DisplayName: "<bold><#4DA3FF>Vampiric Arrows III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:vampiric_arrows 3 %player%"]
-    "47":
-      DisplayName: "<bold><#4DA3FF>Telekinesis</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:telekinesis 1 %player%"]
-    "48":
-      DisplayName: "<bold><#4DA3FF>Nimble</#4DA3FF></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:nimble 1 %player%"]
-    "49":
+    "34":
       DisplayName: "<bold><#4DA3FF>Veinminer I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:veinminer 1 %player%"]
-    "50":
+    "35":
       DisplayName: "<bold><#4DA3FF>Veinminer II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:veinminer 2 %player%"]
-    "51":
+    "36":
       DisplayName: "<bold><#4DA3FF>Veinminer III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:veinminer 3 %player%"]
-    "52":
+    "37":
       DisplayName: "<bold><#4DA3FF>Treefeller</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:treefeller 1 %player%"]
-    "53":
+    "38":
       DisplayName: "<bold><#4DA3FF>Speed</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:speed 1 %player%"]
-    "54":
+    "39":
       DisplayName: "<bold><#4DA3FF>Restore I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:restore 1 %player%"]
-    "55":
+    "40":
       DisplayName: "<bold><#4DA3FF>Restore II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:restore 2 %player%"]
-    "56":
+    "41":
       DisplayName: "<bold><#4DA3FF>Restore III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:restore 3 %player%"]
-    "57":
+    "42":
       DisplayName: "<bold><#4DA3FF>Elemental Protection I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:elemental_protection 1 %player%"]
-    "58":
+    "43":
       DisplayName: "<bold><#4DA3FF>Elemental Protection II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:elemental_protection 2 %player%"]
-    "59":
+    "44":
       DisplayName: "<bold><#4DA3FF>Elemental Protection III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:elemental_protection 3 %player%"]
-    "60":
+    "45":
       DisplayName: "<bold><#4DA3FF>Elemental Protection IV</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:elemental_protection 4 %player%"]
-    "61":
+    "46":
       DisplayName: "<bold><#4DA3FF>Decapitator I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:decapitator 1 %player%"]
-    "62":
+    "47":
       DisplayName: "<bold><#4DA3FF>Decapitator II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:decapitator 2 %player%"]
-    "63":
+    "48":
       DisplayName: "<bold><#4DA3FF>Swiper I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:swiper 1 %player%"]
-    "64":
+    "49":
       DisplayName: "<bold><#4DA3FF>Swiper II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:swiper 2 %player%"]
-    "65":
+    "50":
       DisplayName: "<bold><#4DA3FF>Swiper III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:swiper 3 %player%"]
-    "66":
+    "51":
       DisplayName: "<bold><#4DA3FF>Rage I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:rage 1 %player%"]
-    "67":
+    "52":
       DisplayName: "<bold><#4DA3FF>Rage II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:rage 2 %player%"]
-    "68":
+    "53":
       DisplayName: "<bold><#4DA3FF>Wither I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:wither 1 %player%"]
-    "69":
+    "54":
       DisplayName: "<bold><#4DA3FF>Wither II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:wither 2 %player%"]
-    "70":
+    "55":
       DisplayName: "<bold><#4DA3FF>Infernus I</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:infernus 1 %player%"]
-    "71":
+    "56":
       DisplayName: "<bold><#4DA3FF>Infernus II</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:infernus 2 %player%"]
-    "72":
+    "57":
       DisplayName: "<bold><#4DA3FF>Infernus III</#4DA3FF></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1

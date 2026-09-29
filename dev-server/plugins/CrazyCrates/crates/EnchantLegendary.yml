@@ -214,126 +214,108 @@ Crate:
       Weight: 1
       Commands: ["eenchants book excellentenchants:paralyze 5 %player%"]
     "21":
-      DisplayName: "<bold><#FFB84D>Cutter I</#FFB84D></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 3
-      Commands: ["eenchants book excellentenchants:cutter 1 %player%"]
-    "22":
-      DisplayName: "<bold><#FFB84D>Cutter II</#FFB84D></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 2
-      Commands: ["eenchants book excellentenchants:cutter 2 %player%"]
-    "23":
-      DisplayName: "<bold><#FFB84D>Cutter III</#FFB84D></bold>"
-      DisplayItem: "enchanted_book"
-      DisplayAmount: 1
-      Weight: 1
-      Commands: ["eenchants book excellentenchants:cutter 3 %player%"]
-    "24":
       DisplayName: "<bold><#FFB84D>Dragon Heart I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:dragon_heart 1 %player%"]
-    "25":
+    "22":
       DisplayName: "<bold><#FFB84D>Dragon Heart II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:dragon_heart 2 %player%"]
-    "26":
+    "23":
       DisplayName: "<bold><#FFB84D>Regrowth I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 4
       Commands: ["eenchants book excellentenchants:regrowth 1 %player%"]
-    "27":
+    "24":
       DisplayName: "<bold><#FFB84D>Regrowth II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:regrowth 2 %player%"]
-    "28":
+    "25":
       DisplayName: "<bold><#FFB84D>Regrowth III</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:regrowth 3 %player%"]
-    "29":
+    "26":
       DisplayName: "<bold><#FFB84D>Regrowth IV</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:regrowth 4 %player%"]
-    "30":
+    "27":
       DisplayName: "<bold><#FFB84D>Darkness Cloak I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:darkness_cloak 1 %player%"]
-    "31":
+    "28":
       DisplayName: "<bold><#FFB84D>Darkness Cloak II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:darkness_cloak 2 %player%"]
-    "32":
+    "29":
       DisplayName: "<bold><#FFB84D>Darkness Cloak III</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:darkness_cloak 3 %player%"]
-    "33":
+    "30":
       DisplayName: "<bold><#FFB84D>Tunnel I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:tunnel 1 %player%"]
-    "34":
+    "31":
       DisplayName: "<bold><#FFB84D>Tunnel II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:tunnel 2 %player%"]
-    "35":
+    "32":
       DisplayName: "<bold><#FFB84D>Tunnel III</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:tunnel 3 %player%"]
-    "36":
+    "33":
       DisplayName: "<bold><#FFB84D>Flame Walker I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:flame_walker 1 %player%"]
-    "37":
+    "34":
       DisplayName: "<bold><#FFB84D>Flame Walker II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:flame_walker 2 %player%"]
-    "38":
+    "35":
       DisplayName: "<bold><#FFB84D>Rebound</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 1
       Commands: ["eenchants book excellentenchants:rebound 1 %player%"]
-    "39":
+    "36":
       DisplayName: "<bold><#FFB84D>Dragonfire Arrows I</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 3
       Commands: ["eenchants book excellentenchants:dragonfire_arrows 1 %player%"]
-    "40":
+    "37":
       DisplayName: "<bold><#FFB84D>Dragonfire Arrows II</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
       Weight: 2
       Commands: ["eenchants book excellentenchants:dragonfire_arrows 2 %player%"]
-    "41":
+    "38":
       DisplayName: "<bold><#FFB84D>Dragonfire Arrows III</#FFB84D></bold>"
       DisplayItem: "enchanted_book"
       DisplayAmount: 1
