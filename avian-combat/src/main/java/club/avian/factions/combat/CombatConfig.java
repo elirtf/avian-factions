@@ -72,6 +72,11 @@ public final class CombatConfig {
     private int totemCooldownSeconds = 60;
 
     @Comment("""
+            Seconds between ender pearl throws (vanilla: 1). Drawn on the item, kept across relogs and
+            deaths, so relogging never resets it. 0 = vanilla.""")
+    private int enderPearlCooldownSeconds = 16;
+
+    @Comment("""
             Seconds a player stays in combat after hitting, or being hit by, another player. Every
             hit restarts it. While in combat they cannot teleport, fly or use the commands below,
             and logging out leaves a body behind. 0 = no combat tag at all.""")
@@ -126,6 +131,10 @@ public final class CombatConfig {
         return totemCooldownSeconds;
     }
 
+    public int enderPearlCooldownSeconds() {
+        return enderPearlCooldownSeconds;
+    }
+
     public int combatTagSeconds() {
         return combatTagSeconds;
     }
@@ -153,6 +162,7 @@ public final class CombatConfig {
         e.check(cfg.enchantedGoldenAppleCooldownSeconds >= 0, "enchanted-golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.goldenAppleCooldownSeconds >= 0, "golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.totemCooldownSeconds >= 0, "totem-cooldown-seconds", "must be >= 0");
+        e.check(cfg.enderPearlCooldownSeconds >= 0, "ender-pearl-cooldown-seconds", "must be >= 0");
         e.check(cfg.combatTagSeconds >= 0, "combat-tag-seconds", "must be >= 0");
         e.check(cfg.logoutBodySeconds >= 0 && cfg.logoutBodySeconds <= 600, "logout-body-seconds", "must be 0-600");
         var kb = cfg.knockback;

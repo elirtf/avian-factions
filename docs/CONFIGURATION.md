@@ -74,6 +74,7 @@ goes above its power, it becomes **raidable**: enemies can claim over it.
 | `powerPerMinute` | Power gained per minute **while online** (`0.0166667` = 1 an hour) | `0.0166667` |
 | `lossPerDeath` | Power lost each death | `2` |
 | `raidability` | Land above power makes a faction raidable | `true` |
+| `factionMemberLimit` (in `other`) | Most members a faction can have. A hard cap: the `max_members` upgrade stays off | `10` |
 
 **File:** `run/plugins/AvianFactions/factions.conf` (ours)
 

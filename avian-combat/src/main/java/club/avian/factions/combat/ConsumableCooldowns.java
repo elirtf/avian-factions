@@ -3,7 +3,10 @@ package club.avian.factions.combat;
 import club.avian.factions.api.config.ConfigHandle;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent;
+import io.papermc.paper.event.player.PlayerItemCooldownEvent;
 import org.bukkit.Material;
+import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,7 +25,7 @@ import java.util.function.LongSupplier;
 
 /**
  * Cooldowns on the strongest PvP consumables (#40): golden apples, enchanted golden apples and the
- * totem of undying.
+ * totem of undying; and on ender pearls, the HCF way (16 s instead of vanilla's 1 s).
  *
  * <p>The vanilla item cooldown only draws the sweep on the item and is forgotten on relog, so the
  * real timer lives here, keyed by player: it survives relogging and dying (not a restart), is
@@ -45,6 +48,7 @@ final class ConsumableCooldowns implements Listener {
             case ENCHANTED_GOLDEN_APPLE -> cfg.enchantedGoldenAppleCooldownSeconds();
             case GOLDEN_APPLE -> cfg.goldenAppleCooldownSeconds();
             case TOTEM_OF_UNDYING -> cfg.totemCooldownSeconds();
+            case ENDER_PEARL -> cfg.enderPearlCooldownSeconds();
             default -> 0;
         };
     }
@@ -103,6 +107,39 @@ final class ConsumableCooldowns implements Listener {
         }
     }
 
+    // --- ender pearls: vanilla puts a 1 s cooldown on the pearl after each throw -----------------
+
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onPearl(PlayerLaunchProjectileEvent event) {
+        if (!(event.getProjectile() instanceof EnderPearl)) {
+            return;
+        }
+        long remaining = remainingMillis(event.getPlayer().getUniqueId(), Material.ENDER_PEARL);
+        if (cooldownSeconds(Material.ENDER_PEARL) > 0 && remaining > 0) {
+            event.setCancelled(true);   // the pearl stays in hand
+            tell(event.getPlayer(), Material.ENDER_PEARL, remaining);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPearlThrown(PlayerLaunchProjectileEvent event) {
+        if (event.getProjectile() instanceof EnderPearl) {
+            start(event.getPlayer(), Material.ENDER_PEARL);
+        }
+    }
+
+    /** Vanilla sets its own 1 s pearl cooldown right after the throw; stretch it to ours. */
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    public void onVanillaCooldown(PlayerItemCooldownEvent event) {
+        if (event.getType() != Material.ENDER_PEARL) {
+            return;
+        }
+        long remaining = remainingMillis(event.getPlayer().getUniqueId(), Material.ENDER_PEARL);
+        if (remaining > 0) {
+            event.setCooldown(Math.max(event.getCooldown(), (int) Math.ceil(remaining / 50.0)));
+        }
+    }
+
     // --- keep the item sweep in step after a relog or death ---------------------------------------
 
     @EventHandler
@@ -136,6 +173,7 @@ final class ConsumableCooldowns implements Listener {
         String what = switch (material) {
             case ENCHANTED_GOLDEN_APPLE -> "Enchanted golden apple";
             case GOLDEN_APPLE -> "Golden apple";
+            case ENDER_PEARL -> "Ender pearl";
             default -> "Totem";
         };
         long seconds = (remainingMillis + 999) / 1000;
