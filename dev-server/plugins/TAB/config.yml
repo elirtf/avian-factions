@@ -16,7 +16,6 @@ header-footer:
         - ""
       footer:
         - ""
-        - "<#FFD23F>/f <#6E6E80>· <#FFD23F>/shop <#6E6E80>· <#FFD23F>/tokenshop <#6E6E80>· <#FFD23F>/crates <#6E6E80>· <#FFD23F>/rtp"
         - "<#6E6E80>Ping <#B8B8C8>%ping%ms <#6E6E80>· TPS <#B8B8C8>%tps%"
         - ""
 
