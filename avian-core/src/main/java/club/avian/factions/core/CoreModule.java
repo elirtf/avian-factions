@@ -50,12 +50,31 @@ public final class CoreModule implements AvianModule {
         ctx.registerListener(new PlayerListener(players, ctx.logger()));
         ctx.services().provide(Players.class, players);
 
+        warmLegacyMaterials(ctx.logger());
+
         // Flat bedrock for chunks generated before it was switched on (new ones come flat from Paper).
         var config = ctx.config(CoreConfig.SPEC);
         ctx.registerListener(new club.avian.factions.core.world.BedrockFlattener(ctx.plugin(),
                 () -> config.get().flattenOldBedrock()));
 
         ctx.logger().info(cfg.server().name() + " core ready (" + cfg.server().address() + ")");
+    }
+
+    /**
+     * Pays Paper's one-time legacy-material conversion during startup instead of mid-game. The first
+     * lookup of a pre-1.13 material converts every legacy id on the main thread, which froze the server
+     * for over 10 seconds on the first /ah after a restart (CrazyAuctions sorts every material into its
+     * categories; Paper watchdog, 2026-09-29). Here it happens before anyone can join.
+     */
+    @SuppressWarnings({"deprecation", "removal"})   // LEGACY_* is exactly what we want to touch
+    private static void warmLegacyMaterials(java.util.logging.Logger log) {
+        long start = System.nanoTime();
+        try {
+            org.bukkit.Material.LEGACY_APPLE.isEdible();
+            log.info("Legacy materials converted at startup in " + (System.nanoTime() - start) / 1_000_000 + " ms");
+        } catch (RuntimeException | LinkageError e) {
+            log.warning("Could not warm legacy materials (the first /ah may stall): " + e);
+        }
     }
 
     @Override

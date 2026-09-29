@@ -46,6 +46,10 @@ services:
       AVIAN_DB_NAME: ${AVIAN_DB_NAME:-avian}
       AVIAN_DB_USER: ${AVIAN_DB_USER:-avian}
       AVIAN_DB_PASSWORD: ${AVIAN_DB_PASSWORD:-avian}
+      # Behind a Velocity proxy (docs/DEPLOYMENT.md → A hub); off by default.
+      AVIAN_ONLINE_MODE: ${AVIAN_ONLINE_MODE:-true}
+      AVIAN_VELOCITY: ${AVIAN_VELOCITY:-false}
+      AVIAN_VELOCITY_SECRET: ${AVIAN_VELOCITY_SECRET:-}
     ports:
       - "${AVIAN_GAME_PORT:-25565}:25565/tcp"
       - "${AVIAN_BEDROCK_PORT:-19132}:19132/udp"

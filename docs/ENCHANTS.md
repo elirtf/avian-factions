@@ -7,19 +7,19 @@ book's tooltip carries its description (drawn through packetevents).
 
 ## Where books come from
 
-- **The Enchanter, `/enchanter`:** tokens buy a random book from a tier. The menu charges the
-  tokens (`tokens charge`, see ECONOMY.md → Token shop) and then rolls that tier's hidden book crate
-  (CrazyCrates `forceopen`), so the player sees the spin and gets the book. Right-click a tier to
+- **The Enchanter, `/enchanter`:** XP levels buy a random book from a tier (owner, 2026-09-29: books
+  cost XP, not tokens). The button checks the levels, takes them, then rolls that tier's hidden book
+  crate (CrazyCrates `forceopen`), so the player sees the spin and gets the book. Right-click a tier to
   see every prize and its odds.
 - **Enchanting tables, villager trades, mob gear and loot**, the vanilla way. Legendary enchants
   are *treasure*: never from a table, only loot, fishing and trades. That's their free in-game route
   (ADR-0006).
 
-| Tier | Tokens | Enchants | What's in it |
+| Tier | XP levels | Enchants | What's in it |
 |---|---|---|---|
-| **Common** | 150 | 23 | Utility and grinding |
-| **Rare** | 500 | 28 | Combat effects, arrows, better tools |
-| **Legendary** | 1,500 | 13 | The strongest enchants |
+| **Common** | 10 | 23 | Utility and grinding |
+| **Rare** | 20 | 28 | Combat effects, arrows, better tools |
+| **Legendary** | 30 | 13 | The strongest enchants |
 
 A tier's roll holds one prize per enchant level, and a higher level is rarer: level I has weight
 = max level, down to 1 for the top level. Colours follow the crates: Common grey `#C9C9C9`, Rare

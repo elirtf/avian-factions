@@ -97,6 +97,9 @@ for (const e of all) {
     text = text.replace(/^  DisplayName: .*$/m, `  DisplayName: <c:${TIERS[tier].colour}>${name}</c>`);
     if (TIERS[tier].treasure) text = text.replace(/^  Treasure: false$/m, '  Treasure: true');
   }
+  // A disabled enchant listed as incompatible makes ExcellentEnchants warn at every boot.
+  for (const d of Object.keys(DISABLED)) text = text.replace(new RegExp(`^  - excellentenchants:${d}\\n`, 'gm'), '');
+  text = text.replace(/^  Exclusives:\n(?!  - )/m, '  Exclusives: []\n');
   if (MAX_LEVEL[e]) text = text.replace(/^  MaxLevel: \d+$/m, `  MaxLevel: ${MAX_LEVEL[e]}`);
   levels[e] = +text.match(/^  MaxLevel: (\d+)$/m)[1];
   const header = tier ? `# AVIAN: ${tier} tier (docs/ENCHANTS.md).` : '# AVIAN: curse, as shipped; loot only.';

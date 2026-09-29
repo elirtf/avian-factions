@@ -1,5 +1,5 @@
 # AVIAN: auction house messages in the Brand palette (MiniMessage). {prefix} is the gold ⚖ from
-# config.yml. The price limits in Sell-/Bid-Price-To-Low/High must match config.yml.
+# config.yml (named colours only there). The price limits in Sell-/Bid-Price-To-Low/High must match config.yml.
 Messages:
   Players-Only: "{prefix}<#FF5C5C>Only players can use this command."
   Failed-To-Open-Inventory: "{prefix}<#FF5C5C>That menu couldn't open. Try again."
@@ -31,7 +31,7 @@ Messages:
   Win-Bidding: "{prefix}<#B8B8C8>You won an auction for <#4CE08A>$%price%</#4CE08A>. Collect it with <#7CFF4F>/ah collect</#7CFF4F>."
   Player-Bought-Item: "{prefix}<#FFFFFF>%player%</#FFFFFF> <#B8B8C8>bought your item for <#4CE08A>$%price%</#4CE08A>."
   Someone-Won-Players-Bid: "{prefix}<#FFFFFF>%player%</#FFFFFF> <#B8B8C8>won your auction with a bid of <#4CE08A>$%price%</#4CE08A>."
-  Added-Item-To-Auction: "{prefix}<#B8B8C8>Listed for <#4CE08A>$%price%</#4CE08A>. <#6E6E80>(listing fee $100, 5% tax when it sells)</#6E6E80>"
+  Added-Item-To-Auction: "{prefix}<#B8B8C8>Your item is on the auction house for <#4CE08A>$%price%</#4CE08A> for 2 days. <#6E6E80>$100 listing fee paid; 5% tax comes off when it sells. See it with</#6E6E80> <#7CFF4F>/ah listed</#7CFF4F><#6E6E80>.</#6E6E80>"
   Bid-Msg: "{prefix}<#B8B8C8>You bid <#4CE08A>$%Bid%</#4CE08A> on that item."
   Selling-Disabled: "{prefix}<#FF5C5C>Selling is turned off right now."
   Bidding-Disabled: "{prefix}<#FF5C5C>Auctions are turned off right now."

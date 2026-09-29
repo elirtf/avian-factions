@@ -64,9 +64,9 @@ items:
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
     left_click_commands:
-      - '[console] tokens charge %player_name% 200 shop:key-common crazycrates give virtual Common 1 %player_name%'
+      - '[console] tokens charge %avian_name% 200 shop:key-common crazycrates give virtual Common 1 %avian_name%'
     right_click_commands:
-      - '[console] tokens charge %player_name% 1000 shop:key-common crazycrates give virtual Common 5 %player_name%'
+      - '[console] tokens charge %avian_name% 1000 shop:key-common crazycrates give virtual Common 5 %avian_name%'
   'key_rare':
     material: BARREL
     slot: 12
@@ -80,9 +80,9 @@ items:
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
     left_click_commands:
-      - '[console] tokens charge %player_name% 600 shop:key-rare crazycrates give virtual Rare 1 %player_name%'
+      - '[console] tokens charge %avian_name% 600 shop:key-rare crazycrates give virtual Rare 1 %avian_name%'
     right_click_commands:
-      - '[console] tokens charge %player_name% 3000 shop:key-rare crazycrates give virtual Rare 5 %player_name%'
+      - '[console] tokens charge %avian_name% 3000 shop:key-rare crazycrates give virtual Rare 5 %avian_name%'
   'key_epic':
     material: ENDER_CHEST
     slot: 13
@@ -96,9 +96,9 @@ items:
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
     left_click_commands:
-      - '[console] tokens charge %player_name% 1500 shop:key-epic crazycrates give virtual Epic 1 %player_name%'
+      - '[console] tokens charge %avian_name% 1500 shop:key-epic crazycrates give virtual Epic 1 %avian_name%'
     right_click_commands:
-      - '[console] tokens charge %player_name% 7500 shop:key-epic crazycrates give virtual Epic 5 %player_name%'
+      - '[console] tokens charge %avian_name% 7500 shop:key-epic crazycrates give virtual Epic 5 %avian_name%'
   'key_legendary':
     material: YELLOW_SHULKER_BOX
     slot: 14
@@ -113,9 +113,9 @@ items:
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
     left_click_commands:
-      - '[console] tokens charge %player_name% 4000 shop:key-legendary crazycrates give virtual Legendary 1 %player_name%'
+      - '[console] tokens charge %avian_name% 4000 shop:key-legendary crazycrates give virtual Legendary 1 %avian_name%'
     right_click_commands:
-      - '[console] tokens charge %player_name% 20000 shop:key-legendary crazycrates give virtual Legendary 5 %player_name%'
+      - '[console] tokens charge %avian_name% 20000 shop:key-legendary crazycrates give virtual Legendary 5 %avian_name%'
   'key_mythic':
     material: RED_SHULKER_BOX
     slot: 15
@@ -130,9 +130,9 @@ items:
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
     left_click_commands:
-      - '[console] tokens charge %player_name% 10000 shop:key-mythic crazycrates give virtual Mythic 1 %player_name%'
+      - '[console] tokens charge %avian_name% 10000 shop:key-mythic crazycrates give virtual Mythic 1 %avian_name%'
     right_click_commands:
-      - '[console] tokens charge %player_name% 50000 shop:key-mythic crazycrates give virtual Mythic 5 %player_name%'
+      - '[console] tokens charge %avian_name% 50000 shop:key-mythic crazycrates give virtual Mythic 5 %avian_name%'
   'crates_link':
     material: TRIPWIRE_HOOK
     slot: 22
@@ -161,7 +161,7 @@ items:
       - ''
       - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
     left_click_commands:
-      - '[console] tokens charge %player_name% 250 shop:wand-basic sellwand give %player_name% basic'
+      - '[console] tokens charge %avian_name% 250 shop:wand-basic sellwand give %avian_name% basic'
   'wand_gilded':
     material: BLAZE_ROD
     slot: 31
@@ -176,7 +176,7 @@ items:
       - ''
       - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
     left_click_commands:
-      - '[console] tokens charge %player_name% 1500 shop:wand-gilded sellwand give %player_name% gilded'
+      - '[console] tokens charge %avian_name% 1500 shop:wand-gilded sellwand give %avian_name% gilded'
   'wand_eternal':
     material: END_ROD
     slot: 33
@@ -192,4 +192,4 @@ items:
       - ''
       - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Buy'
     left_click_commands:
-      - '[console] tokens charge %player_name% 12000 shop:wand-eternal sellwand give %player_name% eternal'
+      - '[console] tokens charge %avian_name% 12000 shop:wand-eternal sellwand give %avian_name% eternal'

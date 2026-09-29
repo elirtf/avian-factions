@@ -88,8 +88,6 @@ scoreboard:
         - "<#6E6E80>◆ <#B8B8C8>Power||<#C58CFF>%factionsuuid_faction_power%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_powermax%"
         - "<#6E6E80>◆ <#B8B8C8>Land||<#7CFF4F>%factionsuuid_faction_claims%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_maxclaims%"
         - "<#6E6E80>◆ <#B8B8C8>Online||<#FFFFFF>%factionsuuid_faction_online%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_size%"
-        - ""
-        - "<#6E6E80>/f <#FFD23F>menu <#6E6E80>· /tokenshop"
     solo:
       title: "<bold><gradient:#FFD23F:#FF7A45>AVIAN FACTIONS</gradient></bold>"
       display-condition: "%bedrock%=false"
@@ -103,8 +101,6 @@ scoreboard:
         - "<bold><#B8B8C8>⚑ No faction yet</bold>"
         - "<#6E6E80>◆ <#B8B8C8>Your power||<#C58CFF>%factionsuuid_player_power%<#6E6E80>/<#B8B8C8>%factionsuuid_player_maxpower%"
         - "<#7CFF4F>▶ <#B8B8C8>/f create <#6E6E80>or <#B8B8C8>/f join"
-        - ""
-        - "<#6E6E80>/f <#FFD23F>menu <#6E6E80>· /tokenshop"
     faction-bedrock:
       title: "<bold><#FFD23F>AVIAN FACTIONS</bold>"
       display-condition: "%factionsuuid_player_factionless%!=factionless"

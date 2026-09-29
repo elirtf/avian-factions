@@ -1,7 +1,9 @@
-# AVIAN: the Enchanter (/enchanter). Tokens buy a random custom-enchant book from one of three tiers
-# (docs/ENCHANTS.md). A button charges the tokens and, only if that worked, rolls the tier's book crate
-# for the player (`crazycrates forceopen`: the spin animation, then the book). See token_shop.yml for
-# how `tokens charge` works; never give the reward on a separate line.
+# AVIAN: the Enchanter (/enchanter). XP levels buy a random custom-enchant book from one of three
+# tiers (docs/ENCHANTS.md). A button checks the player has the levels (click requirement), takes them,
+# then rolls the tier's book crate for them (`crazycrates forceopen`: the spin animation, then the book).
+# All on the server thread in one click, so a double-click can't spend the same levels twice.
+# Player names in console commands are %avian_name% (our PlaceholderAPI expansion); %player_name%
+# needs PlaceholderAPI's separate "Player" expansion, which we don't install.
 #
 # Layout: the menu kit (club.avian.factions.api.text.Ui). Colour on the top and bottom rows, the
 # subject top-centre, the three tiers in the middle row. Left-click rolls, right-click shows every prize.
@@ -33,11 +35,11 @@ items:
     update: true
     display_name: '&#C58CFF&l✦ Enchanter'
     lore:
-      - '&#B8B8C8Trade tokens for a random custom'
+      - '&#B8B8C8Trade XP levels for a random custom'
       - '&#B8B8C8enchant book, then add it to gear'
       - '&#B8B8C8in an anvil.'
       - ''
-      - '&#6E6E80◆ &#B8B8C8Your tokens  &#FFE66D%avian_tokens%'
+      - '&#6E6E80◆ &#B8B8C8Your levels  &#7CFF4F%avian_level%'
       - '&#6E6E80◆ &#B8B8C8Custom enchants per item  &#FFFFFFup to 5'
       - ''
       - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See what every enchant does'
@@ -54,17 +56,27 @@ items:
       - '&#B8B8C8Utility and grinding enchants:'
       - '&#B8B8C8Smelter, Haste, Wisdom, Night Vision…'
       - ''
-      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D150 tokens'
+      - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F10 levels'
       - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF23'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_requirement:
+      requirements:
+        levels:
+          type: has exp
+          amount: 10
+          level: true
+      deny_commands:
+        - '[sound] ENTITY_VILLAGER_NO'
+        - '[message] &#FF5C5C✖ &#B8B8C8A Common Book costs &#7CFF4F10 levels&#B8B8C8.'
     left_click_commands:
+      - '[takeexp] 10L'
       - '[close]'
-      - '[console] tokens charge %player_name% 150 enchanter:common crazycrates forceopen EnchantCommon %player_name%'
+      - '[console] crazycrates forceopen EnchantCommon %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantCommon %player_name%'
+      - '[console] crazycrates preview EnchantCommon %avian_name%'
   'rare':
     material: ENCHANTED_BOOK
     slot: 22
@@ -73,17 +85,27 @@ items:
       - '&#B8B8C8Combat effects, arrows and better'
       - '&#B8B8C8tools: Venom, Veinminer, Telekinesis…'
       - ''
-      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D500 tokens'
+      - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F20 levels'
       - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF28'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_requirement:
+      requirements:
+        levels:
+          type: has exp
+          amount: 20
+          level: true
+      deny_commands:
+        - '[sound] ENTITY_VILLAGER_NO'
+        - '[message] &#FF5C5C✖ &#B8B8C8A Rare Book costs &#7CFF4F20 levels&#B8B8C8.'
     left_click_commands:
+      - '[takeexp] 20L'
       - '[close]'
-      - '[console] tokens charge %player_name% 500 enchanter:rare crazycrates forceopen EnchantRare %player_name%'
+      - '[console] crazycrates forceopen EnchantRare %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantRare %player_name%'
+      - '[console] crazycrates preview EnchantRare %avian_name%'
   'legendary':
     material: ENCHANTED_BOOK
     slot: 24
@@ -93,14 +115,24 @@ items:
       - '&#B8B8C8The strongest enchants on the server:'
       - '&#B8B8C8Vampire, Temper, Thunder, Regrowth…'
       - ''
-      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D1,500 tokens'
+      - '&#6E6E80◆ &#B8B8C8Price  &#7CFF4F30 levels'
       - '&#6E6E80◆ &#B8B8C8Enchants  &#FFFFFF13'
       - ''
       - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy and roll'
       - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8See every prize'
+    left_click_requirement:
+      requirements:
+        levels:
+          type: has exp
+          amount: 30
+          level: true
+      deny_commands:
+        - '[sound] ENTITY_VILLAGER_NO'
+        - '[message] &#FF5C5C✖ &#B8B8C8A Legendary Book costs &#7CFF4F30 levels&#B8B8C8.'
     left_click_commands:
+      - '[takeexp] 30L'
       - '[close]'
-      - '[console] tokens charge %player_name% 1500 enchanter:legendary crazycrates forceopen EnchantLegendary %player_name%'
+      - '[console] crazycrates forceopen EnchantLegendary %avian_name%'
     right_click_commands:
       - '[close]'
-      - '[console] crazycrates preview EnchantLegendary %player_name%'
+      - '[console] crazycrates preview EnchantLegendary %avian_name%'
