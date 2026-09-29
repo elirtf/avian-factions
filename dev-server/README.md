@@ -9,7 +9,7 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 | `plugins/Essentials/config.yml` | `unsafe-enchantments: true` (spec §22 custom enchants need levels above vanilla caps) |
 | `plugins/LuckPerms/config.yml` | `storage-method: mariadb`, database settings from `${AVIAN_DB_*}` (`luckperms_` tables) |
 | `plugins/CoreProtect/config.yml` | `use-mysql: true`, database settings from `${AVIAN_DB_*}` (`co_` tables) |
-| `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007) |
+| `plugins/FactionsUUID/config/main.conf` | Power: player start/max 20, min 0, regen 1/hour, death loss 2; `raidability = true` (land > power); `economy.enabled = true` for banks and upgrades (ADR-0007); `factionMemberLimit = 10` (hard cap, HCF-style) |
 | `plugins/FactionsUUID/config/translations.conf` | Role names: Leader, Co-Leader, Officer, Member, Recruit |
 | `plugins/RoseStacker/config.yml` | Only spawners stack (block stacking off); spawners are raidable: TNT drops 75% as items, destroys the rest |
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |

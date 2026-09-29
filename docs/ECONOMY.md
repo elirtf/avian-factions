@@ -166,8 +166,10 @@ Cooldowns in `combat.conf`:
 - Enchanted golden apple: 60 s.
 - Golden apple: 10 s.
 - Totem of undying: 60 s. A totem that pops during its cooldown does not save the player.
+- Ender pearl: 16 s (vanilla is 1 s), as on HCF servers.
 
-The cooldown shows on the item like a vanilla one and survives relogging and dying.
+The cooldown shows on the item like a vanilla one and survives relogging and dying, so relogging
+never resets a pearl.
 
 ## Crates
 
