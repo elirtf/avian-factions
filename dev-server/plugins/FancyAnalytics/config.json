@@ -1,0 +1,6 @@
+{
+  "sender_id": "avian-telemetry-off",
+  "send_metrics": false,
+  "send_errors": false,
+  "disable_logging": true
+}

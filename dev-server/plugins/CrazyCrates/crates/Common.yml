@@ -1,0 +1,177 @@
+# Avian crate: Common. Virtual: opened from /crates with keys held on the player (no crate block, so
+# it works in whichever world spawn ends up in). Weights are relative; the preview shows each chance.
+# Rewards scale with docs/ECONOMY.md: tokens run ~20-40 an hour of farming, a diamond set is $90k.
+Crate:
+  CrateType: CSGO
+  StartingKeys: 0
+  RequiredKeys: 0
+  Max-Mass-Open: 10
+  InGUI: true
+  Slot: 20
+  OpeningBroadCast: false
+  BroadCast: "<#FFD23F>✦</#FFD23F> <white>%player%</white> <#B8B8C8>is opening a</#B8B8C8> <bold><#C9C9C9>Common Crate</#C9C9C9></bold>"
+  opening-command:
+    toggle: false
+    commands: []
+  sound:
+    cycle-sound: {toggle: true, value: "block.note_block.pling", volume: 0.6, pitch: 1.4}
+    click-sound: {toggle: true, value: "ui.button.click", volume: 1.0, pitch: 1.0}
+    stop-sound: {toggle: true, value: "entity.player.levelup", volume: 1.0, pitch: 1.2}
+  Prize-Message:
+    - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You won</#B8B8C8> <white>%reward%</white> <#B8B8C8>from the</#B8B8C8> <#C9C9C9>Common Crate</#C9C9C9><#B8B8C8>!</#B8B8C8>"
+  Prize-Commands: []
+  Settings:
+    Tracking-Crate-Opening: false
+    Knock-Back: true
+    Disabled-Worlds: []
+    Requirements:
+      Key:
+        Sound: {Toggle: true, Name: "entity.villager.no"}
+    Border:
+      Glass-Border: {Toggle: true, Air: true}
+    CSGO:
+      Finished-Material: "lime_stained_glass_pane"
+      Cycle-Material: "purple_stained_glass_pane"
+    Broadcast:
+      Toggle: false
+      Messages: []
+      Permission: ""
+    Rewards:
+      Re-Roll-Spin: false
+      Permission: {Toggle: false, Persist: false, Max-Cap: 20}
+  Item: "chest"
+  Hide-Flags: true
+  Components: []
+  Custom-Model-Data: -1
+  Model: {Namespace: "", Id: ""}
+  Glowing: "add_glow"
+  Name: "<bold><#C9C9C9>Common Crate</#C9C9C9></bold>"
+  Lore:
+    - "<#B8B8C8>Starter gear and a cash boost.</#B8B8C8>"
+    - ""
+    - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Keys</#B8B8C8>  <white>%keys%</white>"
+    - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Opened</#B8B8C8>  <white>%crate_opened%</white>"
+    - ""
+    - "<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Left-click · open with a key</#B8B8C8>"
+    - "<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Right-click · see every prize</#B8B8C8>"
+  Preview:
+    Name: "<bold><#C9C9C9>Common Crate</#C9C9C9></bold> <#6E6E80>· prizes</#6E6E80>"
+    Toggle: true
+    Rows: 6
+    Glass:
+      Toggle: true
+      Name: " "
+      Item: "black_stained_glass_pane"
+      Custom-Model-Data: -1
+      Model: {Namespace: "", Id: ""}
+  Animation:
+    Name: "<#C9C9C9>Rolling…</#C9C9C9>"
+    Glass-Frame:
+      Toggle: true
+      Items: {"1": {name: " ", lore: [], material: "purple_stained_glass_pane", amount: 1}}
+      Random:
+        Toggle: true
+        Items:
+          "1": {name: " ", lore: [], material: "magenta_stained_glass_pane", amount: 1}
+          "2": {name: " ", lore: [], material: "light_blue_stained_glass_pane", amount: 1}
+          "3": {name: " ", lore: [], material: "yellow_stained_glass_pane", amount: 1}
+  PhysicalKey:
+    Name: "<bold><#C9C9C9>Common Key</#C9C9C9></bold>"
+    Lore:
+      - "<#B8B8C8>Opens one Common Crate in /crates.</#B8B8C8>"
+    Item: "tripwire_hook"
+    Custom-Model-Data: -1
+    Model: {Namespace: "", Id: ""}
+    Glowing: "add_glow"
+    flags: {components: []}
+  Hologram:
+    Toggle: false
+    Height: 1.5
+    Range: 8
+    Update-Interval: -1
+    Color: "transparent"
+    TextShadow: false
+    Message: ["<bold><#C9C9C9>Common Crate</#C9C9C9></bold>"]
+  Prizes:
+    "1":
+      DisplayName: "<bold><#4CE08A>$5,000</#4CE08A></bold>"
+      DisplayItem: "gold_ingot"
+      DisplayAmount: 1
+      Weight: 25
+      Commands: ["eco give %player% 5000"]
+    "2":
+      DisplayName: "<bold><#4CE08A>$10,000</#4CE08A></bold>"
+      DisplayItem: "gold_ingot"
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["eco give %player% 10000"]
+    "3":
+      DisplayName: "<bold><#FFE66D>50 Tokens</#FFE66D></bold>"
+      DisplayItem: "sunflower"
+      DisplayAmount: 1
+      Weight: 15
+      Commands: ["tokens give %player% 50 crate:common"]
+    "4":
+      DisplayName: "<#C9C9C9>Iron Sword</#C9C9C9>"
+      DisplayItem: "iron_sword"
+      DisplayAmount: 1
+      DisplayEnchantments:
+        - "sharpness:2"
+        - "unbreaking:2"
+      Weight: 10
+      Items:
+        "1":
+          material: "iron_sword"
+          amount: 1
+          enchantments:
+            sharpness: 2
+            unbreaking: 2
+    "5":
+      DisplayName: "<#C9C9C9>Iron Pickaxe</#C9C9C9>"
+      DisplayItem: "iron_pickaxe"
+      DisplayAmount: 1
+      DisplayEnchantments:
+        - "efficiency:3"
+        - "unbreaking:2"
+      Weight: 10
+      Items:
+        "1":
+          material: "iron_pickaxe"
+          amount: 1
+          enchantments:
+            efficiency: 3
+            unbreaking: 2
+    "6":
+      DisplayName: "<#C9C9C9>32× Iron Ingot</#C9C9C9>"
+      DisplayItem: "iron_ingot"
+      DisplayAmount: 32
+      Weight: 10
+      Items:
+        "1":
+          material: "iron_ingot"
+          amount: 32
+    "7":
+      DisplayName: "<#C9C9C9>8× Diamond</#C9C9C9>"
+      DisplayItem: "diamond"
+      DisplayAmount: 8
+      Weight: 8
+      Items:
+        "1":
+          material: "diamond"
+          amount: 8
+    "8":
+      DisplayName: "<#C9C9C9>16× Bottle o' Enchanting</#C9C9C9>"
+      DisplayItem: "experience_bottle"
+      DisplayAmount: 16
+      Weight: 8
+      Items:
+        "1":
+          material: "experience_bottle"
+          amount: 16
+    "9":
+      DisplayName: "<bold><#4DA3FF>1× Rare Key</#4DA3FF></bold>"
+      DisplayItem: "tripwire_hook"
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 4
+      Commands: ["crates give virtual Rare 1 %player% -s"]

@@ -112,6 +112,23 @@ keeps them when traded or stored. Neighbouring columns are only harvested where 
 break them (claims, WorldGuard). Admins can give one with `/hoe give <player>`
 (`avian.hoe.admin`).
 
+## Sell wands
+
+Right-click a chest, barrel, hopper or any container with a sell wand: everything `/shop` buys is
+sold at the player's own shop price, times the wand's multiplier, and paid as `sellwand:<tier>` in
+the audit trail. Sneak and right-click to see what it's worth without selling. It only works on
+containers the player could open, so another faction's chests are safe. Our own items (the
+Harvester Hoe, wands) are never sold.
+
+| Tier | Item | Uses | Multiplier |
+|---|---|---|---|
+| `basic` | Stick | 100 | ×1 |
+| `gilded` | Blaze rod | 500 | ×1.1 |
+| `eternal` | End rod | unlimited | ×1.25 |
+
+Tiers live in `sellwand.conf`. Admins, crates and shops hand them out with
+`/sellwand give <player> <tier> [amount]` (`avian.sellwand.admin`).
+
 ## Token shop
 
 `/tokenshop` (or `/tshop`) is where tokens are spent. It's a DeluxeMenus menu
@@ -151,6 +168,25 @@ Cooldowns in `combat.conf`:
 - Totem of undying: 60 s. A totem that pops during its cooldown does not save the player.
 
 The cooldown shows on the item like a vanilla one and survives relogging and dying.
+
+## Crates
+
+Six tiers in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). They are virtual:
+keys are held on the player and a crate opens from the menu, so no crate blocks are placed and they
+work in whichever world spawn ends up in. Every crate can also drop a key for the tier above.
+
+| Crate | Main prizes | Key sources (ADR-0006: every sold key needs one) |
+|---|---|---|
+| Vote | $1k–2.5k, 10–25 tokens, iron, XP bottles | Voting (plugin to come). Not sold. |
+| Common | $5k–10k, 50 tokens, iron tools, 8 diamonds | Vote crate (5 %); token shop |
+| Rare | $25k, 150 tokens, diamond gear, zombie spawner, 2 golden apples | Common crate; token shop |
+| Epic | $75k, 400 tokens, Prot III diamond, netherite ingot, skeleton/creeper spawners, totem | Rare crate; token shop |
+| Legendary | $200k, 1,000 tokens, Sharp V / Prot IV netherite, blaze and enderman spawners, notch apple, elytra | Epic crate; token shop |
+| Mythic | $500k, 3,000 tokens, full Prot IV netherite, iron golem spawner, mace, 2 notch apples | Legendary crate; token shop |
+
+The rarest PvP items (golden apples, notch apples, totems) sit at low weights, per #40. Admins give
+keys with `/crates give virtual <Crate> <amount> <player>`; token rewards land in the audit trail
+as `crate:<tier>`.
 
 ## Changing prices
 

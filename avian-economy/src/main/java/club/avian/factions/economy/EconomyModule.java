@@ -35,7 +35,7 @@ public final class EconomyModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC);
+        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC, SellWandConfig.SPEC);
     }
 
     @Override
@@ -75,6 +75,10 @@ public final class EconomyModule implements AvianModule {
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");
+        // Sell wands: right-click a container to sell it all at /shop prices.
+        var sellWand = ctx.config(SellWandConfig.SPEC);
+        ctx.registerListener(new SellWandListener(economy, sellValues, sellWand, System::currentTimeMillis, ctx.logger()));
+        ctx.commands().register(new SellWandCommand(sellWand).build(), "Give sell wands (admins)");
         // /tokens and /gems: your balance; give|take|set is how crates, votes and events pay out (#26).
         var purchase = new Purchase(economy, mainThread,
                 command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), ctx.logger());
