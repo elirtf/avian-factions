@@ -1,0 +1,196 @@
+# AVIAN: TAB 6.2.0 draws the tab list, the nametags and the sidebar (scoreboard).
+# Colours are the Brand palette (club.avian.factions.api.text.Brand): sun #FFD23F, money #4CE08A,
+# token #FFE66D, gem #C58CFF, hot #FF7A45, soft #B8B8C8, dim #6E6E80. Text is MiniMessage only:
+# don't mix &-codes in. %avian_rank% is the LuckPerms rank tag (a MiniMessage suffix, ranks.lp).
+# Factionless players have %factionsuuid_player_factionless% = "factionless".
+# Feature guides: https://github.com/NEZNAMY/TAB/wiki. Anything not set here is TAB's default.
+
+header-footer:
+  enabled: true
+  designs:
+    default:
+      header:
+        - ""
+        - "<bold><gradient:#FFD23F:#FF7A45>AVIAN FACTIONS</gradient></bold>"
+        - "<#B8B8C8>%online% online"
+        - ""
+      footer:
+        - ""
+        - "<#FFD23F>/f <#6E6E80>· <#FFD23F>/shop <#6E6E80>· <#FFD23F>/tokenshop <#6E6E80>· <#FFD23F>/crates <#6E6E80>· <#FFD23F>/rtp"
+        - "<#6E6E80>Ping <#B8B8C8>%ping%ms <#6E6E80>· TPS <#B8B8C8>%tps%"
+        - ""
+
+# Tab list names: "rank ┃ name", the same as chat. The format is in groups.yml.
+tablist-name-formatting:
+  enabled: true
+  disable-condition: ""
+
+# Nametags and tab-list order. Staff first, then paid ranks high to low, then free ranks.
+scoreboard-teams:
+  enabled: true
+  disable-condition: ""
+  enable-collision: true
+  invisible-nametags: false
+  sorting-types:
+    - "GROUPS:owner,admin,mod,helper,raven,hawk,falcon,cardinal,finch,fledgling,hatchling,default"
+    - "PLACEHOLDER_A_TO_Z:%player%"
+  case-sensitive-sorting: false
+  can-see-friendly-invisibles: false
+
+# No number next to names in the tab list.
+playerlist-objective:
+  enabled: false
+  value: "%ping%"
+  fancy-value: "<#6E6E80>%ping%ms"
+  title: "Ping"
+  render-type: INTEGER
+
+belowname-objective:
+  enabled: false
+  value: "%health%"
+  fancy-value: "<#FF5C5C>%health%"
+  fancy-value-default: "NPC"
+  title: "Health"
+  view-distance: 10
+
+prevent-spectator-effect:
+  enabled: false
+
+# The combat tag has its own boss bar (avian-combat); TAB's stays off.
+bossbar:
+  enabled: false
+  toggle-command: /bossbar
+  remember-toggle-choice: false
+  hidden-by-default: false
+  bars: {}
+
+# The sidebar. TAB shows the first scoreboard whose display-condition matches. Java clients get
+# right-aligned values ("label||value", 1.20.3+); Bedrock (Geyser) gets "label: value" lines.
+# /sb hides or shows it, and the choice is remembered.
+scoreboard:
+  enabled: true
+  toggle-command: /sb
+  remember-toggle-choice: true
+  hidden-by-default: false
+  delay-on-join-milliseconds: 0
+  scoreboards:
+    faction:
+      title: "<bold><gradient:#FFD23F:#FF7A45>AVIAN FACTIONS</gradient></bold>"
+      display-condition: "%bedrock%=false;%factionsuuid_player_factionless%!=factionless"
+      lines:
+        - ""
+        - "<#6E6E80>◆ <#B8B8C8>Rank||%avian_rank%"
+        - "<#6E6E80>◆ <#B8B8C8>Balance||<#4CE08A>%avian_balance%"
+        - "<#6E6E80>◆ <#B8B8C8>Tokens||<#FFE66D>%avian_tokens%"
+        - "<#6E6E80>◆ <#B8B8C8>Gems||<#C58CFF>%avian_gems%"
+        - ""
+        - "<bold><#FFD23F>⚑ %factionsuuid_faction_name%</bold>"
+        - "<#6E6E80>◆ <#B8B8C8>Power||<#C58CFF>%factionsuuid_faction_power%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_powermax%"
+        - "<#6E6E80>◆ <#B8B8C8>Land||<#7CFF4F>%factionsuuid_faction_claims%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_maxclaims%"
+        - "<#6E6E80>◆ <#B8B8C8>Online||<#FFFFFF>%factionsuuid_faction_online%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_size%"
+        - ""
+        - "<#6E6E80>/f <#FFD23F>menu <#6E6E80>· /tokenshop"
+    solo:
+      title: "<bold><gradient:#FFD23F:#FF7A45>AVIAN FACTIONS</gradient></bold>"
+      display-condition: "%bedrock%=false"
+      lines:
+        - ""
+        - "<#6E6E80>◆ <#B8B8C8>Rank||%avian_rank%"
+        - "<#6E6E80>◆ <#B8B8C8>Balance||<#4CE08A>%avian_balance%"
+        - "<#6E6E80>◆ <#B8B8C8>Tokens||<#FFE66D>%avian_tokens%"
+        - "<#6E6E80>◆ <#B8B8C8>Gems||<#C58CFF>%avian_gems%"
+        - ""
+        - "<bold><#B8B8C8>⚑ No faction yet</bold>"
+        - "<#6E6E80>◆ <#B8B8C8>Your power||<#C58CFF>%factionsuuid_player_power%<#6E6E80>/<#B8B8C8>%factionsuuid_player_maxpower%"
+        - "<#7CFF4F>▶ <#B8B8C8>/f create <#6E6E80>or <#B8B8C8>/f join"
+        - ""
+        - "<#6E6E80>/f <#FFD23F>menu <#6E6E80>· /tokenshop"
+    faction-bedrock:
+      title: "<bold><#FFD23F>AVIAN FACTIONS</bold>"
+      display-condition: "%factionsuuid_player_factionless%!=factionless"
+      lines:
+        - ""
+        - "<#B8B8C8>Rank: %avian_rank%"
+        - "<#B8B8C8>Balance: <#4CE08A>%avian_balance%"
+        - "<#B8B8C8>Tokens: <#FFE66D>%avian_tokens%"
+        - "<#B8B8C8>Gems: <#C58CFF>%avian_gems%"
+        - ""
+        - "<bold><#FFD23F>%factionsuuid_faction_name%</bold>"
+        - "<#B8B8C8>Power: <#C58CFF>%factionsuuid_faction_power%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_powermax%"
+        - "<#B8B8C8>Land: <#7CFF4F>%factionsuuid_faction_claims%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_maxclaims%"
+        - "<#B8B8C8>Online: <#FFFFFF>%factionsuuid_faction_online%<#6E6E80>/<#B8B8C8>%factionsuuid_faction_size%"
+    solo-bedrock:
+      title: "<bold><#FFD23F>AVIAN FACTIONS</bold>"
+      lines:
+        - ""
+        - "<#B8B8C8>Rank: %avian_rank%"
+        - "<#B8B8C8>Balance: <#4CE08A>%avian_balance%"
+        - "<#B8B8C8>Tokens: <#FFE66D>%avian_tokens%"
+        - "<#B8B8C8>Gems: <#C58CFF>%avian_gems%"
+        - ""
+        - "<#B8B8C8>No faction yet"
+        - "<#B8B8C8>/f create or /f join"
+
+layout:
+  enabled: false
+
+ping-spoof:
+  enabled: false
+  value: 0
+
+global-playerlist:
+  enabled: false
+
+placeholders:
+  date-format: "dd.MM.yyyy"
+  time-format: "[HH:mm:ss / h:mm a]"
+  time-offset: 0
+  register-tab-expansion: false
+  locale: en-US
+
+placeholder-output-replacements: {}
+
+conditions: {}
+
+placeholder-refresh-intervals:
+  default-refresh-interval: 500
+  "%server_tps_1_colored%": 1000
+  "%player_ping%": 1000
+  "%avian_rank%": 2000
+  "%factionsuuid_faction_name%": 1000
+  "%factionsuuid_faction_maxclaims%": 2000
+  "%factionsuuid_player_maxpower%": 2000
+
+assign-groups-by-permissions: false
+primary-group-finding-list:
+  - owner
+  - admin
+  - mod
+  - helper
+  - default
+
+permission-refresh-interval: 1000
+
+debug: false
+
+mysql:
+  enabled: false
+
+# One server for now. Velocity is planned; turn this on with it.
+proxy-support:
+  enabled: false
+
+components:
+  minimessage-support: true
+  disable-shadow-for-heads: true
+
+# Internal value, do not change this
+config-version: 7
+
+per-world-playerlist:
+  enabled: false
+
+compensate-for-packetevents-bug: false
+
+use-bukkit-permissions-manager: false
+use-online-uuid-in-tablist: true

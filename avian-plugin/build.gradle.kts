@@ -203,6 +203,13 @@ val pluginStack = listOf(
     PinnedPlugin("grimac-bukkit-2.3.74-8eb5f28.jar",
         "https://cdn.modrinth.com/data/LJNGWSvH/versions/Gd6BG1HA/grimac-bukkit-2.3.74-8eb5f28.jar",
         "SHA-256", "91c06e7ae7da53636bc5e500d5af3d36a6180247e155fa5b4340da5a72f9eeb7"),
+    // TAB 6.2.0 (Apache-2.0): the sidebar (balance, tokens, faction), the tab list and nametags,
+    // "rank ┃ name" as in chat. Modrinth lists this jar for 26.1–26.3. Checked on a scratch 26.1.2
+    // server with a bot client: MiniMessage rank tags and right-aligned values render.
+    // Config: dev-server/plugins/TAB.
+    PinnedPlugin("TAB-6.2.0.jar",
+        "https://cdn.modrinth.com/data/gG7VFbG0/versions/UDraViyI/TAB%20v6.2.0.jar",
+        "SHA-256", "f94331947134242efa478b9b9bf04b29e37861721dee58c32b7ea57779aa735e"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

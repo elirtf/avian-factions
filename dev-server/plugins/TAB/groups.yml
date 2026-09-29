@@ -1,0 +1,8 @@
+# AVIAN: tab-list names and nametags read "rank ┃ name", as in chat (CarbonChat). The rank tag is
+# the LuckPerms suffix (ranks.lp) through %avian_rank%, so ranks are changed there, not here.
+_DEFAULT_:
+  tabprefix: "%avian_rank% <#5A5A5A>┃ "
+  customtabname: "<#FFFFFF>%player%"
+  tabsuffix: ""
+  tagprefix: "%avian_rank% <#5A5A5A>┃ "
+  tagsuffix: ""

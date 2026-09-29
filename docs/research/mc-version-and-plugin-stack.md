@@ -71,6 +71,16 @@ CoreProtect caveat noted below).
 | License | MIT (https://github.com/HelpChat/DeluxeMenus, last push 2026-08) |
 | Why | Click menus from YAML, with PlaceholderAPI and per-item view requirements: the faction menu over FactionsUUID's commands, without writing GUI code |
 
+### TAB
+
+| | |
+|---|---|
+| Version | **6.2.0** (Modrinth, 2026-09-17; this upload is listed for 26.1, 26.1.1, 26.1.2, 26.2, 26.3) |
+| Download | https://cdn.modrinth.com/data/gG7VFbG0/versions/UDraViyI/TAB%20v6.2.0.jar (sha256 `f94331947134242efa478b9b9bf04b29e37861721dee58c32b7ea57779aa735e`) |
+| License | Apache-2.0 (https://github.com/NEZNAMY/TAB) |
+| Why | Sidebar, tab list and nametags from YAML with PlaceholderAPI. The sidebar shows balance, tokens and faction; names read "rank ┃ name" as in chat. It works behind Velocity too (`proxy-support`), for when the hub comes. |
+| Checked on 26.1.2 | 2026-09-29, on a scratch Paper 26.1.2 build 74 server with a mineflayer (26.1) bot reading the packets. It boots clean. MiniMessage in the config and in placeholder output renders: gradients, hex colours, and a LuckPerms suffix like `<#8C5CFF><bold>ʀᴀᴠᴇɴ</bold>`. Right-aligned sidebar values (`label‖value`) arrive as fixed number formats. |
+
 ### LuckPerms
 
 | | |
