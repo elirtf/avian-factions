@@ -159,6 +159,24 @@ command or a player who logged out). Both halves land in the audit trail as `sho
 give a reward from a separate line: it would pay out whether or not the charge succeeded.
 `gems charge` works the same way for a future gem shop.
 
+## Auction house
+
+`/ah` (CrazyAuctions, `dev-server/plugins/CrazyAuctions/`): players sell to players, at a fixed price
+(`/ah sell <price>`) or by auction (`/ah bid <start price>`). It's the money sink the shop can't be,
+because the money changes hands between players:
+
+| | |
+|---|---|
+| Listing fee | **$100**, paid up front and kept if the item doesn't sell, so listings aren't spam |
+| Tax | **5 %** of every sale |
+| Price range | $10 to $10,000,000 (the plugin's default $1M cap was below an iron golem spawner) |
+| Listings at once | Hatchling 5, Fledgling 8 (`crazyauctions.sell.<n>` / `bid.<n>` in `ranks.lp`; paid ranks inherit 8) |
+| Duration | 2 days for a fixed-price listing, 2.5 minutes for an auction; unsold items wait 10 days in `/ah collect` |
+
+Damaged items can't be listed. Every player needs a `crazyauctions.sell.<n>` permission: with none,
+the plugin allows **unlimited** listings. Listings are stored in the plugin's own files, not
+MariaDB. That's fine, since the hub won't share this market (owner, 2026-09-29).
+
 ## PvP consumables
 
 Cooldowns in `combat.conf`:

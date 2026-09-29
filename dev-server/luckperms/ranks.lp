@@ -62,6 +62,11 @@ lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
 lp group hatchling permission set EconomyShopGUI.sellall true
+# Auction house (CrazyAuctions, /ah): the most listings a player may have at once is the HIGHEST
+# crazyauctions.sell.<n> / bid.<n> they hold. With none at all the limit is unlimited, so every rank
+# needs one. Paid ranks inherit Fledgling's.
+lp group hatchling permission set crazyauctions.sell.5 true
+lp group hatchling permission set crazyauctions.bid.5 true
 # F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
@@ -74,6 +79,8 @@ lp group fledgling parent add hatchling
 lp group fledgling permission set essentials.sethome.multiple.fledgling true
 lp group fledgling meta set homes 2
 lp group fledgling permission set essentials.back true
+lp group fledgling permission set crazyauctions.sell.8 true
+lp group fledgling permission set crazyauctions.bid.8 true
 
 lp createtrack free
 lp track free append hatchling

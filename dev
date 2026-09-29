@@ -499,6 +499,7 @@ cmd_check_log() {
         'CommandTimer.*loaded [0-9]+ tasks' \
         'FactionsUUID\] === Done! ===' \
         'Enabling RoseStacker' \
+        'Enabling CrazyAuctions' \
         'auraskills-hikari - Start completed' \
         'AuraSkills\] Loaded [0-9]+ skills' \
         'ViaVersion detected server version' \
