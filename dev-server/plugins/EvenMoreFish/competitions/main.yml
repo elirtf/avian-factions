@@ -1,0 +1,31 @@
+# AVIAN: the daily fishing contest (owner, 2026-09-30). Tokens and keys only come from contests, and
+# only with 3+ players online, so nobody can farm them alone (docs/research/custom-fishing.md).
+id: mainCompetition
+disabled: false
+type: LARGEST_FISH
+duration: 10
+minimum-players: 3
+times:
+- '18:00'
+- '21:00'
+blacklisted-days:
+- Sunday
+alerts:
+- '5:00'
+bossbar-colour: BLUE
+bossbar-prefix: '<bold><gradient:#5FF3E0:#4DA3FF>Fishing Contest</gradient></bold> <#6E6E80>· biggest fish wins · '
+rewards:
+  '1':
+  - 'MESSAGE:<#FFD23F>♛</#FFD23F> <#B8B8C8>1st place! You won</#B8B8C8> <#FFE66D>150 tokens</#FFE66D> <#B8B8C8>and a</#B8B8C8> <#4DA3FF>Rare Key</#4DA3FF><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 150 fishing-contest'
+  - 'COMMAND:crazycrates give virtual Rare 1 {player}'
+  '2':
+  - 'MESSAGE:<#FFD23F>✦</#FFD23F> <#B8B8C8>2nd place! You won</#B8B8C8> <#FFE66D>75 tokens</#FFE66D> <#B8B8C8>and a</#B8B8C8> <#7CFF4F>Common Key</#7CFF4F><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 75 fishing-contest'
+  - 'COMMAND:crazycrates give virtual Common 1 {player}'
+  '3':
+  - 'MESSAGE:<#FFD23F>✦</#FFD23F> <#B8B8C8>3rd place! You won</#B8B8C8> <#FFE66D>40 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 40 fishing-contest'
+  participation:
+  - 'MESSAGE:<#B8B8C8>Thanks for fishing! You get</#B8B8C8> <#4CE08A>$2,500</#4CE08A> <#B8B8C8>for taking part.</#B8B8C8>'
+  - 'MONEY:2500'

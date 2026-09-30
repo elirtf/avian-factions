@@ -247,6 +247,12 @@ val pluginStack = listOf(
     PinnedPlugin("SimplePets-R5-B315.jar",
         "https://cdn.modrinth.com/data/yNVORkCB/versions/4p1rcZFh/SimplePets.jar",
         "SHA-256", "d7dda20482668c587e5504332a73e690117706b1fa377b1f4a8aeb979c2c2e22"),
+    // EvenMoreFish 2.5.0 (MIT): custom fish, rarities, a fish shop and contests whose rewards run our
+    // commands (owner, 2026-09-30; docs/research/custom-fishing.md). Boot-tested on scratch 26.1.2 and
+    // against MariaDB. Config: dev-server/plugins/EvenMoreFish.
+    PinnedPlugin("EvenMoreFish-2.5.0.jar",
+        "https://cdn.modrinth.com/data/vlh7rLCf/versions/Wognhsxd/EvenMoreFish-2.5.0.jar",
+        "SHA-256", "1ffe00bd2d32ec3811d6d6f4562141182f747fcbd84c871912875e3256ef9bd1"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

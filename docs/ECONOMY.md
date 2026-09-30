@@ -203,9 +203,9 @@ work in whichever world spawn ends up in. Every crate can also drop a key for th
 | Crate | Main prizes | Key sources (ADR-0006: every sold key needs one) |
 |---|---|---|
 | Vote | $1k–2.5k, 10–25 tokens, iron, XP bottles | Voting (plugin to come). Not sold. |
-| Common | $5k–10k, 50 tokens, iron tools, 8 diamonds | Vote crate (5 %); token shop |
-| Rare | $25k, 150 tokens, diamond gear, zombie spawner, 2 golden apples | Common crate; token shop |
-| Epic | $75k, 400 tokens, Prot III diamond, Sharp V netherite sword, netherite ingot, skeleton/creeper/blaze/enderman spawners, totem | Rare crate; Mythic crate (2 keys); token shop |
+| Common | $5k–10k, 50 tokens, iron tools, 8 diamonds | Vote crate (5 %); fishing (contest 2nd, AuraSkills epic catch); token shop |
+| Rare | $25k, 150 tokens, diamond gear, zombie spawner, 2 golden apples | Common crate; fishing contest 1st; token shop |
+| Epic | $75k, 400 tokens, Prot III diamond, Sharp V netherite sword, netherite ingot, skeleton/creeper/blaze/enderman spawners, totem | Rare crate; Mythic crate (2 keys); Sunday fishing contest 1st; token shop |
 | Mythic | $500k, 3,000 tokens, full Prot IV netherite, iron golem and blaze spawners, mace, elytra, 2 notch apples | Epic crate; token shop |
 
 The rarest PvP items (golden apples, notch apples, totems) sit at low weights, per #40. Admins give
@@ -291,6 +291,31 @@ lp bulkupdate users delete "permission == essentials.fly"
 What paid ranks still give beyond cosmetics is their weekly kit (which has its own crate route)
 and more auction listings. Homes are 2 for every rank past Hatchling, `/craft` comes with
 Fledgling and `/ec` is everyone's (owner, 2026-09-29).
+
+## Fishing
+
+Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
+`docs/research/custom-fishing.md`), on top of AuraSkills' own fishing XP and treasure.
+
+- **Money:** custom fish sell only through `/emf shop`, about $8 a catch on average, so roughly
+  $1,500–3,500 an hour: a side income, well under sugar cane. Raw fish stay unsellable in `/shop`
+  (`sell: -1`), so sell wands can't sell them either. Keep it that way.
+- **Tokens and keys come only from contests**, never from ordinary catches, and a contest only runs
+  with **3+ players online**, so nobody can farm them alone:
+
+  | Contest | When | 1st | 2nd | 3rd | Everyone |
+  |---|---|---|---|---|---|
+  | Biggest fish, 10 min | 18:00 and 21:00, not Sunday | 150 tokens + Rare key | 75 + Common key | 40 | $2,500 |
+  | Most fish, 30 min | Sunday 19:00 | 300 tokens + Epic key | 150 + Rare key | 75 + Common key | $5,000 |
+
+- **One rare catch:** AuraSkills' epic fishing loot includes a Common key, about 1 in 2,200
+  catches, more as a player's Fishing level (Epic Catch) rises.
+- **Anti-AFK:** EvenMoreFish's `exploits.afk-fishing` (10 catches in the same 3-block spot stops
+  catches) and AuraSkills' `fishing_a` check are on, since the Mythic enchant Auto Reel plus a held
+  click would otherwise fish unattended. `disable-auraskills-loot` is off so Treasure Hunter and
+  Epic Catch still work.
+
+Contests are in `plugins/EvenMoreFish/competitions/`; the weekend one is switched off.
 
 ## Changing prices
 

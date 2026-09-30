@@ -1,0 +1,30 @@
+# AVIAN: the Sunday fishing contest, longer with bigger prizes (owner, 2026-09-30). 3+ players online.
+id: sundayCompetition
+disabled: false
+type: MOST_FISH
+duration: 30
+minimum-players: 3
+days:
+  Sunday:
+  - '19:00'
+alerts:
+- '15:00'
+- '5:00'
+bossbar-colour: RED
+bossbar-prefix: '<bold><gradient:#FF7A45:#FF4F7A>Sunday Fishing Contest</gradient></bold> <#6E6E80>· most fish wins · '
+rewards:
+  '1':
+  - 'MESSAGE:<#FFD23F>♛</#FFD23F> <#B8B8C8>1st place! You won</#B8B8C8> <#FFE66D>300 tokens</#FFE66D> <#B8B8C8>and an</#B8B8C8> <#B07FE0>Epic Key</#B07FE0><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 300 fishing-contest'
+  - 'COMMAND:crazycrates give virtual Epic 1 {player}'
+  '2':
+  - 'MESSAGE:<#FFD23F>✦</#FFD23F> <#B8B8C8>2nd place! You won</#B8B8C8> <#FFE66D>150 tokens</#FFE66D> <#B8B8C8>and a</#B8B8C8> <#4DA3FF>Rare Key</#4DA3FF><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 150 fishing-contest'
+  - 'COMMAND:crazycrates give virtual Rare 1 {player}'
+  '3':
+  - 'MESSAGE:<#FFD23F>✦</#FFD23F> <#B8B8C8>3rd place! You won</#B8B8C8> <#FFE66D>75 tokens</#FFE66D> <#B8B8C8>and a</#B8B8C8> <#7CFF4F>Common Key</#7CFF4F><#B8B8C8>.</#B8B8C8>'
+  - 'COMMAND:tokens give {player} 75 fishing-contest'
+  - 'COMMAND:crazycrates give virtual Common 1 {player}'
+  participation:
+  - 'MESSAGE:<#B8B8C8>Thanks for fishing! You get</#B8B8C8> <#4CE08A>$5,000</#4CE08A> <#B8B8C8>for taking part.</#B8B8C8>'
+  - 'MONEY:5000'
