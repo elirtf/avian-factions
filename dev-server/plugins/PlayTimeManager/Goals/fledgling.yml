@@ -1,0 +1,25 @@
+# Fledgling: the second free rank, earned by playtime (owner, 2026-09-29). Every Hatchling who reaches
+# requirements.time seconds of play (AFK time excluded, see config.yml) is added to the fledgling group.
+# The goal is one-time, so a player who already has it is not promoted twice. Paid ranks inherit
+# Fledgling too, so a buyer who reaches the goal loses nothing and gains nothing.
+#
+# Field reference: PlayTimeManager's wiki, "Goals". Change the hours here and in
+# Customizations/Commands/commands-config.yml (the /playtime line says when Fledgling unlocks).
+active: true
+repeatable: false
+offline-rewards: false
+check-time-interval: '60'
+check-time-timezone: server
+per-player-check: false
+verbose: false
+goal-sound: UI_TOAST_CHALLENGE_COMPLETE
+goal-message: '<gradient:#FFD84D:#FF7A45><bold>Rank up!</bold></gradient> <#B8B8C8>You are now a <#FFE66D>Fledgling</#FFE66D>: 2 homes, /back and 8 auction listings.'
+requirements:
+  # 12 hours (owner, 2026-09-29; was 2).
+  time: 43200
+  permissions: []
+  placeholders: []
+rewards:
+  permissions: []
+  commands:
+    - 'lp user PLAYER_NAME parent add fledgling'

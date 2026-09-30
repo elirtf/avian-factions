@@ -58,6 +58,9 @@ lp group hatchling permission set essentials.balance true
 lp group hatchling permission set essentials.pay true
 lp group hatchling permission set essentials.home true
 lp group hatchling permission set essentials.sethome true
+# Home limits are keys under sethome-multiple in Essentials' config.yml; a player needs BOTH
+# essentials.sethome.multiple and essentials.sethome.multiple.<key>, or EssentialsX caps them at 1.
+lp group hatchling permission set essentials.sethome.multiple true
 lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
@@ -85,6 +88,8 @@ lp group hatchling permission set crazyauctions.bid.5 true
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
 
+# Fledgling is earned by 12 hours of playtime: PlayTimeManager adds the group
+# (dev-server/plugins/PlayTimeManager/Goals/fledgling.yml).
 lp creategroup fledgling
 lp group fledgling setweight 20
 lp group fledgling meta removeprefix 20
@@ -101,74 +106,98 @@ lp track free append hatchling
 lp track free append fledgling
 
 # ---------------------------------------------------------------------------------------------
-# Paid ranks: Finch -> Cardinal -> Falcon -> Hawk -> Raven.
+# Paid ranks: Harpy -> Griffin -> Wyvern -> Dragon, then Phoenix (owner, 2026-09-29; they replaced
+# Finch -> Cardinal -> Falcon -> Hawk -> Raven, which are deleted below).
+#
+# Phoenix is NOT sold. The only way to get it is winning F-Top: the winning faction's leader chooses
+# which member gets it (owner, 2026-09-29). It sits on this track because it is the top of the ladder.
 #
 # Nothing sold may be EXCLUSIVE (ADR-0006): money may buy something sooner, never something a free
 # player cannot reach. Kits and gear ARE allowed here, because the same kits are winnable from
 # crates and events — it just takes a free player longer. Each gameplay perk needs its in-game
 # route and rate written down first.
 #
-# These tiers are thin today only because no kit system exists yet and EssentialsX is all we have.
-# That is a gap to fill (#18, crate tables), not a rule.
-#
-# Each tier inherits the one below, so a Raven has everything.
-# Particles, pets and hats beyond Essentials' need a cosmetics plugin we have not chosen yet —
-# see #22. Until then these tiers are thin, and that is honest rather than padded with advantage.
+# Each tier inherits the one below, and Harpy inherits Fledgling, so a Phoenix has everything.
 # ---------------------------------------------------------------------------------------------
 
-lp creategroup finch
-lp group finch setweight 100
-lp group finch meta removeprefix 100
-lp group finch meta setsuffix 100 "<#F2D06B>ꜰɪɴᴄʜ"
-lp group finch permission set essentials.nick true
-lp group finch permission set essentials.nick.color true
+# The old paid ranks. Nobody held them when they were renamed. Deleting a group that is already
+# gone only prints a notice, so these stay safe to re-run.
+lp deletegroup finch
+lp deletegroup cardinal
+lp deletegroup falcon
+lp deletegroup hawk
+lp deletegroup raven
+
+lp creategroup harpy
+lp group harpy setweight 100
+lp group harpy meta removeprefix 100
+lp group harpy meta setsuffix 100 "<#E0474C>ʜᴀʀᴘʏ"
+lp group harpy parent add fledgling
+lp group harpy permission set essentials.nick true
+lp group harpy permission set essentials.nick.color true
 # Chat colours are CarbonChat MiniMessage tags now (<red>hi, <#FF4FA3>hi); EssentialsXChat is gone.
-lp group finch permission unset essentials.chat.color
-lp group finch permission set carbon.messagetags.color true
+lp group harpy permission unset essentials.chat.color
+lp group harpy permission set carbon.messagetags.color true
 
-lp creategroup cardinal
-lp group cardinal setweight 110
-lp group cardinal meta removeprefix 110
-lp group cardinal meta setsuffix 110 "<#E0474C>ᴄᴀʀᴅɪɴᴀʟ"
-lp group cardinal parent add finch
-lp group cardinal permission set essentials.hat true
-lp group cardinal permission unset essentials.chat.format
-lp group cardinal permission set carbon.messagetags.decorations true
-lp group cardinal permission set essentials.nick.format true
+lp creategroup griffin
+lp group griffin setweight 110
+lp group griffin meta removeprefix 110
+lp group griffin meta setsuffix 110 "<#F0923A>ɢʀɪꜰꜰɪɴ"
+lp group griffin parent add harpy
+lp group griffin permission set essentials.hat true
+lp group griffin permission unset essentials.chat.format
+lp group griffin permission set carbon.messagetags.decorations true
+lp group griffin permission set essentials.nick.format true
 
-lp creategroup falcon
-lp group falcon setweight 120
-lp group falcon meta removeprefix 120
-lp group falcon meta setsuffix 120 "<#F0923A>ꜰᴀʟᴄᴏɴ"
-lp group falcon parent add cardinal
+lp creategroup wyvern
+lp group wyvern setweight 120
+lp group wyvern meta removeprefix 120
+lp group wyvern meta setsuffix 120 "<#B07FE0>ᴡʏᴠᴇʀɴ"
+lp group wyvern parent add griffin
 # Hex colours. EssentialsX calls this "rgb"; an earlier version granted "essentials.nick.hex", which
 # does not exist, so the unset below cleans it out of databases that already have it.
-lp group falcon permission unset essentials.nick.hex
-lp group falcon permission set essentials.nick.rgb true
-lp group falcon permission unset essentials.chat.rgb
-lp group falcon permission set carbon.messagetags.gradient true
-lp group falcon permission set essentials.itemname true
+lp group wyvern permission unset essentials.nick.hex
+lp group wyvern permission set essentials.nick.rgb true
+lp group wyvern permission unset essentials.chat.rgb
+lp group wyvern permission set carbon.messagetags.gradient true
+lp group wyvern permission set essentials.itemname true
 
-lp creategroup hawk
-lp group hawk setweight 130
-lp group hawk meta removeprefix 130
-lp group hawk meta setsuffix 130 "<#B07FE0>ʜᴀᴡᴋ"
-lp group hawk parent add falcon
-lp group hawk permission set essentials.itemlore true
+lp creategroup dragon
+lp group dragon setweight 130
+lp group dragon meta removeprefix 130
+lp group dragon meta setsuffix 130 "<bold><#FFD84D>ᴅʀᴀɢᴏɴ</bold>"
+lp group dragon parent add wyvern
+lp group dragon permission set essentials.itemlore true
 
-lp creategroup raven
-lp group raven setweight 140
-lp group raven meta removeprefix 140
-lp group raven meta setsuffix 140 "<#8C5CFF><bold>ʀᴀᴠᴇɴ</bold>"
-lp group raven parent add hawk
-lp group raven permission set essentials.nick.others false
+lp creategroup phoenix
+lp group phoenix setweight 140
+lp group phoenix meta removeprefix 140
+lp group phoenix meta setsuffix 140 "<bold><gradient:#FFD84D:#FF7A45:#FF3B3B>ᴘʜᴏᴇɴɪx</gradient></bold>"
+lp group phoenix parent add dragon
+lp group phoenix permission set essentials.nick.others false
 
+# Rebuilt from scratch each run, so a renamed rank never lingers on the track.
+lp deletetrack paid
 lp createtrack paid
-lp track paid append finch
-lp track paid append cardinal
-lp track paid append falcon
-lp track paid append hawk
-lp track paid append raven
+lp track paid append harpy
+lp track paid append griffin
+lp track paid append wyvern
+lp track paid append dragon
+lp track paid append phoenix
+
+# ---------------------------------------------------------------------------------------------
+# Playtester: people who test the server before launch and report bugs (owner, 2026-09-29). A badge,
+# not a perk: it shows instead of their free or paid rank (weight above paid, below staff) and
+# carries Fledgling's permissions so a tester is not stuck on one home. Give it by hand:
+#   lp user <name> parent add playtester
+# Their name stays light gray, like every non-staff player (TAB/groups.yml).
+# ---------------------------------------------------------------------------------------------
+
+lp creategroup playtester
+lp group playtester setweight 150
+lp group playtester meta removeprefix 150
+lp group playtester meta setsuffix 150 "<#FF6FB5>ᴘʟᴀʏᴛᴇꜱᴛᴇʀ"
+lp group playtester parent add fledgling
 
 # ---------------------------------------------------------------------------------------------
 # Staff. Deliberately NOT bird-themed: players must identify staff instantly, in chat, under

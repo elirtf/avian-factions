@@ -20,7 +20,7 @@ means to that end, nothing more. So:
 
 **Nothing sold is exclusive** (ADR-0006): Mojang forbids selling advantage that is *designed* to be
 exclusive. Money may buy something sooner, never something a free player cannot get. So:
-paid ranks (Finch, Cardinal, Falcon, Hawk, Raven) may carry kits and gear, and anything
+paid ranks (Harpy, Griffin, Wyvern, Dragon, Phoenix) may carry kits and gear, and anything
 gameplay-relevant — rank perks, kits, crate keys — needs a written-down in-game route at a rate a
 real player reaches. Free ranks are just Hatchling and Fledgling.
 
@@ -34,7 +34,7 @@ and the `mc.avian.club` identity.
 - Base package: `club.avian.factions`.
 - Database: **MariaDB everywhere** (Docker Compose locally), HikariCP + Flyway, portable SQL, all DB access behind per-module repository interfaces. No SQLite path.
 - Factions: **FactionsUUID 4.7.0** (ADR-0007), built from pinned source; `avian-factions` only adds what it lacks (base power, Claim Boost, upgrade list) through its API.
-- Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer, AuraSkills (skills/stats; combat stats capped), Geyser + Floodgate + ViaVersion (Bedrock crossplay on UDP 19132; `docs/research/bedrock-crossplay.md`), DeluxeMenus (click menus: the `/f` faction menu), MiniMOTD (server-list MOTD), TAB (sidebar, tab list and nametags), CrazyAuctions (`/ah` auction house), ExcellentEnchants + nightcore + packetevents (custom enchants, `/enchanter`; `docs/ENCHANTS.md`), BetterRTP (`/rtp` 5,000+ blocks out), FancyNpcs (spawn NPCs).
+- Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer, AuraSkills (skills/stats; combat stats capped), Geyser + Floodgate + ViaVersion (Bedrock crossplay on UDP 19132; `docs/research/bedrock-crossplay.md`), DeluxeMenus (click menus: the `/f` faction menu), MiniMOTD (server-list MOTD), TAB (sidebar, tab list and nametags), CrazyAuctions (`/ah` auction house), ExcellentEnchants + nightcore + packetevents (custom enchants, `/enchanter`; `docs/ENCHANTS.md`), BetterRTP (`/rtp` 5,000+ blocks out), FancyNpcs (spawn NPCs), PlayTimeManager (playtime; promotes Hatchling to Fledgling).
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
 - V1 world border: 20,000 blocks diameter (10,000 out from spawn); `/rtp` lands 5,000–9,800 out.
 

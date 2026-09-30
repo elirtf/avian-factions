@@ -191,6 +191,16 @@ CoreProtect caveat noted below).
 | Caveat on 26.1.2 | None. |
 | Source | https://hangar.papermc.io/pop4959/Chunky, https://modrinth.com/plugin/chunky |
 
+### PlayTimeManager
+
+| | |
+|---|---|
+| Version | **3.6.6** (Modrinth, 2026-09-03, lists 26.1.2) |
+| Download | https://cdn.modrinth.com/data/OzCiibPq/versions/WykL4lBe/PlayTimeManager-3.6.6.jar (sha256 `e86a7b33257076c66691642ef7568d36b690665c1c656d860fcb585e5a54f0b6`) |
+| License | GPL-3.0 (https://github.com/TheGaBr0/PlayTimeManager) |
+| Why | Fledgling is earned by playtime (owner, 2026-09-29). It tracks playtime in MariaDB, can exclude Essentials AFK time, and runs goal rewards such as a LuckPerms parent add, so the rank-up is config only. Its join streaks could later carry the playtime rewards on the ideas list. |
+| Checked on 26.1.2 | 2026-09-29, scratch server with LuckPerms, EssentialsX, PlaceholderAPI: enables clean, creates its four tables in MariaDB (`play_time`, `completed_goals`, `received_rewards`, `rewards_to_be_claimed`, no clash with ours), and a 10-second test goal added a bot to `fledgling`. |
+
 ### Stack-gap matrix
 
 Author-stated support by MC version, using each plugin's newest stable release

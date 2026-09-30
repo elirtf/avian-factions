@@ -22,6 +22,8 @@ dependencies {
     implementation(project(":avian-factions"))
     implementation(project(":avian-ftop"))
     factionsUuid(project(":avian-factions", "factionsUuidJar"))
+    // Paper provides log4j-core at runtime; PlayTimeManagerLogFix removes a filter from its root logger.
+    compileOnly(libs.log4j.core)
 }
 
 tasks.processResources {
@@ -228,6 +230,12 @@ val pluginStack = listOf(
     PinnedPlugin("CrazyAuctions-26.1.2-f6e007a.jar",
         "https://cdn.modrinth.com/data/U3Q9GAst/versions/iFnIal8K/CrazyAuctions-26.1.2-f6e007a.jar",
         "SHA-256", "5ffe51d35a758bb274beb8b9cd8c7fead4c750b2288708122f3fd9004e1ba80b"),
+    // PlayTimeManager 3.6.6 (GPL-3.0): tracks playtime in MariaDB, skipping Essentials AFK time, and
+    // promotes Hatchling to Fledgling through LuckPerms once a player reaches the goal. Boot-tested on a
+    // scratch 26.1.2 server with a bot promoted end to end. Config: dev-server/plugins/PlayTimeManager.
+    PinnedPlugin("PlayTimeManager-3.6.6.jar",
+        "https://cdn.modrinth.com/data/OzCiibPq/versions/WykL4lBe/PlayTimeManager-3.6.6.jar",
+        "SHA-256", "e86a7b33257076c66691642ef7568d36b690665c1c656d860fcb585e5a54f0b6"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 
