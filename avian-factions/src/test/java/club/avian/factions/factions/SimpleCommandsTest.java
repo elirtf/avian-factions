@@ -1,12 +1,19 @@
 package club.avian.factions.factions;
 
+import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SimpleCommandsTest {
 
@@ -64,5 +71,24 @@ class SimpleCommandsTest {
     })
     void everythingElsePassesThrough(String typed) {
         assertEquals(Optional.empty(), SimpleCommands.rewrite(typed));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"f", "f info", "f info Ravens", "f who Wigby", "f sethome", "f claim 5",
+            "f ally Ravens", "f map height 12", "factions desc Birds of prey", "f show Ravens"})
+    void theClientTreeAcceptsTheShortcuts(String typed) {
+        var dispatcher = new CommandDispatcher<Object>();
+        // A stand-in for FactionsUUID's tree: /f and /factions, only the real subcommand "show".
+        for (String root : List.of("f", "factions")) {
+            dispatcher.register(LiteralArgumentBuilder.literal(root)
+                    .then(LiteralArgumentBuilder.literal("show").executes(c -> 1)
+                            .then(RequiredArgumentBuilder.argument("faction", StringArgumentType.word()).executes(c -> 1))));
+        }
+
+        SimpleCommands.addShortcuts(dispatcher.getRoot());
+
+        var parse = dispatcher.parse(typed, new Object());
+        assertFalse(parse.getReader().canRead(), () -> "unparsed input in: " + typed);
+        assertNotNull(parse.getContext().getCommand(), () -> "incomplete command: " + typed);
     }
 }

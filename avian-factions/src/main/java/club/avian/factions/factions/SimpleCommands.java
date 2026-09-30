@@ -1,5 +1,11 @@
 package club.avian.factions.factions;
 
+import com.destroystokyo.paper.event.brigadier.AsyncPlayerSendCommandsEvent;
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.RootCommandNode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -25,9 +31,49 @@ public final class SimpleCommands implements Listener {
     private static final Set<String> MENU = Set.of("menu", "gui");
     static final String MENU_COMMAND = "fmenu";
 
+    /** Every word {@link #rewrite} handles after {@code /f}; the client is told they exist. */
+    static final Set<String> SHORTCUTS = Set.of("menu", "gui", "top", "claim", "unclaim", "autoclaim",
+            "unclaimall", "map", "fly", "warp", "sethome", "delhome", "setwarp", "delwarp", "deinvite", "desc",
+            "tag", "rename", "ally", "enemy", "neutral", "truce", "who", "f", "info");
+
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         rewrite(event.getMessage()).ifPresent(event::setMessage);
+    }
+
+    /**
+     * The client checks a command against the tree the server sent before Enter is pressed, and
+     * FactionsUUID's tree has no {@code info}, {@code sethome} or {@code claim 5}: typing them turned
+     * red although they worked. Adding the shortcuts to the player's copy of the tree fixes the colour
+     * and tab-completes them. Only the copy sent to the client changes; the rewrite still does the work.
+     */
+    @EventHandler
+    @SuppressWarnings("UnstableApiUsage")
+    public void onSendCommands(AsyncPlayerSendCommandsEvent<?> event) {
+        // Paper fires this async, then again on the main thread only if nothing listened async.
+        if (event.isAsynchronous() || !event.hasFiredAsync()) {
+            addShortcuts(event.getCommandNode());
+        }
+    }
+
+    /** Adds each shortcut, taking any arguments, under every {@code /f} root the player can see. */
+    static <S> void addShortcuts(RootCommandNode<S> root) {
+        for (String name : ROOTS) {
+            CommandNode<S> f = root.getChild(name);
+            if (f == null) {
+                continue;
+            }
+            // A bare /f opens the menu, so the root itself is complete. Adding a node with a command
+            // merges it into the existing one (Brigadier keeps the children, takes the command).
+            root.addChild(LiteralArgumentBuilder.<S>literal(name).executes(context -> 0).build());
+            for (String word : SHORTCUTS) {
+                f.addChild(LiteralArgumentBuilder.<S>literal(word)
+                        .executes(context -> 0)
+                        .then(RequiredArgumentBuilder.<S, String>argument("args", StringArgumentType.greedyString())
+                                .executes(context -> 0))
+                        .build());
+            }
+        }
     }
 
     /** The flag form of a plain {@code /f} command, or empty when it needs no change. */
