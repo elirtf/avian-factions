@@ -211,6 +211,34 @@ The rarest PvP items (golden apples, notch apples, totems) sit at low weights, p
 keys with `/crates give virtual <Crate> <amount> <player>`; token rewards land in the audit trail
 as `crate:<tier>`.
 
+## Rank kits
+
+Each paid rank claims its kit once a week with `/kit <rank>` (`dev-server/plugins/Essentials/kits.yml`),
+and every kit below its own. Every kit has armour, a sword, a pickaxe, a bow, arrows, logs, steak,
+golden apples and 3 random custom enchant books (owner, 2026-09-29). The books come from `/kitbooks`,
+which draws from the Enchanter's own pool for that tier, with the same odds.
+
+| Kit | Armour | Weapons and tools | Extras | Books |
+|---|---|---|---|---|
+| Harpy | Iron, Prot III, Unb II | Sharp III iron sword, Eff III iron pick, Power II bow (all Unb II) | 32 arrows, 32 logs, 32 steak, 2 golden apples | 3 Common |
+| Griffin | Diamond, Prot II, Unb II | Sharp III diamond sword, Eff III diamond pick, Power III bow (all Unb II) | 48 arrows, 48 logs, 32 steak, 3 golden apples | 3 Common |
+| Wyvern | Diamond, Prot III, Unb II | Sharp IV sword, Eff IV Fortune II pick, Power III Punch I bow | 64 arrows, 64 logs, 48 steak, 4 golden apples | 3 Rare |
+| Dragon | Diamond, Prot IV, Unb III | Sharp V sword, Eff V Fortune III pick, Power IV Punch I bow | 64 arrows, 64 logs, 64 steak, 5 golden apples, 1 netherite ingot | 3 Legendary |
+| Phoenix | Netherite helmet and chestplate, diamond legs and boots, Prot IV, Unb III | Sharp V netherite sword, Eff V Fortune III netherite pick, Power V Punch I bow | 64 arrows, 64 logs, 64 steak, 6 golden apples | 3 Mythic |
+
+**The free route (ADR-0006).** Every kit a rank sells is also a crate prize, so it can be won:
+
+| Kit | Crate | Chance per opening |
+|---|---|---|
+| Harpy | Rare | about 5 % |
+| Griffin | Rare | about 3 % |
+| Wyvern | Epic | about 4 % |
+| Dragon | Mythic | about 5 % |
+| Phoenix | none | Phoenix is never sold; winning F-Top is the only way to get it |
+
+Rare keys drop from Common crates and cost 600 tokens, so a free player who farms a few hours a
+week wins a Harpy kit every few weeks. That's the rate the store is selling time against.
+
 ## Changing prices
 
 Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`

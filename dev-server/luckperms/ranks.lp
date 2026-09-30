@@ -120,13 +120,14 @@ lp track free append fledgling
 # Each tier inherits the one below, and Harpy inherits Fledgling, so a Phoenix has everything.
 #
 # Per tier (owner, 2026-09-29):     homes   auction listings   also
-#   Harpy                              3        10                coloured nickname and chat
+#   Harpy                              3        10                coloured nickname and chat, /pweather
 #   Griffin                            4        12                /craft, /hat, bold/italic chat
 #   Wyvern                             5        15                hex and gradient colours, /itemname
 #   Dragon                             6        18                /ec, /itemlore
 #   Phoenix (F-Top only)               8        21
 # Homes are keys under sethome-multiple in Essentials' config.yml. Auction limits take the highest
 # crazyauctions.sell.<n> a player holds, so each tier just adds its own.
+# Each tier also has a weekly kit, /kit <rank> (Essentials kits.yml).
 # ---------------------------------------------------------------------------------------------
 
 # The old paid ranks. Nobody held them when they were renamed. Deleting a group that is already
@@ -147,6 +148,9 @@ lp group harpy permission set essentials.nick.color true
 # Chat colours are CarbonChat MiniMessage tags now (<red>hi, <#FF4FA3>hi); EssentialsXChat is gone.
 lp group harpy permission unset essentials.chat.color
 lp group harpy permission set carbon.messagetags.color true
+# /pweather: your own weather, seen only by you (owner, 2026-09-29).
+lp group harpy permission set essentials.pweather true
+lp group harpy permission set essentials.kits.harpy true
 lp group harpy permission set essentials.sethome.multiple.harpy true
 lp group harpy permission set crazyauctions.sell.10 true
 lp group harpy permission set crazyauctions.bid.10 true
@@ -165,6 +169,7 @@ lp group griffin permission set crazyauctions.sell.12 true
 lp group griffin permission set crazyauctions.bid.12 true
 # /craft: a crafting table anywhere.
 lp group griffin permission set essentials.workbench true
+lp group griffin permission set essentials.kits.griffin true
 
 lp creategroup wyvern
 lp group wyvern setweight 120
@@ -178,6 +183,7 @@ lp group wyvern permission set essentials.nick.rgb true
 lp group wyvern permission unset essentials.chat.rgb
 lp group wyvern permission set carbon.messagetags.gradient true
 lp group wyvern permission set essentials.itemname true
+lp group wyvern permission set essentials.kits.wyvern true
 lp group wyvern permission set essentials.sethome.multiple.wyvern true
 lp group wyvern permission set crazyauctions.sell.15 true
 lp group wyvern permission set crazyauctions.bid.15 true
@@ -193,6 +199,7 @@ lp group dragon permission set crazyauctions.sell.18 true
 lp group dragon permission set crazyauctions.bid.18 true
 # /ec: your own ender chest anywhere (never someone else's: that is essentials.enderchest.others).
 lp group dragon permission set essentials.enderchest true
+lp group dragon permission set essentials.kits.dragon true
 
 lp creategroup phoenix
 lp group phoenix setweight 140
@@ -200,6 +207,7 @@ lp group phoenix meta removeprefix 140
 lp group phoenix meta setsuffix 140 "<bold><gradient:#FFD84D:#FF7A45:#FF3B3B>ᴘʜᴏᴇɴɪx</gradient></bold>"
 lp group phoenix parent add dragon
 lp group phoenix permission set essentials.nick.others false
+lp group phoenix permission set essentials.kits.phoenix true
 lp group phoenix permission set essentials.sethome.multiple.phoenix true
 lp group phoenix permission set crazyauctions.sell.21 true
 lp group phoenix permission set crazyauctions.bid.21 true

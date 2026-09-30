@@ -241,3 +241,13 @@ Crate:
       Weight: 10
       Commands: ["crates give virtual Epic 2 %player% -s"]
       Firework: true
+    # Rank kit: the free route to the Dragon weekly kit (ADR-0006, docs/ECONOMY.md).
+    "14":
+      DisplayName: "<bold><#FFD84D>Dragon Kit</#FFD84D></bold>"
+      DisplayItem: "diamond_pickaxe"
+      DisplayLore: ["<#B8B8C8>The Dragon rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 5
+      Commands: ["essentials:kit dragon %player%"]
+      Firework: true

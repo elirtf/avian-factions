@@ -87,6 +87,13 @@ public final class EconomyModule implements AvianModule {
         ctx.commands().register(new CratesBackCommand(CratesBackCommand::open).build(), "Where a crate preview's Menu button goes");
         // /ah pages redraw when anyone lists, buys, cancels or bids (CrazyAuctions only redraws on Refresh).
         AuctionRefresh.install(ctx.plugin(), ctx.logger());
+        // /kitbooks: rank kits' random enchant books, drawn from the Enchanter's own tier pools.
+        var crates = new java.io.File(ctx.plugin().getDataFolder().getParentFile(), "CrazyCrates/crates");
+        ctx.commands().register(new KitBooksCommand(
+                tier -> KitBooksCommand.readPool(new java.io.File(crates, "Enchant" + tier + ".yml")),
+                command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command),
+                () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble()).build(),
+                "Random enchant books of one tier, for rank kits (admins)");
         // /tokens and /gems: your balance; give|take|set is how crates, votes and events pay out (#26).
         var purchase = new Purchase(economy, mainThread,
                 command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), ctx.logger());

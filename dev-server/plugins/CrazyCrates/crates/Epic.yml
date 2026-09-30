@@ -242,3 +242,13 @@ Crate:
       Weight: 3
       Commands: ["rs give spawner %player% enderman 1 1"]
       Firework: true
+    # Rank kit: the free route to the Wyvern weekly kit (ADR-0006, docs/ECONOMY.md).
+    "15":
+      DisplayName: "<bold><#B07FE0>Wyvern Kit</#B07FE0></bold>"
+      DisplayItem: "diamond_sword"
+      DisplayLore: ["<#B8B8C8>The Wyvern rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 4
+      Commands: ["essentials:kit wyvern %player%"]
+      Firework: true

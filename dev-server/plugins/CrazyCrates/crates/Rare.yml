@@ -192,3 +192,22 @@ Crate:
       DisplayGlowing: true
       Weight: 4
       Commands: ["crates give virtual Epic 1 %player% -s"]
+    # Rank kits: the free route to what the paid ranks get weekly (ADR-0006, docs/ECONOMY.md).
+    "11":
+      DisplayName: "<bold><#E0474C>Harpy Kit</#E0474C></bold>"
+      DisplayItem: "iron_chestplate"
+      DisplayLore: ["<#B8B8C8>The Harpy rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 5
+      Commands: ["essentials:kit harpy %player%"]
+      Firework: true
+    "12":
+      DisplayName: "<bold><#F0923A>Griffin Kit</#F0923A></bold>"
+      DisplayItem: "diamond_chestplate"
+      DisplayLore: ["<#B8B8C8>The Griffin rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 3
+      Commands: ["essentials:kit griffin %player%"]
+      Firework: true
