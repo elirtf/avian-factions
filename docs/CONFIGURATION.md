@@ -241,8 +241,10 @@ How many **homes** a player gets is set by their rank, not here — see below.
 
 This is the master list of every rank, its colour, and what it can do. Ranks are:
 
-- **Free:** Hatchling → Fledgling
-- **Paid:** Finch → Cardinal → Falcon → Hawk → Raven
+- **Free:** Hatchling → Fledgling (Fledgling comes automatically after 2 hours of playtime, not counting
+  AFK: `dev-server/plugins/PlayTimeManager/Goals/fledgling.yml`)
+- **Paid:** Harpy → Griffin → Wyvern → Dragon → Phoenix
+- **Playtester:** a badge for pre-launch testers, given by hand (`lp user <name> parent add playtester`)
 - **Staff:** Helper → Mod → Admin → Owner
 
 To change ranks, edit that file, then run:
@@ -270,7 +272,12 @@ Done with commands in game, not a file. Stand in the area and use WorldGuard:
 /rg define spawn
 /rg flag spawn pvp deny
 /rg flag spawn build deny
+/rg flag spawn natural-hunger-drain deny
 ```
+
+The live `spawn` region (the flags it has today) is in `run/plugins/WorldGuard/worlds/world/regions.yml`.
+It is world data, so it travels with `./dev backup` rather than git. `natural-hunger-drain deny`
+means nobody gets hungrier at spawn (owner, 2026-09-29).
 
 ---
 

@@ -183,6 +183,20 @@ lp track paid append dragon
 lp track paid append phoenix
 
 # ---------------------------------------------------------------------------------------------
+# Playtester: people who test the server before launch and report bugs (owner, 2026-09-29). A badge,
+# not a perk: it shows instead of their free or paid rank (weight above paid, below staff) and
+# carries Fledgling's permissions so a tester is not stuck on one home. Give it by hand:
+#   lp user <name> parent add playtester
+# Their name stays light gray, like every non-staff player (TAB/groups.yml).
+# ---------------------------------------------------------------------------------------------
+
+lp creategroup playtester
+lp group playtester setweight 150
+lp group playtester meta removeprefix 150
+lp group playtester meta setsuffix 150 "<#FF6FB5>ᴘʟᴀʏᴛᴇꜱᴛᴇʀ"
+lp group playtester parent add fledgling
+
+# ---------------------------------------------------------------------------------------------
 # Staff. Deliberately NOT bird-themed: players must identify staff instantly, in chat, under
 # pressure, mid-raid. The only concession to the brand is the palette.
 # ---------------------------------------------------------------------------------------------

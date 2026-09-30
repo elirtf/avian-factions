@@ -68,7 +68,8 @@ we ever have a queue.
 
 **Paid — five tiers**, escalating from small bird to bird of prey:
 
-**Finch → Cardinal → Falcon → Hawk → Raven.**
+**Harpy → Griffin → Wyvern → Dragon → Phoenix.** (Renamed 2026-09-29 from Finch → Cardinal → Falcon → Hawk →
+Raven. The top rank's free route is winning F-Top: the winning faction's leader chooses who gets it.)
 
 **Free — two tiers only**: **Hatchling** (on joining) and **Fledgling** (early play). There is
 deliberately no long free rank ladder mirroring the paid one.
