@@ -243,7 +243,8 @@ This is the master list of every rank, its colour, and what it can do. Ranks are
 
 - **Free:** Hatchling → Fledgling (Fledgling comes automatically after 2 hours of playtime, not counting
   AFK: `dev-server/plugins/PlayTimeManager/Goals/fledgling.yml`)
-- **Paid:** Harpy → Griffin → Wyvern → Dragon → Phoenix
+- **Paid:** Harpy → Griffin → Wyvern → Dragon. **Phoenix** tops the ladder but is never sold: winning F-Top
+  earns it, and the winning faction's leader picks who gets it
 - **Playtester:** a badge for pre-launch testers, given by hand (`lp user <name> parent add playtester`)
 - **Staff:** Helper → Mod → Admin → Owner
 

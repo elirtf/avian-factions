@@ -69,7 +69,8 @@ we ever have a queue.
 **Paid — five tiers**, escalating from small bird to bird of prey:
 
 **Harpy → Griffin → Wyvern → Dragon → Phoenix.** (Renamed 2026-09-29 from Finch → Cardinal → Falcon → Hawk →
-Raven. The top rank's free route is winning F-Top: the winning faction's leader chooses who gets it.)
+Raven.) **Phoenix is never sold**: the only way to get it is winning F-Top, and the winning faction's
+leader chooses which member gets it. The four below it are the store ladder.
 
 **Free — two tiers only**: **Hatchling** (on joining) and **Fledgling** (early play). There is
 deliberately no long free rank ladder mirroring the paid one.

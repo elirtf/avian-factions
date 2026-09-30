@@ -106,8 +106,11 @@ lp track free append hatchling
 lp track free append fledgling
 
 # ---------------------------------------------------------------------------------------------
-# Paid ranks: Harpy -> Griffin -> Wyvern -> Dragon -> Phoenix (owner, 2026-09-29; they replaced
+# Paid ranks: Harpy -> Griffin -> Wyvern -> Dragon, then Phoenix (owner, 2026-09-29; they replaced
 # Finch -> Cardinal -> Falcon -> Hawk -> Raven, which are deleted below).
+#
+# Phoenix is NOT sold. The only way to get it is winning F-Top: the winning faction's leader chooses
+# which member gets it (owner, 2026-09-29). It sits on this track because it is the top of the ladder.
 #
 # Nothing sold may be EXCLUSIVE (ADR-0006): money may buy something sooner, never something a free
 # player cannot reach. Kits and gear ARE allowed here, because the same kits are winnable from
