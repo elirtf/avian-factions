@@ -109,10 +109,13 @@ lp group hatchling permission set emf.next true
 lp group hatchling permission set emf.journal true
 lp group hatchling permission set emf.applybaits true
 lp group hatchling permission set emf.use_rod true
-lp group hatchling permission set emf.toggle true
-lp group hatchling permission set emf.toggle.bossbar true
-lp group hatchling permission set emf.toggle.catchmessage true
-lp group hatchling permission set emf.toggle.fishing true
+# No /fish toggle at all: every catch must be a custom fish, since fishing XP comes from its rarity
+# (EvenMoreFish/rarities). A bare /fish toggle turns custom fishing off for anyone holding ANY toggle
+# permission, even just the boss-bar one, so none are given (and older databases are cleaned).
+lp group hatchling permission unset emf.toggle
+lp group hatchling permission unset emf.toggle.bossbar
+lp group hatchling permission unset emf.toggle.catchmessage
+lp group hatchling permission unset emf.toggle.fishing
 # Cosmetics (owner, 2026-09-29): /tags picks a chat tag you've won (DeluxeTags gives these to ops only by
 # default) and /pet summons a pet (SimplePets' commands are open by default). The tags and pets
 # themselves are Cosmetics crate prizes, one permission each.
