@@ -98,6 +98,21 @@ lp group hatchling permission set crazyauctions.bid.5 true
 # F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
+# Fishing (EvenMoreFish, /fish): it checks these but gives them to no one by default, so without them
+# /fish and /emf were "unknown command" for players (found by the owner, 2026-09-30).
+lp group hatchling permission set emf.gui true
+lp group hatchling permission set emf.shop true
+lp group hatchling permission set emf.sellall true
+lp group hatchling permission set emf.top true
+lp group hatchling permission set emf.help true
+lp group hatchling permission set emf.next true
+lp group hatchling permission set emf.journal true
+lp group hatchling permission set emf.applybaits true
+lp group hatchling permission set emf.use_rod true
+lp group hatchling permission set emf.toggle true
+lp group hatchling permission set emf.toggle.bossbar true
+lp group hatchling permission set emf.toggle.catchmessage true
+lp group hatchling permission set emf.toggle.fishing true
 # Cosmetics (owner, 2026-09-29): /tags picks a chat tag you've won (DeluxeTags gives these to ops only by
 # default) and /pet summons a pet (SimplePets' commands are open by default). The tags and pets
 # themselves are Cosmetics crate prizes, one permission each.

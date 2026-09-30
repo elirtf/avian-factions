@@ -231,10 +231,12 @@ command:
   admin-shortcut:
     enabled: true
     name: emfa
-  # The plugin's main command
-  main: emf
+  # The plugin's main command. AVIAN: /fish, because players won't know what "emf" is (owner,
+  # 2026-09-30): /fish opens the menu, /fish shop sells, /fish top ranks. /emf still works.
+  main: fish
   # Aliases for the main command
   aliases:
+  - emf
   - evenmorefish
   
   # Change the name of the plugin's subcommands
