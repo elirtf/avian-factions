@@ -251,24 +251,24 @@ Crate:
       Weight: 5
       Commands: ["essentials:kit dragon %player%"]
       Firework: true
-    # Super-rare (owner, 2026-09-29): flight for two days or the whole season, and ranks.
+    # Super-rare (owner, 2026-09-29): Essentials /fly for two days or the whole season, and ranks.
     "15":
-      DisplayName: "<bold><gradient:#5FF3E0:#C58CFF>Faction Fly · 2 Days</gradient></bold>"
+      DisplayName: "<bold><gradient:#5FF3E0:#C58CFF>Fly · 2 Days</gradient></bold>"
       DisplayItem: "feather"
-      DisplayLore: ["<#B8B8C8>/f fly in your own land for 48 hours. Stacks with more.</#B8B8C8>"]
+      DisplayLore: ["<#B8B8C8>/fly anywhere for 48 hours, outside combat. Stacks with more.</#B8B8C8>"]
       DisplayAmount: 1
       DisplayGlowing: true
       Weight: 1
-      Commands: ["lp user %player% permission settemp factions.fly true 2d accumulate", "lp user %player% permission settemp factions.fly.auto true 2d accumulate"]
+      Commands: ["lp user %player% permission settemp essentials.fly true 2d accumulate"]
       Firework: true
     "16":
-      DisplayName: "<bold><gradient:#FFD84D:#5FF3E0:#C58CFF>Faction Fly · Season</gradient></bold>"
+      DisplayName: "<bold><gradient:#FFD84D:#5FF3E0:#C58CFF>Fly · Season</gradient></bold>"
       DisplayItem: "elytra"
-      DisplayLore: ["<#B8B8C8>/f fly in your own land until the season ends.</#B8B8C8>"]
+      DisplayLore: ["<#B8B8C8>/fly anywhere until the season ends, outside combat.</#B8B8C8>"]
       DisplayAmount: 1
       DisplayGlowing: true
       Weight: 0.2
-      Commands: ["lp user %player% permission set factions.fly true", "lp user %player% permission set factions.fly.auto true"]
+      Commands: ["lp user %player% permission set essentials.fly true"]
       Firework: true
     "17":
       DisplayName: "<bold><#F0923A>Griffin Rank</#F0923A></bold>"
