@@ -1,4 +1,5 @@
-# AVIAN: tab-list names and nametags read "rank ┃ name", as in chat (CarbonChat). The rank tag is
+# AVIAN: tab-list names and nametags read "rank ┃ name tag", as in chat (CarbonChat); the chat tag is
+# DeluxeTags (%deluxetags_tag%, empty when none). The rank tag is
 # the LuckPerms suffix (ranks.lp) through %avian_rank%, so ranks are changed there, not here.
 #
 # Name colours (owner, 2026-09-29): light gray for everyone, a colour per staff rank. A nametag's name
@@ -8,9 +9,9 @@
 _DEFAULT_:
   tabprefix: "%avian_rank% <#5A5A5A>┃ "
   customtabname: "<gray>%player%"
-  tabsuffix: ""
+  tabsuffix: "%deluxetags_tag%"
   tagprefix: "%avian_rank% <#5A5A5A>┃ <gray>"
-  tagsuffix: ""
+  tagsuffix: "%deluxetags_tag%"
 
 owner:
   customtabname: "<light_purple>%player%"

@@ -1,0 +1,446 @@
+# Avian crate: Cosmetic (owner, 2026-09-29). Tags (DeluxeTags, /tags) and pets (SimplePets, /pet), nothing
+# that changes a fight. Each prize is a permission; one you already own pays 150 tokens instead
+# (BlackListed-Permissions + Alternative-Prize). Keys: the token shop and the Vote crate.
+# Weights: Epic tags 2, Rare 5, Common 10; pets 6 / 3 / 1. The preview shows each chance.
+Crate:
+  CrateType: CSGO
+  StartingKeys: 0
+  RequiredKeys: 0
+  Max-Mass-Open: 10
+  InGUI: true
+  Slot: 31
+  OpeningBroadCast: false
+  BroadCast: "<#FFD23F>✦</#FFD23F> <white>%player%</white> <#B8B8C8>is opening a</#B8B8C8> <bold><#FF4FD8>Cosmetics Crate</#FF4FD8></bold>"
+  opening-command:
+    toggle: false
+    commands: []
+  sound:
+    cycle-sound: {toggle: true, value: "block.note_block.pling", volume: 0.6, pitch: 1.4}
+    click-sound: {toggle: true, value: "ui.button.click", volume: 1.0, pitch: 1.0}
+    stop-sound: {toggle: true, value: "entity.player.levelup", volume: 1.0, pitch: 1.2}
+  Prize-Message:
+    - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You won</#B8B8C8> <white>%reward%</white> <#B8B8C8>from the</#B8B8C8> <#FF4FD8>Cosmetics Crate</#FF4FD8><#B8B8C8>!</#B8B8C8>"
+  Prize-Commands: []
+  Settings:
+    Tracking-Crate-Opening: false
+    Knock-Back: true
+    Disabled-Worlds: []
+    Requirements:
+      Key:
+        Sound: {Toggle: true, Name: "entity.villager.no"}
+    Border:
+      Glass-Border: {Toggle: true, Air: true}
+    CSGO:
+      Finished-Material: "lime_stained_glass_pane"
+      Cycle-Material: "purple_stained_glass_pane"
+    Broadcast:
+      Toggle: false
+      Messages: []
+      Permission: ""
+    Rewards:
+      Re-Roll-Spin: false
+      Permission: {Toggle: false, Persist: false, Max-Cap: 20}
+  Item: "pink_shulker_box"
+  Hide-Flags: true
+  Components: []
+  Custom-Model-Data: -1
+  Model: {Namespace: "", Id: ""}
+  Glowing: "add_glow"
+  Name: "<bold><#FF4FD8>Cosmetics Crate</#FF4FD8></bold>"
+  Lore:
+    - "<#B8B8C8>Chat tags and pets. Pure style, no advantage.</#B8B8C8>"
+    - ""
+    - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Keys</#B8B8C8>  <white>%keys%</white>"
+    - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Opened</#B8B8C8>  <white>%crate_opened%</white>"
+    - ""
+    - "<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Left-click · open with a key</#B8B8C8>"
+    - "<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Right-click · see every prize</#B8B8C8>"
+  Preview:
+    Name: "<bold><#FF4FD8>Cosmetics Crate</#FF4FD8></bold> <#6E6E80>· prizes</#6E6E80>"
+    Toggle: true
+    Rows: 6
+    Glass:
+      Toggle: true
+      Name: " "
+      Item: "black_stained_glass_pane"
+      Custom-Model-Data: -1
+      Model: {Namespace: "", Id: ""}
+  Animation:
+    Name: "<#FF4FD8>Rolling…</#FF4FD8>"
+    Glass-Frame:
+      Toggle: true
+      Items: {"1": {name: " ", lore: [], material: "purple_stained_glass_pane", amount: 1}}
+      Random:
+        Toggle: true
+        Items:
+          "1": {name: " ", lore: [], material: "magenta_stained_glass_pane", amount: 1}
+          "2": {name: " ", lore: [], material: "light_blue_stained_glass_pane", amount: 1}
+          "3": {name: " ", lore: [], material: "yellow_stained_glass_pane", amount: 1}
+  PhysicalKey:
+    Name: "<bold><#FF4FD8>Cosmetic Key</#FF4FD8></bold>"
+    Lore:
+      - "<#B8B8C8>Opens one Cosmetics Crate in /crates.</#B8B8C8>"
+    Item: "tripwire_hook"
+    Custom-Model-Data: -1
+    Model: {Namespace: "", Id: ""}
+    Glowing: "add_glow"
+    flags: {components: []}
+  Hologram:
+    Toggle: false
+    Height: 1.5
+    Range: 8
+    Update-Interval: -1
+    Color: "transparent"
+    TextShadow: false
+    Message: ["<bold><#FF4FD8>Cosmetics Crate</#FF4FD8></bold>"]
+  Prizes:
+    "1":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <bold><italic><gradient:#FF3FA4:#FF9BE0>SL</gradient><#FF1F7A>♥</#FF1F7A><gradient:#FF9BE0:#FF3FA4>Y</gradient></italic></bold>"
+      DisplayItem: "pink_dye"
+      DisplayLore: ["<#FF4FD8>Epic tag</#FF4FD8><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2
+      Commands: ["lp user %player% permission set deluxetags.tag.slay true"]
+      BlackListed-Permissions: ["deluxetags.tag.slay"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "2":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <bold><rainbow>2026</rainbow></bold>"
+      DisplayItem: "firework_rocket"
+      DisplayLore: ["<#FF4FD8>Epic tag</#FF4FD8><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2
+      Commands: ["lp user %player% permission set deluxetags.tag.2026 true"]
+      BlackListed-Permissions: ["deluxetags.tag.2026"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "3":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <bold><#FCEE0A>CH</#FCEE0A><#00F0FF>OO</#00F0FF><#FF003C>M</#FF003C></bold>"
+      DisplayItem: "yellow_dye"
+      DisplayLore: ["<#FF4FD8>Epic tag</#FF4FD8><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2
+      Commands: ["lp user %player% permission set deluxetags.tag.choom true"]
+      BlackListed-Permissions: ["deluxetags.tag.choom"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "4":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <bold><gradient:#FFD84D:#FF7A45>Main Character</gradient></bold>"
+      DisplayItem: "golden_helmet"
+      DisplayLore: ["<#FF4FD8>Epic tag</#FF4FD8><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2
+      Commands: ["lp user %player% permission set deluxetags.tag.maincharacter true"]
+      BlackListed-Permissions: ["deluxetags.tag.maincharacter"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "5":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#FF3B3B><bold>☠ Menace</bold></#FF3B3B>"
+      DisplayItem: "wither_skeleton_skull"
+      DisplayLore: ["<#4DA3FF>Rare tag</#4DA3FF><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set deluxetags.tag.menace true"]
+      BlackListed-Permissions: ["deluxetags.tag.menace"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "6":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <gradient:#5FF3E0:#4DA3FF><bold>Cracked</bold></gradient>"
+      DisplayItem: "diamond_sword"
+      DisplayLore: ["<#4DA3FF>Rare tag</#4DA3FF><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set deluxetags.tag.cracked true"]
+      BlackListed-Permissions: ["deluxetags.tag.cracked"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "7":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#4CE08A><bold>$ Rich $</bold></#4CE08A>"
+      DisplayItem: "emerald"
+      DisplayLore: ["<#4DA3FF>Rare tag</#4DA3FF><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set deluxetags.tag.rich true"]
+      BlackListed-Permissions: ["deluxetags.tag.rich"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "8":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#FF7A45><bold>⚔ Raider</bold></#FF7A45>"
+      DisplayItem: "tnt"
+      DisplayLore: ["<#4DA3FF>Rare tag</#4DA3FF><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set deluxetags.tag.raider true"]
+      BlackListed-Permissions: ["deluxetags.tag.raider"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "9":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#7CFF4F><bold>GG</bold></#7CFF4F>"
+      DisplayItem: "lime_dye"
+      DisplayLore: ["<#7CFF4F>Common tag</#7CFF4F><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["lp user %player% permission set deluxetags.tag.gg true"]
+      BlackListed-Permissions: ["deluxetags.tag.gg"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "10":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#C58CFF>Grinder</#C58CFF>"
+      DisplayItem: "iron_pickaxe"
+      DisplayLore: ["<#7CFF4F>Common tag</#7CFF4F><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["lp user %player% permission set deluxetags.tag.grinder true"]
+      BlackListed-Permissions: ["deluxetags.tag.grinder"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "11":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#7CFF4F>Touch Grass</#7CFF4F>"
+      DisplayItem: "short_grass"
+      DisplayLore: ["<#7CFF4F>Common tag</#7CFF4F><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["lp user %player% permission set deluxetags.tag.touchgrass true"]
+      BlackListed-Permissions: ["deluxetags.tag.touchgrass"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "12":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#FFE66D>No Cap</#FFE66D>"
+      DisplayItem: "leather_helmet"
+      DisplayLore: ["<#7CFF4F>Common tag</#7CFF4F><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["lp user %player% permission set deluxetags.tag.nocap true"]
+      BlackListed-Permissions: ["deluxetags.tag.nocap"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "13":
+      DisplayName: "<#B8B8C8>Tag:</#B8B8C8> <#9E9E9E><italic>lagging…</italic></#9E9E9E>"
+      DisplayItem: "clock"
+      DisplayLore: ["<#7CFF4F>Common tag</#7CFF4F><#B8B8C8> · wear it with /tags</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 10
+      Commands: ["lp user %player% permission set deluxetags.tag.lagging true"]
+      BlackListed-Permissions: ["deluxetags.tag.lagging"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that tag, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "14":
+      DisplayName: "<bold><#7CFF4F>Cat Pet</#7CFF4F></bold>"
+      DisplayItem: "cat_spawn_egg"
+      DisplayLore: ["<#7CFF4F>Common pet</#7CFF4F><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 6
+      Commands: ["lp user %player% permission set pet.type.cat.* true"]
+      BlackListed-Permissions: ["pet.type.cat.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "15":
+      DisplayName: "<bold><#7CFF4F>Fox Pet</#7CFF4F></bold>"
+      DisplayItem: "fox_spawn_egg"
+      DisplayLore: ["<#7CFF4F>Common pet</#7CFF4F><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 6
+      Commands: ["lp user %player% permission set pet.type.fox.* true"]
+      BlackListed-Permissions: ["pet.type.fox.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "16":
+      DisplayName: "<bold><#7CFF4F>Rabbit Pet</#7CFF4F></bold>"
+      DisplayItem: "rabbit_spawn_egg"
+      DisplayLore: ["<#7CFF4F>Common pet</#7CFF4F><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 6
+      Commands: ["lp user %player% permission set pet.type.rabbit.* true"]
+      BlackListed-Permissions: ["pet.type.rabbit.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "17":
+      DisplayName: "<bold><#7CFF4F>Frog Pet</#7CFF4F></bold>"
+      DisplayItem: "frog_spawn_egg"
+      DisplayLore: ["<#7CFF4F>Common pet</#7CFF4F><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 6
+      Commands: ["lp user %player% permission set pet.type.frog.* true"]
+      BlackListed-Permissions: ["pet.type.frog.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "18":
+      DisplayName: "<bold><#4DA3FF>Parrot Pet</#4DA3FF></bold>"
+      DisplayItem: "parrot_spawn_egg"
+      DisplayLore: ["<#4DA3FF>Rare pet</#4DA3FF><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["lp user %player% permission set pet.type.parrot.* true"]
+      BlackListed-Permissions: ["pet.type.parrot.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "19":
+      DisplayName: "<bold><#4DA3FF>Axolotl Pet</#4DA3FF></bold>"
+      DisplayItem: "axolotl_spawn_egg"
+      DisplayLore: ["<#4DA3FF>Rare pet</#4DA3FF><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["lp user %player% permission set pet.type.axolotl.* true"]
+      BlackListed-Permissions: ["pet.type.axolotl.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "20":
+      DisplayName: "<bold><#4DA3FF>Bee Pet</#4DA3FF></bold>"
+      DisplayItem: "bee_spawn_egg"
+      DisplayLore: ["<#4DA3FF>Rare pet</#4DA3FF><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["lp user %player% permission set pet.type.bee.* true"]
+      BlackListed-Permissions: ["pet.type.bee.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "21":
+      DisplayName: "<bold><#4DA3FF>Panda Pet</#4DA3FF></bold>"
+      DisplayItem: "panda_spawn_egg"
+      DisplayLore: ["<#4DA3FF>Rare pet</#4DA3FF><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["lp user %player% permission set pet.type.panda.* true"]
+      BlackListed-Permissions: ["pet.type.panda.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "22":
+      DisplayName: "<bold><#4DA3FF>Armadillo Pet</#4DA3FF></bold>"
+      DisplayItem: "armadillo_spawn_egg"
+      DisplayLore: ["<#4DA3FF>Rare pet</#4DA3FF><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["lp user %player% permission set pet.type.armadillo.* true"]
+      BlackListed-Permissions: ["pet.type.armadillo.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "23":
+      DisplayName: "<bold><#FF4FD8>Allay Pet</#FF4FD8></bold>"
+      DisplayItem: "allay_spawn_egg"
+      DisplayLore: ["<#FF4FD8>Epic pet</#FF4FD8><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set pet.type.allay.* true"]
+      BlackListed-Permissions: ["pet.type.allay.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "24":
+      DisplayName: "<bold><#FF4FD8>Sniffer Pet</#FF4FD8></bold>"
+      DisplayItem: "sniffer_spawn_egg"
+      DisplayLore: ["<#FF4FD8>Epic pet</#FF4FD8><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set pet.type.sniffer.* true"]
+      BlackListed-Permissions: ["pet.type.sniffer.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "25":
+      DisplayName: "<bold><#FF4FD8>Polar Bear Pet</#FF4FD8></bold>"
+      DisplayItem: "polar_bear_spawn_egg"
+      DisplayLore: ["<#FF4FD8>Epic pet</#FF4FD8><#B8B8C8> · follows you around. Summon it with /pet</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set pet.type.polarbear.* true"]
+      BlackListed-Permissions: ["pet.type.polarbear.*"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"

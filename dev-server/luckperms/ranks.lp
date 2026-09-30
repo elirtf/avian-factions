@@ -98,6 +98,12 @@ lp group hatchling permission set crazyauctions.bid.5 true
 # F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
+# Cosmetics (owner, 2026-09-29): /tags picks a chat tag you've won (DeluxeTags gives these to ops only by
+# default) and /pet summons a pet (SimplePets' commands are open by default). The tags and pets
+# themselves are Cosmetics crate prizes, one permission each.
+lp group hatchling permission set deluxetags.gui true
+lp group hatchling permission set deluxetags.select true
+lp group hatchling permission set deluxetags.list true
 # Faction warps: /f warp and /f setwarp. FactionsUUID doesn't give these by default (found by the owner,
 # 2026-09-29); the "warps" upgrade in factions.conf sets how many (5, free).
 lp group hatchling permission set factions.warp true

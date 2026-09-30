@@ -236,6 +236,16 @@ val pluginStack = listOf(
     PinnedPlugin("PlayTimeManager-3.6.6.jar",
         "https://cdn.modrinth.com/data/OzCiibPq/versions/WykL4lBe/PlayTimeManager-3.6.6.jar",
         "SHA-256", "e86a7b33257076c66691642ef7568d36b690665c1c656d860fcb585e5a54f0b6"),
+    // Cosmetics crate (owner, 2026-09-29). DeluxeTags 1.9.0 (MIT, HelpChat): chat tags, one permission
+    // each, MiniMessage styling, shown through PlaceholderAPI. SimplePets R5-B315 (GPL-3.0): pets, one
+    // permission per type, stored in MariaDB. Both boot-tested on a scratch 26.1.2 server; a bot
+    // summoned a pet. Config: dev-server/plugins/DeluxeTags, dev-server/plugins/SimplePets.
+    PinnedPlugin("DeluxeTags-1.9.0-Release.jar",
+        "https://cdn.modrinth.com/data/wtpLgugo/versions/xuwIvpOR/DeluxeTags-1.9.0-Release.jar",
+        "SHA-256", "868b683b32c2bd1b4297a54419c0c7e04c2a9bef86c6282016df5999896206e8"),
+    PinnedPlugin("SimplePets-R5-B315.jar",
+        "https://cdn.modrinth.com/data/yNVORkCB/versions/4p1rcZFh/SimplePets.jar",
+        "SHA-256", "d7dda20482668c587e5504332a73e690117706b1fa377b1f4a8aeb979c2c2e22"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

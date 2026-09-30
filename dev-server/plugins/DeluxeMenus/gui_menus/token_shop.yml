@@ -116,6 +116,24 @@ items:
       - '[console] tokens charge %avian_name% 10000 shop:key-mythic crazycrates give virtual Mythic 1 %avian_name%'
     right_click_commands:
       - '[console] tokens charge %avian_name% 50000 shop:key-mythic crazycrates give virtual Mythic 5 %avian_name%'
+  'key_cosmetic':
+    material: PINK_SHULKER_BOX
+    slot: 20
+    enchantment_glint_override: true
+    display_name: '&#FF4FD8&lCosmetic Key'
+    lore:
+      - '&#B8B8C8Chat tags and pets. Pure style, no advantage.'
+      - '&#B8B8C8A tag or pet you already own pays 150 tokens back.'
+      - ''
+      - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D800 tokens'
+      - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D4,000 tokens'
+      - ''
+      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C8Buy one'
+      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C8Buy five'
+    left_click_commands:
+      - '[console] tokens charge %avian_name% 800 shop:key-cosmetic crazycrates give virtual Cosmetic 1 %avian_name%'
+    right_click_commands:
+      - '[console] tokens charge %avian_name% 4000 shop:key-cosmetic crazycrates give virtual Cosmetic 5 %avian_name%'
   'crates_link':
     material: TRIPWIRE_HOOK
     slot: 22
