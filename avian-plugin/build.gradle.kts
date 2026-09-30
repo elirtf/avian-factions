@@ -22,6 +22,8 @@ dependencies {
     implementation(project(":avian-factions"))
     implementation(project(":avian-ftop"))
     factionsUuid(project(":avian-factions", "factionsUuidJar"))
+    // Paper provides log4j-core at runtime; PlayTimeManagerLogFix removes a filter from its root logger.
+    compileOnly(libs.log4j.core)
 }
 
 tasks.processResources {

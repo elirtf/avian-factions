@@ -22,3 +22,6 @@ softdepend:
   - Essentials
   - FactionsUUID
   - BetterRTP
+# Enable before PlayTimeManager so PlayTimeManagerLogFix can undo the log filter it installs.
+loadbefore:
+  - PlayTimeManager

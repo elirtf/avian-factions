@@ -15,6 +15,8 @@ mockbukkit = "4.115.0"
 testcontainers = "2.0.5"
 shadow = "9.6.1"
 run-paper = "3.1.0"
+# The log4j-core Paper 26.1.2 ships (run/libraries); compile-only, for PlayTimeManagerLogFix.
+log4j = "2.25.2"
 
 [libraries]
 paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper-api" }
@@ -31,6 +33,7 @@ rosestacker = { module = "dev.rosewood:rosestacker", version.ref = "rosestacker"
 configurate-core = { module = "org.spongepowered:configurate-core", version.ref = "configurate" }
 configurate-hocon = { module = "org.spongepowered:configurate-hocon", version.ref = "configurate" }
 hikari = { module = "com.zaxxer:HikariCP", version.ref = "hikari" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 mariadb = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }
 flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
 flyway-mysql = { module = "org.flywaydb:flyway-mysql", version.ref = "flyway" }

@@ -63,6 +63,9 @@ public final class AvianFactionsPlugin extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        var logFix = new PlayTimeManagerLogFix(getLogger());
+        logFix.removeFilters();
+        getServer().getPluginManager().registerEvents(logFix, this);
         var registry = new ServiceRegistry();
         bootstrap = new ModuleBootstrap(modules,
                 module -> new PluginModuleContext(this, module, core, registry.viewFor(module)),
