@@ -228,16 +228,19 @@ which draws from the Enchanter's own pool for that tier, with the same odds.
 
 **The free route (ADR-0006).** Every kit a rank sells is also a crate prize, so it can be won:
 
-| Kit | Crate | Chance per opening |
-|---|---|---|
-| Harpy | Rare | about 5 % |
-| Griffin | Rare | about 3 % |
-| Wyvern | Epic | about 4 % |
-| Dragon | Mythic | about 5 % |
+| Kit | Crate | Chance per opening | Tokens of keys, on average |
+|---|---|---|---|
+| Harpy | Common | about 6 % | about 3,400 |
+| Griffin | Common | about 3.6 % | about 5,500 |
+| Wyvern | Rare | about 5.5 % | about 11,000 |
+| Dragon | Epic | about 6.8 % | about 22,000 |
 | Phoenix | none | Phoenix is never sold; winning F-Top is the only way to get it |
 
-Rare keys drop from Common crates and cost 600 tokens, so a free player who farms a few hours a
-week wins a Harpy kit every few weeks. That's the rate the store is selling time against.
+Balanced 2026-09-29 so the top kit a free player can win, Dragon, costs about a month of steady
+farming in keys (ADR-0006's own yardstick), and each lower kit proportionally less. That assumes
+roughly 20,000 tokens a month from an upgraded Harvester Hoe; hand farming (20–40 an hour) is far
+slower. Measure real token income in playtests and re-weight if it's off. They used to
+sit a crate higher; Dragon in Mythic averaged about 215,000 tokens, which is no real route.
 
 ## Flight and rank prizes
 
