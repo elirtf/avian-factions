@@ -1,0 +1,251 @@
+# AVIAN: chat tags (owner, 2026-09-29). A tag shows after your name in chat and the tab list
+# (%deluxetags_tag% in CarbonChat's global.conf and TAB's groups.yml). Each tag is a permission,
+# deluxetags.tag.<id>, won from the Cosmetics crate (CrazyCrates/crates/Cosmetic.yml); /tags picks one.
+# Tags are MiniMessage and start with a space, so a player without one gets no gap.
+# Categories are rarity, matching how often the crate gives them.
+use_minimessage: true
+force_tags: false
+check_updates: false
+legacy_hex: false
+papi_chat: true
+format_chat:
+  enabled: false
+  format: '{deluxetags_tag} <%1$s> %2$s'
+load_tag_on_join: true
+
+gui:
+  tag_availability_placeholder:
+    has_permission: '<#7CFF4F>▶ Click · wear this tag'
+    no_permission: '<#6E6E80>Locked · win it from the Cosmetics crate'
+  name: '<bold><gradient:#FF4FD8:#C58CFF>✦ Tags</gradient></bold>'
+  size: 54
+  tag_slots:
+  - 9-35
+  divider_item:
+    material: PINK_STAINED_GLASS_PANE
+    data: 0
+    displayname: ' '
+    lore: []
+    slots:
+    - 0-8
+    - 36-44
+  has_tag_item:
+    material: NAME_TAG
+    data: 0
+    displayname: '<#FFD23F>Wearing:%deluxetags_tag%'
+    lore:
+    - '<#7CFF4F>▶ Click · take it off'
+    slot: 49
+  no_tag_item:
+    material: NAME_TAG
+    data: 0
+    displayname: '<#B8B8C8>No tag on'
+    lore:
+    - '<#B8B8C8>Pick one above to wear it.'
+    slot: 49
+  exit_item:
+    material: BARRIER
+    data: 0
+    displayname: '<#FF5C5C><bold>✖ Close'
+    lore: []
+    slots:
+    - 53
+  category_back_item:
+    material: ARROW
+    data: 0
+    displayname: '<#FFD23F>◀ Back'
+    lore: []
+    slot: 45
+  next_page:
+    material: ARROW
+    data: 0
+    displayname: '<#FFD23F>Next ▶ %page%'
+    lore: []
+    slot: 50
+  previous_page:
+    material: ARROW
+    data: 0
+    displayname: '<#FFD23F>◀ Previous %page%'
+    lore: []
+    slot: 48
+  tag_visible_item:
+    material: BARRIER
+    data: 0
+
+categories:
+  all:
+    order: 0
+    item: BOOK
+    name: '<bold><gradient:#FF4FD8:#C58CFF>All tags</gradient></bold>'
+    lore:
+    - '<#B8B8C8>Every tag, yours unlocked.'
+    gui_name: '<bold><gradient:#FF4FD8:#C58CFF>All tags</gradient></bold> <#6E6E80>%deluxetags_category_amount% yours'
+  common:
+    order: 1
+    item: LIME_DYE
+    name: '<#7CFF4F><bold>Common'
+    lore:
+    - '<#B8B8C8>Everyday flex.'
+    gui_name: '<#7CFF4F><bold>Common tags</bold> <#6E6E80>%deluxetags_category_amount% yours'
+  rare:
+    order: 2
+    item: LIGHT_BLUE_DYE
+    name: '<#4DA3FF><bold>Rare'
+    lore:
+    - '<#B8B8C8>Harder to get.'
+    gui_name: '<#4DA3FF><bold>Rare tags</bold> <#6E6E80>%deluxetags_category_amount% yours'
+  epic:
+    order: 3
+    item: PINK_DYE
+    name: '<#FF4FD8><bold>Epic'
+    lore:
+    - '<#B8B8C8>The ones people ask about.'
+    gui_name: '<#FF4FD8><bold>Epic tags</bold> <#6E6E80>%deluxetags_category_amount% yours'
+
+deluxetags:
+  # Epic
+  slay:
+    order: 1
+    category: epic
+    tag: ' <bold><italic><gradient:#FF3FA4:#FF9BE0>SL</gradient><#FF1F7A>♥</#FF1F7A><gradient:#FF9BE0:#FF3FA4>Y</gradient></italic></bold>'
+    displayname: '<#FF4FD8><bold>Slay'
+    description:
+    - '<#B8B8C8>Pink, loud and a little bit diva.'
+    - '%deluxetags_available%'
+    item: PINK_DYE
+    data: 0
+    permission: deluxetags.tag.slay
+  '2026':
+    order: 2
+    category: epic
+    tag: ' <bold><rainbow>2026</rainbow></bold>'
+    displayname: '<bold><rainbow>2026'
+    description:
+    - '<#B8B8C8>You were here for the first year.'
+    - '%deluxetags_available%'
+    item: FIREWORK_ROCKET
+    data: 0
+    permission: deluxetags.tag.2026
+  choom:
+    order: 3
+    category: epic
+    tag: ' <bold><#FCEE0A>CH</#FCEE0A><#00F0FF>OO</#00F0FF><#FF003C>M</#FF003C></bold>'
+    displayname: '<#FCEE0A><bold>Choom'
+    description:
+    - '<#B8B8C8>Wake up, choom. We got a base to raid.'
+    - '%deluxetags_available%'
+    item: YELLOW_DYE
+    data: 0
+    permission: deluxetags.tag.choom
+  maincharacter:
+    order: 4
+    category: epic
+    tag: ' <bold><gradient:#FFD84D:#FF7A45>Main Character</gradient></bold>'
+    displayname: '<#FFD84D><bold>Main Character'
+    description:
+    - '<#B8B8C8>The server revolves around you.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.maincharacter
+  # Rare
+  menace:
+    order: 10
+    category: rare
+    tag: ' <#FF3B3B><bold>☠ Menace</bold></#FF3B3B>'
+    displayname: '<#FF3B3B><bold>Menace'
+    description:
+    - '<#B8B8C8>Everyone knows your name. Not in a good way.'
+    - '%deluxetags_available%'
+    item: WITHER_SKELETON_SKULL
+    data: 0
+    permission: deluxetags.tag.menace
+  cracked:
+    order: 11
+    category: rare
+    tag: ' <gradient:#5FF3E0:#4DA3FF><bold>Cracked</bold></gradient>'
+    displayname: '<#5FF3E0><bold>Cracked'
+    description:
+    - '<#B8B8C8>Your aim is suspicious.'
+    - '%deluxetags_available%'
+    item: DIAMOND_SWORD
+    data: 0
+    permission: deluxetags.tag.cracked
+  rich:
+    order: 12
+    category: rare
+    tag: ' <#4CE08A><bold>$ Rich $</bold></#4CE08A>'
+    displayname: '<#4CE08A><bold>Rich'
+    description:
+    - '<#B8B8C8>Money talks.'
+    - '%deluxetags_available%'
+    item: EMERALD
+    data: 0
+    permission: deluxetags.tag.rich
+  raider:
+    order: 13
+    category: rare
+    tag: ' <#FF7A45><bold>⚔ Raider</bold></#FF7A45>'
+    displayname: '<#FF7A45><bold>Raider'
+    description:
+    - '<#B8B8C8>Your walls are my walls.'
+    - '%deluxetags_available%'
+    item: TNT
+    data: 0
+    permission: deluxetags.tag.raider
+  # Common
+  gg:
+    order: 20
+    category: common
+    tag: ' <#7CFF4F><bold>GG</bold></#7CFF4F>'
+    displayname: '<#7CFF4F><bold>GG'
+    description:
+    - '<#B8B8C8>Good game, every time.'
+    - '%deluxetags_available%'
+    item: LIME_DYE
+    data: 0
+    permission: deluxetags.tag.gg
+  grinder:
+    order: 21
+    category: common
+    tag: ' <#C58CFF>Grinder</#C58CFF>'
+    displayname: '<#C58CFF><bold>Grinder'
+    description:
+    - '<#B8B8C8>Sleep is optional.'
+    - '%deluxetags_available%'
+    item: IRON_PICKAXE
+    data: 0
+    permission: deluxetags.tag.grinder
+  touchgrass:
+    order: 22
+    category: common
+    tag: ' <#7CFF4F>Touch Grass</#7CFF4F>'
+    displayname: '<#7CFF4F><bold>Touch Grass'
+    description:
+    - '<#B8B8C8>Advice you will not take.'
+    - '%deluxetags_available%'
+    item: SHORT_GRASS
+    data: 0
+    permission: deluxetags.tag.touchgrass
+  nocap:
+    order: 23
+    category: common
+    tag: ' <#FFE66D>No Cap</#FFE66D>'
+    displayname: '<#FFE66D><bold>No Cap'
+    description:
+    - '<#B8B8C8>For real, for real.'
+    - '%deluxetags_available%'
+    item: LEATHER_HELMET
+    data: 0
+    permission: deluxetags.tag.nocap
+  lagging:
+    order: 24
+    category: common
+    tag: ' <#9E9E9E><italic>lagging…</italic></#9E9E9E>'
+    displayname: '<#9E9E9E><bold>Lagging'
+    description:
+    - '<#B8B8C8>The excuse for every lost fight.'
+    - '%deluxetags_available%'
+    item: CLOCK
+    data: 0
+    permission: deluxetags.tag.lagging

@@ -151,3 +151,13 @@ Crate:
       DisplayGlowing: true
       Weight: 5
       Commands: ["crates give virtual Common 1 %player% -s"]
+    # The Cosmetics crate's free route (owner, 2026-09-29).
+    "9":
+      DisplayName: "<bold><#FF4FD8>1× Cosmetic Key</#FF4FD8></bold>"
+      DisplayItem: "tripwire_hook"
+      DisplayLore: ["<#B8B8C8>Opens a Cosmetics Crate: a chat tag or a pet.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 6
+      Commands: ["crates give virtual Cosmetic 1 %player% -s"]
+      Firework: true

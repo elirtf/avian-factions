@@ -141,6 +141,7 @@ key and wand the store sells (ADR-0006).
 | Rare key | 600 | |
 | Epic key | 1,500 | |
 | Mythic key | 10,000 | Hoe-farming territory; also reached through the crate chain |
+| Cosmetic key | 800 | Tags and pets only; a duplicate pays 150 back |
 | Sell wand | 250 | Cheap enough to be a new player's first auto-farm tool |
 | Gilded sell wand | 1,500 | |
 | Eternal sell wand | 12,000 | Permanent ×1.25 on every chest: the long-term token sink |
@@ -210,6 +211,24 @@ work in whichever world spawn ends up in. Every crate can also drop a key for th
 The rarest PvP items (golden apples, notch apples, totems) sit at low weights, per #40. Admins give
 keys with `/crates give virtual <Crate> <amount> <player>`; token rewards land in the audit trail
 as `crate:<tier>`.
+
+## Cosmetics crate
+
+Chat tags and pets, nothing that changes a fight (owner, 2026-09-29). `/tags` picks a tag
+(DeluxeTags; it shows after your name in chat, the tab list and above your head), `/pet` summons a
+pet (SimplePets). Each prize is a permission; one you already own pays **150 tokens** instead.
+
+| | Weight each | Prizes |
+|---|---|---|
+| Epic tags | 2 | Sl♥y, 2026 (rainbow), Choom, Main Character |
+| Rare tags | 5 | ☠ Menace, Cracked, $ Rich $, ⚔ Raider |
+| Common tags | 10 | GG, Grinder, Touch Grass, No Cap, lagging… |
+| Common pets | 6 | Cat, Fox, Rabbit, Frog |
+| Rare pets | 3 | Parrot, Axolotl, Bee, Panda, Armadillo |
+| Epic pets | 1 | Allay, Sniffer, Polar Bear |
+
+Keys: **800 tokens** in the token shop (4,000 for five), and about a 5 % drop from the Vote crate.
+Add a tag in `dev-server/plugins/DeluxeTags/config.yml` and its prize in `CrazyCrates/crates/Cosmetic.yml`.
 
 ## Rank kits
 
