@@ -8,3 +8,83 @@ kits:
     delay: 604800
     items:
       - /hoe give {USERNAME}
+
+  # Paid rank kits (owner, 2026-09-29), once a week: /kit <rank>. Each rank can claim its own kit and
+  # every kit below it. The same kit is a crate prize, the free route ADR-0006 requires
+  # (docs/ECONOMY.md → Rank kits). /kitbooks draws enchant books from the Enchanter's tier pool.
+  harpy:
+    delay: 604800
+    items:
+      - iron_helmet 1 protection:3 unbreaking:2
+      - iron_chestplate 1 protection:3 unbreaking:2
+      - iron_leggings 1 protection:3 unbreaking:2
+      - iron_boots 1 protection:3 unbreaking:2
+      - iron_sword 1 sharpness:3 unbreaking:2
+      - iron_pickaxe 1 efficiency:3 unbreaking:2
+      - bow 1 power:2 unbreaking:2
+      - arrow 32
+      - oak_log 32
+      - cooked_beef 32
+      - golden_apple 2
+      - /kitbooks {USERNAME} common 3
+  griffin:
+    delay: 604800
+    items:
+      - diamond_helmet 1 protection:2 unbreaking:2
+      - diamond_chestplate 1 protection:2 unbreaking:2
+      - diamond_leggings 1 protection:2 unbreaking:2
+      - diamond_boots 1 protection:2 unbreaking:2
+      - diamond_sword 1 sharpness:3 unbreaking:2
+      - diamond_pickaxe 1 efficiency:3 unbreaking:2
+      - bow 1 power:3 unbreaking:2
+      - arrow 48
+      - oak_log 48
+      - cooked_beef 32
+      - golden_apple 3
+      - /kitbooks {USERNAME} common 3
+  wyvern:
+    delay: 604800
+    items:
+      - diamond_helmet 1 protection:3 unbreaking:2
+      - diamond_chestplate 1 protection:3 unbreaking:2
+      - diamond_leggings 1 protection:3 unbreaking:2
+      - diamond_boots 1 protection:3 unbreaking:2
+      - diamond_sword 1 sharpness:4 unbreaking:2
+      - diamond_pickaxe 1 efficiency:4 fortune:2 unbreaking:2
+      - bow 1 power:3 punch:1 unbreaking:2
+      - arrow 64
+      - oak_log 64
+      - cooked_beef 48
+      - golden_apple 4
+      - /kitbooks {USERNAME} rare 3
+  dragon:
+    delay: 604800
+    items:
+      - diamond_helmet 1 protection:4 unbreaking:3
+      - diamond_chestplate 1 protection:4 unbreaking:3
+      - diamond_leggings 1 protection:4 unbreaking:3
+      - diamond_boots 1 protection:4 unbreaking:3
+      - diamond_sword 1 sharpness:5 unbreaking:3
+      - diamond_pickaxe 1 efficiency:5 fortune:3 unbreaking:3
+      - bow 1 power:4 punch:1 unbreaking:3
+      - arrow 64
+      - oak_log 64
+      - cooked_beef 64
+      - golden_apple 5
+      - netherite_ingot 1
+      - /kitbooks {USERNAME} legendary 3
+  phoenix:
+    delay: 604800
+    items:
+      - netherite_helmet 1 protection:4 unbreaking:3
+      - netherite_chestplate 1 protection:4 unbreaking:3
+      - diamond_leggings 1 protection:4 unbreaking:3
+      - diamond_boots 1 protection:4 unbreaking:3
+      - netherite_sword 1 sharpness:5 unbreaking:3
+      - netherite_pickaxe 1 efficiency:5 fortune:3 unbreaking:3
+      - bow 1 power:5 punch:1 unbreaking:3
+      - arrow 64
+      - oak_log 64
+      - cooked_beef 64
+      - golden_apple 6
+      - /kitbooks {USERNAME} mythic 3

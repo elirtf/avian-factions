@@ -7,7 +7,7 @@ Crate:
   RequiredKeys: 0
   Max-Mass-Open: 10
   InGUI: true
-  Slot: 24
+  Slot: 25
   OpeningBroadCast: true
   BroadCast: "<#FFD23F>✦</#FFD23F> <white>%player%</white> <#B8B8C8>is opening a</#B8B8C8> <bold><#FF4F7A>Mythic Crate</#FF4F7A></bold>"
   opening-command:
@@ -174,17 +174,17 @@ Crate:
             feather_falling: 4
       Firework: true
     "7":
-      DisplayName: "<bold><#FF7A45>1× 5 Spawner</#FF7A45></bold>"
+      DisplayName: "<bold><#FF7A45>1× Iron Golem Spawner</#FF7A45></bold>"
       DisplayItem: "spawner"
       DisplayAmount: 1
-      Weight: Iron Golem
+      Weight: 5
       Commands: ["rs give spawner %player% iron_golem 1 1"]
       Firework: true
     "8":
-      DisplayName: "<bold><#FF7A45>2× 10 Spawner</#FF7A45></bold>"
+      DisplayName: "<bold><#FF7A45>2× Blaze Spawner</#FF7A45></bold>"
       DisplayItem: "spawner"
       DisplayAmount: 2
-      Weight: Blaze
+      Weight: 10
       Commands: ["rs give spawner %player% blaze 1 2"]
       Firework: true
     "9":
@@ -234,10 +234,20 @@ Crate:
           amount: 5
       Firework: true
     "13":
-      DisplayName: "<bold><#FFB84D>2× Legendary Key</#FFB84D></bold>"
+      DisplayName: "<bold><#B07FE0>2× Epic Key</#B07FE0></bold>"
       DisplayItem: "tripwire_hook"
       DisplayAmount: 2
       DisplayGlowing: true
       Weight: 10
-      Commands: ["crates give virtual Legendary 2 %player% -s"]
+      Commands: ["crates give virtual Epic 2 %player% -s"]
+      Firework: true
+    # Rank kit: the free route to the Dragon weekly kit (ADR-0006, docs/ECONOMY.md).
+    "14":
+      DisplayName: "<bold><#FFD84D>Dragon Kit</#FFD84D></bold>"
+      DisplayItem: "diamond_pickaxe"
+      DisplayLore: ["<#B8B8C8>The Dragon rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 5
+      Commands: ["essentials:kit dragon %player%"]
       Firework: true

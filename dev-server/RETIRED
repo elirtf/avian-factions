@@ -1,0 +1,7 @@
+# Files the server used to have that are gone from dev-server/. tools/sync-config deletes each of
+# these from the server directory (run/ or the container's /data), because copying never deletes.
+# One path per line, relative to the server directory. Keep entries: a server restored from an old
+# backup still has the file.
+
+# The Legendary gear crate, removed 2026-09-29 (owner): the ladder is Common, Rare, Epic, Mythic.
+plugins/CrazyCrates/crates/Legendary.yml

@@ -7,7 +7,7 @@ Crate:
   RequiredKeys: 0
   Max-Mass-Open: 10
   InGUI: true
-  Slot: 20
+  Slot: 19
   OpeningBroadCast: false
   BroadCast: "<#FFD23F>✦</#FFD23F> <white>%player%</white> <#B8B8C8>is opening a</#B8B8C8> <bold><#C9C9C9>Common Crate</#C9C9C9></bold>"
   opening-command:

@@ -7,7 +7,7 @@ Crate:
   RequiredKeys: 0
   Max-Mass-Open: 10
   InGUI: true
-  Slot: 22
+  Slot: 23
   OpeningBroadCast: true
   BroadCast: "<#FFD23F>✦</#FFD23F> <white>%player%</white> <#B8B8C8>is opening a</#B8B8C8> <bold><#B07FE0>Epic Crate</#B07FE0></bold>"
   opening-command:
@@ -168,17 +168,17 @@ Crate:
           amount: 1
       Firework: true
     "7":
-      DisplayName: "<bold><#FF7A45>1× 8 Spawner</#FF7A45></bold>"
+      DisplayName: "<bold><#FF7A45>1× Skeleton Spawner</#FF7A45></bold>"
       DisplayItem: "spawner"
       DisplayAmount: 1
-      Weight: Skeleton
+      Weight: 8
       Commands: ["rs give spawner %player% skeleton 1 1"]
       Firework: true
     "8":
-      DisplayName: "<bold><#FF7A45>1× 5 Spawner</#FF7A45></bold>"
+      DisplayName: "<bold><#FF7A45>1× Creeper Spawner</#FF7A45></bold>"
       DisplayItem: "spawner"
       DisplayAmount: 1
-      Weight: Creeper
+      Weight: 5
       Commands: ["rs give spawner %player% creeper 1 1"]
       Firework: true
     "9":
@@ -202,10 +202,53 @@ Crate:
           amount: 1
       Firework: true
     "11":
-      DisplayName: "<bold><#FFB84D>1× Legendary Key</#FFB84D></bold>"
+      DisplayName: "<bold><#FF4F7A>1× Mythic Key</#FF4F7A></bold>"
       DisplayItem: "tripwire_hook"
       DisplayAmount: 1
       DisplayGlowing: true
+      Weight: 3
+      Commands: ["crates give virtual Mythic 1 %player% -s"]
+      Firework: true
+    # 12 to 14 came up from the Legendary crate when it was removed (2026-09-29).
+    "12":
+      DisplayName: "<#B07FE0>Netherite Sword</#B07FE0>"
+      DisplayItem: "netherite_sword"
+      DisplayAmount: 1
+      DisplayEnchantments:
+        - "sharpness:5"
+        - "unbreaking:3"
+        - "looting:3"
       Weight: 4
-      Commands: ["crates give virtual Legendary 1 %player% -s"]
+      Items:
+        "1":
+          material: "netherite_sword"
+          amount: 1
+          enchantments:
+            sharpness: 5
+            unbreaking: 3
+            looting: 3
+      Firework: true
+    "13":
+      DisplayName: "<bold><#FF7A45>1× Blaze Spawner</#FF7A45></bold>"
+      DisplayItem: "spawner"
+      DisplayAmount: 1
+      Weight: 4
+      Commands: ["rs give spawner %player% blaze 1 1"]
+      Firework: true
+    "14":
+      DisplayName: "<bold><#FF7A45>1× Enderman Spawner</#FF7A45></bold>"
+      DisplayItem: "spawner"
+      DisplayAmount: 1
+      Weight: 3
+      Commands: ["rs give spawner %player% enderman 1 1"]
+      Firework: true
+    # Rank kit: the free route to the Wyvern weekly kit (ADR-0006, docs/ECONOMY.md).
+    "15":
+      DisplayName: "<bold><#B07FE0>Wyvern Kit</#B07FE0></bold>"
+      DisplayItem: "diamond_sword"
+      DisplayLore: ["<#B8B8C8>The Wyvern rank's weekly kit: gear, a bow, golden apples and 3 enchant books.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 4
+      Commands: ["essentials:kit wyvern %player%"]
       Firework: true
