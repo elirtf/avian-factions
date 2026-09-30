@@ -252,3 +252,22 @@ Crate:
       Weight: 4
       Commands: ["essentials:kit wyvern %player%"]
       Firework: true
+    # Super-rare (owner, 2026-09-29): flight for a day, and the Harpy rank itself.
+    "16":
+      DisplayName: "<bold><gradient:#5FF3E0:#C58CFF>Faction Fly · 1 Day</gradient></bold>"
+      DisplayItem: "feather"
+      DisplayLore: ["<#B8B8C8>/f fly in your own land for 24 hours. Stacks with more.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 1
+      Commands: ["lp user %player% permission settemp factions.fly true 1d accumulate", "lp user %player% permission settemp factions.fly.auto true 1d accumulate"]
+      Firework: true
+    "17":
+      DisplayName: "<bold><#E0474C>Harpy Rank</#E0474C></bold>"
+      DisplayItem: "name_tag"
+      DisplayLore: ["<#B8B8C8>The Harpy rank, for good. Incredibly rare.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 0.2
+      Commands: ["lp user %player% parent add harpy"]
+      Firework: true

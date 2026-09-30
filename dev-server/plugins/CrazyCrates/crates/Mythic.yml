@@ -251,3 +251,49 @@ Crate:
       Weight: 5
       Commands: ["essentials:kit dragon %player%"]
       Firework: true
+    # Super-rare (owner, 2026-09-29): flight for two days or the whole season, and ranks.
+    "15":
+      DisplayName: "<bold><gradient:#5FF3E0:#C58CFF>Faction Fly · 2 Days</gradient></bold>"
+      DisplayItem: "feather"
+      DisplayLore: ["<#B8B8C8>/f fly in your own land for 48 hours. Stacks with more.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 1
+      Commands: ["lp user %player% permission settemp factions.fly true 2d accumulate", "lp user %player% permission settemp factions.fly.auto true 2d accumulate"]
+      Firework: true
+    "16":
+      DisplayName: "<bold><gradient:#FFD84D:#5FF3E0:#C58CFF>Faction Fly · Season</gradient></bold>"
+      DisplayItem: "elytra"
+      DisplayLore: ["<#B8B8C8>/f fly in your own land until the season ends.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 0.2
+      Commands: ["lp user %player% permission set factions.fly true", "lp user %player% permission set factions.fly.auto true"]
+      Firework: true
+    "17":
+      DisplayName: "<bold><#F0923A>Griffin Rank</#F0923A></bold>"
+      DisplayItem: "name_tag"
+      DisplayLore: ["<#B8B8C8>The Griffin rank, for good. Incredibly rare.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 0.2
+      Commands: ["lp user %player% parent add griffin"]
+      Firework: true
+    "18":
+      DisplayName: "<bold><#B07FE0>Wyvern Rank</#B07FE0></bold>"
+      DisplayItem: "name_tag"
+      DisplayLore: ["<#B8B8C8>The Wyvern rank, for good. Incredibly rare.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 0.1
+      Commands: ["lp user %player% parent add wyvern"]
+      Firework: true
+    "19":
+      DisplayName: "<bold><#FFD84D>Dragon Rank</#FFD84D></bold>"
+      DisplayItem: "name_tag"
+      DisplayLore: ["<#B8B8C8>The Dragon rank, for good. Incredibly rare.</#B8B8C8>"]
+      DisplayAmount: 1
+      DisplayGlowing: true
+      Weight: 0.05
+      Commands: ["lp user %player% parent add dragon"]
+      Firework: true

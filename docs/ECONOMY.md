@@ -239,6 +239,33 @@ which draws from the Enchanter's own pool for that tier, with the same odds.
 Rare keys drop from Common crates and cost 600 tokens, so a free player who farms a few hours a
 week wins a Harpy kit every few weeks. That's the rate the store is selling time against.
 
+## Flight and rank prizes
+
+`/f fly` (FactionsUUID: flight in your own land, cancelled near enemies) is **not** a default: it's a
+super-rare crate prize (owner, 2026-09-29). `ranks.lp` denies `factions.fly` to everyone, and a prize
+grants it to one player. The ranks themselves are also prizes, incredibly rare, as their free route.
+
+| Prize | Crate | Chance per opening | What it runs |
+|---|---|---|---|
+| Faction Fly · 1 day | Epic | about 1 % | `lp user <p> permission settemp factions.fly true 1d accumulate` |
+| Faction Fly · 2 days | Mythic | about 1 % | the same, `2d`; a second win adds time |
+| Faction Fly · Season | Mythic | about 0.2 % | `lp user <p> permission set factions.fly true` |
+| Harpy rank | Epic | about 0.2 % | `lp user <p> parent add harpy` |
+| Griffin rank | Mythic | about 0.2 % | `… parent add griffin` |
+| Wyvern rank | Mythic | about 0.1 % | `… parent add wyvern` |
+| Dragon rank | Mythic | about 0.05 % | `… parent add dragon` |
+
+**When a season ends**, clear season flight from everyone (temporary flight runs out on its own):
+
+```
+lp bulkupdate users delete "permission == factions.fly"
+lp bulkupdate users delete "permission == factions.fly.auto"
+```
+
+What paid ranks still give beyond cosmetics is their weekly kit (which has its own crate route)
+and more auction listings. Homes are 2 for every rank past Hatchling, `/craft` comes with
+Fledgling and `/ec` is everyone's (owner, 2026-09-29).
+
 ## Changing prices
 
 Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`

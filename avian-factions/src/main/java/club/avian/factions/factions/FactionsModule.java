@@ -68,6 +68,8 @@ public final class FactionsModule implements AvianModule {
         ctx.registerListener(new BusterGrants(ctx.plugin(), config));
         // Mining ancient debris is announced server-wide, so players hunt each other or team up.
         ctx.registerListener(new NetheriteAnnouncer(config, System::currentTimeMillis));
+        // /ec is for everyone, but spawners can't hide in an ender chest from raids and F-Top.
+        ctx.registerListener(new EnderChestSpawnerBan(ctx.plugin()));
 
         // Faction land stays loaded while a member is online, so crops grow while they are away.
         claimLoader = new ClaimLoader(ctx.plugin(), config,
