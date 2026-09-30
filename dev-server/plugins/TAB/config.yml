@@ -31,7 +31,7 @@ scoreboard-teams:
   enable-collision: true
   invisible-nametags: false
   sorting-types:
-    - "GROUPS:owner,admin,mod,helper,raven,hawk,falcon,cardinal,finch,fledgling,hatchling,default"
+    - "GROUPS:owner,admin,mod,helper,phoenix,dragon,wyvern,griffin,harpy,fledgling,hatchling,default"
     - "PLACEHOLDER_A_TO_Z:%player%"
   case-sensitive-sorting: false
   can-see-friendly-invisibles: false

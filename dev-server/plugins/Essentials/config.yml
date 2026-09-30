@@ -819,9 +819,12 @@ world-home-permissions: false
 # In this example, someone with 'essentials.sethome.multiple' and 'essentials.sethome.multiple.vip' will have 5 homes.
 # Remember, they must have BOTH permission nodes in order to be able to set multiple homes.
 # For more information, visit https://wiki.ess3.net/wiki/Multihome
+# Keys match the LuckPerms group names in dev-server/luckperms/ranks.lp, which grants each group
+# essentials.sethome.multiple plus essentials.sethome.multiple.<key>.
 sethome-multiple:
-  default: 3
-  vip: 5
+  default: 1
+  hatchling: 1
+  fledgling: 2
   staff: 10
 
 # Controls whether players need the permission 'essentials.home.compass' in order to point
