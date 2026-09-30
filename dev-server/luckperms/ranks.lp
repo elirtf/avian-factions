@@ -104,6 +104,10 @@ lp group hatchling permission set factions.top false
 lp group hatchling permission set deluxetags.gui true
 lp group hatchling permission set deluxetags.select true
 lp group hatchling permission set deluxetags.list true
+# Faction warps: /f warp and /f setwarp. FactionsUUID doesn't give these by default (found by the owner,
+# 2026-09-29); the "warps" upgrade in factions.conf sets how many (5, free).
+lp group hatchling permission set factions.warp true
+lp group hatchling permission set factions.setwarp true
 
 # Fledgling is earned by 12 hours of playtime: PlayTimeManager adds the group
 # (dev-server/plugins/PlayTimeManager/Goals/fledgling.yml).
