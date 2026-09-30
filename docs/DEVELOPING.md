@@ -49,7 +49,7 @@ The first time takes a few minutes. After that it's quick.
 | Restart after changing code or config | `./dev restart` |
 | Check what's running | `./dev status` |
 
-`./dev start` waits until the server is ready, then applies the ranks and the 5,000-block world
+`./dev start` waits until the server is ready, then applies the ranks and the 10,000-block world
 border for you, but only when `dev-server/luckperms/ranks.lp` or the border changed since last
 time (or the world or database was wiped). `./dev ranks` re-applies them regardless.
 

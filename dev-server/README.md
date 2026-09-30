@@ -15,7 +15,7 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 | `plugins/CommandTimer/timers/*.json` | Raid windows: grace (no explosions) outside Mon–Fri 20–23 and Sat–Sun 18–24, server time |
 | `plugins/AuraSkills/config.yml` | `sql.enabled: true`, database settings from `${AVIAN_DB_*}` (`auraskills_` tables) |
 | `plugins/AuraSkills/stats.yml`, `abilities.yml`, `mana_abilities.yml` | Combat stats and abilities capped for Factions PvP, still growing to level 100; the numbers and why are in `docs/research/skills-rpg.md` |
-| `plugins/BetterRTP/config.yml` | `/rtp` lands 5,000–9,800 blocks from 0,0 (the border is 20,000 wide), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
+| `plugins/BetterRTP/config.yml` | `/rtp` lands 2,000–4,800 blocks from 0,0 (the border is 10,000 wide), never in a WorldGuard region; Nether/End send you to the overworld; updater off. Its FactionsUUID hook is off because it cannot work with 4.x, so `/rtp` does not yet avoid claims (#45) |
 | `server.properties` | `white-list=true`, `enforce-whitelist=true`: `online-mode` from `${AVIAN_ONLINE_MODE}` (false only behind Velocity); port 25565 is forwarded to the internet, so only listed players may join. `management-server-secret` is left blank so the server generates its own; never commit one |
 | `config/paper-global.yml` | Only the Velocity proxy settings, off unless `AVIAN_VELOCITY=true` (the hub plan, docs/DEPLOYMENT.md). Paper fills in every other key |
 | `plugins/CraftEngine/config.yml` | Storage on MariaDB, database settings from `${AVIAN_DB_*}` |
@@ -48,8 +48,8 @@ runs it at every start). Only files we edited are tracked; everything else is ea
 config serves this machine, another machine and Kubernetes: database hosts and passwords never live
 in git. The defaults are the local dev values from `.env.example`. See docs/DEPLOYMENT.md.
 
-The 20,000-block world border is world state, not config: it lives in `run/world/level.dat` after
-`worldborder set 20000` on the console. A fresh world needs that command once (or Chunky's
+The 10,000-block world border is world state, not config: it lives in `run/world/level.dat` after
+`worldborder set 10000` on the console. A fresh world needs that command once (or Chunky's
 `/chunky worldborder`); the README's dev-loop section says so.
 
 `plugins/EconomyShopGUI/` — EconomyShopGUI owns sell prices when installed (see `ShopSellValues`). `config.yml` holds the settings we changed; `shops/` is the whole Avian price sheet (sell list, gear by tier, spawner ladder) and `sections/Magic/potions.yml` turns the potion shop off. Numbers and reasoning: `docs/ECONOMY.md`.

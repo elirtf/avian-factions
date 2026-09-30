@@ -36,7 +36,7 @@ and the `mc.avian.club` identity.
 - Factions: **FactionsUUID 4.7.0** (ADR-0007), built from pinned source; `avian-factions` only adds what it lacks (base power, Claim Boost, upgrade list) through its API.
 - Third-party stack: EssentialsX, LuckPerms, Vault, FastAsyncWorldEdit (replaces WorldEdit; dev build until 2.15.5 ships)+WorldGuard, PlaceholderAPI, CoreProtect, Spark, Chunky, FactionsUUID, RoseStacker, EconomyShopGUI, CrazyCrates, CommandTimer, AuraSkills (skills/stats; combat stats capped), Geyser + Floodgate + ViaVersion (Bedrock crossplay on UDP 19132; `docs/research/bedrock-crossplay.md`), DeluxeMenus (click menus: the `/f` faction menu), MiniMOTD (server-list MOTD), TAB (sidebar, tab list and nametags), CrazyAuctions (`/ah` auction house), ExcellentEnchants + nightcore + packetevents (custom enchants, `/enchanter`; `docs/ENCHANTS.md`), BetterRTP (`/rtp` 5,000+ blocks out), FancyNpcs (spawn NPCs), PlayTimeManager (playtime; promotes Hatchling to Fledgling).
 - Brand: **Avian Factions** — raven/hawk sigil, dark premium arcane; stone/gold/red/purple. Future IP `mc.avian.club` (config placeholder only, never hardcoded).
-- V1 world border: 20,000 blocks diameter (10,000 out from spawn); `/rtp` lands 5,000–9,800 out.
+- V1 world border: 10,000 blocks diameter (5,000 out from spawn); `/rtp` lands 2,000–4,800 out. Halved (owner, 2026-09-29) until a bigger machine can pre-generate 20,000.
 
 ## Dev loop
 
