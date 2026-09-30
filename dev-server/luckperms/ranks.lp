@@ -88,7 +88,7 @@ lp group hatchling permission set crazyauctions.bid.5 true
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
 
-# Fledgling is earned by 2 hours of playtime: PlayTimeManager adds the group
+# Fledgling is earned by 12 hours of playtime: PlayTimeManager adds the group
 # (dev-server/plugins/PlayTimeManager/Goals/fledgling.yml).
 lp creategroup fledgling
 lp group fledgling setweight 20

@@ -23,7 +23,7 @@ prefix: "<#FFD84D>⌚</#FFD84D> <#B8B8C8>"
 #This messaged is showed each time /playtime is executed
 #Available placeholders: %PLAYTIME%, %PLAYER_NAME%, %PREFIX% (luckperms prefix of %PLAYER_NAME%)
 playtime:
-  self-message: "<#B8B8C8>You have played for <#FFE66D>%PLAYTIME%</#FFE66D>. <#6E6E80>Fledgling unlocks at 2 hours.</#6E6E80>"
+  self-message: "<#B8B8C8>You have played for <#FFE66D>%PLAYTIME%</#FFE66D>. <#6E6E80>Fledgling unlocks at 12 hours.</#6E6E80>"
   others-message: "<#FFE66D>%PLAYER_NAME%</#FFE66D> <#B8B8C8>has played for <#FFE66D>%PLAYTIME%</#FFE66D>."
   updated: "&7PlayTime of &e%PLAYER_NAME%&7 has been updated from &6%OLD_TIME%&7 to &6%NEW_TIME%!"
 

@@ -241,7 +241,7 @@ How many **homes** a player gets is set by their rank, not here — see below.
 
 This is the master list of every rank, its colour, and what it can do. Ranks are:
 
-- **Free:** Hatchling → Fledgling (Fledgling comes automatically after 2 hours of playtime, not counting
+- **Free:** Hatchling → Fledgling (Fledgling comes automatically after 12 hours of playtime, not counting
   AFK: `dev-server/plugins/PlayTimeManager/Goals/fledgling.yml`)
 - **Paid:** Harpy → Griffin → Wyvern → Dragon. **Phoenix** tops the ladder but is never sold: winning F-Top
   earns it, and the winning faction's leader picks who gets it
