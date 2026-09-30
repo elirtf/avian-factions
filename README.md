@@ -54,7 +54,7 @@ Cutting a release: `git tag -a v1.2.3 -m "..." && git push origin v1.2.3`. The t
 
 The pinned third-party plugins and the settings we changed are tracked in `dev-server/` and copied
 into `run/` on every start. See `dev-server/README.md`. `./dev start` also applies the LuckPerms
-ranks and the 20,000-block world border.
+ranks and the 10,000-block world border.
 ## Configuration
 
 Plain-language guide to every setting and where it lives: **[`docs/CONFIGURATION.md`](docs/CONFIGURATION.md)**.

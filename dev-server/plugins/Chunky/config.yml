@@ -1,0 +1,10 @@
+# AVIAN: Chunky pre-generates the world inside the border, so /rtp lands in chunks that already
+# exist instead of generating them while the player waits (owner, 2026-09-29). A run takes hours on
+# this machine; resume it after a restart instead of starting over.
+#   chunky world world, chunky worldborder, chunky start   (pause: chunky pause, resume: chunky continue)
+version: 2
+language: en
+continue-on-restart: true
+force-load-existing-chunks: false
+silent: false
+update-interval: 1
