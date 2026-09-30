@@ -30,6 +30,9 @@ lp group hatchling meta removeprefix 10
 lp group hatchling meta setsuffix 10 "<#9E9E9E>ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
 lp group hatchling permission set betterrtp.use true
+# BetterRTP also checks a per-world permission; without it a non-op gets "not allowed rtp in the world
+# world" (found by the owner, 2026-09-29). The Nether and End send /rtp to the overworld (Overrides).
+lp group hatchling permission set betterrtp.world.world true
 lp group hatchling permission set essentials.tpa true
 lp group hatchling permission set essentials.tpaccept true
 lp group hatchling permission set essentials.tpdeny true
