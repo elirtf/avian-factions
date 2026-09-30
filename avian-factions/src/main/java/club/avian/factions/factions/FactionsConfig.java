@@ -34,12 +34,18 @@ public final class FactionsConfig {
 
     private ClaimLoading claimLoading = new ClaimLoading();
 
+    private NetheriteAlert netheriteAlert = new NetheriteAlert();
+
     public double factionBasePower() {
         return factionBasePower;
     }
 
     public List<String> enabledUpgrades() {
         return enabledUpgrades;
+    }
+
+    public NetheriteAlert netheriteAlert() {
+        return netheriteAlert;
     }
 
     public ChunkBuster chunkBuster() {
@@ -55,6 +61,9 @@ public final class FactionsConfig {
                 "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
         e.check(cfg.chunkBuster.layersPerTick >= 1 && cfg.chunkBuster.layersPerTick <= 16,
                 "chunk-buster.layers-per-tick", "must be 1-16");
+        e.check(cfg.netheriteAlert.cooldownSeconds >= 0, "netherite-alert.cooldown-seconds", "must be >= 0");
+        e.check(cfg.chunkBuster.minDistanceFromSpawn >= 0, "chunk-buster.min-distance-from-spawn", "must be >= 0");
+        e.check(cfg.chunkBuster.grantOnJoin >= 0 && cfg.chunkBuster.grantOnJoin <= 64, "chunk-buster.grant-on-join", "must be 0-64");
         e.check(cfg.claimLoading.maxChunksPerFaction >= 0, "claim-loading.max-chunks-per-faction", "must be >= 0");
         e.check(cfg.claimLoading.reconcileSeconds >= 5, "claim-loading.reconcile-seconds", "must be >= 5");
         for (var env : cfg.chunkBuster.environments) {
@@ -90,6 +99,17 @@ public final class FactionsConfig {
                 sealed with netherrack (stone in the overworld) so nothing floods in.""")
         private List<String> environments = List.of("NORMAL", "NETHER");
 
+        @Comment("""
+                Busters do nothing within this many blocks of the world's spawn, measured flat (X and Z).
+                Owner, 2026-09-29: at least 1,000.""")
+        private int minDistanceFromSpawn = 1000;
+
+        @Comment("""
+                Busters a player is given the first time they found or join a faction. Once per player,
+                ever: leaving, disbanding and joining again gives nothing, so busters can't be farmed.
+                0 turns it off.""")
+        private int grantOnJoin = 5;
+
         public boolean enabled() {
             return enabled;
         }
@@ -108,6 +128,33 @@ public final class FactionsConfig {
 
         public List<String> environments() {
             return environments;
+        }
+
+        public int minDistanceFromSpawn() {
+            return minDistanceFromSpawn;
+        }
+
+        public int grantOnJoin() {
+            return grantOnJoin;
+        }
+    }
+
+    /** Telling the server when someone mines ancient debris, so players go looking for each other. */
+    @ConfigSerializable
+    public static final class NetheriteAlert {
+
+        @Comment("Announce in chat when a player mines ancient debris (owner, 2026-09-29).")
+        private boolean enabled = true;
+
+        @Comment("Seconds before the same player is announced again, so mining a vein is one message.")
+        private int cooldownSeconds = 60;
+
+        public boolean enabled() {
+            return enabled;
+        }
+
+        public int cooldownSeconds() {
+            return cooldownSeconds;
         }
     }
 

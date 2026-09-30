@@ -92,7 +92,8 @@ final class ChunkBusters implements Listener {
                     Brand.mm("<soft>placed <hot>all the way down</hot> to bedrock."),
                     net.kyori.adventure.text.Component.empty(),
                     Brand.mm("<soft>Keeps <cane>spawners</cane>, <token>chests</token> and bedrock."),
-                    Brand.mm("<soft>Only works in <sun>your faction's land</sun>."),
+                    Brand.mm("<soft>Only works in <sun>your faction's land</sun>,"),
+                    Brand.mm("<soft>far from spawn."),
                     net.kyori.adventure.text.Component.empty(),
                     Brand.mm("<cane>➜ Place it, then click [BUST CHUNK]</cane>")));
         });
@@ -125,6 +126,10 @@ final class ChunkBusters implements Listener {
             deny(player, "<bad>Chunk busters can't be used on or above the Nether roof.</bad>");
             return;
         }
+        if (nearSpawn(at, at.getWorld().getSpawnLocation(), cfg.minDistanceFromSpawn())) {
+            deny(player, tooCloseMessage(cfg.minDistanceFromSpawn()));
+            return;
+        }
         if (!ownsChunk.test(player, at.getChunk())) {
             deny(player, "<bad>Chunk busters only work in <sun>your faction's land</sun>.</bad>");
             return;
@@ -149,6 +154,11 @@ final class ChunkBusters implements Listener {
             return;
         }
         var chunk = p.at().getChunk();
+        int minDistance = config.get().chunkBuster().minDistanceFromSpawn();
+        if (nearSpawn(p.at(), p.at().getWorld().getSpawnLocation(), minDistance)) {
+            deny(player, tooCloseMessage(minDistance));
+            return;
+        }
         if (!ownsChunk.test(player, chunk)) {
             deny(player, "<bad>That chunk is no longer your faction's land.</bad>");
             return;
@@ -165,6 +175,17 @@ final class ChunkBusters implements Listener {
         player.sendMessage(Brand.mm("<hot><bold>BUSTING!</bold></hot> <soft>Clearing the chunk…"));
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 0.6f, 1.2f);
         bust(chunk, p.at().getBlockY(), () -> player.sendMessage(Brand.mm("<cane><bold>DONE!</bold></cane> <soft>The chunk is clear.")));
+    }
+
+    /** Whether {@code at} is closer than {@code min} blocks to {@code spawn}, measured flat (X and Z only). */
+    static boolean nearSpawn(Location at, Location spawn, int min) {
+        double dx = at.getX() - spawn.getX();
+        double dz = at.getZ() - spawn.getZ();
+        return dx * dx + dz * dz < (double) min * min;
+    }
+
+    private static String tooCloseMessage(int min) {
+        return "<bad>Chunk busters only work <sun>" + String.format("%,d", min) + " blocks</sun> or more from spawn.</bad>";
     }
 
     private boolean takeOne(Player player) {

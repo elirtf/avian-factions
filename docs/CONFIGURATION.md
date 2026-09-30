@@ -82,6 +82,10 @@ goes above its power, it becomes **raidable**: enemies can claim over it.
 |---|---|---|
 | `faction-base-power` | Flat power every **new** faction gets. Never lost on death | `5` |
 | `enabled-upgrades` | Which faction upgrades can be bought with `/f upgrades` | claim_boost, spawner_rate, crop_yield, growth, mob_exp, tnt_bank |
+| `chunk-buster.min-distance-from-spawn` | Chunk busters do nothing closer than this to spawn (flat distance) | `1000` |
+| `chunk-buster.grant-on-join` | Chunk busters a player gets the first time they found or join a faction. Once per player, ever, so they can't be farmed | `5` |
+| `netherite-alert.enabled` | Tell the whole server when someone mines ancient debris (placed debris never counts) | `true` |
+| `netherite-alert.cooldown-seconds` | Seconds before the same player is announced again, so a vein is one message | `60` |
 
 > **Example:** a solo player has 5 base + 20 = **25 chunks**, a 5×5 square. A 4-player faction has
 > 5 + 80 = **85 chunks**. The **Claim Boost** upgrade adds +10, +30 or +70 more.

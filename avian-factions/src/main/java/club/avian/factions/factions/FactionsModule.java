@@ -64,6 +64,10 @@ public final class FactionsModule implements AvianModule {
             return member.hasFaction() && member.faction().equals(owner);
         }, System::currentTimeMillis, ChunkBusters.tickets(ctx.plugin()));
         ctx.registerListener(busters);
+        // 5 starter busters for founding or joining a faction, once per player (owner, 2026-09-29).
+        ctx.registerListener(new BusterGrants(ctx.plugin(), config));
+        // Mining ancient debris is announced server-wide, so players hunt each other or team up.
+        ctx.registerListener(new NetheriteAnnouncer(config, System::currentTimeMillis));
 
         // Faction land stays loaded while a member is online, so crops grow while they are away.
         claimLoader = new ClaimLoader(ctx.plugin(), config,
