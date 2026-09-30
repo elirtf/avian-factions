@@ -13,7 +13,7 @@ check-time-timezone: server
 per-player-check: false
 verbose: false
 goal-sound: UI_TOAST_CHALLENGE_COMPLETE
-goal-message: '<gradient:#FFD84D:#FF7A45><bold>Rank up!</bold></gradient> <#B8B8C8>You are now a <#FFE66D>Fledgling</#FFE66D>: 2 homes, /back and 8 auction listings.'
+goal-message: '<gradient:#FFD84D:#FF7A45><bold>Rank up!</bold></gradient> <#B8B8C8>You are now a <#FFE66D>Fledgling</#FFE66D>: 2 homes, /craft, /back and 8 auction listings.'
 requirements:
   # 12 hours (owner, 2026-09-29; was 2).
   time: 43200

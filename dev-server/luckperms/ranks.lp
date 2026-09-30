@@ -65,6 +65,14 @@ lp group hatchling permission set essentials.sethome.multiple.hatchling true
 lp group hatchling meta set homes 1
 lp group hatchling permission set EconomyShopGUI.shop true
 lp group hatchling permission set EconomyShopGUI.sellall true
+# /ec: your own ender chest anywhere, for everyone (owner, 2026-09-29); never someone else's (that is
+# essentials.enderchest.others). Spawners can't be kept in it (avian-factions EnderChestSpawnerBan).
+lp group hatchling permission set essentials.enderchest true
+# /f fly is a rare crate prize, not a default (owner, 2026-09-29). FactionsUUID gives it to everyone
+# unless it is denied here. Crates grant it per player: for a day or two (a temporary permission)
+# or for the season (docs/ECONOMY.md → Flight, including how to clear it when a season ends).
+lp group hatchling permission set factions.fly false
+lp group hatchling permission set factions.fly.auto false
 # Custom enchants (ExcellentEnchants): /eenchants list shows every enchant and what it does. Books
 # come from /enchanter (tokens), crates, enchanting tables, loot and villagers.
 lp group hatchling permission set excellentenchants.command.list true
@@ -98,6 +106,8 @@ lp group fledgling parent add hatchling
 lp group fledgling permission set essentials.sethome.multiple.fledgling true
 lp group fledgling meta set homes 2
 lp group fledgling permission set essentials.back true
+# /craft: a crafting table anywhere, from Fledgling up (owner, 2026-09-29).
+lp group fledgling permission set essentials.workbench true
 lp group fledgling permission set crazyauctions.sell.8 true
 lp group fledgling permission set crazyauctions.bid.8 true
 
@@ -119,14 +129,14 @@ lp track free append fledgling
 #
 # Each tier inherits the one below, and Harpy inherits Fledgling, so a Phoenix has everything.
 #
-# Per tier (owner, 2026-09-29):     homes   auction listings   also
-#   Harpy                              3        10                coloured nickname and chat, /pweather
-#   Griffin                            4        12                /craft, /hat, bold/italic chat
-#   Wyvern                             5        15                hex and gradient colours, /itemname
-#   Dragon                             6        18                /ec, /itemlore
-#   Phoenix (F-Top only)               8        21
-# Homes are keys under sethome-multiple in Essentials' config.yml. Auction limits take the highest
-# crazyauctions.sell.<n> a player holds, so each tier just adds its own.
+# Per tier (owner, 2026-09-29):     auction listings   also
+#   Harpy                              10                 coloured nickname and chat, /pweather
+#   Griffin                            12                 /hat, bold/italic chat
+#   Wyvern                             15                 hex and gradient colours, /itemname
+#   Dragon                             18                 /itemlore
+#   Phoenix (F-Top only)               21
+# Homes are 2 for every rank past Hatchling (Fledgling's, inherited); /craft is Fledgling's and /ec
+# everyone's. Auction limits take the highest crazyauctions.sell.<n> a player holds.
 # Each tier also has a weekly kit, /kit <rank> (Essentials kits.yml).
 # ---------------------------------------------------------------------------------------------
 
@@ -151,7 +161,6 @@ lp group harpy permission set carbon.messagetags.color true
 # /pweather: your own weather, seen only by you (owner, 2026-09-29).
 lp group harpy permission set essentials.pweather true
 lp group harpy permission set essentials.kits.harpy true
-lp group harpy permission set essentials.sethome.multiple.harpy true
 lp group harpy permission set crazyauctions.sell.10 true
 lp group harpy permission set crazyauctions.bid.10 true
 
@@ -164,11 +173,8 @@ lp group griffin permission set essentials.hat true
 lp group griffin permission unset essentials.chat.format
 lp group griffin permission set carbon.messagetags.decorations true
 lp group griffin permission set essentials.nick.format true
-lp group griffin permission set essentials.sethome.multiple.griffin true
 lp group griffin permission set crazyauctions.sell.12 true
 lp group griffin permission set crazyauctions.bid.12 true
-# /craft: a crafting table anywhere.
-lp group griffin permission set essentials.workbench true
 lp group griffin permission set essentials.kits.griffin true
 
 lp creategroup wyvern
@@ -184,7 +190,6 @@ lp group wyvern permission unset essentials.chat.rgb
 lp group wyvern permission set carbon.messagetags.gradient true
 lp group wyvern permission set essentials.itemname true
 lp group wyvern permission set essentials.kits.wyvern true
-lp group wyvern permission set essentials.sethome.multiple.wyvern true
 lp group wyvern permission set crazyauctions.sell.15 true
 lp group wyvern permission set crazyauctions.bid.15 true
 
@@ -194,11 +199,8 @@ lp group dragon meta removeprefix 130
 lp group dragon meta setsuffix 130 "<bold><#FFD84D>ᴅʀᴀɢᴏɴ</bold>"
 lp group dragon parent add wyvern
 lp group dragon permission set essentials.itemlore true
-lp group dragon permission set essentials.sethome.multiple.dragon true
 lp group dragon permission set crazyauctions.sell.18 true
 lp group dragon permission set crazyauctions.bid.18 true
-# /ec: your own ender chest anywhere (never someone else's: that is essentials.enderchest.others).
-lp group dragon permission set essentials.enderchest true
 lp group dragon permission set essentials.kits.dragon true
 
 lp creategroup phoenix
@@ -208,7 +210,6 @@ lp group phoenix meta setsuffix 140 "<bold><gradient:#FFD84D:#FF7A45:#FF3B3B>ᴘ
 lp group phoenix parent add dragon
 lp group phoenix permission set essentials.nick.others false
 lp group phoenix permission set essentials.kits.phoenix true
-lp group phoenix permission set essentials.sethome.multiple.phoenix true
 lp group phoenix permission set crazyauctions.sell.21 true
 lp group phoenix permission set crazyauctions.bid.21 true
 
