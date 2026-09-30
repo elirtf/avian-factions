@@ -98,4 +98,37 @@ class TrailsTest {
         assertFalse(TrailsConfig.drawable(Particle.BLOCK), "block particles need a block, which trails can't supply");
         assertTrue(TrailsConfig.drawable(Particle.FLAME));
     }
+
+    /** A world that records the particles it is asked to spawn. */
+    static final class RecordingWorld extends org.mockbukkit.mockbukkit.world.WorldMock {
+        final List<Particle> spawned = new ArrayList<>();
+
+        RecordingWorld() {
+            super(org.bukkit.Material.GRASS_BLOCK, 64);
+            setName("recording");
+        }
+
+        @Override
+        public <T> void spawnParticle(Particle particle, Location location, int count, double offsetX, double offsetY,
+                                      double offsetZ, double extra, T data) {
+            spawned.add(particle);
+        }
+    }
+
+    @Test
+    void aMovingPlayerLeavesTheirTrail() {
+        var world = new RecordingWorld();
+        server.addWorld(world);
+        player.teleport(new Location(world, 0, 65, 0));
+        player.addAttachment(MockBukkit.createMockPlugin(), "avian.trail.rainbow", true);
+        trails.choose(player, "rainbow");
+
+        trails.tick(List.of(player));                        // first sight: nothing to compare yet
+        player.teleport(new Location(world, 1, 65, 0));
+        trails.tick(List.of(player));
+        assertEquals(List.of(Particle.DUST), world.spawned, "moved: one puff");
+
+        trails.tick(List.of(player));
+        assertEquals(1, world.spawned.size(), "standing still: none");
+    }
 }
