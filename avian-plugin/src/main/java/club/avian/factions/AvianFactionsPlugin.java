@@ -9,6 +9,7 @@ import club.avian.factions.api.module.ModuleContext;
 import club.avian.factions.api.module.Services;
 import club.avian.factions.api.player.Players;
 import club.avian.factions.combat.CombatModule;
+import club.avian.factions.cosmetics.CosmeticsModule;
 import club.avian.factions.core.CoreModule;
 import club.avian.factions.economy.EconomyModule;
 import club.avian.factions.core.CoreRuntime;
@@ -43,6 +44,7 @@ public final class AvianFactionsPlugin extends JavaPlugin {
         modules = List.of(
                 new CoreModule(core),
                 new CombatModule(),
+                new CosmeticsModule(),
                 new EconomyModule(),
                 new FactionsModule(),
                 new FTopModule()

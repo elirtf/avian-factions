@@ -22,6 +22,7 @@ run/
       combat.conf            ← how fighting feels
       economy.conf           ← money, starting balances
       ftop.conf              ← what spawners and blocks are worth on F-Top
+      trails.conf            ← particle trails for /trails (particle, colours, name)
     Essentials/config.yml    ← homes, teleporting, warps
     FactionsUUID/config/     ← factions, land, power, protection, role names
     CommandTimer/timers/     ← when raiding is allowed

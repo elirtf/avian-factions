@@ -1,7 +1,7 @@
-# Avian crate: Cosmetic (owner, 2026-09-29). Tags (DeluxeTags, /tags) and pets (SimplePets, /pet), nothing
+# Avian crate: Cosmetic (owner, 2026-09-29). Tags (DeluxeTags, /tags), pets (SimplePets, /pet) and trails (ours, /trails), nothing
 # that changes a fight. Each prize is a permission; one you already own pays 150 tokens instead
 # (BlackListed-Permissions + Alternative-Prize). Keys: the token shop and the Vote crate.
-# Weights: Epic tags 2, Rare 5, Common 10; pets 6 / 3 / 1. The preview shows each chance.
+# Weights: Epic tags 2, Rare 5, Common 10; pets 6 / 3 / 1; trails 5 / 2.5 / 1. The preview shows each chance.
 Crate:
   CrateType: CSGO
   StartingKeys: 0
@@ -48,7 +48,7 @@ Crate:
   Glowing: "add_glow"
   Name: "<bold><#FF4FD8>Cosmetics Crate</#FF4FD8></bold>"
   Lore:
-    - "<#B8B8C8>Chat tags and pets. Pure style, no advantage.</#B8B8C8>"
+    - "<#B8B8C8>Chat tags, pets and trails. Pure style, no advantage.</#B8B8C8>"
     - ""
     - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Keys</#B8B8C8>  <white>%keys%</white>"
     - "<#6E6E80>◆</#6E6E80> <#B8B8C8>Opened</#B8B8C8>  <white>%crate_opened%</white>"
@@ -442,5 +442,174 @@ Crate:
         Toggle: true
         Messages:
           - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that pet, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    # Trails (avian-cosmetics, /trails): built in-house, PlayerParticles is licensed non-commercial.
+    "26":
+      DisplayName: "<bold><#7CFF4F>Flames Trail</#7CFF4F></bold>"
+      DisplayItem: "blaze_powder"
+      DisplayLore: ["<#7CFF4F>Common trail</#7CFF4F><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set avian.trail.flames true"]
+      BlackListed-Permissions: ["avian.trail.flames"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "27":
+      DisplayName: "<bold><#7CFF4F>Notes Trail</#7CFF4F></bold>"
+      DisplayItem: "note_block"
+      DisplayLore: ["<#7CFF4F>Common trail</#7CFF4F><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set avian.trail.notes true"]
+      BlackListed-Permissions: ["avian.trail.notes"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "28":
+      DisplayName: "<bold><#7CFF4F>Clouds Trail</#7CFF4F></bold>"
+      DisplayItem: "white_wool"
+      DisplayLore: ["<#7CFF4F>Common trail</#7CFF4F><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set avian.trail.clouds true"]
+      BlackListed-Permissions: ["avian.trail.clouds"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "29":
+      DisplayName: "<bold><#7CFF4F>Sparkle Trail</#7CFF4F></bold>"
+      DisplayItem: "emerald"
+      DisplayLore: ["<#7CFF4F>Common trail</#7CFF4F><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 5
+      Commands: ["lp user %player% permission set avian.trail.sparkle true"]
+      BlackListed-Permissions: ["avian.trail.sparkle"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "30":
+      DisplayName: "<bold><#4DA3FF>Hearts Trail</#4DA3FF></bold>"
+      DisplayItem: "pink_dye"
+      DisplayLore: ["<#4DA3FF>Rare trail</#4DA3FF><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2.5
+      Commands: ["lp user %player% permission set avian.trail.hearts true"]
+      BlackListed-Permissions: ["avian.trail.hearts"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "31":
+      DisplayName: "<bold><#4DA3FF>Snowfall Trail</#4DA3FF></bold>"
+      DisplayItem: "snowball"
+      DisplayLore: ["<#4DA3FF>Rare trail</#4DA3FF><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2.5
+      Commands: ["lp user %player% permission set avian.trail.snow true"]
+      BlackListed-Permissions: ["avian.trail.snow"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "32":
+      DisplayName: "<bold><#4DA3FF>Soul Fire Trail</#4DA3FF></bold>"
+      DisplayItem: "soul_lantern"
+      DisplayLore: ["<#4DA3FF>Rare trail</#4DA3FF><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2.5
+      Commands: ["lp user %player% permission set avian.trail.soul true"]
+      BlackListed-Permissions: ["avian.trail.soul"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "33":
+      DisplayName: "<bold><#4DA3FF>Arcane Trail</#4DA3FF></bold>"
+      DisplayItem: "enchanting_table"
+      DisplayLore: ["<#4DA3FF>Rare trail</#4DA3FF><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 2.5
+      Commands: ["lp user %player% permission set avian.trail.enchant true"]
+      BlackListed-Permissions: ["avian.trail.enchant"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "34":
+      DisplayName: "<bold><#FF4FD8>Rainbow Trail</#FF4FD8></bold>"
+      DisplayItem: "prismarine_crystals"
+      DisplayLore: ["<#FF4FD8>Epic trail</#FF4FD8><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set avian.trail.rainbow true"]
+      BlackListed-Permissions: ["avian.trail.rainbow"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "35":
+      DisplayName: "<bold><#FF4FD8>Cherry Blossom Trail</#FF4FD8></bold>"
+      DisplayItem: "cherry_sapling"
+      DisplayLore: ["<#FF4FD8>Epic trail</#FF4FD8><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set avian.trail.cherry true"]
+      BlackListed-Permissions: ["avian.trail.cherry"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "36":
+      DisplayName: "<bold><#FF4FD8>Ender Rift Trail</#FF4FD8></bold>"
+      DisplayItem: "ender_pearl"
+      DisplayLore: ["<#FF4FD8>Epic trail</#FF4FD8><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set avian.trail.ender true"]
+      BlackListed-Permissions: ["avian.trail.ender"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
+        Commands:
+          - "tokens give %player% 150 crate:cosmetic-duplicate"
+    "37":
+      DisplayName: "<bold><#FF4FD8>Sparks Trail</#FF4FD8></bold>"
+      DisplayItem: "lightning_rod"
+      DisplayLore: ["<#FF4FD8>Epic trail</#FF4FD8><#B8B8C8> · particles at your feet as you move. Wear it with /trails</#B8B8C8>"]
+      DisplayAmount: 1
+      Weight: 1
+      Commands: ["lp user %player% permission set avian.trail.sparks true"]
+      BlackListed-Permissions: ["avian.trail.sparks"]
+      Alternative-Prize:
+        Toggle: true
+        Messages:
+          - "<#FFD23F>✦</#FFD23F> <#B8B8C8>You already have that trail, so here are</#B8B8C8> <#FFE66D>150 tokens</#FFE66D><#B8B8C8>.</#B8B8C8>"
         Commands:
           - "tokens give %player% 150 crate:cosmetic-duplicate"
