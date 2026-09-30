@@ -25,6 +25,11 @@ dependencies {
     factionsUuid(project(":avian-factions", "factionsUuidJar"))
     // Paper provides log4j-core at runtime; PlayTimeManagerLogFix removes a filter from its root logger.
     compileOnly(libs.log4j.core)
+    // For EvenMoreFish, not us: 2.5.0 calls com.devskiller.friendly_id.FriendlyId when a fish is sold but
+    // neither bundles it nor lists it as a library (dropped upstream in commit f000492), so every sale
+    // crashed (owner, 2026-09-30). Shipped here NOT relocated, so EvenMoreFish finds it through Paper's
+    // shared plugin class lookup. Remove once EvenMoreFish ships it again.
+    implementation(libs.friendly.id)
 }
 
 tasks.processResources {
