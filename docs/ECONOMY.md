@@ -315,7 +315,9 @@ Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
   click would otherwise fish unattended. `disable-auraskills-loot` is off so Treasure Hunter and
   Epic Catch still work.
 
-Contests are in `plugins/EvenMoreFish/competitions/`; the weekend one is switched off.
+Players use `/fish` (`/fish shop` sells, `/fish top` ranks; `/emf` also works). Staff start a contest early with
+`/emfa competition start mainCompetition <minutes>` (needs `emf.admin`). Contests are in
+`plugins/EvenMoreFish/competitions/`; the weekend one is switched off.
 
 ## Changing prices
 
