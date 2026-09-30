@@ -30,6 +30,9 @@ lp group hatchling meta removeprefix 10
 lp group hatchling meta setsuffix 10 "<#9E9E9E>ʜᴀᴛᴄʜʟɪɴɢ"
 lp group hatchling permission set essentials.spawn true
 lp group hatchling permission set betterrtp.use true
+# BetterRTP also checks a per-world permission; without it a non-op gets "not allowed rtp in the world
+# world" (found by the owner, 2026-09-29). The Nether and End send /rtp to the overworld (Overrides).
+lp group hatchling permission set betterrtp.world.world true
 lp group hatchling permission set essentials.tpa true
 lp group hatchling permission set essentials.tpaccept true
 lp group hatchling permission set essentials.tpdeny true
@@ -68,11 +71,11 @@ lp group hatchling permission set EconomyShopGUI.sellall true
 # /ec: your own ender chest anywhere, for everyone (owner, 2026-09-29); never someone else's (that is
 # essentials.enderchest.others). Spawners can't be kept in it (avian-factions EnderChestSpawnerBan).
 lp group hatchling permission set essentials.enderchest true
-# /f fly is a rare crate prize, not a default (owner, 2026-09-29). FactionsUUID gives it to everyone
-# unless it is denied here. Crates grant it per player: for a day or two (a temporary permission)
-# or for the season (docs/ECONOMY.md → Flight, including how to clear it when a season ends).
-lp group hatchling permission set factions.fly false
-lp group hatchling permission set factions.fly.auto false
+# /f fly (flight in your own land) is everyone's: FactionsUUID grants it by default. An earlier version
+# denied it here; these unsets clear that from databases that have it. Essentials /fly (anywhere) is
+# Phoenix's and a crate prize (docs/ECONOMY.md → Flight and rank prizes). Neither works in combat.
+lp group hatchling permission unset factions.fly
+lp group hatchling permission unset factions.fly.auto
 # Custom enchants (ExcellentEnchants): /eenchants list shows every enchant and what it does. Books
 # come from /enchanter (tokens), crates, enchanting tables, loot and villagers.
 lp group hatchling permission set excellentenchants.command.list true
@@ -134,7 +137,7 @@ lp track free append fledgling
 #   Griffin                            12                 /hat, bold/italic chat
 #   Wyvern                             15                 hex and gradient colours, /itemname
 #   Dragon                             18                 /itemlore
-#   Phoenix (F-Top only)               21
+#   Phoenix (F-Top only)               21                 /fly anywhere (outside combat)
 # Homes are 2 for every rank past Hatchling (Fledgling's, inherited); /craft is Fledgling's and /ec
 # everyone's. Auction limits take the highest crazyauctions.sell.<n> a player holds.
 # Each tier also has a weekly kit, /kit <rank> (Essentials kits.yml).
@@ -209,6 +212,8 @@ lp group phoenix meta removeprefix 140
 lp group phoenix meta setsuffix 140 "<bold><gradient:#FFD84D:#FF7A45:#FF3B3B>ᴘʜᴏᴇɴɪx</gradient></bold>"
 lp group phoenix parent add dragon
 lp group phoenix permission set essentials.nick.others false
+# /fly anywhere, outside combat (the combat tag grounds you and blocks it). Owner, 2026-09-29.
+lp group phoenix permission set essentials.fly true
 lp group phoenix permission set essentials.kits.phoenix true
 lp group phoenix permission set crazyauctions.sell.21 true
 lp group phoenix permission set crazyauctions.bid.21 true
