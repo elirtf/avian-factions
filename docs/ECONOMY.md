@@ -308,6 +308,11 @@ Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
   | Biggest fish, 10 min | 18:00 and 21:00, not Sunday | 150 tokens + Rare key | 75 + Common key | 40 | $2,500 |
   | Most fish, 30 min | Sunday 19:00 | 300 tokens + Epic key | 150 + Rare key | 75 + Common key | $5,000 |
 
+- **Fishing XP by rarity:** every custom catch gives AuraSkills Fishing XP for its rarity (the
+  `catch-event` in `EvenMoreFish/rarities/`): Junk 30, Common 60, Rare 250, Epic 600, Legendary 1,500,
+  about the vanilla average per cast. AuraSkills' own flat XP for cod, salmon, pufferfish and tropical
+  fish is zeroed (`AuraSkills/sources/fishing.yml`) so nothing counts twice, and players can't turn
+  custom fishing off (no `/fish toggle`), so every catch earns by rarity (owner, 2026-09-30).
 - **One rare catch:** AuraSkills' epic fishing loot includes a Common key, about 1 in 2,200
   catches, more as a player's Fishing level (Epic Catch) rises.
 - **Anti-AFK:** EvenMoreFish's `exploits.afk-fishing` (10 catches in the same 3-block spot stops

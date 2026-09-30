@@ -1,0 +1,48 @@
+# AVIAN: EvenMoreFish replaces every catch with a custom fish and gives Fishing XP by its rarity
+# (EvenMoreFish/rarities, catch-event). These four are zeroed so a custom fish on a cod, salmon,
+# pufferfish or tropical fish item doesn't also get AuraSkills' flat amount (owner, 2026-09-30).
+default:
+  type: fishing
+  menu_item:
+    material: '{item.material}'
+sources:
+  cod:
+    item:
+      material: cod
+    xp: 0
+  salmon:
+    item:
+      material: salmon
+    xp: 0
+  tropical_fish:
+    item:
+      material: tropical_fish
+    xp: 0
+  pufferfish:
+    item:
+      material: pufferfish
+    xp: 0
+  treasure:
+    item:
+      category: fishing_treasure
+    xp: 1000
+    menu_item:
+      material: name_tag
+  junk:
+    item:
+      category: fishing_junk
+    xp: 30
+    menu_item:
+      material: stick
+  rare:
+    item:
+      loot_pool: rare
+    xp: 2000
+    menu_item:
+      material: orange_dye
+  epic:
+    item:
+      loot_pool: epic
+    xp: 5000
+    menu_item:
+      material: purple_dye
