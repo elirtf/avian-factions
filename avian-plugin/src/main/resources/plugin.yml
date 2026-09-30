@@ -10,6 +10,7 @@ website: https://avian.club
 # register during our enable rather than needing deferred wiring.
 softdepend:
   - CrazyCrates
+  - CrazyAuctions
   - RoseStacker
   - EconomyShopGUI
   - LuckPerms

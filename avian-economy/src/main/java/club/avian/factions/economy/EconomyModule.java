@@ -85,6 +85,8 @@ public final class EconomyModule implements AvianModule {
         ctx.commands().register(new SellWandCommand(sellWand).build(), "Give sell wands (admins)");
         // Crate previews' "Menu" button: book rolls back to /enchanter, other crates to /crates.
         ctx.commands().register(new CratesBackCommand(CratesBackCommand::open).build(), "Where a crate preview's Menu button goes");
+        // /ah pages redraw when anyone lists, buys, cancels or bids (CrazyAuctions only redraws on Refresh).
+        AuctionRefresh.install(ctx.plugin(), ctx.logger());
         // /tokens and /gems: your balance; give|take|set is how crates, votes and events pay out (#26).
         var purchase = new Purchase(economy, mainThread,
                 command -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command), ctx.logger());
