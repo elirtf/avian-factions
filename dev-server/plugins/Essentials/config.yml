@@ -825,6 +825,11 @@ sethome-multiple:
   default: 1
   hatchling: 1
   fledgling: 2
+  harpy: 3
+  griffin: 4
+  wyvern: 5
+  dragon: 6
+  phoenix: 8
   staff: 10
 
 # Controls whether players need the permission 'essentials.home.compass' in order to point
