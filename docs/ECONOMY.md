@@ -140,15 +140,14 @@ key and wand the store sells (ADR-0006).
 | Common key | 200 | About 5–10 hours of hand farming: a first goal for a new player |
 | Rare key | 600 | |
 | Epic key | 1,500 | |
-| Legendary key | 4,000 | |
 | Mythic key | 10,000 | Hoe-farming territory; also reached through the crate chain |
 | Sell wand | 250 | Cheap enough to be a new player's first auto-farm tool |
 | Gilded sell wand | 1,500 | |
 | Eternal sell wand | 12,000 | Permanent ×1.25 on every chest: the long-term token sink |
 
 Each key costs 2½ to 3 times the one below. A key never returns more tokens on average than it
-costs. A Mythic crate averages about 500 tokens in prizes, plus a 1-in-9 chance of two Legendary
-keys: about 1,500 tokens in all against a 10,000 price. So buying keys can never be a token farm. Right-click a key to buy five at
+costs. A Mythic crate averages about 500 tokens in prizes, plus a 1-in-10 chance of two Epic keys:
+about 800 tokens in all against a 10,000 price. So buying keys can never be a token farm. Right-click a key to buy five at
 the same unit price.
 
 Every button runs `tokens charge <player> <cost> <reason> <reward command>` as the console. The
@@ -172,7 +171,7 @@ because the money changes hands between players:
 | Listing fee | **$100**, paid up front and kept if the item doesn't sell, so listings aren't spam |
 | Tax | **5 %** of every sale |
 | Price range | $10 to $10,000,000 (the plugin's default $1M cap was below an iron golem spawner) |
-| Listings at once | Hatchling 5, Fledgling 8 (`crazyauctions.sell.<n>` / `bid.<n>` in `ranks.lp`; paid ranks inherit 8) |
+| Listings at once | Hatchling 5, Fledgling 8, Harpy 10, Griffin 12, Wyvern 15, Dragon 18, Phoenix 21 (`crazyauctions.sell.<n>` / `bid.<n>` in `ranks.lp`) |
 | Duration | 2 days for a fixed-price listing, 2.5 minutes for an auction; unsold items wait 10 days in `/ah collect` |
 
 Damaged items can't be listed. Every player needs a `crazyauctions.sell.<n>` permission: with none,
@@ -193,8 +192,9 @@ never resets a pearl.
 
 ## Crates
 
-Six tiers in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). Each is a shulker box in its
-tier colour: Common lime, Rare blue, Epic purple, Legendary orange, Mythic red (owner, 2026-09-29).
+Five crates in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). Each is a shulker box in its
+tier colour: Common lime, Rare blue, Epic purple, Mythic red (owner, 2026-09-29). The Legendary gear crate
+was removed the same day (its best prizes moved into Epic) so "Legendary" names only an enchant tier.
 Left-click opens a crate, right-click previews its prizes. They are virtual:
 keys are held on the player and a crate opens from the menu, so no crate blocks are placed and they
 work in whichever world spawn ends up in. Every crate can also drop a key for the tier above.
@@ -204,9 +204,8 @@ work in whichever world spawn ends up in. Every crate can also drop a key for th
 | Vote | $1k–2.5k, 10–25 tokens, iron, XP bottles | Voting (plugin to come). Not sold. |
 | Common | $5k–10k, 50 tokens, iron tools, 8 diamonds | Vote crate (5 %); token shop |
 | Rare | $25k, 150 tokens, diamond gear, zombie spawner, 2 golden apples | Common crate; token shop |
-| Epic | $75k, 400 tokens, Prot III diamond, netherite ingot, skeleton/creeper spawners, totem | Rare crate; token shop |
-| Legendary | $200k, 1,000 tokens, Sharp V / Prot IV netherite, blaze and enderman spawners, notch apple, elytra | Epic crate; token shop |
-| Mythic | $500k, 3,000 tokens, full Prot IV netherite, iron golem spawner, mace, 2 notch apples | Legendary crate; token shop |
+| Epic | $75k, 400 tokens, Prot III diamond, Sharp V netherite sword, netherite ingot, skeleton/creeper/blaze/enderman spawners, totem | Rare crate; Mythic crate (2 keys); token shop |
+| Mythic | $500k, 3,000 tokens, full Prot IV netherite, iron golem and blaze spawners, mace, elytra, 2 notch apples | Epic crate; token shop |
 
 The rarest PvP items (golden apples, notch apples, totems) sit at low weights, per #40. Admins give
 keys with `/crates give virtual <Crate> <amount> <player>`; token rewards land in the audit trail

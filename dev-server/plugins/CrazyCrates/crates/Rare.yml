@@ -171,10 +171,10 @@ Crate:
           material: "experience_bottle"
           amount: 32
     "8":
-      DisplayName: "<bold><#FF7A45>1× 8 Spawner</#FF7A45></bold>"
+      DisplayName: "<bold><#FF7A45>1× Zombie Spawner</#FF7A45></bold>"
       DisplayItem: "spawner"
       DisplayAmount: 1
-      Weight: Zombie
+      Weight: 8
       Commands: ["rs give spawner %player% zombie 1 1"]
     "9":
       DisplayName: "<#4DA3FF>2× Golden Apple</#4DA3FF>"

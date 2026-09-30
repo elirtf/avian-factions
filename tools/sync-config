@@ -35,8 +35,8 @@ if [[ ! -d "$dest/plugins/CraftEngine/resources" ]]; then
     done
 fi
 
-# 2. Copy the template (everything but the README and our pack), then mirror our pack.
-tar -C "$src" --anchored --exclude=./README.md --exclude="./$pack" -cf - . | tar -C "$dest" -xf -
+# 2. Copy the template (everything but the README, RETIRED and our pack), then mirror our pack.
+tar -C "$src" --anchored --exclude=./README.md --exclude=./RETIRED --exclude="./$pack" -cf - . | tar -C "$dest" -xf -
 if [[ -d "$src/$pack" ]]; then
     rm -rf "${dest:?}/$pack"
     mkdir -p "$(dirname "$dest/$pack")"
@@ -51,6 +51,16 @@ if [[ -d "$src/$ee/_disabled_" ]]; then
         [[ -e "$disabled" ]] || continue
         rm -f "$dest/$ee/$(basename "$disabled")"
     done
+fi
+
+# 2c. Files we used to ship and have since deleted from the template: RETIRED lists them, one path
+#     per line relative to the server directory (# comments allowed). Copying never deletes, so a
+#     deleted crate or menu would otherwise stay live on every server that had it.
+if [[ -f "$src/RETIRED" ]]; then
+    while IFS= read -r retired; do
+        [[ -z "$retired" || "$retired" == \#* ]] && continue
+        rm -f "${dest:?}/$retired"
+    done < "$src/RETIRED"
 fi
 
 # 3. Fill in ${AVIAN_*} placeholders in the config files that carry any.
