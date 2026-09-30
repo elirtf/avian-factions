@@ -15,4 +15,4 @@ dependencyResolutionManagement {
     }
 }
 
-include("avian-api", "avian-core", "avian-combat", "avian-economy", "avian-factions", "avian-ftop", "avian-plugin", "avian-testing")
+include("avian-api", "avian-core", "avian-combat", "avian-cosmetics", "avian-economy", "avian-factions", "avian-ftop", "avian-plugin", "avian-testing")

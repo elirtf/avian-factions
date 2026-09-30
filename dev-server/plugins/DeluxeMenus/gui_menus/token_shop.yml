@@ -122,8 +122,8 @@ items:
     enchantment_glint_override: true
     display_name: '&#FF4FD8&lCosmetic Key'
     lore:
-      - '&#B8B8C8Chat tags and pets. Pure style, no advantage.'
-      - '&#B8B8C8A tag or pet you already own pays 150 tokens back.'
+      - '&#B8B8C8Chat tags, pets and trails. Pure style, no advantage.'
+      - '&#B8B8C8One you already own pays 150 tokens back.'
       - ''
       - '&#6E6E80◆ &#B8B8C8Price  &#FFE66D800 tokens'
       - '&#6E6E80◆ &#B8B8C8Five  &#FFE66D4,000 tokens'

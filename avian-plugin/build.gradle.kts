@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":avian-api"))
     implementation(project(":avian-core"))
     implementation(project(":avian-combat"))
+    implementation(project(":avian-cosmetics"))
     implementation(project(":avian-economy"))
     implementation(project(":avian-factions"))
     implementation(project(":avian-ftop"))

@@ -214,9 +214,10 @@ as `crate:<tier>`.
 
 ## Cosmetics crate
 
-Chat tags and pets, nothing that changes a fight (owner, 2026-09-29). `/tags` picks a tag
+Chat tags, pets and trails, nothing that changes a fight (owner, 2026-09-29). `/tags` picks a tag
 (DeluxeTags; it shows after your name in chat, the tab list and above your head), `/pet` summons a
-pet (SimplePets). Each prize is a permission; one you already own pays **150 tokens** instead.
+pet (SimplePets) and `/trails` picks a particle trail (ours, `avian-cosmetics`: PlayerParticles is
+licensed non-commercial; trails are defined in `plugins/AvianFactions/trails.conf`). Each prize is a permission; one you already own pays **150 tokens** instead.
 
 | | Weight each | Prizes |
 |---|---|---|
@@ -226,6 +227,9 @@ pet (SimplePets). Each prize is a permission; one you already own pays **150 tok
 | Common pets | 6 | Cat, Fox, Rabbit, Frog |
 | Rare pets | 3 | Parrot, Axolotl, Bee, Panda, Armadillo |
 | Epic pets | 1 | Allay, Sniffer, Polar Bear |
+| Common trails | 5 | Flames, Notes, Clouds, Sparkle |
+| Rare trails | 2.5 | Hearts, Snowfall, Soul Fire, Arcane |
+| Epic trails | 1 | Rainbow, Cherry Blossom, Ender Rift, Sparks |
 
 Keys: **800 tokens** in the token shop (4,000 for five), and about a 5 % drop from the Vote crate.
 Add a tag in `dev-server/plugins/DeluxeTags/config.yml` and its prize in `CrazyCrates/crates/Cosmetic.yml`.
