@@ -88,3 +88,21 @@ kits:
       - cooked_beef 64
       - golden_apple 6
       - /kitbooks {USERNAME} mythic 3
+
+  # Starter kit (owner, 2026-09-30): every player, once a day, /kit starter. Humble on purpose; the
+  # fishing rod points new players at /fish.
+  starter:
+    delay: 86400
+    items:
+      - stone_sword 1
+      - stone_pickaxe 1
+      - stone_axe 1
+      - stone_shovel 1
+      - leather_helmet 1
+      - leather_chestplate 1
+      - leather_leggings 1
+      - leather_boots 1
+      - fishing_rod 1 lure:1
+      - bread 16
+      - oak_log 16
+      - torch 16

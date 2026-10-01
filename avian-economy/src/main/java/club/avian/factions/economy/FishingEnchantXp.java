@@ -25,13 +25,13 @@ import java.util.UUID;
  * Fishing skill XP for the custom fishing enchants (owner, 2026-09-29: enchants that gather should
  * feed the RPG side). Block enchants need nothing: Veinminer, Tunnel and Treefeller break each block
  * through {@code Player#breakBlock}, and AuraSkills counts every one (checked on a scratch server).
- * Fishing is different: AuraSkills pays once per catch, so a Double Catch fish and Seasoned Angler
- * earn nothing extra. This adds it:
+ * Fishing is different: XP is paid once per catch, so a doubled catch (Double Catch, AuraSkills' Fisher)
+ * and Seasoned Angler earn nothing extra. This adds it:
  *
  * <ol>
  *   <li>at the start of every fish event, forget the player's last fishing XP;</li>
  *   <li>record the fishing XP AuraSkills grants during it ({@link XpGainEvent});</li>
- *   <li>at its end, read the rod and whether the catch was doubled, and one tick later (whatever the
+ *   <li>at its end, read the rod and how many items were caught, and one tick later (whatever the
  *       listener order, AuraSkills has paid by then) add the bonus, raw, so multipliers aren't
  *       applied twice.</li>
  * </ol>
@@ -40,7 +40,6 @@ import java.util.UUID;
  */
 final class FishingEnchantXp implements Listener {
 
-    static final NamespacedKey DOUBLE_CATCH = NamespacedKey.fromString("excellentenchants:double_catch");
     static final NamespacedKey SEASONED_ANGLER = NamespacedKey.fromString("excellentenchants:seasoned_angler");
 
     private final Plugin plugin;
@@ -72,9 +71,11 @@ final class FishingEnchantXp implements Listener {
         var player = event.getPlayer();
         var rod = rod(player.getInventory().getItem(event.getHand() == null ? EquipmentSlot.HAND : event.getHand()),
                 player.getInventory().getItemInMainHand());
-        boolean doubled = caught.getItemStack().getAmount() >= 2 && level(rod, DOUBLE_CATCH) > 0;
+        // Every item in the catch counts, whatever doubled it: Double Catch, AuraSkills' Fisher, or anything
+        // else (owner, 2026-09-30: two Common fish gave 60 XP instead of 120).
+        int amount = caught.getItemStack().getAmount();
         int angler = level(rod, SEASONED_ANGLER);
-        if (!doubled && angler == 0) {
+        if (amount < 2 && angler == 0) {
             return;
         }
         var uuid = player.getUniqueId();
@@ -84,7 +85,7 @@ final class FishingEnchantXp implements Listener {
             if (paid == null || paid <= 0 || !player.isOnline()) {
                 return;
             }
-            double extra = FishingXpBonus.of(paid, doubled, angler, cfg.doubleCatchSkillXp(), cfg.seasonedAnglerSkillXpPerLevel());
+            double extra = FishingXpBonus.of(paid, amount, angler, cfg.doubleCatchSkillXp(), cfg.seasonedAnglerSkillXpPerLevel());
             var user = AuraSkillsApi.get().getUser(uuid);
             if (extra > 0 && user != null) {
                 user.addSkillXpRaw(Skills.FISHING, extra);

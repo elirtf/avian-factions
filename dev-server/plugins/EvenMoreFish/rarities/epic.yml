@@ -6,7 +6,8 @@ weight: 3
 item:
   material: magenta_concrete_powder
 format: <light_purple>{name}
-worth-multiplier: 0.15
+# Sale value = length × this. Raised 2026-09-30 so early fishing pays (owner): about $35 a catch on average.
+worth-multiplier: 0.65
 broadcast:
   enabled: true
   only-rods: false
