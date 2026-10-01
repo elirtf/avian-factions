@@ -1,0 +1,49 @@
+# AVIAN: the confirm fish-shop screen (/fish shop), re-laid out in the menu kit's style (owner, 2026-09-30:
+# the buttons sat right under the fish and read as part of them): a coloured top row, three open rows
+# for fish, and the buttons centred in a coloured bottom row with the value on them.
+title: '<bold><gradient:#5FF3E0:#4DA3FF>⚓ Confirm Sale</gradient></bold>'
+layout:
+- '         '
+- iiiiiiiii
+- iiiiiiiii
+- iiiiiiiii
+- '  s   a  '
+filler: cyan_stained_glass_pane
+# The character to use for the slots where players can place fish.
+deposit-character: i
+
+sell-item:
+  item:
+    material: GOLD_INGOT
+    displayname: '<bold><#FFD23F>✔ Confirm Sale</#FFD23F></bold>'
+    lore:
+    - '<#B8B8C8>The fish in the slots above.</#B8B8C8>'
+    - ''
+    - '<#6E6E80>◆</#6E6E80> <#B8B8C8>Worth</#B8B8C8>  <#4CE08A>{sell-price}</#4CE08A>'
+    - ''
+    - '<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Left-click · sell them now</#B8B8C8>'
+    - '<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Right-click · close</#B8B8C8>'
+  character: s
+  click-action:
+    left: sell-shop-confirm
+    right: full-exit
+
+sell-all-item:
+  item:
+    material: COD_BUCKET
+    displayname: '<bold><#5FF3E0>✔ Confirm Sell All</#5FF3E0></bold>'
+    lore:
+    - '<#B8B8C8>Every fish in your inventory.</#B8B8C8>'
+    - ''
+    - '<#6E6E80>◆</#6E6E80> <#B8B8C8>Worth</#B8B8C8>  <#4CE08A>{sell-all-price}</#4CE08A>'
+    - ''
+    - '<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Left-click · sell them all now</#B8B8C8>'
+    - '<#7CFF4F>▶</#7CFF4F> <#B8B8C8>Right-click · close</#B8B8C8>'
+  character: a
+  click-action:
+    left: sell-inventory-confirm
+    right: full-exit
+
+# ATTENTION ATTENTION ATTENTION
+# DO NOT EDIT THIS VALUE OR THINGS WILL BREAK!!!
+version: 1

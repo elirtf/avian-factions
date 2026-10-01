@@ -234,6 +234,11 @@ licensed non-commercial; trails are defined in `plugins/AvianFactions/trails.con
 Keys: **800 tokens** in the token shop (4,000 for five), and about a 5 % drop from the Vote crate.
 Add a tag in `dev-server/plugins/DeluxeTags/config.yml` and its prize in `CrazyCrates/crates/Cosmetic.yml`.
 
+## Starter kit
+
+Every player can claim `/kit starter` once a day: stone tools, leather armour, a Lure I fishing rod, 16
+bread, 16 logs and 16 torches (owner, 2026-09-30). Free, so it needs no crate route.
+
 ## Rank kits
 
 Each paid rank claims its kit once a week with `/kit <rank>` (`dev-server/plugins/Essentials/kits.yml`),
@@ -297,8 +302,9 @@ Fledgling and `/ec` is everyone's (owner, 2026-09-29).
 Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
 `docs/research/custom-fishing.md`), on top of AuraSkills' own fishing XP and treasure.
 
-- **Money:** custom fish sell only through `/emf shop`, about $8 a catch on average, so roughly
-  $1,500–3,500 an hour: a side income, well under sugar cane. Raw fish stay unsellable in `/shop`
+- **Money:** custom fish sell only through `/fish shop`, about $35 a catch on average (Common ~$12, Rare
+  ~$76, Epic ~$300, Legendary ~$1,200; raised 2026-09-30 so early fishing pays), roughly $10–15k an
+  hour of active fishing: level with early sugar cane, but it can't be automated (anti-AFK). Raw fish stay unsellable in `/shop`
   (`sell: -1`), so sell wands can't sell them either. Keep it that way.
 - **Tokens and keys come only from contests**, never from ordinary catches, and a contest only runs
   with **3+ players online**, so nobody can farm them alone:
@@ -313,6 +319,8 @@ Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
   about the vanilla average per cast. AuraSkills' own flat XP for cod, salmon, pufferfish and tropical
   fish is zeroed (`AuraSkills/sources/fishing.yml`) so nothing counts twice, and players can't turn
   custom fishing off (no `/fish toggle`), so every catch earns by rarity (owner, 2026-09-30).
+- **Multi-item catches:** a catch of two or more fish (Double Catch, AuraSkills' Fisher) pays the XP
+  for every one, so two Common fish give 120 (avian-economy FishingEnchantXp).
 - **One rare catch:** AuraSkills' epic fishing loot includes a Common key, about 1 in 2,200
   catches, more as a player's Fishing level (Epic Catch) rises.
 - **Anti-AFK:** EvenMoreFish's `exploits.afk-fishing` (10 catches in the same 3-block spot stops
