@@ -1,0 +1,162 @@
+# CI from ADR-0005 on our Forgejo: build → full-stack boot and container boot, on every push to main
+# and every PR. Runs on the avian runner (infra repo, ci-runner/): each job in a fresh container on its
+# own Docker engine, so CI's MariaDB and servers never touch the live dev server. Actions resolve from
+# data.forgejo.org (Forgejo's mirror). .github/workflows/ci.yml still runs on the GitHub mirror.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+env:
+  GRADLE_OPTS: -Dorg.gradle.daemon=false
+
+jobs:
+  build:
+    name: Build, test, shade
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25          # Paper 26.1.2 minimum; matches gradle.properties javaVersion
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Resolve version from tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+      # The job image has neither; kubectl matches the infra repo's pin, kubeconform is checksummed.
+      - name: Install shellcheck, kubectl and kubeconform
+        run: |
+          set -euo pipefail
+          apt-get update -q && apt-get install -yq --no-install-recommends shellcheck
+          cd "$RUNNER_TEMP"
+          curl -fsSLo kubectl https://dl.k8s.io/release/v1.36.4/bin/linux/amd64/kubectl
+          echo "8b8f088da2dab964f853b38464033b1be15ede2839eca751482357c45abdd05a  kubectl" | sha256sum -c -
+          curl -fsSLO https://github.com/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz
+          echo "9bc2bffbf71f261128533edaf912153948b7ff238f9a531ae6d34466ec287883  kubeconform-linux-amd64.tar.gz" | sha256sum -c -
+          tar -xzf kubeconform-linux-amd64.tar.gz kubeconform
+          install -m 755 kubectl kubeconform /usr/local/bin/
+      # The dev script is part of the workflow (CI below runs it), so lint it like code.
+      - name: Lint the shell scripts (./dev, config sync, container entrypoint)
+        run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console
+      # Both game overlays must render and pass strict schema validation (docs/DEPLOYMENT.md →
+      # Kubernetes; the cluster roots are validated in the infra repo). SealedSecret schemas come from
+      # the CRDs catalog, pinned to one commit.
+      - name: Render and validate the Kubernetes manifests
+        run: |
+          for o in k3d production; do kubectl kustomize "deploy/kubernetes/overlays/$o" > "$RUNNER_TEMP/game-$o.yaml"; done
+          kubeconform -strict -summary -schema-location default \
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/d373c2da9702bc9509a004db83e57263fe3bdfc1/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            "$RUNNER_TEMP/game-k3d.yaml" "$RUNNER_TEMP/game-production.yaml"
+      # Unit + MockBukkit tests, Testcontainers integration tests (on the runner's Docker engine), shadowJar.
+      - run: ./gradlew build --console=plain ${VERSION_FLAG:-}
+      # actions/upload-artifact v4+ only talks to GitHub; Forgejo's fork speaks Forgejo's protocol.
+      - uses: forgejo/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: '**/build/reports/tests/'
+          if-no-files-found: ignore
+      - uses: forgejo/upload-artifact@v4
+        with:
+          name: AvianFactions
+          path: avian-plugin/build/libs/AvianFactions-*.jar
+          if-no-files-found: error
+
+  smoke:
+    # Boots the real dev server: Paper, the whole pinned plugin stack (FactionsUUID, RoseStacker,
+    # CommandTimer, …), our jar and the tracked dev-server/ config, exactly as ./dev does locally.
+    # Fails on any plugin error or a missing hook, so a broken plugin config never merges.
+    name: Boot the full server stack
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Install tmux
+        run: command -v tmux || { apt-get update -q && apt-get install -yq --no-install-recommends tmux; }
+      - name: Set up (database in Docker, plugin downloads, FactionsUUID build)
+        run: ./dev setup
+      - name: Start the server, apply ranks and world border
+        run: ./dev start
+      - name: Check the log for plugin errors and missing hooks
+        run: ./dev check-log
+      - name: Stop the server
+        run: |
+          ./dev stop
+          grep -q "Disabled module 'core'" run/logs/latest.log || { echo '::error::plugin did not disable cleanly'; exit 1; }
+      - name: Show the end of the log
+        if: failure()
+        run: tail -n 150 run/logs/latest.log || true
+      - uses: forgejo/upload-artifact@v4
+        if: always()
+        with:
+          name: server-log
+          path: run/logs/latest.log
+          if-no-files-found: ignore
+      - name: Remove the database
+        if: always()
+        run: docker compose down -v || true
+
+  container:
+    # Builds the server image (docs/DEPLOYMENT.md) and boots it against the Compose database: the same
+    # log check as the dev boot, then a clean stop. Guards the way we'd run it on another machine or
+    # Kubernetes, so the image never drifts from ./dev.
+    name: Build and boot the container image
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: 25
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+      - name: Build the image
+        run: ./dev image
+      - name: Boot it with the database
+        run: |
+          cp .env.example .env
+          docker compose up -d --wait mariadb
+          EULA=true AVIAN_MEMORY=3G docker compose --profile server up -d --no-deps server
+          for _ in $(seq 1 100); do
+            docker exec avian-server grep -q ']: Done (' /data/logs/latest.log 2>/dev/null && break
+            sleep 3
+          done
+          docker cp avian-server:/data/logs/latest.log container.log
+      - name: Check the log for plugin errors and missing hooks
+        run: AVIAN_LOG=container.log ./dev check-log
+      - name: Stop it cleanly
+        run: |
+          docker compose --profile server stop server
+          docker logs avian-server 2>&1 | grep -q '\[avian\] Server exited (0)' || { echo '::error::server did not stop cleanly'; exit 1; }
+      - name: Show the end of the log
+        if: failure()
+        run: docker logs --tail 150 avian-server || true
+      - uses: forgejo/upload-artifact@v4
+        if: always()
+        with:
+          name: container-log
+          path: container.log
+          if-no-files-found: ignore
+      # The runner's engine outlives the job: leave nothing behind for the next one.
+      - name: Remove the containers, volumes and image
+        if: always()
+        run: |
+          docker compose --profile server down -v || true
+          docker image rm "${AVIAN_IMAGE:-avian-factions:dev}" || true
