@@ -1,0 +1,19 @@
+# ArgoCD manages its own install from git (sync wave -2: first).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  annotations: {argocd.argoproj.io/sync-wave: "-2"}
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/elirtf/avian-factions.git
+    targetRevision: main
+    path: deploy/argocd/install
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated: {prune: false, selfHeal: true}   # never prune ArgoCD's own pieces automatically
+    syncOptions: [ServerSideApply=true]          # its CRDs are too big for client-side apply
