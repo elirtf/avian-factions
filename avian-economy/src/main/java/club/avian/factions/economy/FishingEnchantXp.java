@@ -32,8 +32,8 @@ import java.util.UUID;
  *   <li>at the start of every fish event, forget the player's last fishing XP;</li>
  *   <li>record the fishing XP AuraSkills grants during it ({@link XpGainEvent});</li>
  *   <li>at its end, read the rod and how many items were caught, and one tick later (whatever the
- *       listener order, AuraSkills has paid by then) add the bonus, raw, so multipliers aren't
- *       applied twice.</li>
+ *       listener order, AuraSkills has paid by then) add the bonus through AuraSkills' normal path (so it
+ *       shows), with its amount pinned by {@link #onBonus} so multipliers aren't applied twice.</li>
  * </ol>
  *
  * Its own class so the AuraSkills API only loads when the plugin is installed.
@@ -45,6 +45,8 @@ final class FishingEnchantXp implements Listener {
     private final Plugin plugin;
     private final ConfigHandle<EconomyConfig> config;
     private final Map<UUID, Double> fishingXp = new HashMap<>();
+    /** The exact bonus each player is about to be granted, applied by {@link #onBonus}. */
+    private final Map<UUID, Double> pendingBonus = new HashMap<>();
 
     FishingEnchantXp(Plugin plugin, ConfigHandle<EconomyConfig> config) {
         this.plugin = plugin;
@@ -54,6 +56,22 @@ final class FishingEnchantXp implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onFishStart(PlayerFishEvent event) {
         fishingXp.remove(event.getPlayer().getUniqueId());
+    }
+
+    /**
+     * The bonus goes through AuraSkills' normal XP path so it shows in the action bar like any gain (the
+     * raw API added it silently, so a double catch looked like it paid once). That path applies XP
+     * multipliers, and the amount it gets is already after them, so the bonus's event is set to the
+     * exact figure here, first.
+     */
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onBonus(XpGainEvent event) {
+        if (event.getSkill() == Skills.FISHING) {
+            Double exact = pendingBonus.remove(event.getPlayer().getUniqueId());
+            if (exact != null) {
+                event.setAmount(exact);
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -88,7 +106,9 @@ final class FishingEnchantXp implements Listener {
             double extra = FishingXpBonus.of(paid, amount, angler, cfg.doubleCatchSkillXp(), cfg.seasonedAnglerSkillXpPerLevel());
             var user = AuraSkillsApi.get().getUser(uuid);
             if (extra > 0 && user != null) {
-                user.addSkillXpRaw(Skills.FISHING, extra);
+                pendingBonus.put(uuid, extra);
+                user.addSkillXp(Skills.FISHING, extra);
+                pendingBonus.remove(uuid);   // in case another plugin cancelled the event before ours ran
             }
         });
     }
