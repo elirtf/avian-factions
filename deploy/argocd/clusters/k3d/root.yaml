@@ -1,0 +1,19 @@
+# The root of the k3d cluster: ArgoCD reads this directory and creates every Application in it,
+# including this one, so the cluster is defined entirely by git. Bootstrapped once by ./dev k8s bootstrap.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+  annotations: {argocd.argoproj.io/sync-wave: "-3"}
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/elirtf/avian-factions.git
+    targetRevision: argocd   # TEST: flipped back to main before merge
+    path: deploy/argocd/clusters/k3d
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}

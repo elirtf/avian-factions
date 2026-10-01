@@ -1,0 +1,8 @@
+# Sealed Secrets (bitnami-labs, Apache-2.0), pinned: decrypts the SealedSecrets committed in
+# deploy/kubernetes/overlays/*/sealed-secret.yaml into ordinary Secrets, with a key only the cluster
+# holds, so passwords can live in this public repo encrypted. ArgoCD installs it (deploy/argocd).
+# Release v0.40.0, controller.yaml sha256 ac8aabccdd9110430d117501705818115b2ab0993700a9c118d4d42cf4015a17.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.40.0/controller.yaml

@@ -550,14 +550,11 @@ cmd_k8s() {
                 say "Importing the image into k3d…"
                 k3d image import avian-factions:dev -c "${K8S_CONTEXT#k3d-}" >/dev/null || fail "Image import failed."
             fi
-            k8s_secrets
-            if kubectl --context "$K8S_CONTEXT" -n argocd get application avian >/dev/null 2>&1; then
-                # ArgoCD owns the manifests: ask it to re-read main now instead of within 3 minutes.
-                say "ArgoCD applies the manifests from main; asking it to refresh…"
-                kubectl --context "$K8S_CONTEXT" -n argocd annotate application avian argocd.argoproj.io/refresh=hard --overwrite >/dev/null
-            else
-                kubectl --context "$K8S_CONTEXT" apply -k "$ROOT/$K8S_OVERLAY" || fail "kubectl apply failed."
-            fi
+            kubectl --context "$K8S_CONTEXT" -n argocd get application avian >/dev/null 2>&1 \
+                || fail "ArgoCD isn't managing $K8S_CONTEXT yet: ./dev k8s bootstrap"
+            # Manifests come from main through ArgoCD; this only asks it to re-read now, not in 3 minutes.
+            say "ArgoCD applies the manifests from main; asking it to refresh…"
+            kubectl --context "$K8S_CONTEXT" -n argocd annotate application avian argocd.argoproj.io/refresh=hard --overwrite >/dev/null
             # A rebuilt image keeps its tag, so replace the pod to pick it up. (Not rollout restart:
             # its annotation is drift that ArgoCD would undo.)
             kc wait --for=jsonpath='{.status.availableReplicas}'=1 statefulset/avian-factions --timeout=2m >/dev/null 2>&1 || true
@@ -565,47 +562,64 @@ cmd_k8s() {
             say "Waiting for the server (the first boot takes a few minutes)…"
             kc rollout status statefulset/avian-factions --timeout=10m || fail "The server did not become ready: ./dev k8s logs"
             ok "Deployed to $K8S_CONTEXT." ;;
-        secrets) k8s_secrets ;;
-        argocd)  k8s_argocd ;;
+        bootstrap) k8s_bootstrap ;;
+        seal)      k8s_seal ;;
         ui)
-            say "ArgoCD at https://localhost:8080 (user admin; ./dev k8s argocd prints the password). Ctrl-C to stop."
+            say "ArgoCD at https://localhost:8080 (user admin; ./dev k8s bootstrap prints the password). Ctrl-C to stop."
             kubectl --context "$K8S_CONTEXT" -n argocd port-forward svc/argocd-server 8080:443 ;;
         status) kc get pods,svc,pvc ;;
         logs)   kc logs -f avian-factions-0 ;;
         cmd)    [[ $# -gt 0 ]] || fail "Usage: ./dev k8s cmd \"<console command>\""
                 kc exec avian-factions-0 -- avian-console "$*" ;;
         restore) k8s_restore "$@" ;;
-        *) fail "Usage: ./dev k8s up|argocd|secrets|deploy|status|logs|cmd <command>|restore <backup> [--yes]|ui|down" ;;
+        *) fail "Usage: ./dev k8s up|bootstrap|seal|deploy|status|logs|cmd <command>|restore <backup> [--yes]|ui|down" ;;
     esac
 }
 
-# The avian-db Secret, from the overlay's git-ignored secret.env: never in git (the repo is public),
-# so neither ArgoCD nor the overlay creates it.
-k8s_secrets() {
-    local env="$ROOT/$K8S_OVERLAY/secret.env"
+# Where each cluster's Sealed Secrets key is kept: outside git, so a recreated cluster can decrypt the
+# SealedSecrets already committed (./dev k8s bootstrap restores it).
+K8S_KEYS="${AVIAN_K8S_KEYS:-$HOME/.config/avian/sealed-secrets}"
+
+# Encrypts the overlay's secret.env (git-ignored) into a SealedSecret that only this cluster can open,
+# writes it to the overlay as sealed-secret.yaml for committing, and backs up the cluster's key.
+k8s_seal() {
+    command -v kubeseal >/dev/null || fail "kubeseal is not installed (docs/DEPLOYMENT.md → Kubernetes)."
+    local env="$ROOT/$K8S_OVERLAY/secret.env" out="$ROOT/$K8S_OVERLAY/sealed-secret.yaml" kust="$ROOT/$K8S_OVERLAY/kustomization.yaml"
     [[ -f "$env" ]] || fail "Create $K8S_OVERLAY/secret.env first (copy secret.env.example)."
-    kubectl --context "$K8S_CONTEXT" create namespace "$K8S_NS" --dry-run=client -o yaml \
-        | kubectl --context "$K8S_CONTEXT" apply -f - >/dev/null
-    kc create secret generic avian-db --from-env-file="$env" --dry-run=client -o yaml \
-        | kc apply -f - >/dev/null || fail "Could not create the avian-db Secret."
-    ok "Secret avian-db is up to date in $K8S_CONTEXT."
+    kubectl --context "$K8S_CONTEXT" -n kube-system rollout status deployment/sealed-secrets-controller --timeout=3m >/dev/null \
+        || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (./dev k8s bootstrap installs it)."
+    kubectl --context "$K8S_CONTEXT" -n "$K8S_NS" create secret generic avian-db --from-env-file="$env" --dry-run=client -o yaml \
+        | kubeseal --context "$K8S_CONTEXT" --controller-namespace kube-system --format yaml > "$out" \
+        || fail "Sealing failed."
+    grep -q "sealed-secret.yaml" "$kust" || sed -i 's|^  - \.\./\.\./base$|  - ../../base\n  - sealed-secret.yaml   # the avian-db Secret, encrypted for this cluster (./dev k8s seal)|' "$kust"
+    mkdir -p "$K8S_KEYS" && chmod 700 "$K8S_KEYS"
+    kubectl --context "$K8S_CONTEXT" -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml \
+        > "$K8S_KEYS/$K8S_CONTEXT.yaml" && chmod 600 "$K8S_KEYS/$K8S_CONTEXT.yaml"
+    ok "Sealed into $K8S_OVERLAY/sealed-secret.yaml. Commit it; ArgoCD applies it from main."
+    echo "  The cluster's key is backed up to $K8S_KEYS/$K8S_CONTEXT.yaml (keep it safe, never in git)."
 }
 
-# Installs ArgoCD (pinned in deploy/argocd/install) and the Application that keeps this cluster
-# matching its overlay on main (deploy/argocd/apps/<overlay>.yaml).
-k8s_argocd() {
-    local app
-    app="$ROOT/deploy/argocd/apps/$(basename "$K8S_OVERLAY").yaml"
-    [[ -f "$app" ]] || fail "No ArgoCD Application for this overlay: $app"
+# The one step done by hand per cluster: restore its Sealed Secrets key if we have one, install ArgoCD
+# (pinned, deploy/argocd/install) and point it at the cluster's root (deploy/argocd/clusters/<name>).
+# From then on ArgoCD manages everything, itself included, from main.
+k8s_bootstrap() {
+    local name root
+    name="$(basename "$K8S_OVERLAY")"; root="$ROOT/deploy/argocd/clusters/$name/root.yaml"
+    [[ -f "$root" ]] || fail "No ArgoCD root for this cluster: $root"
+    if [[ -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]]; then
+        say "Restoring this cluster's Sealed Secrets key…"
+        kubectl --context "$K8S_CONTEXT" apply -f "$K8S_KEYS/$K8S_CONTEXT.yaml" >/dev/null || fail "Could not restore the key."
+    fi
     say "Installing ArgoCD…"
     # Server-side: ArgoCD's CRDs are too big for client-side apply's annotation.
     kubectl --context "$K8S_CONTEXT" apply --server-side --force-conflicts -k "$ROOT/deploy/argocd/install" >/dev/null \
         || fail "Installing ArgoCD failed."
     kubectl --context "$K8S_CONTEXT" -n argocd rollout status deployment/argocd-server --timeout=5m >/dev/null \
         || fail "ArgoCD did not start."
-    k8s_secrets
-    kubectl --context "$K8S_CONTEXT" apply -f "$app" >/dev/null || fail "Could not create the Application."
-    ok "ArgoCD installed; it now keeps $K8S_CONTEXT matching $(basename "$K8S_OVERLAY") on main."
+    kubectl --context "$K8S_CONTEXT" apply -f "$root" >/dev/null || fail "Could not create the root Application."
+    ok "ArgoCD now builds $K8S_CONTEXT from deploy/argocd/clusters/$name on main."
+    [[ -f "$ROOT/$K8S_OVERLAY/sealed-secret.yaml" && -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]] \
+        || echo "  No sealed secret for this cluster yet: once Sealed Secrets is up, ./dev k8s seal, then commit."
     local pw
     pw="$(kubectl --context "$K8S_CONTEXT" -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' 2>/dev/null | base64 -d)"
     [[ -n "$pw" ]] && echo "  Dashboard: ./dev k8s ui, then https://localhost:8080 as admin / $pw"
@@ -685,7 +699,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}restore-container${RESET} <file>  Load a backup into the server container instead (docs/DEPLOYMENT.md)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
-  ${BOLD}k8s${RESET} <sub>        Kubernetes (k3s + ArgoCD): up|argocd|secrets|deploy|status|logs|cmd|restore|ui|down
+  ${BOLD}k8s${RESET} <sub>        Kubernetes (k3s, GitOps via ArgoCD): up|bootstrap|seal|deploy|status|logs|cmd|restore|ui|down
 EOF
 }
 

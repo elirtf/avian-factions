@@ -1,17 +1,16 @@
-# ArgoCD keeps the production cluster matching deploy/kubernetes/overlays/production on main: changes merged to main
-# are applied within a few minutes, and anything changed by hand is put back (selfHeal).
-# Not in git, on purpose (this repo is public): the avian-db Secret. ./dev k8s secrets creates it.
+# The game: the k3d overlay (MariaDB, Avian Factions; later the Velocity proxy and the hub).
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: avian
   namespace: argocd
+  annotations: {argocd.argoproj.io/sync-wave: "0"}
 spec:
   project: default
   source:
     repoURL: https://github.com/elirtf/avian-factions.git
-    targetRevision: main
-    path: deploy/kubernetes/overlays/production
+    targetRevision: argocd   # TEST: flipped back to main before merge
+    path: deploy/kubernetes/overlays/k3d
   destination:
     server: https://kubernetes.default.svc
     namespace: avian
