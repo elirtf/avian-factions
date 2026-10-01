@@ -1,37 +1,46 @@
-# Issue tracker: GitHub
+# Issue tracker: Forgejo
 
-Issues and PRDs for this repo live as GitHub issues on `elirtf/avian-factions`. Use the `gh` CLI for all operations.
+Issues and PRDs for this repo live on our Forgejo, **https://git.willowcrest.world/avian/avian-factions**
+(moved from GitHub on 2026-09-30 with every issue and PR; GitHub is now only a push mirror). Use
+`tools/forgejo` for all operations: it reads the repo from `git remote get-url origin` and the token
+from `~/.config/avian/forgejo-token`. Bodies always come from a file or stdin (`-`), never the command line.
 
 ## Conventions
 
-- **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies.
-- **Read an issue**: `gh issue view <number> --comments`, filtering comments by `jq` and also fetching labels.
-- **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
-- **Comment on an issue**: `gh issue comment <number> --body "..."`
-- **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`
-- **Close**: `gh issue close <number> --comment "..."`
+- **Create an issue**: `tools/forgejo issue create --title "..." --body-file - [--label a,b] <<'EOF' … EOF`
+- **Read an issue**: `tools/forgejo issue view <number>` (body, labels and every comment)
+- **List issues**: `tools/forgejo issue list [--state open|closed|all] [--label <name>]`
+- **Comment on an issue**: `tools/forgejo issue comment <number> --body-file -`
+- **Apply / remove labels**: `tools/forgejo issue label <number> --add a,b --remove c`
+- **Close**: `tools/forgejo issue close <number> [--comment-file -]`
 
-Infer the repo from `git remote -v` — `gh` does this automatically when run inside a clone.
+## Pull requests
 
-## Pull requests as a triage surface
+Branches push to `origin` (Forgejo, mirrored to GitHub). Open and merge PRs on Forgejo:
+`tools/forgejo pr create --head <branch> --title "..." --body-file -`, `pr view`, `pr list`, `pr checks`,
+`pr merge` (a merge commit, branch deleted).
 
 **PRs as a request surface: no.**
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitHub issue.
+Create a Forgejo issue with `tools/forgejo issue create`.
 
 ## When a skill says "fetch the relevant ticket"
 
-Run `gh issue view <number> --comments`.
+Run `tools/forgejo issue view <number>`.
 
 ## Wayfinding operations
 
 Used by `/wayfinder`. The **map** is a single issue with **child** issues as tickets.
 
-- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body. `gh issue create --label wayfinder:map`.
-- **Child ticket**: an issue linked to the map as a GitHub sub-issue (`gh api` on the sub-issues endpoint). Where sub-issues aren't enabled, add the child to a task list in the map body and put `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>` (`research`/`prototype`/`grilling`/`task`). Once claimed, the ticket is assigned to the driving dev.
-- **Blocking**: GitHub's **native issue dependencies** — the canonical, UI-visible representation. Add an edge with `gh api --method POST repos/<owner>/<repo>/issues/<child>/dependencies/blocked_by -F issue_id=<blocker-db-id>`, where `<blocker-db-id>` is the blocker's numeric **database id** (`gh api repos/<owner>/<repo>/issues/<n> --jq .id`, _not_ the `#number` or `node_id`). GitHub reports `issue_dependencies_summary.blocked_by` (open blockers only — the live gate). Where dependencies aren't available, fall back to a `Blocked by: #<n>, #<n>` line at the top of the child body. A ticket is unblocked when every blocker is closed.
-- **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to the map's sub-issues / task list), drop any with an open blocker (`issue_dependencies_summary.blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee; first in map order wins.
-- **Claim**: `gh issue edit <n> --add-assignee @me` — the session's first write.
-- **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
+- **Map**: a single issue labelled `wayfinder:map`, holding the Notes / Decisions-so-far / Fog body.
+- **Child ticket**: Forgejo has no sub-issues, so add the child to a task list in the map body and put
+  `Part of #<map>` at the top of the child body. Labels: `wayfinder:<type>`
+  (`research`/`prototype`/`grilling`/`task`).
+- **Blocking**: Forgejo's native issue dependencies: `tools/forgejo issue blocked-by <child> <blocker>`.
+  A ticket is unblocked when every blocker is closed.
+- **Frontier query**: list the map's open children, drop any with an open blocker; first in map order wins.
+- **Claim**: assign it to yourself in the Forgejo UI (or note it in a comment) as the session's first write.
+- **Resolve**: comment the answer, close the issue, then append a context pointer (gist + link) to the
+  map's Decisions-so-far.

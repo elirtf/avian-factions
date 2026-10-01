@@ -1,7 +1,7 @@
-# The local test cluster (deploy/k3d/cluster.yaml): the image `./dev image` built, imported into k3d,
-# with less memory and disk than production. The avian-db Secret is not here (the repo is public):
-# ./dev k8s secrets creates it from secret.env (git-ignored; copy secret.env.example). ArgoCD applies
-# this overlay (deploy/argocd).
+# The local test cluster (the infra repo's k3d/cluster.yaml): the image `./dev image` built, imported
+# into k3d, with less memory and disk than production. The avian-db Secret is sealed-secret.yaml,
+# encrypted for this cluster (./dev k8s seal from the git-ignored secret.env). ArgoCD applies this
+# overlay (the infra repo's clusters/k3d).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: avian

@@ -1,0 +1,149 @@
+#!/usr/bin/env node
+// tools/forgejo — issues and pull requests on our Forgejo (the gh of this repo; docs/agents/issue-tracker.md).
+// The repo comes from `git remote get-url origin`; the token from ~/.config/avian/forgejo-token
+// (or FORGEJO_TOKEN_FILE). Bodies are read from a file or stdin ("-"), never from the command line.
+//
+//   tools/forgejo issue list [--state open|closed|all] [--label <name>]
+//   tools/forgejo issue view <n>
+//   tools/forgejo issue create --title <t> --body-file <f|-> [--label a,b]
+//   tools/forgejo issue comment <n> --body-file <f|->
+//   tools/forgejo issue label <n> [--add a,b] [--remove c]
+//   tools/forgejo issue close <n> [--comment-file <f|->]
+//   tools/forgejo issue blocked-by <n> <blocker>
+//   tools/forgejo pr create --head <branch> [--base main] --title <t> --body-file <f|->
+//   tools/forgejo pr view <n> | pr list [--state open|closed|all] | pr merge <n> | pr checks <n>
+'use strict';
+const fs = require('fs');
+const os = require('os');
+const { execFileSync } = require('child_process');
+
+function die(msg) { console.error(`forgejo: ${msg}`); process.exit(1); }
+
+const remote = execFileSync('git', ['remote', 'get-url', 'origin'], { encoding: 'utf8' }).trim();
+const m = remote.match(/^https:\/\/([^/]+)\/([^/]+)\/([^/]+?)(?:\.git)?$/);
+if (!m) die(`origin is not an https Forgejo URL: ${remote}`);
+const [, host, owner, repo] = m;
+const API = `https://${host}/api/v1`;
+const tokenFile = process.env.FORGEJO_TOKEN_FILE || `${os.homedir()}/.config/avian/forgejo-token`;
+let token;
+try { token = fs.readFileSync(tokenFile, 'utf8').trim(); } catch { die(`no token at ${tokenFile}`); }
+
+async function api(method, path, body) {
+  const res = await fetch(`${API}${path}`, {
+    method,
+    headers: { Authorization: `token ${token}`, 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  const text = await res.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!res.ok) die(`${method} ${path}: ${res.status} ${data && data.message ? data.message : text}`);
+  return data;
+}
+const R = `/repos/${owner}/${repo}`;
+
+function flags(args) {
+  const out = { _: [] };
+  for (let i = 0; i < args.length; i++) {
+    if (args[i].startsWith('--')) out[args[i].slice(2)] = args[++i];
+    else out._.push(args[i]);
+  }
+  return out;
+}
+function readBody(f) {
+  if (f === undefined) return undefined;
+  return fs.readFileSync(f === '-' ? 0 : f, 'utf8');
+}
+async function labelIds(names) {
+  const all = await api('GET', `${R}/labels?limit=100`);
+  return names.map((n) => {
+    const l = all.find((x) => x.name === n);
+    if (!l) die(`no label "${n}" (have: ${all.map((x) => x.name).join(', ')})`);
+    return l.id;
+  });
+}
+const list = (s) => (s ? s.split(',').map((x) => x.trim()).filter(Boolean) : []);
+
+async function main() {
+  const [kind, verb, ...rest] = process.argv.slice(2);
+  const f = flags(rest);
+  const n = f._[0];
+  if (kind === 'issue') {
+    switch (verb) {
+      case 'list': {
+        const q = new URLSearchParams({ type: 'issues', state: f.state || 'open', limit: '50' });
+        if (f.label) q.set('labels', f.label);
+        for (const i of await api('GET', `${R}/issues?${q}`)) {
+          console.log(`#${i.number}\t${i.state}\t${i.title}\t[${i.labels.map((l) => l.name).join(',')}]`);
+        }
+        return;
+      }
+      case 'view': {
+        const i = await api('GET', `${R}/issues/${n}`);
+        console.log(`#${i.number} ${i.title} (${i.state}) [${i.labels.map((l) => l.name).join(', ')}]\n${i.html_url}\n\n${i.body}`);
+        for (const c of await api('GET', `${R}/issues/${n}/comments`)) {
+          console.log(`\n--- ${c.user.login} ${c.created_at}\n${c.body}`);
+        }
+        return;
+      }
+      case 'create': {
+        if (!f.title) die('--title is required');
+        const body = { title: f.title, body: readBody(f['body-file']) || '' };
+        if (f.label) body.labels = await labelIds(list(f.label));
+        const i = await api('POST', `${R}/issues`, body);
+        console.log(i.html_url);
+        return;
+      }
+      case 'comment':
+        console.log((await api('POST', `${R}/issues/${n}/comments`, { body: readBody(f['body-file']) })).html_url);
+        return;
+      case 'label':
+        if (f.add) await api('POST', `${R}/issues/${n}/labels`, { labels: await labelIds(list(f.add)) });
+        for (const id of f.remove ? await labelIds(list(f.remove)) : []) await api('DELETE', `${R}/issues/${n}/labels/${id}`);
+        return;
+      case 'close':
+        if (f['comment-file']) await api('POST', `${R}/issues/${n}/comments`, { body: readBody(f['comment-file']) });
+        await api('PATCH', `${R}/issues/${n}`, { state: 'closed' });
+        console.log(`closed #${n}`);
+        return;
+      case 'blocked-by':
+        await api('POST', `${R}/issues/${n}/dependencies`, { owner, repo, index: Number(f._[1]) });
+        console.log(`#${n} is blocked by #${f._[1]}`);
+        return;
+    }
+  }
+  if (kind === 'pr') {
+    switch (verb) {
+      case 'create': {
+        if (!f.head || !f.title) die('--head and --title are required');
+        const p = await api('POST', `${R}/pulls`, {
+          head: f.head, base: f.base || 'main', title: f.title, body: readBody(f['body-file']) || '',
+        });
+        console.log(p.html_url);
+        return;
+      }
+      case 'view': {
+        const p = await api('GET', `${R}/pulls/${n}`);
+        console.log(`#${p.number} ${p.title} (${p.merged ? 'merged' : p.state}) ${p.head.ref} → ${p.base.ref}\n${p.html_url}\n\n${p.body}`);
+        return;
+      }
+      case 'list':
+        for (const p of await api('GET', `${R}/pulls?state=${f.state || 'open'}&limit=50`)) {
+          console.log(`#${p.number}\t${p.merged ? 'merged' : p.state}\t${p.head.ref}\t${p.title}`);
+        }
+        return;
+      case 'merge':
+        await api('POST', `${R}/pulls/${n}/merge`, { Do: 'merge', delete_branch_after_merge: true });
+        console.log(`merged #${n}`);
+        return;
+      case 'checks': {
+        const p = await api('GET', `${R}/pulls/${n}`);
+        const s = await api('GET', `${R}/commits/${p.head.sha}/status`);
+        console.log(`${s.state || 'no checks'}`);
+        for (const c of s.statuses || []) console.log(`${c.status}\t${c.context}`);
+        return;
+      }
+    }
+  }
+  die('usage: see the top of tools/forgejo');
+}
+main().catch((e) => die(e.message));
