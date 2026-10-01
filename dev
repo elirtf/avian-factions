@@ -593,8 +593,10 @@ k8s_seal() {
         || fail "Sealing failed."
     grep -q "sealed-secret.yaml" "$kust" || sed -i 's|^  - \.\./\.\./base$|  - ../../base\n  - sealed-secret.yaml   # the avian-db Secret, encrypted for this cluster (./dev k8s seal)|' "$kust"
     mkdir -p "$K8S_KEYS" && chmod 700 "$K8S_KEYS"
+    # Without the server-set fields (uid, resourceVersion…), so bootstrap can create it in a new cluster.
     kubectl --context "$K8S_CONTEXT" -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml \
-        > "$K8S_KEYS/$K8S_CONTEXT.yaml" && chmod 600 "$K8S_KEYS/$K8S_CONTEXT.yaml"
+        | grep -vE '^ +(uid|resourceVersion|creationTimestamp): ' > "$K8S_KEYS/$K8S_CONTEXT.yaml" \
+        && chmod 600 "$K8S_KEYS/$K8S_CONTEXT.yaml"
     ok "Sealed into $K8S_OVERLAY/sealed-secret.yaml. Commit it; ArgoCD applies it from main."
     echo "  The cluster's key is backed up to $K8S_KEYS/$K8S_CONTEXT.yaml (keep it safe, never in git)."
 }
@@ -606,9 +608,11 @@ k8s_bootstrap() {
     local name root
     name="$(basename "$K8S_OVERLAY")"; root="$ROOT/deploy/argocd/clusters/$name/root.yaml"
     [[ -f "$root" ]] || fail "No ArgoCD root for this cluster: $root"
-    if [[ -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]]; then
+    # Only into a cluster that has no key yet (a new or rebuilt one); re-running bootstrap leaves it be.
+    if [[ -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]] && [[ -z "$(kubectl --context "$K8S_CONTEXT" -n kube-system get secret \
+            -l sealedsecrets.bitnami.com/sealed-secrets-key -o name 2>/dev/null)" ]]; then
         say "Restoring this cluster's Sealed Secrets key…"
-        kubectl --context "$K8S_CONTEXT" apply -f "$K8S_KEYS/$K8S_CONTEXT.yaml" >/dev/null || fail "Could not restore the key."
+        kubectl --context "$K8S_CONTEXT" create -f "$K8S_KEYS/$K8S_CONTEXT.yaml" >/dev/null || fail "Could not restore the key."
     fi
     say "Installing ArgoCD…"
     # Server-side: ArgoCD's CRDs are too big for client-side apply's annotation.
