@@ -17,3 +17,44 @@ patches:
       - op: add
         path: /spec/volumeClaimTemplates/0/spec/storageClassName
         value: retain             # the platform's replicated class, kept on delete (infra: platform/longhorn)
+  # No Bedrock at launch (owner, 2026-09-30): TCPShield protects UDP only on its paid plan, and an open
+  # 19132 would expose the home IP. Geyser still runs inside the pod; nothing outside can reach it.
+  # Bring it back by deleting this patch (infra repo docs/architecture.md → Getting traffic in).
+  - target: {kind: Service, name: avian-factions}
+    patch: |-
+      - {op: test, path: /spec/ports/1/name, value: bedrock}
+      - {op: remove, path: /spec/ports/1}
+  # Two machines have 32 GB, two have 8 GB (owner, 2026-09-30): the server (10 GiB) only fits on, and only
+  # ever moves between, the big ones (labelled node.avian/size=large by the infra repo's hosts/k3s config).
+  # On a failover it outranks everything else (game-critical, infra: platform/priorities), so the
+  # surviving big machine makes room for it.
+  - target: {kind: StatefulSet, name: avian-factions}
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: game-critical
+      - op: add
+        path: /spec/template/spec/affinity
+        value:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - {key: node.avian/size, operator: In, values: [large]}
+  # The database fits anywhere, but sits next to the server when it can (every query crosses the network
+  # otherwise) and is as critical: the server can't run without it.
+  - target: {kind: StatefulSet, name: avian-mariadb}
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: game-critical
+      - op: add
+        path: /spec/template/spec/affinity
+        value:
+          podAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+              - weight: 100
+                podAffinityTerm:
+                  topologyKey: kubernetes.io/hostname
+                  labelSelector:
+                    matchLabels: {app.kubernetes.io/name: avian-factions}

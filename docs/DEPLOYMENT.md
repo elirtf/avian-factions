@@ -136,7 +136,7 @@ Checked 2026-09-30:
    then commit and merge the new `sealed-secret.yaml`. ArgoCD creates the Secret and the game starts.
 4. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
    same two variables.
-5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP and 19132 UDP.
+5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP (no Bedrock at launch).
    Forward the router's 25565 to it, behind TCPShield, and follow CLAUDE.md's "Before production" list.
 
 ### Why it's shaped like this
@@ -160,6 +160,11 @@ Checked 2026-09-30:
   25565/19132, only the server may reach MariaDB, and MariaDB can't open any connection out (DNS
   only). Checked 2026-09-30 on k3d: the old specs are refused and the new ones pass; MariaDB
   initialises as 999; the server reaches MariaDB, other pods don't; MariaDB can't reach the internet.
+- **Production placement** (the infra repo's `docs/architecture.md`): the server runs only on the two
+  32 GB machines and outranks every other pod (`game-critical`), so the surviving one makes room for it
+  on a failover. MariaDB sits next to it when it can.
+- **No Bedrock at launch** (owner, 2026-09-30): production doesn't publish UDP 19132. TCPShield covers it
+  only on its paid plan, and an open port would expose the home IP. Geyser still runs in the pod.
 - **Node loss:** the server and MariaDB move after 30 s on a dead node instead of 5 min. That matters
   once there are three nodes and Longhorn volumes to move with them.
 - **Backups:** `./dev backup` on the dev box today. On the cluster, a scheduled job that dumps the
