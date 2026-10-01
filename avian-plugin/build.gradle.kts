@@ -14,6 +14,66 @@ val paperBuild = providers.gradleProperty("paperBuild").get().toInt()
 val factionsUuid = configurations.dependencyScope("factionsUuid")
 val factionsUuidJar = configurations.resolvable("factionsUuidJar") { extendsFrom(factionsUuid.get()) }
 
+// Quests (LMBishop), built from a pinned master commit: its 3.16.1 release predates EvenMoreFish 2.5 and
+// Paper 26.1, and upstream's CI artifact for the fixed commit expires. The source tarball and the
+// finished jar are both hash-pinned (the build is reproducible).
+abstract class BuildQuests @javax.inject.Inject constructor(private val exec: ExecOperations) : DefaultTask() {
+    @get:Input abstract val commit: Property<String>
+    @get:Input abstract val sourceSha256: Property<String>
+    @get:Input abstract val jarSha256: Property<String>
+    @get:Internal abstract val javaHome: Property<String>
+    @get:Internal abstract val workDir: DirectoryProperty
+    @get:OutputFile abstract val jar: RegularFileProperty
+
+    private fun sha256(file: java.io.File) =
+        MessageDigest.getInstance("SHA-256").digest(file.readBytes()).joinToString("") { "%02x".format(it) }
+
+    @TaskAction
+    fun build() {
+        val c = commit.get()
+        val dir = workDir.get().asFile.apply { deleteRecursively(); mkdirs() }
+        val tarball = dir.resolve("Quests-$c.tar.gz")
+        URI.create("https://codeload.github.com/LMBishop/Quests/tar.gz/$c").toURL()
+            .openStream().use { input -> tarball.outputStream().use { input.copyTo(it) } }
+        if (sha256(tarball) != sourceSha256.get()) {
+            throw GradleException("Quests $c source: SHA-256 mismatch, expected ${sourceSha256.get()}, got ${sha256(tarball)}")
+        }
+        exec.exec { commandLine("tar", "xzf", tarball.absolutePath, "-C", dir.absolutePath) }
+        val src = dir.resolve("Quests-$c")
+        // The build stamps its version with `git rev-parse --short HEAD`; a tarball has no .git, so a
+        // stand-in git on the PATH answers with the pinned commit.
+        val shim = dir.resolve("shim").apply { mkdirs() }
+        shim.resolve("git").apply { writeText("#!/bin/sh\necho $c\n"); setExecutable(true) }
+        exec.exec {
+            workingDir = src
+            environment("JAVA_HOME", javaHome.get())
+            environment("PATH", shim.absolutePath + ":" + System.getenv("PATH"))
+            commandLine("./gradlew", "--no-daemon", "-q")
+        }
+        val built = src.resolve("build/libs").listFiles { f -> f.name.matches(Regex("Quests-.*-$c\\.jar")) }?.singleOrNull()
+            ?: throw GradleException("Quests $c: no plugin jar in build/libs")
+        if (sha256(built) != jarSha256.get()) {
+            throw GradleException("Quests $c jar: SHA-256 mismatch, expected ${jarSha256.get()}, got ${sha256(built)}")
+        }
+        built.copyTo(jar.get().asFile, overwrite = true)
+        src.deleteRecursively()
+        tarball.delete()
+    }
+}
+
+val questsCommit = providers.gradleProperty("questsCommit")
+val buildQuests = tasks.register<BuildQuests>("buildQuests") {
+    description = "Downloads the pinned Quests source, verifies it, builds the plugin jar and verifies that."
+    group = "avian"
+    commit = questsCommit
+    sourceSha256 = providers.gradleProperty("questsSourceSha256")
+    jarSha256 = providers.gradleProperty("questsJarSha256")
+    javaHome = javaToolchains.launcherFor(java.toolchain).map { it.metadata.installationPath.asFile.absolutePath }
+    workDir = layout.buildDirectory.dir("quests/work")
+    jar = layout.buildDirectory.zip(questsCommit) { dir, c -> dir.file("quests/Quests-$c.jar") }
+}
+val questsJar: FileCollection = files(buildQuests.flatMap { it.jar })
+
 dependencies {
     implementation(project(":avian-api"))
     implementation(project(":avian-core"))
@@ -267,7 +327,7 @@ tasks.register("downloadPlugins") {
     val target = layout.projectDirectory.dir("../run/plugins")
     val stack = pluginStack
     outputs.dir(target)
-    val builtFromSource: FileCollection = factionsUuidJar.get()
+    val builtFromSource: FileCollection = factionsUuidJar.get() + questsJar
     inputs.files(builtFromSource)
     doLast {
         val dir = target.asFile.apply { mkdirs() }
@@ -367,7 +427,7 @@ tasks.register<Sync>("stageImage") {
     description = "Stages the container image's build context in build/image (then: docker build)."
     group = "avian"
     dependsOn("downloadPlugins")
-    val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name }
+    val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name } + questsJar.map { it.name }
     from(layout.projectDirectory.dir("../deploy/container")) {
         include("Dockerfile")
     }

@@ -1,0 +1,19 @@
+# AVIAN: fishing quest (owner, 2026-09-30; docs/research/quests.md). Cooldowns are minutes: 1200 = 20 h
+# for dailies, 8640 = 6 days for weeklies, so the reset doesn't drift later every round.
+tasks:
+  podium:
+    type: "permission"
+    permission: "avian.quests.fishing.podium"
+display:
+  name: "&#C77DFFOn the Podium"
+  lore-normal: [ "&7Place top 3 in a fishing contest." ]
+  type: "GOLD_INGOT"
+rewards:
+  - "lp user {player} permission unsettemp avian.quests.fishing.podium"
+  - "tokens give {player} 50 quest-fishing-weekly"
+options:
+  category: "fishing"
+  repeatable: true
+  autostart: true
+  counts-towards-limit: false
+  cooldown: { enabled: true, time: 8640 }

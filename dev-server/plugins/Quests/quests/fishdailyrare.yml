@@ -1,0 +1,20 @@
+# AVIAN: fishing quest (owner, 2026-09-30; docs/research/quests.md). Cooldowns are minutes: 1200 = 20 h
+# for dailies, 8640 = 6 days for weeklies, so the reset doesn't drift later every round.
+tasks:
+  rare:
+    type: "evenmorefish_fishing"
+    amount: 3
+    rarities: [ "Rare", "Epic", "Legendary" ]
+display:
+  name: "&#4DA3FFRare Bites"
+  lore-normal: [ "&7Catch &f3 &7Rare or better fish." ]
+  lore-started: [ "&7Progress: &f{rare:progress}&7/3" ]
+  type: "SALMON"
+rewards:
+  - "tokens give {player} 20 quest-fishing-daily"
+options:
+  category: "fishing"
+  repeatable: true
+  autostart: true
+  counts-towards-limit: false
+  cooldown: { enabled: true, time: 1200 }

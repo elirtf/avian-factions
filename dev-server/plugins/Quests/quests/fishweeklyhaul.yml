@@ -1,0 +1,19 @@
+# AVIAN: fishing quest (owner, 2026-09-30; docs/research/quests.md). Cooldowns are minutes: 1200 = 20 h
+# for dailies, 8640 = 6 days for weeklies, so the reset doesn't drift later every round.
+tasks:
+  haul:
+    type: "evenmorefish_fishing"
+    amount: 250
+display:
+  name: "&#FFD23FBig Haul"
+  lore-normal: [ "&7Catch &f250 &7custom fish this week." ]
+  type: "BARREL"
+rewards:
+  - "eco give {player} 15000"
+  - "tokens give {player} 50 quest-fishing-weekly"
+options:
+  category: "fishing"
+  repeatable: true
+  autostart: true
+  counts-towards-limit: false
+  cooldown: { enabled: true, time: 8640 }
