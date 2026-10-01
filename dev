@@ -560,8 +560,62 @@ cmd_k8s() {
         cmd)    [[ $# -gt 0 ]] || fail "Usage: ./dev k8s cmd \"<console command>\""
                 kc exec avian-factions-0 -- avian-console "$*" ;;
         restore) k8s_restore "$@" ;;
-        *) fail "Usage: ./dev k8s seal|deploy|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: ../infra/infra)" ;;
+        push)    k8s_push "$@" ;;
+        *) fail "Usage: ./dev k8s seal|deploy|push <version>|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: ../infra/infra)" ;;
     esac
+}
+
+# Publishes a release image to both registries the machines pull from (the infra repo's
+# docs/architecture.md → Images): GHCR always, and our own registry when AVIAN_REGISTRY is its address.
+# The machines ask ours first and fall back to GHCR, so the GHCR copy is the off-site spare.
+GHCR_IMAGE="ghcr.io/elirtf/avian-factions"
+AVIAN_CONFIG_DIR="$HOME/.config/avian"
+
+k8s_push() {
+    local version="${1:-}"
+    [[ "$version" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]] || fail "Usage: ./dev k8s push <version>   (e.g. 0.2.0; it becomes the image tag)"
+    command -v crane >/dev/null || fail "crane is not installed (docs/DEPLOYMENT.md → Kubernetes → Tools)."
+    [[ -f "$AVIAN_CONFIG_DIR/ghcr-push-token" ]] || fail "No GitHub push token at $AVIAN_CONFIG_DIR/ghcr-push-token (classic, write:packages)."
+    # Credentials live in their own directory, not ~/.docker.
+    export DOCKER_CONFIG="$AVIAN_CONFIG_DIR/registry-auth"
+    mkdir -p "$DOCKER_CONFIG" && chmod 700 "$DOCKER_CONFIG"
+    crane auth login ghcr.io -u elirtf --password-stdin < "$AVIAN_CONFIG_DIR/ghcr-push-token" >/dev/null 2>&1 \
+        || fail "GitHub refused the push token."
+    # A published version is never replaced: a node that already pulled it must run the same thing.
+    crane digest "$GHCR_IMAGE:$version" >/dev/null 2>&1 && fail "$GHCR_IMAGE:$version already exists; pick a new version."
+    [[ -z "$(git status --porcelain --untracked-files=no -- . ':!CLAUDE.md')" ]] \
+        || echo "${GOLD}!${RESET} Uncommitted changes go into this image; a release should come from a commit."
+
+    AVIAN_IMAGE="avian-factions:$version" cmd_image
+    local tar
+    tar="$(mktemp --suffix=.tar)"
+    # Expanded now and cleared after: a RETURN trap would also fire as the callers return.
+    # shellcheck disable=SC2064
+    trap "rm -f '$tar'; trap - RETURN" RETURN
+    docker save "avian-factions:$version" -o "$tar" || fail "Could not export the image."
+
+    say "Pushing to GitHub ($GHCR_IMAGE:$version)…"
+    crane push "$tar" "$GHCR_IMAGE:$version" >/dev/null || fail "Pushing to GitHub failed."
+    # The image carries bought plugins: the package must never be public.
+    local visibility
+    visibility="$(curl -fsS -H "Authorization: token $(cat "$AVIAN_CONFIG_DIR/ghcr-push-token")" \
+        https://api.github.com/user/packages/container/avian-factions | sed -n 's/.*"visibility": *"\([a-z]*\)".*/\1/p')"
+    [[ "$visibility" == private ]] \
+        || fail "The GitHub package is '${visibility:-unknown}', not private! Make it private now: github.com/users/elirtf/packages/container/avian-factions/settings"
+    ok "On GitHub (private)."
+
+    if [[ -n "${AVIAN_REGISTRY:-}" ]]; then
+        say "Pushing to our registry ($AVIAN_REGISTRY)…"
+        # Our own CA signs its certificate (the infra repo's ./infra registry-secrets).
+        export SSL_CERT_FILE="$AVIAN_CONFIG_DIR/registry-ca/ca.crt"
+        crane auth login "$AVIAN_REGISTRY" -u pusher --password-stdin < "$AVIAN_CONFIG_DIR/registry-push-password" >/dev/null 2>&1 \
+            || fail "Our registry refused the push account."
+        crane push "$tar" "$AVIAN_REGISTRY/elirtf/avian-factions:$version" >/dev/null || fail "Pushing to our registry failed."
+        ok "On our registry."
+    else
+        echo "  AVIAN_REGISTRY isn't set (our registry runs once the cluster exists), so GitHub only for now."
+    fi
+    ok "Published $version. Deploy it: set newTag: \"$version\" in deploy/kubernetes/overlays/production/kustomization.yaml and merge."
 }
 
 # Where each cluster's Sealed Secrets key is kept: outside git, so a recreated cluster can decrypt the
@@ -620,16 +674,18 @@ k8s_restore() {
     say "Restoring the world and plugin data into the server's volume…"
     local image
     image="$(kc get statefulset avian-factions -o jsonpath='{.spec.template.spec.containers[0].image}')"
-    # A short-lived pod that mounts the volume as root, only to copy and hand files to the server's user.
-    kc run avian-restore --image="$image" --restart=Never --overrides='{"spec":{"securityContext":{"runAsUser":0},
+    # A short-lived pod that mounts the volume as the server's own user (the namespace allows no root),
+    # so everything it copies already belongs to the server.
+    kc run avian-restore --image="$image" --restart=Never --overrides='{"spec":{"securityContext":{"runAsUser":1001,
+        "runAsGroup":1001,"runAsNonRoot":true,"fsGroup":1001,"seccompProfile":{"type":"RuntimeDefault"}},
         "containers":[{"name":"restore","image":"'"$image"'","command":["sleep","3600"],
+        "securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},
         "volumeMounts":[{"name":"data","mountPath":"/data"}]}],
         "volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"data-avian-factions-0"}}]}}' >/dev/null \
         || { rm -rf "$work"; fail "Could not start the restore pod."; }
     kc wait --for=condition=Ready pod/avian-restore --timeout=3m >/dev/null || { kc delete pod avian-restore --wait=false >/dev/null; rm -rf "$work"; fail "The restore pod did not start."; }
     if ! { kc exec avian-restore -- sh -c 'rm -rf /data/world /data/world_*' \
-            && tar -C "$work/run" -cf - . | kc exec -i avian-restore -- tar -C /data -xf - \
-            && kc exec avian-restore -- chown -R 1001:1001 /data; }; then
+            && tar -C "$work/run" -cf - . | kc exec -i avian-restore -- tar -C /data --no-overwrite-dir -m -xf -; }; then
         kc delete pod avian-restore --wait=false >/dev/null; rm -rf "$work"
         fail "Copying into the volume failed; re-run to retry."
     fi
@@ -663,7 +719,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}restore-container${RESET} <file>  Load a backup into the server container instead (docs/DEPLOYMENT.md)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
-  ${BOLD}k8s${RESET} <sub>        Kubernetes: seal|deploy|status|logs|cmd|restore (the cluster itself: the infra repo)
+  ${BOLD}k8s${RESET} <sub>        Kubernetes: seal|deploy|push|status|logs|cmd|restore (the cluster itself: the infra repo)
 EOF
 }
 

@@ -98,7 +98,7 @@ key to `~/.config/avian/sealed-secrets/<context>.yaml` (never in git; keep a cop
 open. Lose the key and you re-seal from `secret.env` and commit.
 
 **Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0, kubectl v1.36.4 (matching the cluster;
-kubectl supports one minor version either side) and kubeseal v0.40.0.
+kubectl supports one minor version either side), kubeseal v0.40.0 and crane v0.22.1 (pushes images).
 
 ### The game on the local test cluster
 
@@ -110,6 +110,7 @@ then:
 |---|---|
 | `./dev k8s deploy` | k3d: build the image, import it, ask ArgoCD to refresh, replace the server pod |
 | `./dev k8s seal` | Encrypt `secret.env` into the overlay's `sealed-secret.yaml` (commit it) and back up the key |
+| `./dev k8s push <version>` | Build the image and publish it for production: to GHCR (private, checked) and, with `AVIAN_REGISTRY` set, our own registry. Never replaces a published version |
 | `./dev k8s restore <backup> [--yes]` | Load a `./dev backup`: database into MariaDB, world and plugin data into the volume |
 | `./dev k8s status` / `logs` / `cmd "list"` | Pods and volumes / the server's log / one console command |
 
@@ -127,21 +128,20 @@ Checked 2026-09-30:
 
 ### Moving to the real k3s box (runbook)
 
-1. **Install k3s** at the same version, without Traefik:
-   `curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 sh -s - --disable=traefik`.
-   Add `/etc/rancher/k3s/k3s.yaml` to your kubeconfig as a named context.
-2. **Image:** push `avian-factions:<version>` to a registry and set it in
-   `overlays/production/kustomization.yaml`.
-3. **Bootstrap:** in the infra repo,
-   `AVIAN_CLUSTER=production AVIAN_K8S_CONTEXT=<context> ./infra bootstrap`, then `./infra seal-repo-creds`
-   and commit.
-4. **Database secret:** fill `overlays/production/secret.env` here, run
+1. **The cluster:** prepare the machine and install k3s by the infra repo's `hosts/README.md` (its
+   config, the VIPs, then `./infra bootstrap`). Its `docs/architecture.md` covers the three-node plan.
+2. **Image:** `AVIAN_REGISTRY=<registry VIP> ./dev k8s push <version>`, then set that version as `newTag` in
+   `overlays/production/kustomization.yaml`. The machines pull `ghcr.io/elirtf/avian-factions` from our
+   registry first and from GHCR when it can't serve it (the infra repo's `docs/architecture.md` → Images).
+   Tokens, never in git: `~/.config/avian/ghcr-push-token` (classic, `write:packages`) here, and the
+   read-only one (`read:packages`) in each machine's `/etc/rancher/k3s/registries.yaml`.
+3. **Database secret:** fill `overlays/production/secret.env` here, run
    `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s seal`,
    then commit and merge the new `sealed-secret.yaml`. ArgoCD creates the Secret and the game starts.
-5. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
+4. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
    same two variables.
-6. **Players:** k3s answers on the node's own 25565 (TCP) and 19132 (UDP). Point the router or DNS at
-   the new box, and follow CLAUDE.md's "Before production" list for the firewall.
+5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP (no Bedrock at launch).
+   Forward the router's 25565 to it, behind TCPShield, and follow CLAUDE.md's "Before production" list.
 
 ### Why it's shaped like this
 
@@ -149,13 +149,31 @@ Checked 2026-09-30:
   writer and never scales out. Every world it hosts (today `world`; planned: the spawn world with
   the warzone, the resource world, the darkzone and the flat claiming world) lives on that volume.
 - `terminationGracePeriodSeconds: 150` gives the save-then-stop time to finish.
-- The **Service** publishes TCP 25565 and UDP 19132 together. k3s's ServiceLB answers it on the node,
-  so a home box needs no MetalLB. Once the Velocity proxy exists, it takes this role and the server's
+- The **Service** publishes TCP 25565 and UDP 19132 together. On k3d, k3s's ServiceLB answers it on
+  the node. In production, kube-vip gives it a floating LAN address that moves to a live node. Once the Velocity proxy exists, it takes this role and the server's
   Service becomes ClusterIP.
 - **Memory:** the pod gets the heap (`MEMORY`) plus about 2 GiB for the JVM itself.
-- **Production volumes** use `local-path-retain`: deleting a claim keeps the data on disk.
+- **Production volumes** use the platform's `retain` class (the infra repo: Longhorn, replicated across
+  the nodes, kept when a claim is deleted). The game never defines storage itself.
 - **The config sync** leaves existing directories' owner and mode alone (`tar --no-overwrite-dir`):
   the volume's root belongs to root and the server runs as user 1001.
+- **Locked down** (the infra repo's `docs/architecture.md` → Security): the namespace enforces Pod
+  Security **restricted**, so every pod runs non-root (the server as 1001, MariaDB as its own 999,
+  `./dev k8s restore`'s helper as 1001), with no capabilities and no privilege escalation; anything
+  else is refused. **NetworkPolicies** deny all traffic in by default. Players may reach the server's
+  25565/19132, only the server may reach MariaDB, and MariaDB can't open any connection out (DNS
+  only). Checked 2026-09-30 on k3d: the old specs are refused and the new ones pass; MariaDB
+  initialises as 999; the server reaches MariaDB, other pods don't; MariaDB can't reach the internet.
+- **Images:** checked 2026-10-01, `./dev k8s push dev-c85a6e6` built and pushed the image to GHCR, the
+  package came out private, the machines' read-only token pulls it, and anonymous pulls and pushes with
+  the read-only token are refused.
+- **Production placement** (the infra repo's `docs/architecture.md`): the server runs only on the two
+  32 GB machines and outranks every other pod (`game-critical`), so the surviving one makes room for it
+  on a failover. MariaDB sits next to it when it can.
+- **No Bedrock at launch** (owner, 2026-09-30): production doesn't publish UDP 19132. TCPShield covers it
+  only on its paid plan, and an open port would expose the home IP. Geyser still runs in the pod.
+- **Node loss:** the server and MariaDB move after 30 s on a dead node instead of 5 min. That matters
+  once there are three nodes and Longhorn volumes to move with them.
 - **Backups:** `./dev backup` on the dev box today. On the cluster, a scheduled job that dumps the
   database and copies the server's volume is the next step.
 

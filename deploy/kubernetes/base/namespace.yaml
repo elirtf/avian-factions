@@ -1,4 +1,9 @@
+# Pod Security "restricted": every pod here runs as a non-root user, can't gain privileges, has no
+# Linux capabilities and no host access. Kubernetes refuses any pod that doesn't comply.
 apiVersion: v1
 kind: Namespace
 metadata:
   name: avian
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: v1.36   # the k3s version; raise with it

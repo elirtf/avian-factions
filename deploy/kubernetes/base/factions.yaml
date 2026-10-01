@@ -25,10 +25,20 @@ spec:
       securityContext:
         runAsUser: 1001                   # the image's avian user, never root
         runAsGroup: 1001
+        runAsNonRoot: true
         fsGroup: 1001                     # lets that user write the volume
+        seccompProfile: {type: RuntimeDefault}
+      # Move to another node 30 s after this one stops answering, not Kubernetes' default 5 min
+      # (with Longhorn, the volume follows; infra repo docs/architecture.md).
+      tolerations:
+        - {key: node.kubernetes.io/not-ready, operator: Exists, effect: NoExecute, tolerationSeconds: 30}
+        - {key: node.kubernetes.io/unreachable, operator: Exists, effect: NoExecute, tolerationSeconds: 30}
       containers:
         - name: server
           image: avian-factions   # set by the overlay
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
           env:
             - {name: EULA, value: "true"}  # you accept https://aka.ms/MinecraftEULA
             - {name: MEMORY, value: 8G}

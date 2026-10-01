@@ -11,3 +11,4 @@ resources:
   - namespace.yaml
   - mariadb.yaml
   - factions.yaml
+  - network-policies.yaml

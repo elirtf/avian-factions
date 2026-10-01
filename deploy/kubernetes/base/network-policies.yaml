@@ -1,0 +1,59 @@
+# Who may talk to whom in the avian namespace (infra repo docs/architecture.md → Security). Nothing
+# gets in unless a policy below lets it; k3s enforces these out of the box. When the Velocity proxy
+# arrives, players reach only it, and the Factions server accepts only Velocity.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+spec:
+  podSelector: {}
+  policyTypes: [Ingress]
+---
+# Players connect straight to the Factions server until Velocity exists.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: avian-factions-from-players
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: avian-factions}
+  policyTypes: [Ingress]
+  ingress:
+    - ports:
+        - {port: 25565, protocol: TCP}
+        - {port: 19132, protocol: UDP}
+---
+# Only the game server reaches the database.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: avian-mariadb-from-factions
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: avian-mariadb}
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: {app.kubernetes.io/name: avian-factions}
+      ports:
+        - {port: 3306, protocol: TCP}
+---
+# The database never starts a connection anywhere (nothing to exfiltrate to): name lookups only.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: avian-mariadb-no-egress
+spec:
+  podSelector:
+    matchLabels: {app.kubernetes.io/name: avian-mariadb}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: kube-system}
+          podSelector:
+            matchLabels: {k8s-app: kube-dns}
+      ports:
+        - {port: 53, protocol: UDP}
+        - {port: 53, protocol: TCP}
