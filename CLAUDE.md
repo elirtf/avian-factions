@@ -42,7 +42,7 @@ and the `mc.avian.club` identity.
 
 Backups and moving machines: `./dev backup` / `./dev restore <file>`, guide in `docs/MIGRATION.md`. Code and config are in git; the world, database and plugin data are not — they travel as a backup file.
 
-Container and Kubernetes: `./dev image` builds the whole server as one image, `./dev restore-container <file>` loads a backup into it. The network runs on **k3s**, **GitOps-managed by ArgoCD** from `main` (ADR-0008): everything a cluster runs, ArgoCD itself and Sealed Secrets included, is in `deploy/argocd/clusters/<cluster>`; never `kubectl apply` by hand, merge to main. Passwords are committed only as SealedSecrets (`./dev k8s seal`). Tested on a local **k3d** cluster: `./dev k8s up|bootstrap|seal|deploy|restore <file>|status|cmd|ui|down` (127.0.0.1:25700 / 19700, never the dev server's ports). Guide in `docs/DEPLOYMENT.md`. Tracked config never holds machine values: write `${AVIAN_NAME:-default}` and `tools/sync-config` fills it from `.env` or the environment.
+Container and Kubernetes: `./dev image` builds the whole server as one image, `./dev restore-container <file>` loads a backup into it. The network runs on **k3s**, **GitOps-managed by ArgoCD** from `main` (ADR-0008); never `kubectl apply` by hand, merge to main. The platform (ArgoCD, Sealed Secrets, cluster roots, a project per app) is the **`avian/infra`** repo with its `./infra` script (`up|bootstrap|seal-repo-creds|status|ui|down`); this repo holds only the game's overlays and `./dev k8s seal|deploy|restore <file>|status|logs|cmd`. Passwords are committed only as SealedSecrets. Local test cluster: k3d on 127.0.0.1:25700 / 19700, never the dev server's ports. Guide in `docs/DEPLOYMENT.md`. Tracked config never holds machine values: write `${AVIAN_NAME:-default}` and `tools/sync-config` fills it from `.env` or the environment.
 
 Everything goes through `./dev` (guide: `docs/DEVELOPING.md`): `./dev setup` once, then `./dev start` / `restart` / `stop`. The server runs in a tmux session named `avian`: `./dev console` attaches, `./dev cmd "<command>"` runs one console command and prints the reply (use this instead of attaching), `./dev check-log` fails on plugin errors. `./dev start` applies `dev-server/luckperms/ranks.lp` and the world border. Edit `dev-server/`, never `run/` (overwritten on every start). `./dev test` = `./gradlew build` (JDK 25 auto-provisioned; unit + MockBukkit + Testcontainers). Pins: `gradle.properties` + `gradle/libs.versions.toml`. CI boots the full stack with `./dev` on every push and PR.
 
@@ -54,7 +54,7 @@ Follow `docs/SPEC.md` §2 (Development Rules), §65 (async/sync), §74 (security
 
 ### Issue tracker
 
-GitHub Issues on `elirtf/avian-factions` via `gh`. See `docs/agents/issue-tracker.md`.
+Forgejo issues on `git.willowcrest.world/avian/avian-factions` via `tools/forgejo` (moved from GitHub 2026-09-30; GitHub is a push mirror). See `docs/agents/issue-tracker.md`.
 
 ### Domain docs
 

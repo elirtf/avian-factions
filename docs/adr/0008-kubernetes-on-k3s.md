@@ -37,13 +37,20 @@ them out of git would leave part of the cluster undefined by it. Each cluster's 
 up outside git so a rebuilt cluster opens what is committed. SOPS was the alternative; Sealed Secrets
 needs no key management beyond that one backup and no ArgoCD plugin.
 
+**The platform moved to its own repo (2026-09-30).** The website and the owner's other projects will
+share the cluster, so ArgoCD, Sealed Secrets, the cluster roots and an ArgoCD project per app live in
+`avian/infra`; each project repo keeps only its own manifests. Both repos moved to a self-hosted
+Forgejo (git.willowcrest.world/avian), GitHub is a push mirror, and every repo address is written once
+(`clusters/base/repos.yaml`) so moving hosts again is a small change. ArgoCD reads the private repos
+with a read-only token, committed sealed.
+
 **Considered:** Docker Compose for production (already works, `--profile server`). Rejected for the
 network because restarts, rollouts and several servers behind a proxy are exactly what it doesn't do;
 it stays the simplest way to run one server.
 
 **Consequences:**
 
-- k3d tests use the same k3s version as production (pinned in `deploy/k3d/cluster.yaml`), bound to
+- k3d tests use the same k3s version as production (pinned in the infra repo's `k3d/cluster.yaml`), bound to
   127.0.0.1 on ports 25700 and 19700 so they never touch the live dev server.
 - Production's volumes use `local-path-retain`, so a world or database survives a deleted claim.
 - CI renders both overlays and both ArgoCD roots and validates them with kubeconform on every push.

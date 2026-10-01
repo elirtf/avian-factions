@@ -1,6 +1,7 @@
-# The real k3s box (docs/DEPLOYMENT.md → Kubernetes). Set the image to where `./dev image` was
-# pushed. The avian-db Secret is not here (the repo is public): ./dev k8s secrets creates it from
-# secret.env (git-ignored; copy secret.env.example). ArgoCD applies this overlay (deploy/argocd).
+# The real k3s box (docs/DEPLOYMENT.md → Kubernetes). Set the image to where `./dev image` was pushed.
+# The avian-db Secret will be sealed-secret.yaml, encrypted for that cluster (./dev k8s seal from the
+# git-ignored secret.env; add it to resources then). ArgoCD applies this overlay (the infra repo's
+# clusters/production).
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: avian

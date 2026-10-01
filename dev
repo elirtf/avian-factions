@@ -520,7 +520,7 @@ cmd_check_log() {
     ok "Server log is clean"
 }
 
-# --- Kubernetes (k3s; tested on a local k3d cluster). Guide: docs/DEPLOYMENT.md → Kubernetes. -------
+# --- Kubernetes: this game's part (the cluster, ArgoCD and Sealed Secrets live in the infra repo). ----
 # AVIAN_K8S_CONTEXT / AVIAN_K8S_OVERLAY point these at another cluster (production's k3s box).
 K8S_CONTEXT="${AVIAN_K8S_CONTEXT:-k3d-avian}"
 K8S_OVERLAY="${AVIAN_K8S_OVERLAY:-deploy/kubernetes/overlays/k3d}"
@@ -534,16 +534,8 @@ cmd_k8s() {
     command -v kubectl >/dev/null || fail "kubectl is not installed (docs/DEPLOYMENT.md → Kubernetes)."
     local sub="${1:-status}"; shift || true
     case "$sub" in
-        up)
-            command -v k3d >/dev/null || fail "k3d is not installed (docs/DEPLOYMENT.md → Kubernetes)."
-            k3d cluster list avian >/dev/null 2>&1 && { ok "The k3d cluster 'avian' already exists."; return; }
-            k3d cluster create --config "$ROOT/deploy/k3d/cluster.yaml" || fail "Could not create the cluster."
-            ok "Cluster up. Next: ./dev k8s deploy" ;;
-        down)
-            echo "${RED}This deletes the k3d cluster 'avian' and everything in it (its worlds and database too).${RESET}"
-            read -r -p "Type 'delete' to continue: " answer
-            [[ "$answer" == "delete" ]] || fail "Cancelled; nothing changed."
-            k3d cluster delete avian ;;
+        up|down|bootstrap|ui)
+            fail "The cluster itself (k3d, ArgoCD, Sealed Secrets) is run from the infra repo: ../infra/infra $sub" ;;
         deploy)
             if [[ "$K8S_CONTEXT" == k3d-* ]]; then
                 cmd_image
@@ -551,7 +543,7 @@ cmd_k8s() {
                 k3d image import avian-factions:dev -c "${K8S_CONTEXT#k3d-}" >/dev/null || fail "Image import failed."
             fi
             kubectl --context "$K8S_CONTEXT" -n argocd get application avian >/dev/null 2>&1 \
-                || fail "ArgoCD isn't managing $K8S_CONTEXT yet: ./dev k8s bootstrap"
+                || fail "ArgoCD isn't managing $K8S_CONTEXT yet: ../infra/infra bootstrap"
             # Manifests come from main through ArgoCD; this only asks it to re-read now, not in 3 minutes.
             say "ArgoCD applies the manifests from main; asking it to refresh…"
             kubectl --context "$K8S_CONTEXT" -n argocd annotate application avian argocd.argoproj.io/refresh=hard --overwrite >/dev/null
@@ -562,22 +554,18 @@ cmd_k8s() {
             say "Waiting for the server (the first boot takes a few minutes)…"
             kc rollout status statefulset/avian-factions --timeout=10m || fail "The server did not become ready: ./dev k8s logs"
             ok "Deployed to $K8S_CONTEXT." ;;
-        bootstrap) k8s_bootstrap ;;
         seal)      k8s_seal ;;
-        ui)
-            say "ArgoCD at https://localhost:8080 (user admin; ./dev k8s bootstrap prints the password). Ctrl-C to stop."
-            kubectl --context "$K8S_CONTEXT" -n argocd port-forward svc/argocd-server 8080:443 ;;
         status) kc get pods,svc,pvc ;;
         logs)   kc logs -f avian-factions-0 ;;
         cmd)    [[ $# -gt 0 ]] || fail "Usage: ./dev k8s cmd \"<console command>\""
                 kc exec avian-factions-0 -- avian-console "$*" ;;
         restore) k8s_restore "$@" ;;
-        *) fail "Usage: ./dev k8s up|bootstrap|seal|deploy|status|logs|cmd <command>|restore <backup> [--yes]|ui|down" ;;
+        *) fail "Usage: ./dev k8s seal|deploy|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: ../infra/infra)" ;;
     esac
 }
 
 # Where each cluster's Sealed Secrets key is kept: outside git, so a recreated cluster can decrypt the
-# SealedSecrets already committed (./dev k8s bootstrap restores it).
+# SealedSecrets already committed (the infra repo's ./infra bootstrap restores it).
 K8S_KEYS="${AVIAN_K8S_KEYS:-$HOME/.config/avian/sealed-secrets}"
 
 # Encrypts the overlay's secret.env (git-ignored) into a SealedSecret that only this cluster can open,
@@ -587,7 +575,7 @@ k8s_seal() {
     local env="$ROOT/$K8S_OVERLAY/secret.env" out="$ROOT/$K8S_OVERLAY/sealed-secret.yaml" kust="$ROOT/$K8S_OVERLAY/kustomization.yaml"
     [[ -f "$env" ]] || fail "Create $K8S_OVERLAY/secret.env first (copy secret.env.example)."
     kubectl --context "$K8S_CONTEXT" -n kube-system rollout status deployment/sealed-secrets-controller --timeout=3m >/dev/null \
-        || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (./dev k8s bootstrap installs it)."
+        || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (../infra/infra bootstrap installs it)."
     kubectl --context "$K8S_CONTEXT" -n "$K8S_NS" create secret generic avian-db --from-env-file="$env" --dry-run=client -o yaml \
         | kubeseal --context "$K8S_CONTEXT" --controller-namespace kube-system --format yaml > "$out" \
         || fail "Sealing failed."
@@ -599,34 +587,6 @@ k8s_seal() {
         && chmod 600 "$K8S_KEYS/$K8S_CONTEXT.yaml"
     ok "Sealed into $K8S_OVERLAY/sealed-secret.yaml. Commit it; ArgoCD applies it from main."
     echo "  The cluster's key is backed up to $K8S_KEYS/$K8S_CONTEXT.yaml (keep it safe, never in git)."
-}
-
-# The one step done by hand per cluster: restore its Sealed Secrets key if we have one, install ArgoCD
-# (pinned, deploy/argocd/install) and point it at the cluster's root (deploy/argocd/clusters/<name>).
-# From then on ArgoCD manages everything, itself included, from main.
-k8s_bootstrap() {
-    local name root
-    name="$(basename "$K8S_OVERLAY")"; root="$ROOT/deploy/argocd/clusters/$name/root.yaml"
-    [[ -f "$root" ]] || fail "No ArgoCD root for this cluster: $root"
-    # Only into a cluster that has no key yet (a new or rebuilt one); re-running bootstrap leaves it be.
-    if [[ -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]] && [[ -z "$(kubectl --context "$K8S_CONTEXT" -n kube-system get secret \
-            -l sealedsecrets.bitnami.com/sealed-secrets-key -o name 2>/dev/null)" ]]; then
-        say "Restoring this cluster's Sealed Secrets key…"
-        kubectl --context "$K8S_CONTEXT" create -f "$K8S_KEYS/$K8S_CONTEXT.yaml" >/dev/null || fail "Could not restore the key."
-    fi
-    say "Installing ArgoCD…"
-    # Server-side: ArgoCD's CRDs are too big for client-side apply's annotation.
-    kubectl --context "$K8S_CONTEXT" apply --server-side --force-conflicts -k "$ROOT/deploy/argocd/install" >/dev/null \
-        || fail "Installing ArgoCD failed."
-    kubectl --context "$K8S_CONTEXT" -n argocd rollout status deployment/argocd-server --timeout=5m >/dev/null \
-        || fail "ArgoCD did not start."
-    kubectl --context "$K8S_CONTEXT" apply -f "$root" >/dev/null || fail "Could not create the root Application."
-    ok "ArgoCD now builds $K8S_CONTEXT from deploy/argocd/clusters/$name on main."
-    [[ -f "$ROOT/$K8S_OVERLAY/sealed-secret.yaml" && -f "$K8S_KEYS/$K8S_CONTEXT.yaml" ]] \
-        || echo "  No sealed secret for this cluster yet: once Sealed Secrets is up, ./dev k8s seal, then commit."
-    local pw
-    pw="$(kubectl --context "$K8S_CONTEXT" -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' 2>/dev/null | base64 -d)"
-    [[ -n "$pw" ]] && echo "  Dashboard: ./dev k8s ui, then https://localhost:8080 as admin / $pw"
 }
 
 # Loads a ./dev backup into the cluster: the database into MariaDB, the world and plugin data into the
@@ -703,7 +663,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}restore-container${RESET} <file>  Load a backup into the server container instead (docs/DEPLOYMENT.md)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
-  ${BOLD}k8s${RESET} <sub>        Kubernetes (k3s, GitOps via ArgoCD): up|bootstrap|seal|deploy|status|logs|cmd|restore|ui|down
+  ${BOLD}k8s${RESET} <sub>        Kubernetes: seal|deploy|status|logs|cmd|restore (the cluster itself: the infra repo)
 EOF
 }
 
