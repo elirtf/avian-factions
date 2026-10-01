@@ -98,7 +98,7 @@ key to `~/.config/avian/sealed-secrets/<context>.yaml` (never in git; keep a cop
 open. Lose the key and you re-seal from `secret.env` and commit.
 
 **Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0, kubectl v1.36.4 (matching the cluster;
-kubectl supports one minor version either side) and kubeseal v0.40.0.
+kubectl supports one minor version either side), kubeseal v0.40.0 and crane v0.22.1 (pushes images).
 
 ### The game on the local test cluster
 
@@ -110,6 +110,7 @@ then:
 |---|---|
 | `./dev k8s deploy` | k3d: build the image, import it, ask ArgoCD to refresh, replace the server pod |
 | `./dev k8s seal` | Encrypt `secret.env` into the overlay's `sealed-secret.yaml` (commit it) and back up the key |
+| `./dev k8s push <version>` | Build the image and publish it for production: to GHCR (private, checked) and, with `AVIAN_REGISTRY` set, our own registry. Never replaces a published version |
 | `./dev k8s restore <backup> [--yes]` | Load a `./dev backup`: database into MariaDB, world and plugin data into the volume |
 | `./dev k8s status` / `logs` / `cmd "list"` | Pods and volumes / the server's log / one console command |
 
@@ -129,8 +130,11 @@ Checked 2026-09-30:
 
 1. **The cluster:** prepare the machine and install k3s by the infra repo's `hosts/README.md` (its
    config, the VIPs, then `./infra bootstrap`). Its `docs/architecture.md` covers the three-node plan.
-2. **Image:** push `avian-factions:<version>` to a registry and set it in
-   `overlays/production/kustomization.yaml`.
+2. **Image:** `AVIAN_REGISTRY=<registry VIP> ./dev k8s push <version>`, then set that version as `newTag` in
+   `overlays/production/kustomization.yaml`. The machines pull `ghcr.io/elirtf/avian-factions` from our
+   registry first and from GHCR when it can't serve it (the infra repo's `docs/architecture.md` → Images).
+   Tokens, never in git: `~/.config/avian/ghcr-push-token` (classic, `write:packages`) here, and the
+   read-only one (`read:packages`) in each machine's `/etc/rancher/k3s/registries.yaml`.
 3. **Database secret:** fill `overlays/production/secret.env` here, run
    `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s seal`,
    then commit and merge the new `sealed-secret.yaml`. ArgoCD creates the Secret and the game starts.
@@ -160,6 +164,9 @@ Checked 2026-09-30:
   25565/19132, only the server may reach MariaDB, and MariaDB can't open any connection out (DNS
   only). Checked 2026-09-30 on k3d: the old specs are refused and the new ones pass; MariaDB
   initialises as 999; the server reaches MariaDB, other pods don't; MariaDB can't reach the internet.
+- **Images:** checked 2026-10-01, `./dev k8s push dev-c85a6e6` built and pushed the image to GHCR, the
+  package came out private, the machines' read-only token pulls it, and anonymous pulls and pushes with
+  the read-only token are refused.
 - **Production placement** (the infra repo's `docs/architecture.md`): the server runs only on the two
   32 GB machines and outranks every other pod (`game-critical`), so the surviving one makes room for it
   on a failover. MariaDB sits next to it when it can.
