@@ -302,11 +302,11 @@ Fledgling and `/ec` is everyone's (owner, 2026-09-29).
 Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
 `docs/research/custom-fishing.md`), on top of AuraSkills' own fishing XP and treasure.
 
-- **Money:** custom fish sell only through `/fish shop`, about $35 a catch on average (Common ~$12, Rare
-  ~$76, Epic ~$300, Legendary ~$1,200; raised 2026-09-30 so early fishing pays), roughly $6–7k an
-  hour with a plain rod, $8k with the starter kit's Lure I and $13k with Lure III (checked 2026-09-30
-  against every fish's size: $33.50 a catch): level with early sugar cane, below automated cane, and
-  it can't be automated itself (anti-AFK). Each fish scales with its size, so a Common runs $1–24. Raw fish stay unsellable in `/shop`
+- **Money:** custom fish sell only through `/fish shop`, about $75 a catch on average (Common ~$28, Rare
+  ~$170, Epic ~$630, Legendary ~$2,500), so roughly $15k an hour with a plain rod, $18k with the
+  starter kit's Lure I and $28k with Lure III (owner, 2026-09-30: $15–30k an hour for now, to revisit;
+  checked against every fish's size). It can't be automated (anti-AFK). Each fish scales with its size,
+  so a Common runs about $2–54. Raw fish stay unsellable in `/shop`
   (`sell: -1`), so sell wands can't sell them either. Keep it that way.
 - **Tokens and keys come only from contests**, never from ordinary catches, and a contest only runs
   with **3+ players online**, so nobody can farm them alone:

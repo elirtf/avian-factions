@@ -6,8 +6,8 @@ weight: 10
 item:
   material: light_blue_concrete_powder
 format: <aqua>{name}
-# Sale value = length × this. Raised 2026-09-30 so early fishing pays (owner): about $35 a catch on average.
-worth-multiplier: 0.9
+# Sale value = length × this. Set 2026-09-30 (owner: $15–30k an hour for now): about $75 a catch on average.
+worth-multiplier: 2.0
 broadcast:
   enabled: false
   only-rods: false
