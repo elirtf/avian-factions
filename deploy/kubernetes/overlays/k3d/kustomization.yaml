@@ -7,6 +7,7 @@ kind: Kustomization
 namespace: avian
 resources:
   - ../../base
+  - sealed-secret.yaml   # the avian-db Secret, encrypted for this cluster (./dev k8s seal)
 images:
   - name: avian-factions
     newName: avian-factions
