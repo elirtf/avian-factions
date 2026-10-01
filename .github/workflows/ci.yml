@@ -32,17 +32,18 @@ jobs:
       # The dev script is part of the workflow (CI below runs it), so lint it like code.
       - name: Lint the shell scripts (./dev, config sync, container entrypoint)
         run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console
-      # Both Kubernetes overlays must render and pass strict schema validation (docs/DEPLOYMENT.md →
-      # Kubernetes). The example secrets stand in for the git-ignored real ones.
+      # Everything ArgoCD deploys must render and pass strict schema validation (docs/DEPLOYMENT.md →
+      # Kubernetes): both game overlays and both clusters' ArgoCD roots. SealedSecret and Application
+      # schemas come from the CRDs catalog, pinned to one commit.
       - name: Render and validate the Kubernetes manifests
         run: |
-          for o in k3d production; do
-            cp "deploy/kubernetes/overlays/$o/secret.env.example" "deploy/kubernetes/overlays/$o/secret.env"
-            kubectl kustomize "deploy/kubernetes/overlays/$o" > "$RUNNER_TEMP/$o.yaml"
-          done
+          for o in k3d production; do kubectl kustomize "deploy/kubernetes/overlays/$o" > "$RUNNER_TEMP/game-$o.yaml"; done
+          for c in k3d production; do kubectl kustomize "deploy/argocd/clusters/$c" > "$RUNNER_TEMP/argocd-$c.yaml"; done
           docker run --rm -v "$RUNNER_TEMP:/m" \
             ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e \
-            -strict -summary /m/k3d.yaml /m/production.yaml
+            -strict -summary -schema-location default \
+            -schema-location 'https://raw.githubusercontent.com/datreeio/CRDs-catalog/d373c2da9702bc9509a004db83e57263fe3bdfc1/{{.Group}}/{{.ResourceKind}}_{{.ResourceAPIVersion}}.json' \
+            /m/game-k3d.yaml /m/game-production.yaml /m/argocd-k3d.yaml /m/argocd-production.yaml
       # Unit + MockBukkit tests, Testcontainers integration tests (Docker is on ubuntu-latest), shadowJar.
       - run: ./gradlew build --console=plain ${VERSION_FLAG:-}
       - uses: actions/upload-artifact@v7

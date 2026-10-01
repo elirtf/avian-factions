@@ -28,6 +28,15 @@ We have one box now and maybe a few later. k3s still grows: worker nodes join wi
 three servers give it high availability. Managed cloud Kubernetes was set aside: it costs monthly and
 adds latency for players. If we ever move, the same manifests apply.
 
+**GitOps, through ArgoCD (owner, 2026-09-30: "make sure everything is GitOps managed").** Each
+cluster is defined by a root in `deploy/argocd/clusters/<cluster>`: ArgoCD (which manages its own
+pinned install), Sealed Secrets, and the game overlay, synced in that order from `main` with
+self-heal on. The one manual step per cluster is `./dev k8s bootstrap`. Passwords are committed only
+as SealedSecrets, encrypted for one cluster: plain Secrets can't live in a public repo, and keeping
+them out of git would leave part of the cluster undefined by it. Each cluster's sealing key is backed
+up outside git so a rebuilt cluster opens what is committed. SOPS was the alternative; Sealed Secrets
+needs no key management beyond that one backup and no ArgoCD plugin.
+
 **Considered:** Docker Compose for production (already works, `--profile server`). Rejected for the
 network because restarts, rollouts and several servers behind a proxy are exactly what it doesn't do;
 it stays the simplest way to run one server.
@@ -37,7 +46,9 @@ it stays the simplest way to run one server.
 - k3d tests use the same k3s version as production (pinned in `deploy/k3d/cluster.yaml`), bound to
   127.0.0.1 on ports 25700 and 19700 so they never touch the live dev server.
 - Production's volumes use `local-path-retain`, so a world or database survives a deleted claim.
-- CI renders both overlays and validates them with kubeconform on every push.
+- CI renders both overlays and both ArgoCD roots and validates them with kubeconform on every push.
+- A change reaches a cluster only through `main`; testing a branch on k3d means pointing its
+  `targetRevision` at the branch on that branch.
 - The Avian Factions server keeps every world it hosts (spawn and warzone, the resource world, later
   the darkzone and the flat claiming world) on its one volume; the hub and Velocity are separate
   workloads added later.

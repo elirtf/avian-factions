@@ -67,56 +67,83 @@ SIGTERM handling deadlocks on "Saving players" on this build, so this matters. A
 
 ## On Kubernetes
 
-The network runs on **k3s** (ADR-0008), proven first on **k3d**, which is k3s inside Docker on the
-dev box. Manifests are a kustomize base with two overlays:
+The network runs on **k3s** and is **GitOps-managed by ArgoCD** (ADR-0008): every cluster is built
+from `main`. After a one-time bootstrap, nothing is applied by hand; a change reaches a cluster by
+merging it to `main`, and ArgoCD puts back anything changed by hand. It's proven first on **k3d**
+(k3s inside Docker on the dev box).
 
 ```
-deploy/k3d/cluster.yaml                  the local test cluster (k3s v1.36.4, one node)
-deploy/kubernetes/base/                  namespace avian: MariaDB + the Avian Factions server
-deploy/kubernetes/overlays/k3d/          the local test: image avian-factions:dev, 4 GB heap, small disks
-deploy/kubernetes/overlays/production/   the real k3s box: registry image, 8 GB heap, volumes kept on delete
+deploy/k3d/cluster.yaml                    the local test cluster (k3s v1.36.4, one node)
+deploy/argocd/install/                     ArgoCD v3.5.3, pinned (ArgoCD manages this too)
+deploy/argocd/clusters/<cluster>/          a cluster's root: ArgoCD creates every Application in it
+  root.yaml, avian.yaml   + ../base/      argocd.yaml, sealed-secrets.yaml
+deploy/sealed-secrets/                     Sealed Secrets v0.40.0, pinned
+deploy/kubernetes/base/                    namespace avian: MariaDB + the Avian Factions server
+deploy/kubernetes/overlays/k3d/            the local test: image avian-factions:dev, 4 GB heap, small disks
+deploy/kubernetes/overlays/production/     the real k3s box: registry image, 8 GB heap, volumes kept on delete
+  sealed-secret.yaml                       the database passwords, encrypted for that cluster
 ```
 
-Each overlay reads its database passwords from `secret.env` (git-ignored; copy `secret.env.example`
-and fill it with `openssl rand -hex 24`). CI renders both overlays and validates them on every push.
+Sync order (waves): the root, then ArgoCD itself, then Sealed Secrets, then the game. CI renders all
+of it and validates it with kubeconform on every push.
 
-**Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0 and kubectl v1.36.4, matching the
-cluster's version (kubectl supports one minor version either side).
+**Secrets.** The repo is public, so passwords are committed only as a **SealedSecret**: encrypted with
+a key that only the cluster holds, so the file is useless to anyone else. Each overlay keeps the
+plain values in a git-ignored `secret.env` (copy `secret.env.example`; make passwords with
+`openssl rand -hex 24`). `./dev k8s seal` encrypts it into `sealed-secret.yaml`, which you commit,
+and backs up that cluster's key to `~/.config/avian/sealed-secrets/<context>.yaml` (never in git; keep a
+copy somewhere safe). `./dev k8s bootstrap` puts that key back into a recreated cluster, so the
+committed SealedSecret still opens. Lose the key and you just re-seal from `secret.env` and commit.
+
+**Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0, kubectl v1.36.4 (matching the cluster;
+kubectl supports one minor version either side) and kubeseal v0.40.0.
 
 ### The local test cluster
 
-Everything goes through `./dev k8s`. It never touches the live dev server: the cluster listens on
-**127.0.0.1:25700** (Java) and **127.0.0.1:19700** (Bedrock), not 25565 and 19132.
+It never touches the live dev server: it listens on **127.0.0.1:25700** (Java) and **127.0.0.1:19700**
+(Bedrock), not 25565 and 19132.
 
 | Command | What it does |
 |---|---|
 | `./dev k8s up` | Create the k3d cluster from `deploy/k3d/cluster.yaml` |
-| `./dev k8s deploy` | Build the image, import it into k3d, apply the overlay, wait until the server is ready |
-| `./dev k8s restore <backup> [--yes]` | Load a `./dev backup` file: database into MariaDB, world and plugin data into the server's volume |
-| `./dev k8s status` / `logs` | Pods, services and volumes / the server's log |
-| `./dev k8s cmd "list"` | One console command, like `./dev cmd` |
+| `./dev k8s bootstrap` | The one manual step per cluster: restore its sealing key, install ArgoCD, point it at `deploy/argocd/clusters/<cluster>` |
+| `./dev k8s seal` | Encrypt `secret.env` into the overlay's `sealed-secret.yaml` (commit it) and back up the key |
+| `./dev k8s deploy` | k3d: build the image, import it, ask ArgoCD to refresh, replace the server pod |
+| `./dev k8s restore <backup> [--yes]` | Load a `./dev backup`: database into MariaDB, world and plugin data into the volume |
+| `./dev k8s status` / `logs` / `cmd "list"` | Pods and volumes / the server's log / one console command |
+| `./dev k8s ui` | ArgoCD's dashboard at https://localhost:8080 (`admin`; `bootstrap` prints the password) |
 | `./dev k8s down` | Delete the cluster and everything in it |
 
-Checked 2026-09-30: the server boots in about two minutes with every plugin and no errors, Java
-clients get the MOTD on 25700, Bedrock gets Geyser's on UDP 19700, and a real backup restores with
-its factions intact. A fresh, empty cluster has no ranks yet; a restored backup brings them in the
-database, or apply `dev-server/luckperms/ranks.lp` through `./dev k8s cmd`.
+**A new cluster from nothing:** `./dev k8s up`, `k3d image import avian-factions:dev -c avian` (or
+`./dev k8s deploy` later), `./dev k8s bootstrap`. If there is no key backup for it yet, run
+`./dev k8s seal` once Sealed Secrets is up and commit the new `sealed-secret.yaml`.
+
+**Testing manifest changes before they're on main:** ArgoCD reads `main`. To try a branch on k3d, set
+`targetRevision` to the branch in `deploy/argocd/clusters/k3d/*.yaml` and `deploy/argocd/clusters/base/*.yaml`
+on that branch, push, `./dev k8s bootstrap`, and flip it back to `main` before merging.
+
+Checked 2026-09-30: deleting the cluster and running only `up` and `bootstrap` rebuilt everything from
+git: ArgoCD (managing itself), Sealed Secrets decrypting the committed password with the restored key,
+MariaDB and the server (booted in about two minutes with every plugin and no errors). ArgoCD put a
+hand-edited value back within seconds and left a hand-scaled server alone (`/spec/replicas` is
+ignored, so restores can scale to 0). Java answers on 25700, Bedrock on UDP 19700, and a real backup
+restores with its factions intact.
 
 ### Moving to the real k3s box (runbook)
 
 1. **Install k3s** at the same version, without Traefik (nothing uses it yet):
    `curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 sh -s - --disable=traefik`.
-   Copy `/etc/rancher/k3s/k3s.yaml` to the machine you manage it from as a kubeconfig context.
-2. **Get the image there:** push `avian-factions:<version>` to a registry and set it in
-   `overlays/production/kustomization.yaml`, or copy it straight in with
-   `docker save avian-factions:<version> | sudo k3s ctr images import -`.
-3. **Secrets:** `overlays/production/secret.env` with real passwords.
-4. **Apply:** `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s deploy`
-   (the same commands take those two variables for status, cmd and restore).
-5. **Bring the game over:** `./dev backup` on the old box, then `./dev k8s restore <file>` with the
-   same two variables. Stop the old server first so nothing is played on it afterwards.
-6. **Players:** k3s answers on the node's own ports 25565 (TCP) and 19132 (UDP). Point the router or
-   DNS at the new box, and follow CLAUDE.md's "Before production" list for the firewall.
+   Add `/etc/rancher/k3s/k3s.yaml` to the kubeconfig you manage it from, as a named context.
+2. **Image:** push `avian-factions:<version>` to a registry and set it in
+   `overlays/production/kustomization.yaml` (or `docker save … | sudo k3s ctr images import -`).
+3. **Bootstrap:** `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s bootstrap`
+   (every `./dev k8s` command takes those two variables).
+4. **Secrets:** fill `overlays/production/secret.env`, run `./dev k8s seal` with the same variables, commit
+   and merge the new `sealed-secret.yaml`; ArgoCD creates the Secret and the game starts.
+5. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
+   same variables.
+6. **Players:** k3s answers on the node's own 25565 (TCP) and 19132 (UDP). Point the router or DNS at
+   the new box, and follow CLAUDE.md's "Before production" list for the firewall.
 
 ### Why it's shaped like this
 
