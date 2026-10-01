@@ -1,0 +1,25 @@
+# ArgoCD keeps the production cluster matching deploy/kubernetes/overlays/production on main: changes merged to main
+# are applied within a few minutes, and anything changed by hand is put back (selfHeal).
+# Not in git, on purpose (this repo is public): the avian-db Secret. ./dev k8s secrets creates it.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: avian
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/elirtf/avian-factions.git
+    targetRevision: main
+    path: deploy/kubernetes/overlays/production
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: avian
+  syncPolicy:
+    automated: {prune: true, selfHeal: true}
+    syncOptions: [CreateNamespace=true, RespectIgnoreDifferences=true]
+  # Restores and maintenance scale the server to 0 by hand; ArgoCD must not scale it straight back.
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      jsonPointers: [/spec/replicas]
