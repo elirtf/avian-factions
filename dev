@@ -620,16 +620,18 @@ k8s_restore() {
     say "Restoring the world and plugin data into the server's volume…"
     local image
     image="$(kc get statefulset avian-factions -o jsonpath='{.spec.template.spec.containers[0].image}')"
-    # A short-lived pod that mounts the volume as root, only to copy and hand files to the server's user.
-    kc run avian-restore --image="$image" --restart=Never --overrides='{"spec":{"securityContext":{"runAsUser":0},
+    # A short-lived pod that mounts the volume as the server's own user (the namespace allows no root),
+    # so everything it copies already belongs to the server.
+    kc run avian-restore --image="$image" --restart=Never --overrides='{"spec":{"securityContext":{"runAsUser":1001,
+        "runAsGroup":1001,"runAsNonRoot":true,"fsGroup":1001,"seccompProfile":{"type":"RuntimeDefault"}},
         "containers":[{"name":"restore","image":"'"$image"'","command":["sleep","3600"],
+        "securityContext":{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]}},
         "volumeMounts":[{"name":"data","mountPath":"/data"}]}],
         "volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"data-avian-factions-0"}}]}}' >/dev/null \
         || { rm -rf "$work"; fail "Could not start the restore pod."; }
     kc wait --for=condition=Ready pod/avian-restore --timeout=3m >/dev/null || { kc delete pod avian-restore --wait=false >/dev/null; rm -rf "$work"; fail "The restore pod did not start."; }
     if ! { kc exec avian-restore -- sh -c 'rm -rf /data/world /data/world_*' \
-            && tar -C "$work/run" -cf - . | kc exec -i avian-restore -- tar -C /data -xf - \
-            && kc exec avian-restore -- chown -R 1001:1001 /data; }; then
+            && tar -C "$work/run" -cf - . | kc exec -i avian-restore -- tar -C /data --no-overwrite-dir -m -xf -; }; then
         kc delete pod avian-restore --wait=false >/dev/null; rm -rf "$work"
         fail "Copying into the volume failed; re-run to retry."
     fi

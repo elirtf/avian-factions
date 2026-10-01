@@ -25,9 +25,22 @@ spec:
     metadata:
       labels: {app.kubernetes.io/name: avian-mariadb}
     spec:
+      # The image's mysql user from the start (its entrypoint supports it), so the pod never runs as root.
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        runAsNonRoot: true
+        fsGroup: 999
+        seccompProfile: {type: RuntimeDefault}
+      tolerations:                       # as avian-factions: move after 30 s on a dead node
+        - {key: node.kubernetes.io/not-ready, operator: Exists, effect: NoExecute, tolerationSeconds: 30}
+        - {key: node.kubernetes.io/unreachable, operator: Exists, effect: NoExecute, tolerationSeconds: 30}
       containers:
         - name: mariadb
           image: mariadb:11.8.9          # same tag as docker-compose.yml and the tests
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities: {drop: [ALL]}
           env:
             - {name: MARIADB_DATABASE, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_NAME}}}
             - {name: MARIADB_USER, valueFrom: {secretKeyRef: {name: avian-db, key: AVIAN_DB_USER}}}

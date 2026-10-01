@@ -156,6 +156,15 @@ Checked 2026-09-30:
 - **Production volumes** use `local-path-retain`: deleting a claim keeps the data on disk.
 - **The config sync** leaves existing directories' owner and mode alone (`tar --no-overwrite-dir`):
   the volume's root belongs to root and the server runs as user 1001.
+- **Locked down** (the infra repo's `docs/architecture.md` → Security): the namespace enforces Pod
+  Security **restricted**, so every pod runs non-root (the server as 1001, MariaDB as its own 999,
+  `./dev k8s restore`'s helper as 1001), with no capabilities and no privilege escalation; anything
+  else is refused. **NetworkPolicies** deny all traffic in by default. Players may reach the server's
+  25565/19132, only the server may reach MariaDB, and MariaDB can't open any connection out (DNS
+  only). Checked 2026-09-30 on k3d: the old specs are refused and the new ones pass; MariaDB
+  initialises as 999; the server reaches MariaDB, other pods don't; MariaDB can't reach the internet.
+- **Node loss:** the server and MariaDB move after 30 s on a dead node instead of 5 min. That matters
+  once there are three nodes and Longhorn volumes to move with them.
 - **Backups:** `./dev backup` on the dev box today. On the cluster, a scheduled job that dumps the
   database and copies the server's volume is the next step.
 
