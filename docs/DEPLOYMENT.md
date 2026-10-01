@@ -67,33 +67,72 @@ SIGTERM handling deadlocks on "Saving players" on this build, so this matters. A
 
 ## On Kubernetes
 
-Manifests are in `deploy/kubernetes/`. They pass strict schema validation (kubeconform) but
-haven't run on a real cluster yet. Treat them as the starting point.
+The network runs on **k3s** (ADR-0008), proven first on **k3d**, which is k3s inside Docker on the
+dev box. Manifests are a kustomize base with two overlays:
 
-1. **Push the image** somewhere the cluster can pull from:
-   `docker tag avian-factions:dev <registry>/avian-factions:<version>` and `docker push`. Set that
-   name in `server.yaml`.
-2. **Create the Secret:** copy `secret.example.yaml` to `secret.yaml` (git-ignored), set real
-   passwords, then `kubectl apply -f deploy/kubernetes/secret.yaml`.
-3. **Apply** `mariadb.yaml`, then `server.yaml`.
-4. **Load the game** from a backup: scale the server to 0, load `database.sql` into MariaDB
-   (`kubectl exec -i avian-mariadb-0 -- mariadb -u… -p… avian < database.sql`, into an empty
-   database), copy the backup's `run/` contents into the server's volume with a temporary pod, then
-   scale back to 1.
-5. **Console:** `kubectl exec avian-0 -- avian-console "list"`.
+```
+deploy/k3d/cluster.yaml                  the local test cluster (k3s v1.36.4, one node)
+deploy/kubernetes/base/                  namespace avian: MariaDB + the Avian Factions server
+deploy/kubernetes/overlays/k3d/          the local test: image avian-factions:dev, 4 GB heap, small disks
+deploy/kubernetes/overlays/production/   the real k3s box: registry image, 8 GB heap, volumes kept on delete
+```
 
-The shape, and why:
+Each overlay reads its database passwords from `secret.env` (git-ignored; copy `secret.env.example`
+and fill it with `openssl rand -hex 24`). CI renders both overlays and validates them on every push.
 
-- The server is a **StatefulSet with one replica** and its own volume. A Minecraft world has
-  exactly one writer; it never scales out.
+**Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0 and kubectl v1.36.4, matching the
+cluster's version (kubectl supports one minor version either side).
+
+### The local test cluster
+
+Everything goes through `./dev k8s`. It never touches the live dev server: the cluster listens on
+**127.0.0.1:25700** (Java) and **127.0.0.1:19700** (Bedrock), not 25565 and 19132.
+
+| Command | What it does |
+|---|---|
+| `./dev k8s up` | Create the k3d cluster from `deploy/k3d/cluster.yaml` |
+| `./dev k8s deploy` | Build the image, import it into k3d, apply the overlay, wait until the server is ready |
+| `./dev k8s restore <backup> [--yes]` | Load a `./dev backup` file: database into MariaDB, world and plugin data into the server's volume |
+| `./dev k8s status` / `logs` | Pods, services and volumes / the server's log |
+| `./dev k8s cmd "list"` | One console command, like `./dev cmd` |
+| `./dev k8s down` | Delete the cluster and everything in it |
+
+Checked 2026-09-30: the server boots in about two minutes with every plugin and no errors, Java
+clients get the MOTD on 25700, Bedrock gets Geyser's on UDP 19700, and a real backup restores with
+its factions intact. A fresh, empty cluster has no ranks yet; a restored backup brings them in the
+database, or apply `dev-server/luckperms/ranks.lp` through `./dev k8s cmd`.
+
+### Moving to the real k3s box (runbook)
+
+1. **Install k3s** at the same version, without Traefik (nothing uses it yet):
+   `curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 sh -s - --disable=traefik`.
+   Copy `/etc/rancher/k3s/k3s.yaml` to the machine you manage it from as a kubeconfig context.
+2. **Get the image there:** push `avian-factions:<version>` to a registry and set it in
+   `overlays/production/kustomization.yaml`, or copy it straight in with
+   `docker save avian-factions:<version> | sudo k3s ctr images import -`.
+3. **Secrets:** `overlays/production/secret.env` with real passwords.
+4. **Apply:** `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s deploy`
+   (the same commands take those two variables for status, cmd and restore).
+5. **Bring the game over:** `./dev backup` on the old box, then `./dev k8s restore <file>` with the
+   same two variables. Stop the old server first so nothing is played on it afterwards.
+6. **Players:** k3s answers on the node's own ports 25565 (TCP) and 19132 (UDP). Point the router or
+   DNS at the new box, and follow CLAUDE.md's "Before production" list for the firewall.
+
+### Why it's shaped like this
+
+- The server is a **StatefulSet with one replica** and its own volume: a world has exactly one
+  writer and never scales out. Every world it hosts (today `world`; planned: the spawn world with
+  the warzone, the resource world, the darkzone and the flat claiming world) lives on that volume.
 - `terminationGracePeriodSeconds: 150` gives the save-then-stop time to finish.
-- The **Service** publishes TCP 25565 (Java) and UDP 19132 (Bedrock through Geyser). A
-  LoadBalancer with both protocols needs Kubernetes 1.26+. On a home cluster, use MetalLB, or a
-  NodePort with the router forwarding to it.
+- The **Service** publishes TCP 25565 and UDP 19132 together. k3s's ServiceLB answers it on the node,
+  so a home box needs no MetalLB. Once the Velocity proxy exists, it takes this role and the server's
+  Service becomes ClusterIP.
 - **Memory:** the pod gets the heap (`MEMORY`) plus about 2 GiB for the JVM itself.
-- **Backups:** dump the database (`mariadb-dump --single-transaction`) and snapshot the server's
-  volume, or run `avian-console "save-off"`, `"save-all flush"`, copy `/data`, then `"save-on"`, as
-  `./dev backup` does.
+- **Production volumes** use `local-path-retain`: deleting a claim keeps the data on disk.
+- **The config sync** leaves existing directories' owner and mode alone (`tar --no-overwrite-dir`):
+  the volume's root belongs to root and the server runs as user 1001.
+- **Backups:** `./dev backup` on the dev box today. On the cluster, a scheduled job that dumps the
+  database and copies the server's volume is the next step.
 
 ## A hub (later)
 
@@ -111,6 +150,10 @@ ready now:
 - **TAB** has `proxy-support` for a tab list across servers; it stays off until the proxy exists.
 - **Features stay world-agnostic:** no hardcoded world names, so a separate spawn world or hub
   needs no code changes.
+
+On Kubernetes the network becomes three workloads in the `avian` namespace: `avian-velocity` (a
+Deployment with the LoadBalancer Service players connect to), `avian-hub` (a StatefulSet), and
+`avian-factions` (this server, its Service switched to ClusterIP). They share `avian-mariadb`.
 
 Still to do when the hub happens:
 

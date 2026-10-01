@@ -26,5 +26,6 @@ bin/
 # ./dev backup output: world + database + plugin data. State, not source — copy it, never commit it.
 backups/
 
-# Kubernetes Secret with real passwords (copy of deploy/kubernetes/secret.example.yaml)
-deploy/kubernetes/secret.yaml
+
+# Kubernetes overlay secrets (copy secret.env.example in that overlay).
+deploy/kubernetes/overlays/*/secret.env

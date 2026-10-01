@@ -1,10 +1,10 @@
 # MariaDB for one server (or, later, the hub and every backend). A managed database or an operator
-# works too: point AVIAN_DB_HOST in server.yaml at it and drop this file.
+# works too: point AVIAN_DB_HOST in factions.yaml at it and drop this file.
 apiVersion: v1
 kind: Service
 metadata:
   name: avian-mariadb
-  labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+  labels: {app.kubernetes.io/name: avian-mariadb}
 spec:
   clusterIP: None
   selector: {app.kubernetes.io/name: avian-mariadb}
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: avian-mariadb
-  labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+  labels: {app.kubernetes.io/name: avian-mariadb}
 spec:
   serviceName: avian-mariadb
   replicas: 1
@@ -23,7 +23,7 @@ spec:
     matchLabels: {app.kubernetes.io/name: avian-mariadb}
   template:
     metadata:
-      labels: {app.kubernetes.io/name: avian-mariadb, app.kubernetes.io/part-of: avian-factions}
+      labels: {app.kubernetes.io/name: avian-mariadb}
     spec:
       containers:
         - name: mariadb

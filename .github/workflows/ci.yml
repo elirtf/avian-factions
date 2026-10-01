@@ -32,6 +32,17 @@ jobs:
       # The dev script is part of the workflow (CI below runs it), so lint it like code.
       - name: Lint the shell scripts (./dev, config sync, container entrypoint)
         run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console
+      # Both Kubernetes overlays must render and pass strict schema validation (docs/DEPLOYMENT.md →
+      # Kubernetes). The example secrets stand in for the git-ignored real ones.
+      - name: Render and validate the Kubernetes manifests
+        run: |
+          for o in k3d production; do
+            cp "deploy/kubernetes/overlays/$o/secret.env.example" "deploy/kubernetes/overlays/$o/secret.env"
+            kubectl kustomize "deploy/kubernetes/overlays/$o" > "$RUNNER_TEMP/$o.yaml"
+          done
+          docker run --rm -v "$RUNNER_TEMP:/m" \
+            ghcr.io/yannh/kubeconform:v0.8.0@sha256:faffaf43f95aa6425306e1ab8d6fcad72acb9049158f38e574c085ea1ec0f64e \
+            -strict -summary /m/k3d.yaml /m/production.yaml
       # Unit + MockBukkit tests, Testcontainers integration tests (Docker is on ubuntu-latest), shadowJar.
       - run: ./gradlew build --console=plain ${VERSION_FLAG:-}
       - uses: actions/upload-artifact@v7
