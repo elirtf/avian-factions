@@ -1,0 +1,22 @@
+# The real k3s box (docs/DEPLOYMENT.md → Kubernetes). Set the image to where `./dev image` was
+# pushed; secrets come from secret.env (git-ignored; copy secret.env.example).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: avian   # also covers the Secret this overlay generates
+resources:
+  - ../../base
+  - storageclass.yaml
+images:
+  - name: avian-factions
+    newName: registry.example/avian-factions   # change to the real registry
+    newTag: "0.1.0"
+secretGenerator:
+  - name: avian-db
+    envs: [secret.env]
+    options: {disableNameSuffixHash: true}
+patches:
+  - target: {kind: StatefulSet}
+    patch: |-
+      - op: add
+        path: /spec/volumeClaimTemplates/0/spec/storageClassName
+        value: local-path-retain

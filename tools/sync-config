@@ -36,7 +36,9 @@ if [[ ! -d "$dest/plugins/CraftEngine/resources" ]]; then
 fi
 
 # 2. Copy the template (everything but the README, RETIRED and our pack), then mirror our pack.
-tar -C "$src" --anchored --exclude=./README.md --exclude=./RETIRED --exclude="./$pack" -cf - . | tar -C "$dest" -xf -
+#    --no-overwrite-dir and -m leave existing directories' owner, mode and times alone: on Kubernetes
+#    the volume's root belongs to root and the server runs as a plain user, so changing them fails.
+tar -C "$src" --anchored --exclude=./README.md --exclude=./RETIRED --exclude="./$pack" -cf - . | tar -C "$dest" --no-overwrite-dir -m -xf -
 if [[ -d "$src/$pack" ]]; then
     rm -rf "${dest:?}/$pack"
     mkdir -p "$(dirname "$dest/$pack")"

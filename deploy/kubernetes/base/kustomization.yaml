@@ -1,0 +1,13 @@
+# The Avian network on Kubernetes (k3s; ADR-0008). Apply an overlay, not this:
+#   kubectl apply -k deploy/kubernetes/overlays/k3d          (the local test cluster)
+#   kubectl apply -k deploy/kubernetes/overlays/production   (the real k3s box)
+# Planned here later: avian-velocity (the proxy players connect to) and avian-hub (the lobby).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: avian
+labels:
+  - pairs: {app.kubernetes.io/part-of: avian}
+resources:
+  - namespace.yaml
+  - mariadb.yaml
+  - factions.yaml
