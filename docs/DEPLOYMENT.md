@@ -127,21 +127,17 @@ Checked 2026-09-30:
 
 ### Moving to the real k3s box (runbook)
 
-1. **Install k3s** at the same version, without Traefik:
-   `curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.36.4+k3s1 sh -s - --disable=traefik`.
-   Add `/etc/rancher/k3s/k3s.yaml` to your kubeconfig as a named context.
+1. **The cluster:** prepare the machine and install k3s by the infra repo's `hosts/README.md` (its
+   config, the VIPs, then `./infra bootstrap`). Its `docs/architecture.md` covers the three-node plan.
 2. **Image:** push `avian-factions:<version>` to a registry and set it in
    `overlays/production/kustomization.yaml`.
-3. **Bootstrap:** in the infra repo,
-   `AVIAN_CLUSTER=production AVIAN_K8S_CONTEXT=<context> ./infra bootstrap`, then `./infra seal-repo-creds`
-   and commit.
-4. **Database secret:** fill `overlays/production/secret.env` here, run
+3. **Database secret:** fill `overlays/production/secret.env` here, run
    `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s seal`,
    then commit and merge the new `sealed-secret.yaml`. ArgoCD creates the Secret and the game starts.
-5. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
+4. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
    same two variables.
-6. **Players:** k3s answers on the node's own 25565 (TCP) and 19132 (UDP). Point the router or DNS at
-   the new box, and follow CLAUDE.md's "Before production" list for the firewall.
+5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP and 19132 UDP.
+   Forward the router's 25565 to it, behind TCPShield, and follow CLAUDE.md's "Before production" list.
 
 ### Why it's shaped like this
 
@@ -149,11 +145,12 @@ Checked 2026-09-30:
   writer and never scales out. Every world it hosts (today `world`; planned: the spawn world with
   the warzone, the resource world, the darkzone and the flat claiming world) lives on that volume.
 - `terminationGracePeriodSeconds: 150` gives the save-then-stop time to finish.
-- The **Service** publishes TCP 25565 and UDP 19132 together. k3s's ServiceLB answers it on the node,
-  so a home box needs no MetalLB. Once the Velocity proxy exists, it takes this role and the server's
+- The **Service** publishes TCP 25565 and UDP 19132 together. On k3d, k3s's ServiceLB answers it on
+  the node. In production, kube-vip gives it a floating LAN address that moves to a live node. Once the Velocity proxy exists, it takes this role and the server's
   Service becomes ClusterIP.
 - **Memory:** the pod gets the heap (`MEMORY`) plus about 2 GiB for the JVM itself.
-- **Production volumes** use `local-path-retain`: deleting a claim keeps the data on disk.
+- **Production volumes** use the platform's `retain` class (the infra repo: Longhorn, replicated across
+  the nodes, kept when a claim is deleted). The game never defines storage itself.
 - **The config sync** leaves existing directories' owner and mode alone (`tar --no-overwrite-dir`):
   the volume's root belongs to root and the server runs as user 1001.
 - **Locked down** (the infra repo's `docs/architecture.md` → Security): the namespace enforces Pod

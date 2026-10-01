@@ -52,7 +52,8 @@ it stays the simplest way to run one server.
 
 - k3d tests use the same k3s version as production (pinned in the infra repo's `k3d/cluster.yaml`), bound to
   127.0.0.1 on ports 25700 and 19700 so they never touch the live dev server.
-- Production's volumes use `local-path-retain`, so a world or database survives a deleted claim.
+- Production's volumes use the platform's `retain` class (Longhorn, replicated across nodes, kept on a
+  deleted claim), so a world or database survives both a lost node and a deleted claim.
 - CI renders both overlays and both ArgoCD roots and validates them with kubeconform on every push.
 - A change reaches a cluster only through `main`; testing a branch on k3d means pointing its
   `targetRevision` at the branch on that branch.

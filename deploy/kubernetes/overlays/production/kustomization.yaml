@@ -7,7 +7,6 @@ kind: Kustomization
 namespace: avian
 resources:
   - ../../base
-  - storageclass.yaml
 images:
   - name: avian-factions
     newName: registry.example/avian-factions   # change to the real registry
@@ -17,4 +16,4 @@ patches:
     patch: |-
       - op: add
         path: /spec/volumeClaimTemplates/0/spec/storageClassName
-        value: local-path-retain
+        value: retain             # the platform's replicated class, kept on delete (infra: platform/longhorn)
