@@ -1,0 +1,7 @@
+categories:
+  fishing:
+    display:
+      name: "&#4DA3FF&lFishing Quests"
+      lore:
+        - "&7Daily and weekly goals for anglers."
+      type: "FISHING_ROD"

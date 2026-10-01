@@ -332,6 +332,26 @@ Players use `/fish` (`/fish shop` sells, `/fish top` ranks; `/emf` also works). 
 `/emfa competition start mainCompetition <minutes>` (needs `emf.admin`). Contests are in
 `plugins/EvenMoreFish/competitions/`; the weekend one is switched off.
 
+## Quests
+
+`/quests` (LMBishop Quests, built from a pinned commit; `docs/research/quests.md`). Fishing first
+(owner, 2026-09-30); every quest starts itself and the repeating ones come back on a cooldown that
+counts from when you finish (20 hours for dailies, 6 days for weeklies).
+
+| Quest | Goal | Repeats | Reward |
+|---|---|---|---|
+| Daily Catch | 20 custom fish | Daily | $2,500 + 10 tokens |
+| Rare Bites | 3 Rare-or-better fish | Daily | 20 tokens |
+| Big Haul | 250 fish | Weekly | $15,000 + 50 tokens |
+| Legend of the Deep | 1 Legendary | Weekly | 50 tokens + Common key |
+| On the Podium | Top 3 in a fishing contest | Weekly | 50 tokens |
+| Angler I / II / III | Fishing level 10 / 25 / 50 | Once each | $10k + Common key / Rare key / Epic key |
+
+At most about 360 tokens and a Common key a week, nothing per catch. The Angler milestones are a
+written-down free route to keys (ADR-0006). Contest places 1–3 grant a 3-day
+`avian.quests.fishing.podium` permission that On the Podium checks for and clears. Quest files are
+in `plugins/Quests/quests/`.
+
 ## Changing prices
 
 Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`

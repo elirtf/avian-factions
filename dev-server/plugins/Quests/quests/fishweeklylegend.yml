@@ -1,0 +1,20 @@
+# AVIAN: fishing quest (owner, 2026-09-30; docs/research/quests.md). Cooldowns are minutes: 1200 = 20 h
+# for dailies, 8640 = 6 days for weeklies, so the reset doesn't drift later every round.
+tasks:
+  legend:
+    type: "evenmorefish_fishing"
+    amount: 1
+    rarity: "Legendary"
+display:
+  name: "&#FF8A3DLegend of the Deep"
+  lore-normal: [ "&7Land a &6Legendary &7fish." ]
+  type: "TROPICAL_FISH"
+rewards:
+  - "tokens give {player} 50 quest-fishing-weekly"
+  - "crazycrates give virtual Common 1 {player}"
+options:
+  category: "fishing"
+  repeatable: true
+  autostart: true
+  counts-towards-limit: false
+  cooldown: { enabled: true, time: 8640 }

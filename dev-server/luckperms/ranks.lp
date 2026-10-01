@@ -100,6 +100,12 @@ lp group hatchling permission set crazyauctions.bid.5 true
 # F-Top is ours: /f top (rewritten to /ftop) opens a menu ranked by spawner and block value. FactionsUUID's own /f top ranks by money and
 # would contradict it, so it is hidden from everyone.
 lp group hatchling permission set factions.top false
+# Quests (/quests): only the bare command is open by default; these let players browse categories,
+# see what they've started and track one. Fishing quests start themselves, so no start or cancel.
+lp group hatchling permission set quests.command.category true
+lp group hatchling permission set quests.command.started true
+lp group hatchling permission set quests.command.quest true
+lp group hatchling permission set quests.command.track true
 # Fishing (EvenMoreFish, /fish): it checks these but gives them to no one by default, so without them
 # /fish and /emf were "unknown command" for players (found by the owner, 2026-09-30).
 lp group hatchling permission set emf.gui true

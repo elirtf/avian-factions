@@ -1,0 +1,20 @@
+# AVIAN: fishing quest (owner, 2026-09-30; docs/research/quests.md). Cooldowns are minutes: 1200 = 20 h
+# for dailies, 8640 = 6 days for weeklies, so the reset doesn't drift later every round.
+tasks:
+  level:
+    type: "placeholderapi_evaluate"
+    placeholder: "%auraskills_fishing%"
+    evaluates: "10"
+    operator: "GREATER_THAN_OR_EQUAL_TO"
+display:
+  name: "&#7CFF4FAngler I"
+  lore-normal: [ "&7Reach &fFishing 10&7." ]
+  type: "FISHING_ROD"
+rewards:
+  - "eco give {player} 10000"
+  - "crazycrates give virtual Common 1 {player}"
+options:
+  category: "fishing"
+  repeatable: false
+  autostart: true
+  counts-towards-limit: false
