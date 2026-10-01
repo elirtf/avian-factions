@@ -9,7 +9,7 @@ resources:
   - ../../base
 images:
   - name: avian-factions
-    newName: registry.example/avian-factions   # change to the real registry
+    newName: ghcr.io/elirtf/avian-factions   # served from our own registry first (infra: hosts/k3s/registries.yaml)
     newTag: "0.1.0"
 patches:
   - target: {kind: StatefulSet}
