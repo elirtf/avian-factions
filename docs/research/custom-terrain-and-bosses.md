@@ -99,3 +99,9 @@ downloaded from Modrinth with their SHA-512 checked.
    generation. The resource world can be smaller than the claiming world, and it gets reset anyway.
 3. Stellarity's items need its resource pack (Stellarity RP) merged into ours (CraftEngine), or they
    show as plain base items.
+4. **Our enchantments only** (owner, 2026-10-01, after a Stellarity book showed up broken in a chest:
+   "keep our stuff"). Stellarity adds 8 enchantments; `tools/datapacks/stellarity-our-enchants-only.js`
+   takes them out of the enchantment tags and every random loot roll (8 tag entries, 16 rolls), while
+   its own items keep their mechanics. Applied on the test server with a datapack reload; at launch the
+   build fetches the pinned Stellarity and runs it, rather than storing a copy in git (its licence
+   forbids redistribution).
