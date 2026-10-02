@@ -61,6 +61,76 @@ abstract class BuildQuests @javax.inject.Inject constructor(private val exec: Ex
     }
 }
 
+// PlayerVaultsX (GPL-3.0) for FactionsUUID's vaults upgrade (#30). It has no downloadable releases
+// (SpigotMC only, behind Cloudflare), so it's built from a pinned commit with a pinned Maven, like
+// Quests. A fixed outputTimestamp makes the jar byte-for-byte reproducible, so it's pinned too.
+abstract class BuildPlayerVaults @javax.inject.Inject constructor(private val exec: ExecOperations) : DefaultTask() {
+    @get:Input abstract val commit: Property<String>
+    @get:Input abstract val sourceSha256: Property<String>
+    @get:Input abstract val jarSha256: Property<String>
+    @get:Input abstract val mavenVersion: Property<String>
+    @get:Input abstract val mavenSha512: Property<String>
+    @get:Internal abstract val javaHome: Property<String>
+    @get:Internal abstract val workDir: DirectoryProperty
+    @get:OutputFile abstract val jar: RegularFileProperty
+
+    private fun digest(algorithm: String, file: java.io.File) =
+        MessageDigest.getInstance(algorithm).digest(file.readBytes()).joinToString("") { "%02x".format(it) }
+
+    private fun download(url: String, to: java.io.File, algorithm: String, expected: String, label: String) {
+        URI.create(url).toURL().openStream().use { input -> to.outputStream().use { input.copyTo(it) } }
+        val got = digest(algorithm, to)
+        if (got != expected) throw GradleException("$label: $algorithm mismatch, expected $expected, got $got")
+    }
+
+    @TaskAction
+    fun build() {
+        val c = commit.get()
+        val mvn = mavenVersion.get()
+        val dir = workDir.get().asFile.apply { deleteRecursively(); mkdirs() }
+        val maven = dir.resolve("maven.tar.gz")
+        download("https://archive.apache.org/dist/maven/maven-3/$mvn/binaries/apache-maven-$mvn-bin.tar.gz",
+            maven, "SHA-512", mavenSha512.get(), "Maven $mvn")
+        exec.exec { commandLine("tar", "xzf", maven.absolutePath, "-C", dir.absolutePath) }
+        val tarball = dir.resolve("PlayerVaultsX-$c.tar.gz")
+        download("https://codeload.github.com/KittehDev/PlayerVaultsX/tar.gz/$c",
+            tarball, "SHA-256", sourceSha256.get(), "PlayerVaultsX $c source")
+        exec.exec { commandLine("tar", "xzf", tarball.absolutePath, "-C", dir.absolutePath) }
+        val src = dir.listFiles { f -> f.isDirectory && f.name.startsWith("PlayerVaultsX-") }?.singleOrNull()
+            ?: throw GradleException("PlayerVaultsX $c: unexpected source layout")
+        exec.exec {
+            workingDir = src
+            environment("JAVA_HOME", javaHome.get())
+            commandLine(dir.resolve("apache-maven-$mvn/bin/mvn").absolutePath, "-B", "-q",
+                "-Dmaven.repo.local=" + dir.resolve("m2").absolutePath,
+                "-Dproject.build.outputTimestamp=2026-08-18T19:30:41Z", "package")
+        }
+        val built = src.resolve("target/PlayerVaultsX.jar")
+        if (!built.isFile) throw GradleException("PlayerVaultsX $c: no target/PlayerVaultsX.jar")
+        val got = digest("SHA-256", built)
+        if (got != jarSha256.get()) {
+            throw GradleException("PlayerVaultsX $c jar: SHA-256 mismatch, expected ${jarSha256.get()}, got $got")
+        }
+        built.copyTo(jar.get().asFile, overwrite = true)
+        dir.listFiles()?.forEach { if (it.name != "m2") it.deleteRecursively() }   // keep the Maven cache
+    }
+}
+
+val playerVaultsCommit = providers.gradleProperty("playerVaultsCommit")
+val buildPlayerVaults = tasks.register<BuildPlayerVaults>("buildPlayerVaults") {
+    description = "Downloads the pinned PlayerVaultsX source and Maven, verifies both, builds the jar and verifies that."
+    group = "avian"
+    commit = playerVaultsCommit
+    sourceSha256 = providers.gradleProperty("playerVaultsSourceSha256")
+    jarSha256 = providers.gradleProperty("playerVaultsJarSha256")
+    mavenVersion = providers.gradleProperty("mavenVersion")
+    mavenSha512 = providers.gradleProperty("mavenSha512")
+    javaHome = javaToolchains.launcherFor(java.toolchain).map { it.metadata.installationPath.asFile.absolutePath }
+    workDir = layout.buildDirectory.dir("playervaults/work")
+    jar = layout.buildDirectory.zip(playerVaultsCommit) { dir, c -> dir.file("playervaults/PlayerVaultsX-$c.jar") }
+}
+val playerVaultsJar: FileCollection = files(buildPlayerVaults.flatMap { it.jar })
+
 val questsCommit = providers.gradleProperty("questsCommit")
 val buildQuests = tasks.register<BuildQuests>("buildQuests") {
     description = "Downloads the pinned Quests source, verifies it, builds the plugin jar and verifies that."
@@ -327,7 +397,7 @@ tasks.register("downloadPlugins") {
     val target = layout.projectDirectory.dir("../run/plugins")
     val stack = pluginStack
     outputs.dir(target)
-    val builtFromSource: FileCollection = factionsUuidJar.get() + questsJar
+    val builtFromSource: FileCollection = factionsUuidJar.get() + questsJar + playerVaultsJar
     inputs.files(builtFromSource)
     doLast {
         val dir = target.asFile.apply { mkdirs() }
@@ -427,7 +497,8 @@ tasks.register<Sync>("stageImage") {
     description = "Stages the container image's build context in build/image (then: docker build)."
     group = "avian"
     dependsOn("downloadPlugins")
-    val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name } + questsJar.map { it.name }
+    val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name } + questsJar.map { it.name } +
+        playerVaultsJar.map { it.name }
     from(layout.projectDirectory.dir("../deploy/container")) {
         include("Dockerfile")
     }

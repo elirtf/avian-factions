@@ -29,9 +29,9 @@ public final class FactionsConfig {
             + "Costs and levels are FactionsUUID's own, in its data/universe.json.\n"
             + "Launch set: claim_boost (ours), spawner_rate, crop_yield + growth (farming), mob_exp, tnt_bank,\n"
             + "and warps: FactionsUUID sets a faction's warp limit through it (5, free at level 1), so without\n"
-            + "it no faction can set a warp.")
+            + "it no faction can set a warp. vaults: /f vault, through PlayerVaultsX (#30).")
     private List<String> enabledUpgrades = List.of("claim_boost", "spawner_rate", "crop_yield", "growth", "mob_exp", "tnt_bank",
-            "warps");
+            "warps", "vaults");
 
     private ChunkBuster chunkBuster = new ChunkBuster();
 
