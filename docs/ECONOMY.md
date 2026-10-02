@@ -191,6 +191,17 @@ Cooldowns in `combat.conf`:
 The cooldown shows on the item like a vanilla one and survives relogging and dying, so relogging
 never resets a pearl.
 
+**Where they come from (#40):** none of the three is sold in `/shop`.
+
+- **Golden apples** can't be crafted (`combat.conf` `disabled-recipes`). Eight gold is cheap: the shop
+  sells it at about $32 an ingot and gold farms make it cheaper still, so crafting would make them
+  common. They come from the rank kits (2–6 a week), the Rare crate (2, 3.7 % a roll), the Epic crate
+  (3, 5.5 %) and chests in the world.
+- **Enchanted golden apples**: the Mythic crate (2, 4.9 % a roll, about one pair per 20 Mythic keys)
+  and the rarest chests in the world. They were never craftable.
+- **Dragon's breath**, and so lingering potions: only from the ender dragon in the End, which is open.
+  Rare, and obtainable, as ADR-0006 asks.
+
 ## Crates
 
 Five crates in `/crates` (CrazyCrates, `dev-server/plugins/CrazyCrates/crates/`). Each is a shulker box in its
