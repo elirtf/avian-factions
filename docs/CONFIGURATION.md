@@ -171,6 +171,7 @@ into the `knockback` block and set `preset = CUSTOM`.
 | `knockback.extra-horizontal` | Extra push when sprinting or using Knockback enchant | `0.5` |
 | `knockback.extra-vertical` | Extra lift when sprinting | `0.1` |
 | `knockback.respect-knockback-resistance` | Does netherite armour reduce knockback? | `true` |
+| `disabled-recipes` | Recipes nobody can craft. Golden apples are loot-only so they stay rare (#40); remove a line and `/avian reload` to allow it again | `["minecraft:golden_apple"]` |
 
 > **How to tune:** bigger `horizontal` = people fly further back. Bigger `vertical` = fights get
 > floatier. This needs two people hitting each other — you cannot judge it alone.

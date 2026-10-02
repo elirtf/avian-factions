@@ -37,6 +37,10 @@ public final class CombatModule implements AvianModule {
         ctx.registerListener(listener);
         ctx.registerListener(new ConsumableCooldowns(config, System::currentTimeMillis));
         ctx.registerListener(new EnchantLimit(config));   // at most max-enchantments-per-item per item
+        // Golden apples are loot-only (#40).
+        var recipes = new DisabledRecipes(DisabledRecipes.Registry.SERVER, ctx.logger());
+        recipes.apply(config.get().disabledRecipes());
+        config.onReload(cfg -> recipes.apply(cfg.disabledRecipes()));
         bodies = new LogoutBodies(ctx.plugin(), config,
                 new LogoutDeathRepository.Jdbc(ctx.database(), Clock.systemUTC()), System::currentTimeMillis);
         var tags = new CombatTagListener(config, new CombatTags(System::currentTimeMillis), bodies);

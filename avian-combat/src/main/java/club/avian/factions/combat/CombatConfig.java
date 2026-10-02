@@ -67,6 +67,12 @@ public final class CombatConfig {
     private int goldenAppleCooldownSeconds = 10;
 
     @Comment("""
+            Recipes nobody can craft (#40: golden apples must be rare). Crafting a golden apple costs
+            8 gold, which farms and the shop make cheap, so it stays loot-only: crates, rank kits and
+            chests in the world. Remove a line and /avian reload to bring a recipe back.""")
+    private List<String> disabledRecipes = List.of("minecraft:golden_apple");
+
+    @Comment("""
             Seconds after a totem of undying saves a player before another one can. A totem popped
             while this is running does nothing and the player dies. 0 = none.""")
     private int totemCooldownSeconds = 60;
@@ -133,6 +139,10 @@ public final class CombatConfig {
         return goldenAppleCooldownSeconds;
     }
 
+    public List<String> disabledRecipes() {
+        return disabledRecipes;
+    }
+
     public int totemCooldownSeconds() {
         return totemCooldownSeconds;
     }
@@ -172,6 +182,10 @@ public final class CombatConfig {
         e.check(cfg.enchantedGoldenAppleCooldownSeconds >= 0, "enchanted-golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.goldenAppleCooldownSeconds >= 0, "golden-apple-cooldown-seconds", "must be >= 0");
         e.check(cfg.totemCooldownSeconds >= 0, "totem-cooldown-seconds", "must be >= 0");
+        for (var key : cfg.disabledRecipes) {
+            e.check(org.bukkit.NamespacedKey.fromString(key) != null, "disabled-recipes",
+                    "\"%s\" is not a recipe key like minecraft:golden_apple", key);
+        }
         e.check(cfg.enderPearlCooldownSeconds >= 0, "ender-pearl-cooldown-seconds", "must be >= 0");
         e.check(cfg.maxEnchantmentsPerItem >= 0, "max-enchantments-per-item", "must be >= 0");
         e.check(cfg.combatTagSeconds >= 0, "combat-tag-seconds", "must be >= 0");
