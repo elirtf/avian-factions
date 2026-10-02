@@ -20,13 +20,15 @@ class StackingRulesTest {
     private ServerMock server;
     private WorldMock world;
     private StackingRules rules;
+    private PlacedSpawnerMark mark;
     private final EconomyConfig.Stacking defaults = new EconomyConfig().stacking();
 
     @BeforeEach
     void setUp() {
         server = MockBukkit.mock();
         world = server.addSimpleWorld("world");
-        rules = new StackingRules(MockBukkit.createMockPlugin(), new HarvesterHoeTest.Handle<>(new EconomyConfig()));
+        mark = new PlacedSpawnerMark(MockBukkit.createMockPlugin());
+        rules = new StackingRules(mark, new HarvesterHoeTest.Handle<>(new EconomyConfig()));
     }
 
     @AfterEach
@@ -37,7 +39,7 @@ class StackingRulesTest {
     private LivingEntity spawn(EntityType type, boolean fromPlacedSpawner) {
         var entity = (LivingEntity) world.spawnEntity(world.getSpawnLocation(), type);
         if (fromPlacedSpawner) {
-            rules.markFromPlacedSpawner(entity);
+            mark.set(entity);
         }
         return entity;
     }

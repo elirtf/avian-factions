@@ -36,8 +36,12 @@ hay, slime blocks, melons) are never cheaper to buy than what they turn into.
 | | | | | | | Redstone | 2 |
 | | | | Raw meat 1, cooked 2, feather 2, leather 5 | | | Storage blocks | 9 × |
 
-Emeralds and copper are not sellable: villager trading and copper scraping would otherwise be free
-money.
+**Emeralds sell for $250 each** (owner, 2026-10-01): with nether stars from the Darkzone, the
+biggest earner. They come from **villager spawners** (tier 6 below) and **mining emerald ore**, never
+from trading: villagers no longer pay emeralds for anything (`economy.conf` `emerald-trades=false`),
+so crops, paper and meat can't be turned into money through them. Emerald ore can't be bought, and
+emeralds and emerald blocks cost 4× their sell price, so nothing buys back cheaper than it sells.
+Copper is not sellable: scraping would otherwise be free money.
 
 **Sugar cane in numbers.** Farm crops grow at 120 % of vanilla speed (`spigot.yml` growth
 modifiers; saplings, vines and mushrooms are unchanged), so a cane column yields about 4 cane an
@@ -63,8 +67,10 @@ its shop price (`ftop.conf`), so F-Top ranks what a faction invested.
 | 3 | Creeper, enderman, slime, magma cube | $125,000 | ~$30 |
 | 4 | **Blaze** | $250,000 | ~$60 |
 | 5 | **Iron golem** | $600,000 | ~$160 |
+| 6 | **Villager** (one emerald a villager) | $1,000,000 | $250 |
 
-Only these 14 are sold. Villagers can no longer summon iron golems (`economy.conf`:
+Only these 15 are sold. A villager drops its emerald only when a spawner a player placed spawned it
+(`economy.conf` `spawner-drops`), so bred or wild villagers are worth nothing. Villagers can no longer summon iron golems (`economy.conf`:
 `villager-iron-golems=false`); a vanilla iron farm would otherwise make golem spawners pointless.
 
 **Which mobs stack** (owner, 2026-10-01; `economy.conf` `stacking`): stacking turns many mobs into

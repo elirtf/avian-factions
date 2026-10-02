@@ -788,8 +788,10 @@ global-spawner-settings:
   spawn-range: 4
 
   # Should mobs spawned from spawners spawn directly into nearby stacks?
+  # Avian (2026-10-01): no. A mob spawned straight into a stack skips the stack check, so villagers,
+  # golems and silverfish could stack after all; separate mobs merge through our rules (economy.conf).
   # Default: true
-  spawn-into-nearby-stacks: true
+  spawn-into-nearby-stacks: false
 
   # Should only spawners placed by players spawn mobs?
   # Note that a spawner will only be detected if it was generated in the world after RoseStacker was installed

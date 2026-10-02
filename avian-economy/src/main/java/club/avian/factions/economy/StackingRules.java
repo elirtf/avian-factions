@@ -4,13 +4,10 @@ import club.avian.factions.api.config.ConfigHandle;
 import dev.rosewood.rosestacker.event.EntityStackEvent;
 import dev.rosewood.rosestacker.event.PostStackedSpawnerSpawnEvent;
 import dev.rosewood.rosestacker.stack.StackedEntity;
-import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +22,11 @@ import java.util.List;
 final class StackingRules implements Listener {
 
     private final ConfigHandle<EconomyConfig> config;
-    private final NamespacedKey fromPlacedSpawner;
+    private final PlacedSpawnerMark mark;
 
-    StackingRules(Plugin plugin, ConfigHandle<EconomyConfig> config) {
+    StackingRules(PlacedSpawnerMark mark, ConfigHandle<EconomyConfig> config) {
         this.config = config;
-        this.fromPlacedSpawner = new NamespacedKey(plugin, "from_placed_spawner");
+        this.mark = mark;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -38,10 +35,10 @@ final class StackingRules implements Listener {
             return;
         }
         for (var stack : event.getSpawnedStacks()) {
-            mark(stack);
+            markStack(stack);
         }
         for (var stack : event.getModifiedStacks()) {
-            mark(stack);
+            markStack(stack);
         }
     }
 
@@ -63,24 +60,16 @@ final class StackingRules implements Listener {
             if (entity == null || rules.neverStack().contains(entity.getType().name())) {
                 return false;
             }
-            if (rules.onlyPlayerPlacedSpawners() && !isFromPlacedSpawner(entity)) {
+            if (rules.onlyPlayerPlacedSpawners() && !mark.has(entity)) {
                 return false;
             }
         }
         return true;
     }
 
-    boolean isFromPlacedSpawner(Entity entity) {
-        return entity.getPersistentDataContainer().has(fromPlacedSpawner, PersistentDataType.BYTE);
-    }
-
-    void markFromPlacedSpawner(Entity entity) {
-        entity.getPersistentDataContainer().set(fromPlacedSpawner, PersistentDataType.BYTE, (byte) 1);
-    }
-
-    private void mark(StackedEntity stack) {
+    private void markStack(StackedEntity stack) {
         if (stack.getEntity() != null) {
-            markFromPlacedSpawner(stack.getEntity());
+            mark.set(stack.getEntity());
         }
     }
 }

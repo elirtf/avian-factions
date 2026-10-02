@@ -19,7 +19,7 @@ public final class EconomyConfig {
     public static final ConfigSpec<EconomyConfig> SPEC = ConfigSpec.of("economy.conf", EconomyConfig.class)
             .version(1)
             .validate(EconomyConfig::validate)
-            .freeForm("sell-values")
+            .freeForm("sell-values", "spawner-drops")
             .build();
 
     @RequiresRestart
@@ -69,6 +69,18 @@ public final class EconomyConfig {
                 iron golems and silverfish feed the emerald economy, so each one is a single kill.""")
     private Stacking stacking = new Stacking();
 
+    @Comment("""
+            Extra drops for mobs from spawners players placed, by entity type: item and amount per death,
+            however it dies. The emerald economy (owner, 2026-10-01): a villager spawner (the top tier)
+            pays one emerald a villager. Wild, bred or dungeon-spawner mobs never drop these.""")
+    private Map<String, Map<String, Integer>> spawnerDrops = new LinkedHashMap<>(Map.of("VILLAGER", new LinkedHashMap<>(Map.of("EMERALD", 1))));
+
+    @Comment("""
+            Whether villagers may pay emeralds in trades. false: they still sell things for emeralds,
+            but never buy crops, paper or meat with them, since emeralds sell for money and those trades
+            would make any farm free money. Emeralds come from villager spawners and mining.""")
+    private boolean emeraldTrades = false;
+
     @ConfigSerializable
     public static final class Stacking {
         private boolean onlyPlayerPlacedSpawners = true;
@@ -110,6 +122,7 @@ public final class EconomyConfig {
         values.put("ENDER_PEARL", 60L);
         values.put("BLAZE_ROD", 120L);
         values.put("IRON_INGOT", 40L);
+        values.put("EMERALD", 250L);   // the emerald economy (owner, 2026-10-01)
         return values;
     }
 
@@ -153,6 +166,14 @@ public final class EconomyConfig {
         return stacking;
     }
 
+    public Map<String, Map<String, Integer>> spawnerDrops() {
+        return spawnerDrops;
+    }
+
+    public boolean emeraldTrades() {
+        return emeraldTrades;
+    }
+
     public boolean doubleCatchSkillXp() {
         return doubleCatchSkillXp;
     }
@@ -168,6 +189,14 @@ public final class EconomyConfig {
         e.check(cfg.startingGems >= 0, "starting-gems", "must be >= 0");
         e.check(cfg.sugarCaneTokenChance >= 0 && cfg.sugarCaneTokenChance <= 1, "sugar-cane-token-chance", "must be 0-1");
         e.check(cfg.sugarCaneTokens >= 0, "sugar-cane-tokens", "must be >= 0");
+        cfg.spawnerDrops.forEach((type, drops) -> {
+            e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
+                    "spawner-drops", "\"%s\" is not an entity type (e.g. VILLAGER)", type);
+            drops.forEach((item, amount) -> {
+                e.check(org.bukkit.Material.matchMaterial(item) != null, "spawner-drops." + type, "\"%s\" is not an item", item);
+                e.check(amount >= 0, "spawner-drops." + type, "amounts must be >= 0");
+            });
+        });
         for (var type : cfg.stacking.neverStack) {
             e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
                     "stacking.never-stack", "\"%s\" is not an entity type (e.g. VILLAGER)", type);
