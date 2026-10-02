@@ -62,3 +62,40 @@ it, the Nether gets vanilla terrain plus structure packs and the bosses below.
 
 Everything gameplay-relevant a boss drops still follows ADR-0006 (obtainable in game) and #40
 (rare PvP consumables stay rare: boss loot tables must not hand out golden apples freely).
+
+## Boot test (2026-10-01)
+
+On this dev box (4 cores, shared with the live server), the owner chose to test all of the
+recommended set: Tectonic 3.0.25, Trek B0.6.2, Hopo's Better Mineshafts 1.3.6 / Ruined Portals 1.5.0
+/ Underwater Ruins 1.2.7, Stellarity 6.0.0 (datapacks), EliteMobs 10.9.7, LevelledMobs 4.5.3.2. All
+downloaded from Modrinth with their SHA-512 checked.
+
+- **Everything loads on Paper 26.1.2 with our whole stack**: all six datapacks enable, both plugins
+  enable, the server log check is clean. EliteMobs notices LevelledMobs and switches to its own
+  "high compatibility mode". EliteMobs registers its currency with nightcore (our enchants'
+  library): its economy is one of the parts to switch off.
+- **Generation cost**, 441 overworld chunks on plain Paper + Chunky:
+
+  | Packs | Time | vs vanilla |
+  |---|---|---|
+  | none (vanilla) | 41 s | 1× |
+  | Stellarity (End only) | 35 s | no overworld cost |
+  | Trek | 66 s | 1.6× |
+  | Tectonic | 103 s | 2.5× |
+  | all six | 330 s (234 s with CraftEngine) | 6–8× |
+
+  In the full stack, once warm: 3.5–4 chunks a second (vanilla about 11).
+- **The first boot of a fresh world froze the server** (Paper's watchdog stopped it after 60 s):
+  BetterRTP builds its queue of `/rtp` spots by loading chunks on the main thread, and a fresh chunk
+  under these packs takes long enough to stall it. Without BetterRTP, and once the spawn area
+  existed, Chunky generated steadily.
+
+**What that means for launch:**
+
+1. **Pre-generate every new world before players arrive**, with Chunky, and only then enable
+   `/rtp`. On this box a 5,000-block-wide resource world (~98,000 chunks) would take about 7–8 hours;
+   the big machines have more cores and nothing else to do while they generate.
+2. **Size the resource world for that**: a full 10,000-wide world is ~390,000 chunks, a day or more of
+   generation. The resource world can be smaller than the claiming world, and it gets reset anyway.
+3. Stellarity's items need its resource pack (Stellarity RP) merged into ours (CraftEngine), or they
+   show as plain base items.
