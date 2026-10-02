@@ -15,6 +15,9 @@ dependencies {
     compileOnly(libs.auraskills.api)
     // The EconomyShopGUI plugin provides these classes at runtime; we only compile against them.
     compileOnly(libs.economyshopgui.api)
+    // RoseStacker provides these at runtime: which mobs may stack (StackingRules).
+    compileOnly(libs.rosestacker)
+    testImplementation(libs.rosestacker)
 
     "integrationTestImplementation"(project(":avian-testing"))
 }

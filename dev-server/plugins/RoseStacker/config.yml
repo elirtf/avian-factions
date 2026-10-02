@@ -289,8 +289,10 @@ global-entity-settings:
   stack-flying-downwards: false
 
   # Should we only stack entities spawned from spawners?
+  # Avian (owner, 2026-10-01): yes. Our plugin narrows it further to spawners players placed, and keeps
+  # villagers, iron golems and silverfish unstacked (economy.conf stacking).
   # Default: false
-  only-stack-from-spawners: false
+  only-stack-from-spawners: true
 
   # Should we only avoid stacking entities spawned from trial spawners?
   # Default: true

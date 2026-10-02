@@ -65,6 +65,10 @@ public final class EconomyModule implements AvianModule {
                 () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(),
                 mainThread, ctx.logger()));
         ctx.registerListener(new VillagerGolemGuard(config));
+        // Only mobs from spawners players placed stack, and never the emerald-economy types.
+        if (Bukkit.getPluginManager().getPlugin("RoseStacker") != null) {
+            ctx.registerListener(new StackingRules(ctx.plugin(), config));
+        }
 
         // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
         var hoe = ctx.config(HoeConfig.SPEC);

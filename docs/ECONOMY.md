@@ -67,6 +67,13 @@ its shop price (`ftop.conf`), so F-Top ranks what a faction invested.
 Only these 14 are sold. Villagers can no longer summon iron golems (`economy.conf`:
 `villager-iron-golems=false`); a vanilla iron farm would otherwise make golem spawners pointless.
 
+**Which mobs stack** (owner, 2026-10-01; `economy.conf` `stacking`): stacking turns many mobs into
+one kill target, so it sets how fast a spawner farm earns. Only mobs from spawners a **player placed**
+stack. Wild mobs and mobs from dungeon, fortress or stronghold spawners never do (RoseStacker's
+`only-stack-from-spawners`, narrowed by our plugin, which marks each mob a placed spawner spawns).
+**Villagers, iron golems and silverfish never stack** at all: they feed the emerald economy, so every
+one is its own kill.
+
 ## Buying
 
 - **Everything else**: the plugin's default prices, rounded up to whole dollars (minimum $1).

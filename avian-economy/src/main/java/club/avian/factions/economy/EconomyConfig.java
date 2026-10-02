@@ -3,10 +3,13 @@ package club.avian.factions.economy;
 import club.avian.factions.api.config.ConfigErrors;
 import club.avian.factions.api.config.ConfigSpec;
 import club.avian.factions.api.config.RequiresRestart;
+import org.bukkit.entity.EntityType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /** {@code economy.conf} — currencies, starting balances and the sell table (spec §12, §30). */
@@ -56,6 +59,29 @@ public final class EconomyConfig {
             Whether villagers may summon iron golems. false stops vanilla iron farms, which would
             otherwise produce free what iron golem spawners (the top spawner tier) are sold for.""")
     private boolean villagerIronGolems = false;
+
+    @Comment("""
+            Which mobs RoseStacker may stack (owner, 2026-10-01). Stacking turns many mobs into one,
+            so it decides how much a spawner farm earns per kill.
+              only-player-placed-spawners: only mobs from spawners players placed stack; wild mobs
+                and mobs from dungeon, fortress or stronghold spawners never do.
+              never-stack: entity types that never stack at all, whatever spawned them. Villagers,
+                iron golems and silverfish feed the emerald economy, so each one is a single kill.""")
+    private Stacking stacking = new Stacking();
+
+    @ConfigSerializable
+    public static final class Stacking {
+        private boolean onlyPlayerPlacedSpawners = true;
+        private List<String> neverStack = List.of("VILLAGER", "IRON_GOLEM", "SILVERFISH");
+
+        public boolean onlyPlayerPlacedSpawners() {
+            return onlyPlayerPlacedSpawners;
+        }
+
+        public List<String> neverStack() {
+            return neverStack;
+        }
+    }
 
     @Comment("""
             Fishing skill XP (AuraSkills) for custom-enchant catches. A Double Catch that doubles the fish
@@ -123,6 +149,10 @@ public final class EconomyConfig {
         return villagerIronGolems;
     }
 
+    public Stacking stacking() {
+        return stacking;
+    }
+
     public boolean doubleCatchSkillXp() {
         return doubleCatchSkillXp;
     }
@@ -138,6 +168,10 @@ public final class EconomyConfig {
         e.check(cfg.startingGems >= 0, "starting-gems", "must be >= 0");
         e.check(cfg.sugarCaneTokenChance >= 0 && cfg.sugarCaneTokenChance <= 1, "sugar-cane-token-chance", "must be 0-1");
         e.check(cfg.sugarCaneTokens >= 0, "sugar-cane-tokens", "must be >= 0");
+        for (var type : cfg.stacking.neverStack) {
+            e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
+                    "stacking.never-stack", "\"%s\" is not an entity type (e.g. VILLAGER)", type);
+        }
         e.check(cfg.seasonedAnglerSkillXpPerLevel >= 0, "seasoned-angler-skill-xp-per-level", "must be >= 0");
         for (var entry : cfg.sellValues.entrySet()) {
             if (org.bukkit.Material.matchMaterial(entry.getKey()) == null) {
