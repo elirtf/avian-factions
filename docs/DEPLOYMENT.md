@@ -143,6 +143,27 @@ Checked 2026-09-30:
 5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP (no Bedrock at launch).
    Forward the router's 25565 to it, behind TCPShield, and follow CLAUDE.md's "Before production" list.
 
+### New worlds with the custom terrain
+
+The owner's picks (2026-10-02; `docs/research/custom-terrain-and-bosses.md`): Tectonic, Trek and Hopo's
+structure packs for the resource world, a patched Stellarity for the End (its enchantments removed, its
+item textures merged into our resource pack), and Incendium for the Nether. They only shape chunks
+generated after they're added, so they go in with the fresh worlds, never into a world players have
+already explored.
+
+1. Set `worldgenPacks=true` in `gradle.properties` and build the image as usual: `stageWorldgen`
+   downloads and checks every pack, patches Stellarity, and puts them in the image's world template.
+2. **Incendium**, by the owner (its licence bars AI tools from handling it): download the 26.1.2 data pack
+   from its Modrinth page into the new world's `world/datapacks/` before the first start.
+3. First start, before anyone joins: `datapack list enabled` must show `file/avian-netherite` **last**,
+   after Incendium, so our netherite rate wins. If not: `datapack enable "file/avian-netherite" last`
+   and restart (generation reads the order at start-up).
+4. **Pre-generate with Chunky before players arrive, with `/rtp` off** (BetterRTP out of the plugin set,
+   or not yet enabled): a fresh chunk under these packs takes long enough that `/rtp`'s queue froze a
+   test server. Measured on the dev box: 3.5–4 chunks a second in the overworld, all packs on.
+5. Check `//count ancient_debris` over a 256×256 Nether area: about 1,000 means our 3× veins hold
+   (owner's test with Incendium: 1,074).
+
 ### Why it's shaped like this
 
 - The server is a **StatefulSet with one replica** and its own volume: a world has exactly one
