@@ -1,0 +1,159 @@
+# Support: https://discord.gg/badbones-s-live-chat-182615261403283459
+# Github: https://github.com/Crazy-Crew
+# 
+# Issues: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# Features: https://github.com/Crazy-Crew/CrazyEnvoys/issues
+# 
+root:
+  # Choose the language you prefer to use on your server!
+  # 
+  # Currently Available:
+  #  > en-US ( English )
+  # 
+  # If you do not see your language above, You can contribute by modifying the current en-US.yml
+  # https://github.com/Crazy-Crew/CrazyEnvoys/blob/main/paper/src/main/resources/locale/en-US.yml
+  # Submit your finalized config using https://bin.bloom.host/ and send it to us in https://discord.gg/badbones-s-live-chat-182615261403283459
+  # 
+  language: en-US
+  # A list of available hologram plugins:
+  #  -> DecentHolograms
+  #  -> FancyHolograms
+  #  -> CMI
+  #  -> None
+  # 
+  # If the option is set to blank, it'll pick whatever plugin it feels like picking.
+  # Set the value to None if you do not want any.
+  hologram-plugin: ''
+  # This option will tell the plugin to send all messages as action bars or messages in chat.
+  # 
+  # send_message -> sends messages in chat.
+  # send_actionbar -> sends messages in actionbar.
+  # 
+  message-state: send_message
+  # The command prefix you want shown in front of commands!
+  command_prefix: '<#FFD23F>Envoys</#FFD23F> <#6E6E80>»</#6E6E80> '
+  # The console prefix you want shown when the logging messages show up!
+  console_prefix: '<dark_gray>[<red>CrazyEnvoys<dark_gray>] '
+envoys:
+  open-chest:
+    # Envoys will act as chests with items inside instead of adding to inventory.
+    toggle: false
+    # Settings related to the menu opened when right clicking an envoy. Requires the option above to be true!
+    menu:
+      title: <red>Envoy Drops
+      size: 27
+  falling-blocks:
+    # Whether a block should fall when an envoy spawns.
+    toggle: true
+    # The block type falling when an envoy spawns.
+    type: beacon
+    # How high should the block spawn when an envoy spawns?
+    height: 15
+  generation:
+    # Whether to always spawn the max amount of crates possible set below, If the option is false. Spawn locations set using /envoy edit will instead spawn.
+    # Note: You should only use this if random-locations is false.
+    max-drops-toggle: false
+    # The max amount of crates that will spawn.
+    max-drops-amount: 12
+    # The min amount of crates that will spawn.
+    min-drops-amount: 8
+    # This option will spawn a random number of envoys between min-drops-amount and max-drops-amount.
+    # Note: You must set max-drops-toggle to false otherwise this will not function.
+    random-drops: true
+    random-locations:
+      # This option will spawn envoys at complete random
+      # Note: You need to use /envoy center at wherever you want the center to be.
+      # Second Note: You may have to tweak the options above.
+      # Avian (2026-10-03): off. Random spots look up ground height across a wide area, loading chunks on
+      # the main thread: 7–25 s freezes on a test server. Drops go to fixed spots placed in the warzone
+      # with /envoy edit instead (docs/ECONOMY.md → Envoys).
+      toggle: false
+      # The maximum distance the envoys will fall from the center.
+      max-radius: 150
+      # The minimum distance from the middle the envoys will fall from the center.
+      min-radius: 10
+  # If all drop locations should be broadcast when an envoy starts.
+  broadcast: false
+  schedule:
+    run-time:
+      # This option decides whether to run envoys at an interval or on a schedule.
+      # Note: If the option is false, It will only start via a command or a player's flare.
+      toggle: true
+      # This option decides how long the envoy event should last.
+      value: 5m
+    countdown:
+      # This option decides if the envoy event has a cooldown i.e 59 minutes or activates at a specific time of day.
+      toggle: true
+      # The time till the envoy event will happen again.
+      time: 1h
+      # A specified time of the day that an envoy will happen. Please use 1-12 for hours and 0-59 for minutes.
+      timestamp: 2:00 AM
+    # If the envoy event should spawn if the server is empty.
+    ignore-empty-server: true
+  required-players:
+    default:
+      # If the envoy event should require a minimum number of players. This option is no longer required for the flare requirements.
+      toggle: false
+      # The minimum amount of players needed to start an envoy.
+      amount: 12
+  # Broadcast a message when a player picks up an envoy.
+  announce-player-pickup: true
+  grab-cooldown:
+    # If the player should wait before being able to grab another envoy.
+    toggle: false
+    # The amount of time a player has to wait before grabbing another envoy.
+    time: 15s
+  grace-period:
+    # If there should be a grace period when an envoy spawns. What this means is the player will have to wait a certain amount of time.
+    toggle: false
+    # The time they have to wait to claim the envoy.
+    timer: 120
+    # The message shown above the envoy when the grace period is over.
+    message: <red>Ready to claim.
+    # The unit of time to show at the end of the countdown since it's in seconds. The space is required!
+    time-unit: ' seconds.'
+  world-messages:
+    # If the broadcast messages are only in specific worlds.
+    toggle: false
+    # The worlds you wish to have messages show up in.
+    worlds:
+    - world
+  # Pick what time stamps the warning messages will appear at.
+  warnings:
+  - 10m
+  - 5m
+  - 1m
+  - 10s
+  ignore-behaviour:
+    # Pick which messages are influenced by the ignore functionality (/envoy ignore)
+    ended: false
+    warning: false
+    not-enough-players: false
+    no-spawn-locations-found: false
+    started: false
+    started-player: false
+    envoys-remaining: true
+flare:
+  required-players:
+    # If the flare should require a minimum amount of players.
+    toggle: false
+    # The minimum amount of players needed to use a flare.
+    amount: 6
+  item:
+    # The name of the flare item.
+    name: <bold><gray>(<dark_red>!<gray>)</bold> <red>Flare
+    # The material of the flare item.
+    type: redstone_torch
+    # If the flare will glow.
+    glowing: false
+    # The lore of the flare item.
+    lore:
+    - <gray>Right click me to
+    - <gray>start an envoy event.
+  support:
+    worldguard:
+      # If they are limited to use flares only in specified regions.
+      toggle: false
+      # The name of the regions you can use flares in.
+      regions:
+      - Warzone

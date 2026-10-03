@@ -1,0 +1,81 @@
+# Avian envoy tier (owner, 2026-10-03: envoys hourly around warzone). One prize per crate, from our economy:
+# money, tokens, crate keys, TNT for raiding. Never golden apples (#40: they stay rare).
+Settings:
+  Claim-Permission: false
+  Claim-Permission-Name: 'avian.envoy.basic'
+  Prize-Message:
+    - '<#B8B8C8>You won <#4CE08A>{reward}</#4CE08A> <#B8B8C8>from a <#4CE08A>Common</#4CE08A> <#B8B8C8>envoy.'
+  Spawn-Chance: 75
+  Use-Chance: true
+  Placed-Block: 'CHEST'
+  Bulk-Prizes:
+    Toggle: false
+    Random: true
+    Max-Bulk: 1
+  Hologram-Toggle: false   # no hologram plugin installed
+  Hologram-Height: 1.5
+  Hologram-Range: 8
+  Hologram:
+    - '<bold><#4CE08A>✦ Common Envoy ✦</#4CE08A></bold>'
+    - '%crazyenvoys_crates_time%'
+  Firework-Toggle: true
+  Firework-Colors:
+    - 'Lime'
+    - 'Green'
+    - 'White'
+  Signal-Flare:
+    Toggle: true
+    Time: '15s'
+    Colors:
+      - 'Lime'
+      - 'Green'
+      - 'White'
+Prizes:
+  '1':
+    DisplayName: '<#4CE08A>$2,500'
+    Chance: 30
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#4CE08A>$2,500<#B8B8C8>.'
+    Commands:
+      - 'eco give {player} 2500'
+  '2':
+    DisplayName: '<#4CE08A>$5,000'
+    Chance: 20
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#4CE08A>$5,000<#B8B8C8>.'
+    Commands:
+      - 'eco give {player} 5000'
+  '3':
+    DisplayName: '<#FFE66D>15 tokens'
+    Chance: 20
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#FFE66D>15 tokens<#B8B8C8>.'
+    Commands:
+      - 'tokens give {player} 15 envoy'
+  '4':
+    DisplayName: '<#B8B8C8>Common key'
+    Chance: 10
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found a <#B8B8C8>Common key<#B8B8C8>.'
+    Commands:
+      - 'crates give virtual Common 1 {player} -s'
+  '5':
+    DisplayName: '<#FF7A45>8 TNT'
+    Chance: 10
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#FF7A45>8 TNT<#B8B8C8>.'
+    Items:
+      - 'item:tnt, amount:8'
+  '6':
+    DisplayName: '<#5FF3E0>16 XP bottles'
+    Chance: 10
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#5FF3E0>16 XP bottles<#B8B8C8>.'
+    Items:
+      - 'item:experience_bottle, amount:16'

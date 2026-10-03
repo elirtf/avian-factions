@@ -131,6 +131,70 @@ val buildPlayerVaults = tasks.register<BuildPlayerVaults>("buildPlayerVaults") {
 }
 val playerVaultsJar: FileCollection = files(buildPlayerVaults.flatMap { it.jar })
 
+// VelKoth 1.0.9 (MIT): KOTH (owner, 2026-10-03; issue #24). Built from a pinned commit with Avian's patch
+// (tools/velkoth/avian.patch, explained in its README): FactionsUUID 4.x support, MariaDB that works, and the
+// prize to the capturing player only.
+// Pinned by the source tarball's SHA-256: the shaded jar isn't reproducible (timestamps).
+abstract class BuildVelKoth @javax.inject.Inject constructor(private val exec: ExecOperations) : DefaultTask() {
+    @get:Input abstract val commit: Property<String>
+    @get:Input abstract val sourceSha256: Property<String>
+    @get:InputFile abstract val patch: RegularFileProperty
+    @get:Internal abstract val javaHome: Property<String>
+    @get:Internal abstract val workDir: DirectoryProperty
+    @get:OutputFile abstract val jar: RegularFileProperty
+
+    @TaskAction
+    fun build() {
+        val c = commit.get()
+        val dir = workDir.get().asFile.apply { deleteRecursively(); mkdirs() }
+        val tarball = dir.resolve("VelKoth-$c.tar.gz")
+        URI.create("https://codeload.github.com/Velmax-Studios/VelKoth/tar.gz/$c").toURL()
+            .openStream().use { input -> tarball.outputStream().use { input.copyTo(it) } }
+        val digest = MessageDigest.getInstance("SHA-256").digest(tarball.readBytes()).joinToString("") { "%02x".format(it) }
+        if (digest != sourceSha256.get()) {
+            throw GradleException("VelKoth $c source: SHA-256 mismatch, expected ${sourceSha256.get()}, got $digest")
+        }
+        exec.exec { commandLine("tar", "xzf", tarball.absolutePath, "-C", dir.absolutePath) }
+        val src = dir.resolve("VelKoth-$c")
+        // Fails if upstream changed under the pin: the patch only applies to exactly this source.
+        // GIT_CEILING_DIRECTORIES: this folder is inside our own repo, where git apply would skip the files.
+        exec.exec {
+            workingDir = src
+            environment("GIT_CEILING_DIRECTORIES", dir.absolutePath)
+            commandLine("git", "apply", "-p1", patch.get().asFile.absolutePath)
+        }
+        if (!src.resolve("src/main/java/dev/velmax/velkoth/team/FactionsUUIDHook.java").readText().contains("dev.kitteh.factions")) {
+            throw GradleException("VelKoth: avian.patch did not apply")
+        }
+        src.resolve("gradlew").setExecutable(true)
+        exec.exec {
+            workingDir = src
+            environment("JAVA_HOME", javaHome.get())
+            commandLine("./gradlew", "--no-daemon", "-q", "shadowJar")
+        }
+        val built = src.resolve("build/libs").listFiles { f -> f.name.matches(Regex("VelKoth-[0-9.]+\\.jar")) }?.singleOrNull()
+            ?: throw GradleException("VelKoth $c: no plugin jar in build/libs")
+        built.copyTo(jar.get().asFile, overwrite = true)
+        src.deleteRecursively()
+        tarball.delete()
+    }
+}
+
+val velKothCommit = providers.gradleProperty("velKothCommit")
+val buildVelKoth = tasks.register<BuildVelKoth>("buildVelKoth") {
+    description = "Downloads the pinned VelKoth source, verifies it, applies tools/velkoth/avian.patch and builds the plugin jar."
+    group = "avian"
+    commit = velKothCommit
+    sourceSha256 = providers.gradleProperty("velKothSourceSha256")
+    patch = layout.projectDirectory.file("../tools/velkoth/avian.patch")
+    // VelKoth's own build (Gradle 8.12) needs Java 21 to run.
+    javaHome = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(21) }
+        .map { it.metadata.installationPath.asFile.absolutePath }
+    workDir = layout.buildDirectory.dir("velkoth/work")
+    jar = layout.buildDirectory.zip(velKothCommit) { dir, c -> dir.file("velkoth/VelKoth-${c.take(12)}.jar") }
+}
+val velKothJar: FileCollection = files(buildVelKoth.flatMap { it.jar })
+
 val questsCommit = providers.gradleProperty("questsCommit")
 val buildQuests = tasks.register<BuildQuests>("buildQuests") {
     description = "Downloads the pinned Quests source, verifies it, builds the plugin jar and verifies that."
@@ -275,6 +339,10 @@ val pluginStack = listOf(
     PinnedPlugin("EconomyShopGUI-7.3.1.jar",
         "https://cdn.spiget.org/file/spiget-resources/69927.jar",
         "SHA-256", "51e19e014e1ea545d13f6094b554a072fedb93ae0681a45bffff27a8728bd869"),
+    // CrazyEnvoys 1.15.0 (MIT; same authors as CrazyCrates): crates dropped around warzone hourly (owner, 2026-10-03).
+    PinnedPlugin("CrazyEnvoys-1.15.0.jar",
+        "https://cdn.modrinth.com/data/mqwRS0rH/versions/1KifVd5L/CrazyEnvoys-1.15.0.jar",
+        "SHA-512", "929d59ecd429d16156919bda62e219c53e6a9afd04cc1400c54037a3cb1575247cf60343abac9eaea44504f9020b88f85dc4fb1bb09b135b9c9a3bcab2381a3f"),
     // RoseStacker 1.5.42 — mobs, items, blocks and spawners. Licence is MIT-Non-Distribution:
     // use, copy and modify are granted, redistribution and resale are not. Fine to run on our own
     // server; it could never be bundled into anything we hand out.
@@ -397,7 +465,7 @@ tasks.register("downloadPlugins") {
     val target = layout.projectDirectory.dir("../run/plugins")
     val stack = pluginStack
     outputs.dir(target)
-    val builtFromSource: FileCollection = factionsUuidJar.get() + questsJar + playerVaultsJar
+    val builtFromSource: FileCollection = factionsUuidJar.get() + questsJar + playerVaultsJar + velKothJar
     inputs.files(builtFromSource)
     doLast {
         val dir = target.asFile.apply { mkdirs() }
@@ -498,7 +566,7 @@ tasks.register<Sync>("stageImage") {
     group = "avian"
     dependsOn("downloadPlugins")
     val pinned = pluginStack.map { it.file } + factionsUuidJar.get().map { it.name } + questsJar.map { it.name } +
-        playerVaultsJar.map { it.name }
+        playerVaultsJar.map { it.name } + velKothJar.map { it.name }
     from(layout.projectDirectory.dir("../deploy/container")) {
         include("Dockerfile")
     }

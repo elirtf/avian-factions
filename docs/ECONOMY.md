@@ -379,6 +379,49 @@ written-down free route to keys (ADR-0006). Contest places 1–3 grant a 3-day
 `avian.quests.fishing.podium` permission that On the Podium checks for and clears. Quest files are
 in `plugins/Quests/quests/`.
 
+## KOTH and envoys
+
+Owner, 2026-10-03 (issue #24): KOTH every 3 hours, envoys every hour, so a player logging in any time
+is close to a fight.
+
+**KOTH** (VelKoth, built from source with our patch: `tools/velkoth/README.md`):
+
+- Every 3 hours, Central time (00:00, 03:00 … 21:00), on the arena called `koth`
+  (`plugins/VelKoth/config.yml`). Hold the hill for 2 minutes uncontested; faction members don't
+  contest each other.
+- **Prize, to the capturing player only:** an **Epic key, $50,000 and 100 tokens**. At up to 8 a day
+  that's at most 8 Epic keys (each about 1,500 tokens) and $400k a day.
+- **Setting up the arena** (once the warzone hill is built; arenas are drawn in game, so they live in
+  the server's data, not git): stand at the hill, `/koth wand`, select the two corners,
+  `/koth create koth`, then in `plugins/VelKoth/arenas.yml` set its rewards and `/koth reload`:
+
+  ```yaml
+  rewards:
+    - 'COMMAND:crates give virtual Epic 1 %player% -s'
+    - 'ECONOMY:50000'
+    - 'COMMAND:tokens give %player% 100 koth'
+  ```
+
+  Rewards can also be set in game: `/koth reward add koth <reward>`. Until the arena exists the schedule
+  finds no `koth` arena and does nothing. Change the schedule in `config.yml` (tracked), not with
+  `/koth schedule add`, which a restart would undo.
+
+**Envoys** (CrazyEnvoys): about 8–12 crates every hour, each paying one prize by tier
+(`plugins/CrazyEnvoys/tiers/`):
+
+| Tier | Chance | Prizes |
+|---|---|---|
+| Common (`Basic.yml`) | 75 % | $2,500 / $5,000 / 15 tokens / Common key / 8 TNT / 16 XP bottles |
+| Rare (`Lucky.yml`) | 22 % | $10,000 / 40 tokens / Rare key / 2 Common keys / 32 TNT |
+| Epic (`Titan.yml`) | 3 % | Epic key / $50,000 / 150 tokens / 2 Rare keys |
+
+No golden apples (#40). An envoy hour pays out roughly $40–60k across the server.
+
+- **Drop spots are fixed, placed in the warzone with `/envoy edit`** (right-click blocks to add spots;
+  aim for 20–30). Random spots are off: CrazyEnvoys finds them by loading chunks on the main thread,
+  which froze a test server for 7–25 seconds. Fixed spots measured no lag.
+- Envoys skip empty servers.
+
 ## Changing prices
 
 Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`

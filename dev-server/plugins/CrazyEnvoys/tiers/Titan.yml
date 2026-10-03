@@ -1,0 +1,65 @@
+# Avian envoy tier (owner, 2026-10-03: envoys hourly around warzone). One prize per crate, from our economy:
+# money, tokens, crate keys, TNT for raiding. Never golden apples (#40: they stay rare).
+Settings:
+  Claim-Permission: false
+  Claim-Permission-Name: 'avian.envoy.titan'
+  Prize-Message:
+    - '<#B8B8C8>You won <#B07FE0>{reward}</#B07FE0> <#B8B8C8>from an <#B07FE0>Epic</#B07FE0> <#B8B8C8>envoy.'
+  Spawn-Chance: 3
+  Use-Chance: true
+  Placed-Block: 'CHEST'
+  Bulk-Prizes:
+    Toggle: false
+    Random: true
+    Max-Bulk: 1
+  Hologram-Toggle: false   # no hologram plugin installed
+  Hologram-Height: 1.5
+  Hologram-Range: 8
+  Hologram:
+    - '<bold><#B07FE0>✦ Epic Envoy ✦</#B07FE0></bold>'
+    - '%crazyenvoys_crates_time%'
+  Firework-Toggle: true
+  Firework-Colors:
+    - 'Purple'
+    - 'Fuchsia'
+    - 'White'
+  Signal-Flare:
+    Toggle: true
+    Time: '15s'
+    Colors:
+      - 'Purple'
+      - 'Fuchsia'
+      - 'White'
+Prizes:
+  '1':
+    DisplayName: '<#B07FE0>Epic key'
+    Chance: 40
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found an <#B07FE0>Epic key<#B8B8C8>.'
+    Commands:
+      - 'crates give virtual Epic 1 {player} -s'
+  '2':
+    DisplayName: '<#4CE08A>$50,000'
+    Chance: 30
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#4CE08A>$50,000<#B8B8C8>.'
+    Commands:
+      - 'eco give {player} 50000'
+  '3':
+    DisplayName: '<#FFE66D>150 tokens'
+    Chance: 20
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#FFE66D>150 tokens<#B8B8C8>.'
+    Commands:
+      - 'tokens give {player} 150 envoy'
+  '4':
+    DisplayName: '<#4DA3FF>2 Rare keys'
+    Chance: 10
+    Drop-Items: false
+    Messages:
+      - '<#B8B8C8>You found <#4DA3FF>2 Rare keys<#B8B8C8>.'
+    Commands:
+      - 'crates give virtual Rare 2 {player} -s'
