@@ -1,0 +1,145 @@
+--- a/src/main/java/dev/velmax/velkoth/capture/CaptureManager.java
++++ b/src/main/java/dev/velmax/velkoth/capture/CaptureManager.java
+@@ -268,7 +268,7 @@
+ 
+         // Grant rewards and record stats (team-aware)
+         String teamName = plugin.getTeamManager().getTeamName(winner);
+-        if (teamName != null) {
++        if (teamName != null && Boolean.getBoolean("velkoth.rewardWholeTeam")) {
+             for (Player p : Bukkit.getOnlinePlayers()) {
+                 if (plugin.getTeamManager().isSameTeam(winner, p)) {
+                     plugin.getRewardManager().grantRewards(p, arena.rewards());
+--- a/src/main/java/dev/velmax/velkoth/storage/DatabaseManager.java
++++ b/src/main/java/dev/velmax/velkoth/storage/DatabaseManager.java
+@@ -69,7 +69,7 @@
+                     """);
+             stmt.executeUpdate("""
+                         CREATE TABLE IF NOT EXISTS koth_win_log (
+-                            id INTEGER PRIMARY KEY AUTOINCREMENT,
++                            id BIGINT PRIMARY KEY AUTO_INCREMENT,
+                             uuid VARCHAR(36) NOT NULL,
+                             arena_id VARCHAR(64) NOT NULL,
+                             win_timestamp BIGINT NOT NULL
+@@ -91,10 +91,10 @@
+                 try (PreparedStatement ps = conn.prepareStatement("""
+                             INSERT INTO koth_stats (uuid, player_name, total_wins, last_win_timestamp)
+                             VALUES (?, ?, 1, ?)
+-                            ON CONFLICT(uuid) DO UPDATE SET
+-                                player_name = excluded.player_name,
++                            ON DUPLICATE KEY UPDATE
++                                player_name = VALUES(player_name),
+                                 total_wins = total_wins + 1,
+-                                last_win_timestamp = excluded.last_win_timestamp
++                                last_win_timestamp = VALUES(last_win_timestamp)
+                         """)) {
+                     ps.setString(1, uuid.toString());
+                     ps.setString(2, playerName);
+--- a/src/main/java/dev/velmax/velkoth/team/FactionsUUIDHook.java
++++ b/src/main/java/dev/velmax/velkoth/team/FactionsUUIDHook.java
+@@ -4,43 +4,53 @@
+ import org.jetbrains.annotations.Nullable;
+ 
+ import java.lang.reflect.Method;
++import java.util.UUID;
+ 
++/**
++ * Avian's replacement for VelKoth's FactionsUUID hook (tools/velkoth, applied by buildVelKoth): the
++ * upstream one targets FactionsUUID 0.x (com.massivecraft), which 4.x renamed to dev.kitteh, so with
++ * our FactionsUUID 4.7 faction members contested each other on the hill. Two players are one team only
++ * when both are in the same real faction: players with no faction (wilderness) are each on their own.
++ * Reflection, as upstream, so VelKoth still builds without FactionsUUID.
++ */
+ public class FactionsUUIDHook implements TeamHook {
+-    private Object fplayersInstance;
+-    private Method getByPlayerMethod;
+-    private Method getFactionMethod;
+-    private Method getTagMethod;
++    private Object fplayers;
++    private Method get;
++    private Method faction;
++    private Method isNormal;
++    private Method id;
++    private Method tag;
+ 
+     public FactionsUUIDHook() {
+         try {
+-            Class<?> fplayersClass = Class.forName("com.massivecraft.factions.FPlayers");
+-            fplayersInstance = fplayersClass.getMethod("getInstance").invoke(null);
+-            getByPlayerMethod = fplayersClass.getMethod("getByPlayer", Player.class);
+-
+-            Class<?> fplayerClass = Class.forName("com.massivecraft.factions.FPlayer");
+-            getFactionMethod = fplayerClass.getMethod("getFaction");
+-
+-            Class<?> factionClass = Class.forName("com.massivecraft.factions.Faction");
+-            getTagMethod = factionClass.getMethod("getTag");
++            Class<?> fplayersClass = Class.forName("dev.kitteh.factions.FPlayers");
++            fplayers = fplayersClass.getMethod("fPlayers").invoke(null);
++            get = fplayersClass.getMethod("get", UUID.class);
++            faction = Class.forName("dev.kitteh.factions.FPlayer").getMethod("faction");
++            Class<?> factionClass = Class.forName("dev.kitteh.factions.Faction");
++            isNormal = factionClass.getMethod("isNormal");
++            id = factionClass.getMethod("id");
++            tag = factionClass.getMethod("tag");
+         } catch (Exception e) {
+-            // Plugin not present or unsupported version
++            get = null;   // not FactionsUUID 4.x: no team capturing
+         }
+     }
+ 
++    /** The player's faction, or null when they have none (wilderness, safezone, warzone). */
++    private @Nullable Object factionOf(Player player) throws Exception {
++        Object f = faction.invoke(get.invoke(fplayers, player.getUniqueId()));
++        return f != null && (Boolean) isNormal.invoke(f) ? f : null;
++    }
++
+     @Override
+     public boolean isSameTeam(Player p1, Player p2) {
+         try {
+-            if (getByPlayerMethod == null)
++            if (get == null) {
+                 return false;
+-            Object fp1 = getByPlayerMethod.invoke(fplayersInstance, p1);
+-            Object fp2 = getByPlayerMethod.invoke(fplayersInstance, p2);
+-
+-            Object f1 = getFactionMethod.invoke(fp1);
+-            Object f2 = getFactionMethod.invoke(fp2);
+-
+-            // In factions, wildcard / wilderness might be technically equal,
+-            // but generally we just match object equality for standard factions.
+-            return f1 != null && f1.equals(f2);
++            }
++            Object f1 = factionOf(p1);
++            Object f2 = factionOf(p2);
++            return f1 != null && f2 != null && id.invoke(f1).equals(id.invoke(f2));
+         } catch (Exception e) {
+             return false;
+         }
+@@ -49,13 +59,11 @@
+     @Override
+     public @Nullable String getTeamName(Player player) {
+         try {
+-            if (getByPlayerMethod == null || getTagMethod == null)
+-                return null;
+-            Object fp = getByPlayerMethod.invoke(fplayersInstance, player);
+-            Object f = getFactionMethod.invoke(fp);
+-            if (f == null)
++            if (get == null) {
+                 return null;
+-            return (String) getTagMethod.invoke(f);
++            }
++            Object f = factionOf(player);
++            return f == null ? null : (String) tag.invoke(f);
+         } catch (Exception e) {
+             return null;
+         }
+--- a/src/main/java/dev/velmax/velkoth/team/TeamManager.java
++++ b/src/main/java/dev/velmax/velkoth/team/TeamManager.java
+@@ -25,7 +25,7 @@
+         if (Bukkit.getPluginManager().isPluginEnabled("BetterTeams")) {
+             activeHook = new BetterTeamsHook();
+             plugin.getLogger().info("Hooked into BetterTeams for team support!");
+-        } else if (Bukkit.getPluginManager().isPluginEnabled("Factions")) {
++        } else if (Bukkit.getPluginManager().isPluginEnabled("Factions") || Bukkit.getPluginManager().isPluginEnabled("FactionsUUID")) {
+             // Need to check which Factions fork it is. SaberFactions and FactionsUUID share
+             // similar APIs.
+             // For safety we try one first. We will assume FactionsUUID/SaberFactions for

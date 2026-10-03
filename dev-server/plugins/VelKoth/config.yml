@@ -1,0 +1,121 @@
+# VelKoth Configuration
+# Database configuration
+# SQLITE: Local file storage (standard for single servers)
+# MYSQL: Recommended for database synchronization across multiple bungee/velocity servers.
+database:
+  # Database type: SQLITE or MYSQL
+  type: MYSQL
+  # MySQL connection details (ignored for SQLite)
+  # Avian: our MariaDB (tables koth_stats and koth_win_log), filled in from .env or the environment.
+  host: ${AVIAN_DB_HOST:-127.0.0.1}
+  port: ${AVIAN_DB_PORT:-3306}
+  database: ${AVIAN_DB_NAME:-avian}
+  username: ${AVIAN_DB_USER:-avian}
+  password: '${AVIAN_DB_PASSWORD:-avian}'
+  # Connection pool size
+  pool-size: 5
+# Default capture settings for new arenas
+capture-defaults:
+  # Default capture time in seconds
+  capture-time: 120
+  # Grace period in seconds before capture resets when player leaves
+  grace-period: 5
+  # Default capture mode for the hill:
+  # CAPTURE: Traditional mode where players must stay on the hill until it turns their color.
+  # SCORE: Points-based mode where teams earn score over time while holding the hill.
+  capture-mode: CAPTURE
+  # Default max score for SCORE mode
+  max-score: 300
+  # Whether the hill becomes contested when multiple players are on it
+  contest-enabled: true
+# Display settings
+display:
+  # Enable BossBar showing capture progress
+  boss-bar-enabled: true
+  # Enable ActionBar timer
+  action-bar-enabled: true
+  # Enable title notifications
+  titles-enabled: true
+  # Enable capture sounds
+  sounds-enabled: true
+  # Enable particle effects on the hill
+  particles-enabled: true
+  # Enable per-player FastBoard scoreboards showing active capture status
+  # Avian: off, TAB is the one sidebar.
+  scoreboard-enabled: false
+  # Should VelKoth show an 'Idle' scoreboard when there are no active events?
+  # Set this to false if you are using another scoreboard plugin (TAB, SimpleScore) and only want VelKoth's scoreboard during events.
+  show-idle-scoreboard: false
+  # If true, VelKoth will attempt to pause other scoreboard plugins (like TAB or SimpleScore) while an event is active.
+  # This ensures there are no flickering issues when VelKoth takes over the player's scoreboard.
+  override-other-scoreboards: false
+  # Enable floating TextDisplay holograms above active hills
+  hologram-enabled: true
+  # Y-axis offset for the hologram above the hill center
+  hologram-yoffset: 3.0
+# Timezone for scheduled events.
+# Use a region-based ID (e.g., 'Europe/Paris' or 'America/New_York') for automatic Daylight Saving Time (DST) adjustment.
+# Use a fixed offset (e.g., 'GMT+2' or '+02:00') if you want the schedule to stay the same all year round.
+# Examples: UTC, EST, America/New_York, Europe/London, Asia/Kolkata, GMT+2
+schedule-timezone: America/Chicago
+# Scheduled events
+# Format: day:HH:mm:arenaId or a cron expression
+# Avian (owner, 2026-10-03): KOTH every 3 hours, Central time, on the arena called koth. It needs that arena:
+# until it's built (docs/ECONOMY.md → KOTH) these do nothing.
+schedule:
+- MONDAY:00:00:koth
+- MONDAY:03:00:koth
+- MONDAY:06:00:koth
+- MONDAY:09:00:koth
+- MONDAY:12:00:koth
+- MONDAY:15:00:koth
+- MONDAY:18:00:koth
+- MONDAY:21:00:koth
+- TUESDAY:00:00:koth
+- TUESDAY:03:00:koth
+- TUESDAY:06:00:koth
+- TUESDAY:09:00:koth
+- TUESDAY:12:00:koth
+- TUESDAY:15:00:koth
+- TUESDAY:18:00:koth
+- TUESDAY:21:00:koth
+- WEDNESDAY:00:00:koth
+- WEDNESDAY:03:00:koth
+- WEDNESDAY:06:00:koth
+- WEDNESDAY:09:00:koth
+- WEDNESDAY:12:00:koth
+- WEDNESDAY:15:00:koth
+- WEDNESDAY:18:00:koth
+- WEDNESDAY:21:00:koth
+- THURSDAY:00:00:koth
+- THURSDAY:03:00:koth
+- THURSDAY:06:00:koth
+- THURSDAY:09:00:koth
+- THURSDAY:12:00:koth
+- THURSDAY:15:00:koth
+- THURSDAY:18:00:koth
+- THURSDAY:21:00:koth
+- FRIDAY:00:00:koth
+- FRIDAY:03:00:koth
+- FRIDAY:06:00:koth
+- FRIDAY:09:00:koth
+- FRIDAY:12:00:koth
+- FRIDAY:15:00:koth
+- FRIDAY:18:00:koth
+- FRIDAY:21:00:koth
+- SATURDAY:00:00:koth
+- SATURDAY:03:00:koth
+- SATURDAY:06:00:koth
+- SATURDAY:09:00:koth
+- SATURDAY:12:00:koth
+- SATURDAY:15:00:koth
+- SATURDAY:18:00:koth
+- SATURDAY:21:00:koth
+- SUNDAY:00:00:koth
+- SUNDAY:03:00:koth
+- SUNDAY:06:00:koth
+- SUNDAY:09:00:koth
+- SUNDAY:12:00:koth
+- SUNDAY:15:00:koth
+- SUNDAY:18:00:koth
+- SUNDAY:21:00:koth
