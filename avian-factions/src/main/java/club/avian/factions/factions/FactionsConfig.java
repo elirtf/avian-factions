@@ -2,10 +2,13 @@ package club.avian.factions.factions;
 
 import club.avian.factions.api.config.ConfigErrors;
 import club.avian.factions.api.config.ConfigSpec;
+import org.bukkit.Material;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * {@code factions.conf}. Factions, claims, power and protection belong to FactionsUUID (ADR-0007)
@@ -17,6 +20,7 @@ public final class FactionsConfig {
     public static final ConfigSpec<FactionsConfig> SPEC = ConfigSpec.of("factions.conf", FactionsConfig.class)
             .version(1)
             .validate(FactionsConfig::validate)
+            .freeForm("tnt-durability.blocks")
             .build();
 
     @Comment("Flat power every new faction gets on top of its members' power, so a solo player can\n"
@@ -39,6 +43,8 @@ public final class FactionsConfig {
 
     private NetheriteAlert netheriteAlert = new NetheriteAlert();
 
+    private TntDurability tntDurability = new TntDurability();
+
     public double factionBasePower() {
         return factionBasePower;
     }
@@ -51,6 +57,10 @@ public final class FactionsConfig {
         return netheriteAlert;
     }
 
+    public TntDurability tntDurability() {
+        return tntDurability;
+    }
+
     public ChunkBuster chunkBuster() {
         return chunkBuster;
     }
@@ -60,6 +70,13 @@ public final class FactionsConfig {
     }
 
     static void validate(FactionsConfig cfg, ConfigErrors e) {
+        var tnt = cfg.tntDurability;
+        e.check(tnt.radius > 0 && tnt.radius <= 8, "tnt-durability.radius", "must be above 0 and at most 8");
+        e.check(tnt.resetMinutes >= 0, "tnt-durability.reset-minutes", "must be >= 0");
+        tnt.blocks.forEach((block, hits) -> {
+            e.check(Material.matchMaterial(block) != null, "tnt-durability.blocks", "\"%s\" is not a block", block);
+            e.check(hits >= 1, "tnt-durability.blocks." + block, "must take at least 1 hit");
+        });
         e.check(Double.isFinite(cfg.factionBasePower) && cfg.factionBasePower >= 0, "faction-base-power",
                 "must be a finite number >= 0 (got %s)", cfg.factionBasePower);
         e.check(cfg.chunkBuster.layersPerTick >= 1 && cfg.chunkBuster.layersPerTick <= 16,
@@ -158,6 +175,52 @@ public final class FactionsConfig {
 
         public int cooldownSeconds() {
             return cooldownSeconds;
+        }
+    }
+
+    /** Raiding (spec §25): blocks TNT can't break in vanilla, made breakable in a number of hits. */
+    @ConfigSerializable
+    public static final class TntDurability {
+
+        @Comment("""
+                Let TNT wear down blocks vanilla TNT can't break (owner, 2026-10-02: raiding). Without
+                it an obsidian wall is unraidable. Only where FactionsUUID lets the explosion do damage:
+                never in safezone or warzone, never where a raid shield or grace is on.""")
+        private boolean enabled = true;
+
+        @Comment("Hits each block takes before it breaks. Each TNT within the radius is one hit.")
+        private Map<String, Integer> blocks = new LinkedHashMap<>(Map.of(
+                "OBSIDIAN", 3, "CRYING_OBSIDIAN", 3));
+
+        @Comment("How far from the explosion a block takes a hit, in blocks (vanilla TNT reaches about 3).")
+        private double radius = 3.0;
+
+        @Comment("Minutes without a hit before a block's damage is forgotten, so a wall heals after a raid. 0 = never.")
+        private int resetMinutes = 10;
+
+        @Comment("""
+                TNT that explodes in water or lava hurts none of these blocks, as in vanilla, so water
+                is still a defence. false: liquids give no protection.""")
+        private boolean liquidsProtect = true;
+
+        public boolean enabled() {
+            return enabled;
+        }
+
+        public Map<String, Integer> blocks() {
+            return blocks;
+        }
+
+        public double radius() {
+            return radius;
+        }
+
+        public int resetMinutes() {
+            return resetMinutes;
+        }
+
+        public boolean liquidsProtect() {
+            return liquidsProtect;
         }
     }
 

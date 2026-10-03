@@ -87,6 +87,11 @@ goes above its power, it becomes **raidable**: enemies can claim over it.
 | `chunk-buster.grant-on-join` | Chunk busters a player gets the first time they found or join a faction. Once per player, ever, so they can't be farmed | `5` |
 | `netherite-alert.enabled` | Tell the whole server when someone mines ancient debris (placed debris never counts) | `true` |
 | `netherite-alert.cooldown-seconds` | Seconds before the same player is announced again, so a vein is one message | `60` |
+| `tnt-durability.enabled` | Raiding: TNT wears down blocks vanilla TNT can't break, so an obsidian wall can be raided. Only where FactionsUUID lets TNT do damage (never safezone, warzone, grace) | `true` |
+| `tnt-durability.blocks` | Hits each block takes before it breaks; each TNT within the radius is one hit | obsidian and crying obsidian `3` |
+| `tnt-durability.radius` | How far from an explosion a block takes a hit, in blocks | `3.0` |
+| `tnt-durability.reset-minutes` | Minutes without a hit before a block heals (0 = never) | `10` |
+| `tnt-durability.liquids-protect` | TNT exploding in water or lava hurts none of these blocks, as in vanilla, so water stays a defence | `true` |
 
 > **Example:** a solo player has 5 base + 20 = **25 chunks**, a 5×5 square. A 4-player faction has
 > 5 + 80 = **85 chunks**. The **Claim Boost** upgrade adds +10, +30 or +70 more.

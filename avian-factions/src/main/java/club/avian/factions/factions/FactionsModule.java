@@ -70,6 +70,10 @@ public final class FactionsModule implements AvianModule {
         ctx.registerListener(new NetheriteAnnouncer(config, System::currentTimeMillis));
         // /ec is for everyone, but spawners can't hide in an ender chest from raids and F-Top.
         ctx.registerListener(new EnderChestSpawnerBan(ctx.plugin()));
+        // Raiding: TNT wears down obsidian (and whatever tnt-durability lists) where FactionsUUID allows TNT.
+        var tntDurability = new TntDurability(config, new BlockDurability(System::currentTimeMillis));
+        ctx.registerListener(tntDurability);
+        Bukkit.getScheduler().runTaskTimer(ctx.plugin(), tntDurability::prune, 20 * 300, 20 * 300);
 
         // Faction land stays loaded while a member is online, so crops grow while they are away.
         claimLoader = new ClaimLoader(ctx.plugin(), config,
