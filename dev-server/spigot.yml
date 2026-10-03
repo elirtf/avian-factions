@@ -156,7 +156,10 @@ world-settings:
       swim-multiplier: 0.01
       sprint-multiplier: 0.1
       other-multiplier: 0.0
-    max-tnt-per-tick: 100
+    # Avian (2026-10-03, raiding): TNT past this many in one tick waits for the next, which throws a cannon
+    # shot off (vanilla 100). Measured on the 4-core dev box, a 400-TNT volley in solid stone: all of it in
+    # one tick, worst tick about 130 ms, then back to normal. Paper's optimize-explosions made no difference.
+    max-tnt-per-tick: 500
     max-tick-time:
       tile: 50
       entity: 50
