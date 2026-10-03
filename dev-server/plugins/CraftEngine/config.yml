@@ -90,6 +90,8 @@ resource-pack:
   merge-external-zip-files:
     - "CustomNameplates/resourcepack.zip"
     - "BetterModel/build.zip"
+    # Stellarity's item textures (staged by stageWorldgen; skipped while absent).
+    - "Stellarity/resourcepack.zip"
   exclude-file-extensions: [ "md", "psd", "bbmodel", "db", "ini", "DS_Store", "zip", "gz", "tar", "jar" ]
   # Cache the resource files in memory to speed up pack generation.
   cache-resource-files: true

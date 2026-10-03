@@ -81,6 +81,59 @@ public final class EconomyConfig {
             would make any farm free money. Emeralds come from villager spawners and mining.""")
     private boolean emeraldTrades = false;
 
+    @Comment("""
+            What EliteMobs' elites and bosses pay (owner, 2026-10-02: our rewards, not EliteMobs' own coins
+            and gear). The player who dealt the most damage is paid.
+              money-per-level: money for an elite, times its level (elite levels follow nearby players'
+                gear: about 1-20 in vanilla gear).
+              boss-tiers: what a custom boss pays, by its level; the highest tier the boss reaches applies.
+                Commands run from the console, %player% is the player's name.""")
+    private EliteRewards eliteRewards = new EliteRewards();
+
+    @ConfigSerializable
+    public static final class EliteRewards {
+        private long moneyPerLevel = 25;
+        private List<BossTier> bossTiers = List.of(
+                new BossTier(0, 25, List.of("crates give virtual Rare 1 %player% -s")),
+                new BossTier(20, 75, List.of("crates give virtual Epic 1 %player% -s")));
+
+        public long moneyPerLevel() {
+            return moneyPerLevel;
+        }
+
+        public List<BossTier> bossTiers() {
+            return bossTiers;
+        }
+    }
+
+    @ConfigSerializable
+    public static final class BossTier {
+        private int minLevel;
+        private long tokens;
+        private List<String> commands = List.of();
+
+        public BossTier() {
+        }
+
+        BossTier(int minLevel, long tokens, List<String> commands) {
+            this.minLevel = minLevel;
+            this.tokens = tokens;
+            this.commands = commands;
+        }
+
+        public int minLevel() {
+            return minLevel;
+        }
+
+        public long tokens() {
+            return tokens;
+        }
+
+        public List<String> commands() {
+            return commands;
+        }
+    }
+
     @ConfigSerializable
     public static final class Stacking {
         private boolean onlyPlayerPlacedSpawners = true;
@@ -174,6 +227,10 @@ public final class EconomyConfig {
         return emeraldTrades;
     }
 
+    public EliteRewards eliteRewards() {
+        return eliteRewards;
+    }
+
     public boolean doubleCatchSkillXp() {
         return doubleCatchSkillXp;
     }
@@ -197,6 +254,10 @@ public final class EconomyConfig {
                 e.check(amount >= 0, "spawner-drops." + type, "amounts must be >= 0");
             });
         });
+        e.check(cfg.eliteRewards.moneyPerLevel >= 0, "elite-rewards.money-per-level", "must be >= 0");
+        for (var tier : cfg.eliteRewards.bossTiers) {
+            e.check(tier.minLevel >= 0 && tier.tokens >= 0, "elite-rewards.boss-tiers", "min-level and tokens must be >= 0");
+        }
         for (var type : cfg.stacking.neverStack) {
             e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
                     "stacking.never-stack", "\"%s\" is not an entity type (e.g. VILLAGER)", type);

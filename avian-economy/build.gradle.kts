@@ -18,6 +18,8 @@ dependencies {
     // RoseStacker provides these at runtime: which mobs may stack (StackingRules).
     compileOnly(libs.rosestacker)
     testImplementation(libs.rosestacker)
+    // EliteMobs provides these at runtime: rewards for elite and boss kills (EliteRewards).
+    compileOnly(libs.elitemobs) { isTransitive = false }
 
     "integrationTestImplementation"(project(":avian-testing"))
 }
