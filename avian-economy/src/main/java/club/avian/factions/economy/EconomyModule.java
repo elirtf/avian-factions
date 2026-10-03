@@ -73,6 +73,10 @@ public final class EconomyModule implements AvianModule {
         }
         ctx.registerListener(new SpawnerDrops(config, placedSpawnerMark));
         ctx.registerListener(new EmeraldTradeGuard(config));
+        // EliteMobs kills pay in our economy (its own coins and gear are off in its config).
+        if (Bukkit.getPluginManager().getPlugin("EliteMobs") != null) {
+            ctx.registerListener(new EliteRewards(config, economy, mainThread, ctx.logger()));
+        }
 
         // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
         var hoe = ctx.config(HoeConfig.SPEC);

@@ -106,6 +106,51 @@ lp group hatchling permission set quests.command.category true
 lp group hatchling permission set quests.command.started true
 lp group hatchling permission set quests.command.quest true
 lp group hatchling permission set quests.command.track true
+# EliteMobs (owner, 2026-10-02): only its elites and bosses, paying in our economy (economy.conf
+# elite-rewards). Its own commands (shops, quests, guild, gear repair and enchanting, coins, parties) would
+# lead to systems that are switched off, so players don't get them. /em trackboss stays: it points at a boss.
+lp group hatchling permission set elitemobs.adventurersguild.command false
+lp group hatchling permission set elitemobs.adventurersguild.teleport false
+lp group hatchling permission set elitemobs.alt false
+lp group hatchling permission set elitemobs.arena.start false
+lp group hatchling permission set elitemobs.discord.link false
+lp group hatchling permission set elitemobs.dungeon.tp false
+lp group hatchling permission set elitemobs.command false
+lp group hatchling permission set elitemobs.enchant.command false
+lp group hatchling permission set elitemobs.scroll.command false
+lp group hatchling permission set elitemobs.help false
+lp group hatchling permission set elitemobs.loot.command false
+lp group hatchling permission set elitemobs.money.check.self false
+lp group hatchling permission set elitemobs.money.pay false
+lp group hatchling permission set elitemobs.party false
+lp group hatchling permission set elitemobs.quest.accept false
+lp group hatchling permission set elitemobs.quest.complete false
+lp group hatchling permission set elitemobs.quest.leave false
+lp group hatchling permission set elitemobs.quest.track false
+lp group hatchling permission set elitemobs.quest.npc false
+lp group hatchling permission set elitemobs.quit false
+lp group hatchling permission set elitemobs.rank.command false
+lp group hatchling permission set elitemobs.repair.command false
+lp group hatchling permission set elitemobs.scrap.command false
+lp group hatchling permission set elitemobs.shareitem false
+lp group hatchling permission set elitemobs.shop.custom false
+lp group hatchling permission set elitemobs.shop.dynamic false
+lp group hatchling permission set elitemobs.teleport.spawn false
+lp group hatchling permission set elitemobs.instance.start false
+lp group hatchling permission set elitemobs.unbind.command false
+lp group hatchling permission set elitemobs.rank.npc false
+lp group hatchling permission set elitemobs.shop.dynamic.npc false
+lp group hatchling permission set elitemobs.shop.custom.npc false
+lp group hatchling permission set elitemobs.shop.sell.npc false
+lp group hatchling permission set elitemobs.back.npc false
+lp group hatchling permission set elitemobs.scrap.npc false
+lp group hatchling permission set elitemobs.repair.npc false
+lp group hatchling permission set elitemobs.unbind.npc false
+lp group hatchling permission set elitemobs.enchant.npc false
+lp group hatchling permission set elitemobs.scroll.npc false
+lp group hatchling permission set elitemobs.shop.arrow.npc false
+lp group hatchling permission set elitemobs.gambling.npc false
+lp group hatchling permission set elitemobs.skill.npc false
 # Fishing (EvenMoreFish, /fish): it checks these but gives them to no one by default, so without them
 # /fish and /emf were "unknown command" for players (found by the owner, 2026-09-30).
 lp group hatchling permission set emf.gui true

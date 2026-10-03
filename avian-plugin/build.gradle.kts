@@ -276,6 +276,11 @@ val pluginStack = listOf(
     PinnedPlugin("EconomyShopGUI-7.3.1.jar",
         "https://cdn.spiget.org/file/spiget-resources/69927.jar",
         "SHA-256", "51e19e014e1ea545d13f6094b554a072fedb93ae0681a45bffff27a8728bd869"),
+    // EliteMobs 10.9.7 (GPL-3.0): elites and bosses in the wild (owner, 2026-10-02). Only those: its coins, gear,
+    // shops, guild, classes and skills are off (dev-server/plugins/EliteMobs), and kills pay in our economy.
+    PinnedPlugin("EliteMobs-10.9.7.jar",
+        "https://cdn.modrinth.com/data/ypMp4OVC/versions/PNUL3xYe/EliteMobs.jar",
+        "SHA-512", "34f028c74fe180de1b769774cf0364e79611add3774ad8c1b2971c1f7e3c47802cd086e25606682f05ecbbbe674ad2281f37a64ff2ec3b37c224b97660cd39b7"),
     // RoseStacker 1.5.42 — mobs, items, blocks and spawners. Licence is MIT-Non-Distribution:
     // use, copy and modify are granted, redistribution and resale are not. Fine to run on our own
     // server; it could never be bundled into anything we hand out.

@@ -34,7 +34,7 @@ record EmeraldTradeGuard(ConfigHandle<EconomyConfig> config) implements Listener
         if (!config.get().emeraldTrades() && paysEmeralds(event.getTrade())) {
             event.setCancelled(true);
             event.getPlayer().sendActionBar(Brand.mm("<bad>✖</bad> <soft>Villagers don't pay emeralds here. "
-                    + "Emeralds come from <gold>villager spawners</gold> and mining.</soft>"));
+                    + "Emeralds come from <sun>villager spawners</sun> and mining.</soft>"));
         }
     }
 }
