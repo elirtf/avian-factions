@@ -1,5 +1,6 @@
 import java.net.URI
 import java.security.MessageDigest
+import java.util.zip.ZipFile
 
 plugins {
     id("avian.java-conventions")
@@ -491,6 +492,85 @@ val downloadPaper = tasks.register("downloadPaper") {
     }
 }
 
+// World generation for the new worlds (owner, 2026-10-01/02; docs/research/custom-terrain-and-bosses.md):
+// bigger terrain and more structures in the resource world, Stellarity's End, our netherite rule on top.
+// Packs change every chunk generated after they're added, so they wait for fresh worlds: the image only
+// carries them once `worldgenPacks=true` (gradle.properties), which is flipped at the migration. Incendium
+// (Nether) is installed by hand then: its licence bars AI tools from handling it.
+val worldgenPacks = listOf(
+    PinnedPlugin("tectonic-datapack-3.0.25.zip",
+        "https://cdn.modrinth.com/data/lWDHr9jE/versions/CmzMQNDL/tectonic-datapack-3.0.25.zip",
+        "SHA-512", "7b3c5dee391337b21bdfee5362f4a986417b4fffd6aa617dddaf3444b729b326e3651e7cd87cd7d68d39c301d28767648753784cd50f0a94eda904f85cd6d5bd"),
+    PinnedPlugin("Trek_1.21-26.2_B0.6.2.zip",
+        "https://cdn.modrinth.com/data/h2jngREY/versions/c92jt3Xd/Trek%201.21-26.2%20B0.6.2.zip",
+        "SHA-512", "36be4f658dd2d00fde30c228c946e74cc9a3187e3c48ae052e8a720c2d1739616838d79e2c7dab9d2ae10961320fdb749a8b1a2dbc43c3cf018b62889a3c183f"),
+    PinnedPlugin("hopobettermineshaft-26-1-1-3-6.zip",
+        "https://cdn.modrinth.com/data/9IxCUYAP/versions/oxJRGhVM/hopobettermineshaft-26-1-1-3-6.zip",
+        "SHA-512", "e6cc5fe9ec02533f2f821d0d1bf094cf7cf3e13410718aa7f00b609cdabdd618d0c98a621e4b43b3bc82190fee525caca11157ca615dd085137eb7fba3b280d8"),
+    PinnedPlugin("hopobetterruinedportals-26-1-1-5-0.zip",
+        "https://cdn.modrinth.com/data/hIpLSyga/versions/VD9QVgIl/hopobetterruinedportals-26-1-1-5-0.zip",
+        "SHA-512", "76a09730ef746b79c4b78e9d45ad13d9a28be9829f34948eeba91ef3d2fdf5815f36e2753c2719edd61107decd58cbd3a7cfe8b683d3c0ea1d6457717ad9023f"),
+    PinnedPlugin("hopobetterunderwaterruins-26-1-1-2-7.zip",
+        "https://cdn.modrinth.com/data/BuWCQzqf/versions/fAhWn0su/hopobetterunderwaterruins-26-1-1-2-7.zip",
+        "SHA-512", "2eed3f8c13da416d8716214952a3f6938b5fbe0ae74390b44ac5c2dc8086370d695732afdd184359904ccb1116bfac7d1243881db5b1d5e89437d3813d6d06d9"),
+)
+// Stellarity: patched to drop its 8 enchantments (owner: "keep our stuff"), never stored in git (its licence
+// forbids redistribution); its resource pack is merged into ours by CraftEngine.
+val stellarityPack = PinnedPlugin("Stellarity-6.0.0.zip",
+        "https://cdn.modrinth.com/data/bZgeDzN8/versions/Ty3gI3Su/Stellarity-6.0.0.zip",
+        "SHA-512", "eb0a96612e46510b1eee2fffa949afba0f69798fefb13fc985d7de7edeea92343a209abee012db34c1282db98ef5ae6651fc64e0a5f0f613ac9b99f5cd97dcc6")
+val stellarityResourcePack = PinnedPlugin("Stellarity-6.0.0-RP.zip",
+        "https://cdn.modrinth.com/data/NfszI0rL/versions/3NU5xRwJ/Stellarity-6.0.0-RP.zip",
+        "SHA-512", "1c711e607baa517076bf1224b1ab0dd769461c1281d8b058c3581a2bc1291374afe6ec2501b73930bc96d611e24223c610f27545d0082553e7d182815bfe526c")
+
+val stageWorldgen = tasks.register("stageWorldgen") {
+    description = "Downloads and verifies the world generation packs, patches Stellarity, into build/worldgen."
+    group = "avian"
+    val out = layout.buildDirectory.dir("worldgen")
+    val patch = layout.projectDirectory.file("../tools/datapacks/stellarity-our-enchants-only.js")
+    val packs = worldgenPacks
+    val stellarity = stellarityPack
+    val rp = stellarityResourcePack
+    inputs.property("pins", (packs + stellarity + rp).joinToString { it.hash })
+    inputs.file(patch)
+    outputs.dir(out)
+    doLast {
+        fun fetch(p: PinnedPlugin, to: java.io.File) {
+            to.parentFile.mkdirs()
+            URI.create(p.url).toURL().openStream().use { input -> to.outputStream().use { input.copyTo(it) } }
+            val digest = MessageDigest.getInstance(p.algo).digest(to.readBytes()).joinToString("") { "%02x".format(it) }
+            if (digest != p.hash) {
+                to.delete()
+                throw GradleException("${p.file}: ${p.algo} mismatch, expected ${p.hash}, got $digest")
+            }
+        }
+        val root = out.get().asFile.apply { deleteRecursively(); mkdirs() }
+        val datapacks = root.resolve("world/datapacks")
+        packs.forEach { fetch(it, datapacks.resolve(it.file)) }
+        // Stellarity is unpacked into a folder pack and patched there.
+        val zip = root.resolve("stellarity.zip").also { fetch(stellarity, it) }
+        val dir = datapacks.resolve(stellarity.file.removeSuffix(".zip") + "-avian")
+        ZipFile(zip).use { z ->
+            for (e in z.entries()) {
+                val target = dir.resolve(e.name).canonicalFile
+                if (!target.path.startsWith(dir.canonicalPath)) throw GradleException("Stellarity: bad zip entry ${e.name}")
+                if (e.isDirectory) {
+                    target.mkdirs()
+                } else {
+                    target.parentFile.mkdirs()
+                    z.getInputStream(e).use { i -> target.outputStream().use { i.copyTo(it) } }
+                }
+            }
+        }
+        zip.delete()
+        val node = ProcessBuilder("node", patch.asFile.absolutePath).directory(dir).inheritIO().start()
+        if (node.waitFor() != 0) throw GradleException("Patching Stellarity failed (${patch.asFile.name})")
+        fetch(rp, root.resolve("plugins/Stellarity/resourcepack.zip"))
+        logger.lifecycle("World generation staged in $root: ${packs.size} packs, patched Stellarity, its resource pack")
+    }
+}
+val worldgenInImage = providers.gradleProperty("worldgenPacks").map { it.toBoolean() }.getOrElse(false)
+
 // build/image: the Docker build context. Plugin jars come from run/plugins, where downloadPlugins
 // has just verified every hash and removed anything unpinned.
 tasks.register<Sync>("stageImage") {
@@ -514,5 +594,8 @@ tasks.register<Sync>("stageImage") {
     }
     from(tasks.shadowJar) { into("plugins") }
     from(layout.projectDirectory.dir("../dev-server")) { into("template") }
+    if (worldgenInImage) {
+        from(stageWorldgen) { into("template") }
+    }
     into(layout.buildDirectory.dir("image"))
 }
