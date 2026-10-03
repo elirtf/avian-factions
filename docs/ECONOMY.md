@@ -379,6 +379,24 @@ written-down free route to keys (ADR-0006). Contest places 1–3 grant a 3-day
 `avian.quests.fishing.podium` permission that On the Podium checks for and clears. Quest files are
 in `plugins/Quests/quests/`.
 
+## Elites and bosses (EliteMobs)
+
+Owner, 2026-10-02: EliteMobs only for its wild **elites** (tougher mobs with powers) and **bosses**,
+paying in *our* economy. Its own currency (Elite Coins), gear and enchantments, shops, quests, guild,
+gambling, parties, classes and skill system are all off (`plugins/EliteMobs/`), so nothing competes with
+the enchanter, the 6-enchant cap or the gear ladder. Its skill system would also have given players
+extra hearts, which PvP can't have. Players get none of its commands except boss tracking.
+
+- **Where:** the resource world, the Nether and the End (`ValidWorlds.yml`), never the claiming world, so
+  bases aren't harassed. Today's single `world` is the claiming world, so it is off until the migration
+  adds the resource world. Spawner mobs never become elites (`doSpawnersSpawnEliteMobs: false`).
+- **Rewards** (`economy.conf` `elite-rewards`), to the player who dealt the most damage:
+  - an elite: **$25 × its level**. Elite levels follow nearby players' gear (about 1–20 in vanilla gear),
+    so about $25–500 an elite;
+  - a boss: **25 tokens and a Rare key** up to level 19, **75 tokens and an Epic key** from level 20.
+- **Bosses** come from EliteMobs content packs (its world bosses and events), installed with `/em setup`;
+  the plugin alone ships only test bosses. Pick packs with the owner: they must not hand out gear.
+
 ## Changing prices
 
 Every price on this page is for **one** item. EconomyShopGUI prices an entry for its `stack-size`

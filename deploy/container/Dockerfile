@@ -13,7 +13,8 @@ RUN apt-get update \
     && mkdir /data && chown avian:avian /data
 
 COPY --chown=root:root . /opt/avian/
-RUN chmod 0755 /opt/avian/bin/* && ln -s /opt/avian/bin/avian-console /usr/local/bin/avian-console
+# Readable by the server user whatever mode a file had in the build context (a 0600 file once broke start-up).
+RUN chmod -R a+rX /opt/avian && chmod 0755 /opt/avian/bin/* && ln -s /opt/avian/bin/avian-console /usr/local/bin/avian-console
 
 # Never root: a Paper or plugin exploit stays inside this user and this container.
 USER avian

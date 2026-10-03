@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         maven("https://jitpack.io") { name = "jitpack" }   // VaultAPI is published here only
         maven("https://repo.rosewooddev.io/repository/public/") { name = "rosewood" }   // RoseStacker API
         maven("https://repo.extendedclip.com/releases/") { name = "extendedclip" }   // PlaceholderAPI
+        maven("https://repo.magmaguy.com/releases/") { name = "magmaguy" }   // EliteMobs API
     }
 }
 
