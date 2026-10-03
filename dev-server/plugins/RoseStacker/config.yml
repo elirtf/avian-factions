@@ -289,8 +289,10 @@ global-entity-settings:
   stack-flying-downwards: false
 
   # Should we only stack entities spawned from spawners?
+  # Avian (owner, 2026-10-01): yes. Our plugin narrows it further to spawners players placed, and keeps
+  # villagers, iron golems and silverfish unstacked (economy.conf stacking).
   # Default: false
-  only-stack-from-spawners: false
+  only-stack-from-spawners: true
 
   # Should we only avoid stacking entities spawned from trial spawners?
   # Default: true
@@ -786,8 +788,10 @@ global-spawner-settings:
   spawn-range: 4
 
   # Should mobs spawned from spawners spawn directly into nearby stacks?
+  # Avian (2026-10-01): no. A mob spawned straight into a stack skips the stack check, so villagers,
+  # golems and silverfish could stack after all; separate mobs merge through our rules (economy.conf).
   # Default: true
-  spawn-into-nearby-stacks: true
+  spawn-into-nearby-stacks: false
 
   # Should only spawners placed by players spawn mobs?
   # Note that a spawner will only be detected if it was generated in the world after RoseStacker was installed

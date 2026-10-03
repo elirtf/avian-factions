@@ -24,8 +24,8 @@ pages:
         sell: 1350
       emerald_block:
         material: EMERALD_BLOCK
-        buy: 373
-        sell: -1
+        buy: 9000
+        sell: 2250
       netherite_block:
         material: NETHERITE_BLOCK
         buy: 108000
@@ -55,10 +55,11 @@ pages:
         buy: 5400
         sell: 1350
         stack-size: 9
+      # AVIAN: the emerald economy (owner, 2026-10-01): $250 each from villager spawners and mining.
       emerald:
         material: EMERALD
-        buy: 355
-        sell: -1
+        buy: 9000
+        sell: 2250
         stack-size: 9
       netherite_ingot:
         material: NETHERITE_INGOT
@@ -87,7 +88,7 @@ pages:
         sell: -1
       emerald_ore:
         material: EMERALD_ORE
-        buy: 150
+        buy: -1
         sell: -1
       ancient_debris:
         material: ANCIENT_DEBRIS

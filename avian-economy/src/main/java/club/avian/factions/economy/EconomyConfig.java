@@ -3,10 +3,13 @@ package club.avian.factions.economy;
 import club.avian.factions.api.config.ConfigErrors;
 import club.avian.factions.api.config.ConfigSpec;
 import club.avian.factions.api.config.RequiresRestart;
+import org.bukkit.entity.EntityType;
 import org.spongepowered.configurate.objectmapping.ConfigSerializable;
 import org.spongepowered.configurate.objectmapping.meta.Comment;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /** {@code economy.conf} — currencies, starting balances and the sell table (spec §12, §30). */
@@ -16,7 +19,7 @@ public final class EconomyConfig {
     public static final ConfigSpec<EconomyConfig> SPEC = ConfigSpec.of("economy.conf", EconomyConfig.class)
             .version(1)
             .validate(EconomyConfig::validate)
-            .freeForm("sell-values")
+            .freeForm("sell-values", "spawner-drops")
             .build();
 
     @RequiresRestart
@@ -58,6 +61,41 @@ public final class EconomyConfig {
     private boolean villagerIronGolems = false;
 
     @Comment("""
+            Which mobs RoseStacker may stack (owner, 2026-10-01). Stacking turns many mobs into one,
+            so it decides how much a spawner farm earns per kill.
+              only-player-placed-spawners: only mobs from spawners players placed stack; wild mobs
+                and mobs from dungeon, fortress or stronghold spawners never do.
+              never-stack: entity types that never stack at all, whatever spawned them. Villagers,
+                iron golems and silverfish feed the emerald economy, so each one is a single kill.""")
+    private Stacking stacking = new Stacking();
+
+    @Comment("""
+            Extra drops for mobs from spawners players placed, by entity type: item and amount per death,
+            however it dies. The emerald economy (owner, 2026-10-01): a villager spawner (the top tier)
+            pays one emerald a villager. Wild, bred or dungeon-spawner mobs never drop these.""")
+    private Map<String, Map<String, Integer>> spawnerDrops = new LinkedHashMap<>(Map.of("VILLAGER", new LinkedHashMap<>(Map.of("EMERALD", 1))));
+
+    @Comment("""
+            Whether villagers may pay emeralds in trades. false: they still sell things for emeralds,
+            but never buy crops, paper or meat with them, since emeralds sell for money and those trades
+            would make any farm free money. Emeralds come from villager spawners and mining.""")
+    private boolean emeraldTrades = false;
+
+    @ConfigSerializable
+    public static final class Stacking {
+        private boolean onlyPlayerPlacedSpawners = true;
+        private List<String> neverStack = List.of("VILLAGER", "IRON_GOLEM", "SILVERFISH");
+
+        public boolean onlyPlayerPlacedSpawners() {
+            return onlyPlayerPlacedSpawners;
+        }
+
+        public List<String> neverStack() {
+            return neverStack;
+        }
+    }
+
+    @Comment("""
             Fishing skill XP (AuraSkills) for custom-enchant catches. A Double Catch that doubles the fish
             earns the catch's XP again when true; Seasoned Angler adds this fraction per level
             (0.10 = +10 % a level). Vanilla XP orbs are the enchant's own business.""")
@@ -84,6 +122,7 @@ public final class EconomyConfig {
         values.put("ENDER_PEARL", 60L);
         values.put("BLAZE_ROD", 120L);
         values.put("IRON_INGOT", 40L);
+        values.put("EMERALD", 250L);   // the emerald economy (owner, 2026-10-01)
         return values;
     }
 
@@ -123,6 +162,18 @@ public final class EconomyConfig {
         return villagerIronGolems;
     }
 
+    public Stacking stacking() {
+        return stacking;
+    }
+
+    public Map<String, Map<String, Integer>> spawnerDrops() {
+        return spawnerDrops;
+    }
+
+    public boolean emeraldTrades() {
+        return emeraldTrades;
+    }
+
     public boolean doubleCatchSkillXp() {
         return doubleCatchSkillXp;
     }
@@ -138,6 +189,18 @@ public final class EconomyConfig {
         e.check(cfg.startingGems >= 0, "starting-gems", "must be >= 0");
         e.check(cfg.sugarCaneTokenChance >= 0 && cfg.sugarCaneTokenChance <= 1, "sugar-cane-token-chance", "must be 0-1");
         e.check(cfg.sugarCaneTokens >= 0, "sugar-cane-tokens", "must be >= 0");
+        cfg.spawnerDrops.forEach((type, drops) -> {
+            e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
+                    "spawner-drops", "\"%s\" is not an entity type (e.g. VILLAGER)", type);
+            drops.forEach((item, amount) -> {
+                e.check(org.bukkit.Material.matchMaterial(item) != null, "spawner-drops." + type, "\"%s\" is not an item", item);
+                e.check(amount >= 0, "spawner-drops." + type, "amounts must be >= 0");
+            });
+        });
+        for (var type : cfg.stacking.neverStack) {
+            e.check(Arrays.stream(EntityType.values()).anyMatch(t -> t.name().equals(type)),
+                    "stacking.never-stack", "\"%s\" is not an entity type (e.g. VILLAGER)", type);
+        }
         e.check(cfg.seasonedAnglerSkillXpPerLevel >= 0, "seasoned-angler-skill-xp-per-level", "must be >= 0");
         for (var entry : cfg.sellValues.entrySet()) {
             if (org.bukkit.Material.matchMaterial(entry.getKey()) == null) {

@@ -65,6 +65,14 @@ public final class EconomyModule implements AvianModule {
                 () -> java.util.concurrent.ThreadLocalRandom.current().nextDouble(),
                 mainThread, ctx.logger()));
         ctx.registerListener(new VillagerGolemGuard(config));
+        // The emerald economy (owner, 2026-10-01): only mobs from spawners players placed stack (never
+        // villagers, golems or silverfish), spawner villagers drop emeralds, and trades never pay them.
+        var placedSpawnerMark = new PlacedSpawnerMark(ctx.plugin());
+        if (Bukkit.getPluginManager().getPlugin("RoseStacker") != null) {
+            ctx.registerListener(new StackingRules(placedSpawnerMark, config));
+        }
+        ctx.registerListener(new SpawnerDrops(config, placedSpawnerMark));
+        ctx.registerListener(new EmeraldTradeGuard(config));
 
         // The Harvester Hoe (spec §31): /hoe to buy and upgrade, break cane with it to harvest.
         var hoe = ctx.config(HoeConfig.SPEC);

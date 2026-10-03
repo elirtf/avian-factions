@@ -74,3 +74,9 @@ pages:
         spawnertype: IRON_GOLEM
         buy: 600000
         sell: -1
+      # Tier 6, the emerald economy (owner, 2026-10-01): one emerald ($250) a villager.
+      villager_spawner:
+        material: SPAWNER
+        spawnertype: VILLAGER
+        buy: 1000000
+        sell: -1
