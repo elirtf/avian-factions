@@ -180,6 +180,16 @@ our CA:
 - a delete through the server was refused (403);
 - the hourly loop ran on its own and stopped at once on SIGTERM.
 
+Tested 2026-10-16 on k3d, through the real commands:
+- the pod runs both containers; with no Secret, the sidecar only logs and the game runs;
+- `./dev k8s seal` sealed `backup.env`, and the cluster opened it;
+- `./dev k8s backup` stored the 341 MiB test world as 31 MiB in 13 s; `backups` listed it;
+  `fetch-backup` downloaded a 36 MB file with the world, plugin data, player lists and all 60 tables.
+- Found there: Paper's console can't run `save-off` for a moment right after start-up, and the error goes
+  only to stdout, not `latest.log`. The sidecar now checks each save command's reply ("Automatic saving is
+  now disabled", "Saving the game") and stops at once without one.
+- `./dev k8s restore` of the fetched file was not re-run this time (proven 2026-09-30, same archive layout).
+
 ### New worlds with the custom terrain
 
 The owner's picks (2026-10-02; `docs/research/custom-terrain-and-bosses.md`): Tectonic (terrain and

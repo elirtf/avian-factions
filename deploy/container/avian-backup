@@ -26,7 +26,15 @@ fi
 
 say() { echo "[backup $(date -u +%FT%TZ)] $*"; }
 
-send() { avian-console "$1" >/dev/null 2>&1 || return 1; }
+# send <command> [<reply pattern>]: one console command; with a pattern, it fails unless the server's
+# reply matches. Right after start-up Paper's console can still be missing its world: save-off then
+# throws, and only to stdout, never to latest.log (seen on k3d, 2026-10-16). So success is the expected
+# reply, and a backup stops at once instead of waiting out the save timeout.
+send() {
+    local out
+    out="$(avian-console "$1" 2>&1)" || return 1
+    [[ -z "${2:-}" ]] || grep -q -E "$2" <<< "$out"
+}
 
 configured() {
     [[ -n "${RESTIC_REPOSITORY:-}" && -n "${RESTIC_PASSWORD:-}" ]]
@@ -74,7 +82,7 @@ backup_once() {
 
     local since status=0
     since=$(wc -l < "$log")
-    send "save-off" || { say "The server isn't reading its console: skipped."; return 1; }
+    send "save-off" "Automatic saving is now disabled|Saving is already turned off" || { say "save-off failed (server busy or still starting): skipped."; send "save-on" || true; return 1; }
     # Saves go back on however the backup ends.
     backup_paused "$since" || status=$?
     send "save-on" || say "Could not send save-on; check the server: ./dev k8s cmd \"save-on\""
@@ -84,7 +92,7 @@ backup_once() {
 # With world saves paused: flush, dump the database, archive.
 backup_paused() {
     local since=$1 waited=0
-    send "save-all flush"
+    send "save-all flush" "Saving the game|Saved the game" || { say "save-all failed: no backup."; return 1; }
     until tail -n +"$((since + 1))" "$log" | grep -q "Saved the game"; do
         (( waited++ >= 180 )) && { say "The save did not finish within 3 minutes: no backup."; return 1; }
         sleep 1
