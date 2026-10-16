@@ -1,0 +1,161 @@
+{
+  "configVersion": 1,
+  "id": "6f1c2a10-7d3e-4c1a-9b21-000000000010",
+  "name": "ground-item-cleanup",
+  "commands": [
+    {
+      "command": "minecraft:tellraw @a [\"\",{\"text\":\"🧹 \",\"color\":\"#FFD23F\"},{\"text\":\"Items on the ground are cleared in 60 seconds. Pick up what you want to keep!\",\"color\":\"#B8B8C8\"}]",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "description": "warning: 60 s"
+    },
+    {
+      "command": "minecraft:tellraw @a [\"\",{\"text\":\"🧹 \",\"color\":\"#FFD23F\"},{\"text\":\"Items on the ground are cleared in 30 seconds.\",\"color\":\"#B8B8C8\"}]",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 30
+      },
+      "description": "warning: 30 s"
+    },
+    {
+      "command": "minecraft:tellraw @a [\"\",{\"text\":\"🧹 \",\"color\":\"#FFD23F\"},{\"text\":\"Items on the ground are cleared in 10 seconds!\",\"color\":\"#FF8A3D\"}]",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 50
+      },
+      "description": "warning: 10 s"
+    },
+    {
+      "command": "scoreboard objectives add avian_item_age dummy",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 56
+      },
+      "description": "the age scoreboard (an error after the first time is fine)"
+    },
+    {
+      "command": "execute as @e[type=minecraft:item] store result score @s avian_item_age run data get entity @s Age",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 57
+      },
+      "description": "each item's age, in ticks"
+    },
+    {
+      "command": "minecraft:kill @e[type=minecraft:item,scores={avian_item_age=1200..}]",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 58
+      },
+      "description": "only items over a minute old: fresh drops (a death a moment ago) stay"
+    },
+    {
+      "command": "minecraft:tellraw @a [\"\",{\"text\":\"🧹 \",\"color\":\"#FFD23F\"},{\"text\":\"Cleared the items on the ground (anything dropped in the last minute was left).\",\"color\":\"#7CFF4F\"}]",
+      "gender": "CONSOLE",
+      "interval": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 0
+      },
+      "delay": {
+        "days": 0,
+        "hours": 0,
+        "minutes": 0,
+        "seconds": 58
+      },
+      "description": "done"
+    }
+  ],
+  "interval": {
+    "days": 0,
+    "hours": 0,
+    "minutes": 10,
+    "seconds": 0
+  },
+  "times": [],
+  "random": 1,
+  "days": [
+    "MONDAY",
+    "TUESDAY",
+    "WEDNESDAY",
+    "THURSDAY",
+    "FRIDAY",
+    "SATURDAY",
+    "SUNDAY"
+  ],
+  "executionLimit": -1,
+  "commandExecutionMode": "ALL",
+  "commandExecutionInterval": {
+    "days": 0,
+    "hours": 0,
+    "minutes": 0,
+    "seconds": 0
+  },
+  "active": true,
+  "resetExecutionsAfterRestart": false,
+  "condition": {
+    "conditionType": "SIMPLE",
+    "conditions": [],
+    "simpleCondition": {
+      "conditionParamFields": []
+    }
+  },
+  "events": []
+}

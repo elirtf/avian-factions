@@ -25,7 +25,7 @@ run/
       trails.conf            ← particle trails for /trails (particle, colours, name)
     Essentials/config.yml    ← homes, teleporting, warps
     FactionsUUID/config/     ← factions, land, power, protection, role names
-    CommandTimer/timers/     ← when raiding is allowed
+    CommandTimer/timers/     ← when raiding is allowed, and the ground-item cleanup
     EconomyShopGUI/          ← shop prices and menus
     RoseStacker/config.yml   ← how many mobs/spawners stack
     WorldGuard/              ← protected areas like spawn
@@ -121,6 +121,19 @@ The times are in **server time**. Each rule is a file in `run/plugins/CommandTim
 
 By hand, in the console: `fa set grace on 3h` stops explosions for three hours, `fa set grace off`
 allows them again, and `f grace` shows the current state.
+
+### Clearing items on the ground
+
+Every 10 minutes (owner, 2026-10-16), `timers/ground-item-cleanup.json` clears dropped items, for performance.
+It's needed now that gen blocks and chunk busters make a lot of drops, and faction land stays loaded.
+
+- **Warnings:** everyone is told at 60, 30 and 10 seconds before.
+- **Only items over a minute old:** each item's age goes onto a scoreboard (`avian_item_age`) and only those
+  on the ground for over a minute are removed. Someone who died a moment ago keeps their drops.
+- **Dropped items only:** mobs (stacked spawner mobs included), item frames, armour stands and logout bodies
+  are never touched.
+- **Changing it:** the interval is the file's top `interval`. Each step's `delay` must stay **under a
+  minute**: CommandTimer silently skipped the steps at 60 seconds or more when this was tested.
 
 ---
 
