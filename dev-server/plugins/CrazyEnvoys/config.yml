@@ -23,7 +23,7 @@ root:
   # 
   # If the option is set to blank, it'll pick whatever plugin it feels like picking.
   # Set the value to None if you do not want any.
-  hologram-plugin: ''
+  hologram-plugin: DecentHolograms   # floating names over envoy crates (owner, 2026-10-16)
   # This option will tell the plugin to send all messages as action bars or messages in chat.
   # 
   # send_message -> sends messages in chat.

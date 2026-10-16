@@ -349,6 +349,11 @@ val pluginStack = listOf(
     PinnedPlugin("CrazyEnvoys-1.15.0.jar",
         "https://cdn.modrinth.com/data/mqwRS0rH/versions/1KifVd5L/CrazyEnvoys-1.15.0.jar",
         "SHA-512", "929d59ecd429d16156919bda62e219c53e6a9afd04cc1400c54037a3cb1575247cf60343abac9eaea44504f9020b88f85dc4fb1bb09b135b9c9a3bcab2381a3f"),
+    // DecentHolograms 2.10.1 (GPL-3.0): the floating name above each envoy crate, so players can spot them
+    // (owner, 2026-10-16). Chosen over FancyHolograms, whose 26.1.2 builds are still alpha/beta.
+    PinnedPlugin("DecentHolograms-2.10.1.jar",
+        "https://cdn.modrinth.com/data/w02MKsTg/versions/Fva1FgWm/DecentHolograms-2.10.1.jar",
+        "SHA-512", "4be371d0b2258eb6d255b14155a730f8bc5998eee826e5fed54d402a1b3e315e7c03941f3b654ef648d800f74911ef25355a0d370a85e3c062eba74aad1ed678"),
     // RoseStacker 1.5.42 — mobs, items, blocks and spawners. Licence is MIT-Non-Distribution:
     // use, copy and modify are granted, redistribution and resale are not. Fine to run on our own
     // server; it could never be bundled into anything we hand out.

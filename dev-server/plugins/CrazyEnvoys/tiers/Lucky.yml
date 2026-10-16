@@ -12,12 +12,13 @@ Settings:
     Toggle: false
     Random: true
     Max-Bulk: 1
-  Hologram-Toggle: false   # no hologram plugin installed
+  Hologram-Toggle: true
   Hologram-Height: 1.5
-  Hologram-Range: 8
+  Hologram-Range: 48   # blocks away the name shows
   Hologram:
-    - '<bold><#4DA3FF>✦ Rare Envoy ✦</#4DA3FF></bold>'
-    - '%crazyenvoys_crates_time%'
+    # Legacy colours: CrazyEnvoys turns #RRGGBB and &-codes into colours here (not MiniMessage).
+    - '#4DA3FF&l✦ Rare Envoy ✦'
+    - '&7▶ Click to claim'
   Firework-Toggle: true
   Firework-Colors:
     - 'Aqua'
