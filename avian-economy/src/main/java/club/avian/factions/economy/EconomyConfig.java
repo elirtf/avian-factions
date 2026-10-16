@@ -56,6 +56,14 @@ public final class EconomyConfig {
     private long sugarCaneTokens = 1;
 
     @Comment("""
+            Biomes that count as icy waters for the Ice Fisher quest (owner, 2026-10-16: 1,000 catches
+            there earns the tag). A catch counts when the hook lands in one of these; the running total
+            is %avian_ice_fish%, kept on the player.""")
+    private List<String> iceFishingBiomes = List.of("frozen_river", "frozen_ocean", "deep_frozen_ocean", "cold_ocean",
+            "deep_cold_ocean", "snowy_plains", "snowy_taiga", "snowy_beach", "ice_spikes", "grove", "snowy_slopes",
+            "frozen_peaks", "jagged_peaks");
+
+    @Comment("""
             Whether villagers may summon iron golems. false stops vanilla iron farms, which would
             otherwise produce free what iron golem spawners (the top spawner tier) are sold for.""")
     private boolean villagerIronGolems = false;
@@ -201,6 +209,10 @@ public final class EconomyConfig {
 
     public Map<String, Long> sellValues() {
         return sellValues;
+    }
+
+    public List<String> iceFishingBiomes() {
+        return iceFishingBiomes;
     }
 
     public double sugarCaneTokenChance() {

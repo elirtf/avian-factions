@@ -1,0 +1,27 @@
+# AVIAN: Ice Fisher (owner, 2026-10-16): catch 1,000 fish in an ice biome, earn the Ice Fisher tag. Quests
+# can't filter catches by biome, so AvianFactions counts them (economy.conf ice-fishing-biomes: the hook
+# must land in icy water) as %avian_ice_fish%, and this quest checks that total.
+tasks:
+  icefish:
+    type: "placeholderapi_evaluate"
+    placeholder: "%avian_ice_fish%"
+    evaluates: "1000"
+    operator: "GREATER_THAN_OR_EQUAL_TO"
+display:
+  name: "&#9FE8FF&lIce Fisher"
+  lore-normal:
+    - "&7Catch &f1,000 fish &7in icy waters:"
+    - "&7frozen rivers and oceans, snowy plains,"
+    - "&7ice spikes and the snowy mountains."
+    - ""
+    - "&7Reward: the &#9FE8FF&l❄ Ice Fisher &7tag."
+  type: "PACKED_ICE"
+rewards:
+  - "lp user {player} permission set deluxetags.tag.icefisher true"
+rewardstring:
+  - "&#9FE8FF❄ You earned the &lIce Fisher&r&#9FE8FF tag! Wear it with /tags."
+options:
+  category: "fishing"
+  repeatable: false
+  autostart: true
+  counts-towards-limit: false

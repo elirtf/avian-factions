@@ -111,6 +111,18 @@ categories:
 
 deluxetags:
   # Earned
+  icefisher:
+    order: 1
+    category: earned
+    tag: ' <bold><gradient:#E8FBFF:#7FD8FF:#3F8CFF>❄ Ice Fisher</gradient></bold>'
+    displayname: '<bold><gradient:#E8FBFF:#7FD8FF:#3F8CFF>❄ Ice Fisher'
+    description:
+    - '<#B8B8C8>1,000 fish pulled from icy waters.'
+    - '<#B8B8C8>The Ice Fisher quest. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: PACKED_ICE
+    data: 0
+    permission: deluxetags.tag.icefisher
   aerie:
     order: 0
     category: earned
