@@ -146,6 +146,31 @@ Harvester Hoe, wands) are never sold.
 Tiers live in `sellwand.conf`. Admins, crates and shops hand them out with
 `/sellwand give <player> <tier> [amount]` (`avian.sellwand.admin`).
 
+## Mob coins
+
+Owner, 2026-10-16 (#28): **UltimateMobCoins** 2.1.1 (MIT). It was boot-tested on Paper 26.1.2 with RoseStacker
+and on k3d with the whole stack.
+
+- **Drops:** every mob has a **5% chance of 1–2 coins** (the plugin's default). Bosses and rare mobs drop more:
+  Elder Guardian, Wither, Warden and the Ender Dragon always drop (10–20, 25–50, 15–30 and 50–100); evokers and
+  ravagers have 25% for 2–4. Looting raises it. A spawner stack killed in one hit pays **per mob**
+  (RoseStacker hook), so a busy farm (~2,000 kills an hour) makes about **150 coins an hour**.
+  File: `plugins/UltimateMobCoins/mobcoins.yml`.
+- **Coin Collector I–V**, our enchantment (`docs/ENCHANTS.md`): **+20% coins a level** on a melee weapon (V doubles them).
+- **The shop:** `/mobcoins` opens a **rotating shop**: 8 of 16 items at a time, new stock every 12 hours, each
+  with a per-refresh stock. A Common key is about an hour of farming.
+
+  | Group | Items (mob coins) |
+  |---|---|
+  | Keys | Common 150 · Rare 450 · Epic 1,100 |
+  | 2× sell boost, 15 min | 120 (EconomyShopGUI `sell-multipliers.mobcoinboost`, a timed permission; the higher of this and the Aerie's applies) |
+  | Raiding | 4 creeper eggs 80 · 64 TNT 60 · chunk buster 150 · horizontal / vertical obsidian gen 250 |
+  | XP and spawners | 32 XP bottles 40 · 64 for 70 · zombie spawner 900 · skeleton spawner 1,100 |
+  | Coin Collector books | I 200 · III 700 · V 2,000 |
+
+- **Players can:** `/mobcoins balance`, `pay`, `withdraw` (coins as an item) and `top`. The spinner is off
+  (its prizes aren't ours). Coins live in MariaDB, in a table called `users` (the plugin has no prefix option).
+
 ## Merging keys
 
 Owner, 2026-10-16: `/mergekeys` (or `/keymerge`) trades spare crate keys for one of the next tier up.

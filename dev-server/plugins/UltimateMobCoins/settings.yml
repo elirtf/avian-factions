@@ -1,0 +1,103 @@
+storage:
+  # Supported types are: SQLITE, MYSQL, MARIADB, POSTGRESQL and MONGODB
+  type: MARIADB   # AVIAN: our MariaDB (tools/sync-config fills these from .env or the Secret)
+  host: ${AVIAN_DB_HOST:-127.0.0.1}
+  port: ${AVIAN_DB_PORT:-3306}
+  database: ${AVIAN_DB_NAME:-avian}
+  username: ${AVIAN_DB_USER:-avian}
+  password: ${AVIAN_DB_PASSWORD:-avian}
+  pool-settings:
+    maximum-pool-size: 5
+    minimum-idle: 2
+    maximum-lifetime: 1800000
+    connection-timeout: 5000
+  properties:
+    useUnicode: true
+    characterEncoding: utf8
+  
+  # Prefix for the collections created in mongodb by UltimateMobCoins
+  mongodb-collection-prefix: ''
+  # If you need to use a custom uri for MongoDB, use this.
+  # For information about this, please see: https://docs.mongodb.com/manual/reference/connection-string/
+  mongodb-connection-uri: ''
+
+mobcoins:
+  disabled_worlds: []
+  starting_balance: 0.0
+  drops:
+    auto-redeem-on-pickup: true
+    auto-pickup: false
+    allow-hopper-pickup: false
+  format: '###,##0.00'
+  format-locale: en-US
+  item:
+    material: SUNFLOWER
+    name: <bold><gradient:#FFD23F:#FF8A3D>Mob Coin</gradient></bold> <#6E6E80>(right-click to redeem)
+    lore:
+    - <#B8B8C8>Spend mob coins in /mobcoins:
+    - <#B8B8C8>a shop that changes every 12 hours.
+    - <reset>
+    - '<#6E6E80>◆ <#B8B8C8Holds  <#FFD23F><amount> mob coins'
+    - <reset>
+    - '<#7CFF4F>▶ Right-click <#6E6E80>· <#B8B8C8redeem'
+    glow: false
+    model-data: null
+    # Players can redeem their coins by clicking on the item.
+    self-redeemable: true
+  sounds:
+    drop:
+      enabled: true
+      sound: ENTITY_EXPERIENCE_ORB_PICKUP   # AVIAN: not a dragon growl on every coin
+      volume: 1.0
+      pitch: 1.0
+    pickup:
+      enabled: true
+      sound: ENTITY_PLAYER_LEVELUP
+      volume: 1.0
+      pitch: 1.0
+  animations:
+    drop:
+      enabled: false
+      type: CIRCLE
+      particle: SPELL_WITCH
+      duration: 10
+  looting-enchant-multiplier: true
+  loss-on-death:
+    # Type options: PERCENTAGE or FIXED
+    type: percentage
+    # Value supports decimals. So 2.25 is 2.25% or 2.25 coins depending on the type set above.
+    value: 0.0
+  leaderboard:
+    enabled: false
+    show-zero: false
+  earnings-penalty:
+    enabled: false
+    threshold: 1000.0
+    per:
+      value: 1
+      unit: minutes
+    # Type options: PERCENTAGE or FIXED
+    type: percentage
+    # Value supports decimals. So 2.25 is 2.25% or 2.25 coins depending on the type set above.
+    value: 0.0
+
+log:
+  pay: true
+  withdraw: true
+  spinner: true
+
+# Changing the command name or aliases requires you to restart the server.
+command:
+  name: mobcoins
+  aliases:
+  - mobcoin
+  default_shop: rotating_shop   # AVIAN: /mobcoins opens the rotating shop straight away
+  withdraw:
+    # When disabled, the amount will always be converted to an integer.
+    # Changing this setting requires a server restart.
+    amount-double-type: true
+
+update:
+  notify-on-join: false
+
+config-version: 11

@@ -1,0 +1,365 @@
+# AVIAN: the mob coin shop (owner, 2026-10-16; #28). /mobcoins opens it. 8 of these 16 show at a time, and the
+# selection changes every 12 hours. Prices assume ~150 coins an hour from a busy farm: a Common key is about an
+# hour. Stock is how many of each can be bought per refresh. Colour on the top and bottom rows only (the menu kit).
+title: '<bold><gradient:#FFD23F:#FF8A3D>⛃ Mob Coin Shop</gradient></bold>'
+type: ROTATING_SHOP
+size: 36
+close-on-click: false
+update-interval: 20
+shop-slots: [10, 12, 14, 16, 19, 21, 23, 25]
+refresh-time: 43200
+sounds:
+  opening:
+    enabled: true
+    sound: BLOCK_CHEST_OPEN
+    volume: 0.6
+    pitch: 1.4
+  closing:
+    enabled: true
+    sound: BLOCK_CHEST_CLOSE
+    volume: 0.6
+    pitch: 1.4
+
+items:
+  common_key:
+    item:
+      - material:TRIPWIRE_HOOK
+      - amount:1
+      - 'name:<#C9C9C9><bold>Common Key'
+      - 'lore:<#B8B8C8>One Common crate key.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 150
+    stock: 3
+    actions:
+      - '[command] crazycrates give virtual Common 1 %player_name% -s'
+  rare_key:
+    item:
+      - material:TRIPWIRE_HOOK
+      - amount:1
+      - 'name:<#4DA3FF><bold>Rare Key'
+      - 'lore:<#B8B8C8>One Rare crate key.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 450
+    stock: 2
+    actions:
+      - '[command] crazycrates give virtual Rare 1 %player_name% -s'
+  epic_key:
+    item:
+      - material:TRIPWIRE_HOOK
+      - amount:1
+      - 'name:<#B07FE0><bold>Epic Key'
+      - 'lore:<#B8B8C8>One Epic crate key.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 1100
+    stock: 1
+    actions:
+      - '[command] crazycrates give virtual Epic 1 %player_name% -s'
+  sell_boost:
+    item:
+      - material:SUNFLOWER
+      - amount:1
+      - 'name:<bold><gradient:#4CE08A:#FFD23F>2× Sell Boost · 15 min'
+      - 'lore:<#B8B8C8>Everything you sell pays double for'
+      - 'lore:<#B8B8C8>15 minutes: /sell, the hoe, sell wands.'
+      - 'lore:<#B8B8C8>(The higher of this and the Aerie bonus applies.)'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 120
+    stock: 2
+    actions:
+      - '[command] lp user %player_name% permission settemp EconomyShopGUI.sell-multipliers.mobcoinboost true 15m'
+      - '[command] minecraft:tellraw %player_name% ["",{"text":"💰 2× sell boost on for 15 minutes!","color":"#4CE08A"}]'
+  creeper_eggs:
+    item:
+      - material:CREEPER_SPAWN_EGG
+      - amount:4
+      - 'name:<#7CFF4F><bold>4 Creeper Spawn Eggs'
+      - 'lore:<#B8B8C8>For breaching walls.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 80
+    stock: 3
+    actions:
+      - '[command] minecraft:give %player_name% creeper_spawn_egg 4'
+  tnt:
+    item:
+      - material:TNT
+      - amount:64
+      - 'name:<#FF5C5C><bold>64 TNT'
+      - 'lore:<#B8B8C8>A stack of TNT for raiding.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 60
+    stock: 3
+    actions:
+      - '[command] minecraft:give %player_name% tnt 64'
+  chunk_buster:
+    item:
+      - material:END_PORTAL_FRAME
+      - amount:1
+      - 'name:<bold><gradient:#FF7A45:#C58CFF>Chunk Buster'
+      - 'lore:<#B8B8C8>Clears a chunk of your land.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 150
+    stock: 2
+    actions:
+      - '[command] chunkbuster give %player_name% 1'
+  gen_obsidian_h:
+    item:
+      - material:OBSIDIAN
+      - amount:1
+      - 'name:<#B07FE0><bold>Horizontal Obsidian Gen'
+      - 'lore:<#B8B8C8>Lays obsidian walls, paying per block.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 250
+    stock: 1
+    actions:
+      - '[command] genblock give %player_name% horizontal_obsidian 1'
+  gen_obsidian_v:
+    item:
+      - material:OBSIDIAN
+      - amount:1
+      - 'name:<#B07FE0><bold>Vertical Obsidian Gen'
+      - 'lore:<#B8B8C8>Lays obsidian walls downward, paying per block.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 250
+    stock: 1
+    actions:
+      - '[command] genblock give %player_name% vertical_obsidian 1'
+  xp_32:
+    item:
+      - material:EXPERIENCE_BOTTLE
+      - amount:32
+      - 'name:<#7CFF4F><bold>32 XP Bottles'
+      - 'lore:<#B8B8C8>XP for the Enchanter.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 40
+    stock: 3
+    actions:
+      - '[command] minecraft:give %player_name% experience_bottle 32'
+  xp_64:
+    item:
+      - material:EXPERIENCE_BOTTLE
+      - amount:64
+      - 'name:<#7CFF4F><bold>64 XP Bottles'
+      - 'lore:<#B8B8C8>XP for the Enchanter.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 70
+    stock: 2
+    actions:
+      - '[command] minecraft:give %player_name% experience_bottle 64'
+  zombie_spawner:
+    item:
+      - material:SPAWNER
+      - amount:1
+      - 'name:<#7CFF4F><bold>Zombie Spawner'
+      - 'lore:<#B8B8C8>A rare find in this shop.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 900
+    stock: 1
+    actions:
+      - '[command] rs give spawner %player_name% zombie 1 1'
+  skeleton_spawner:
+    item:
+      - material:SPAWNER
+      - amount:1
+      - 'name:<#C9C9C9><bold>Skeleton Spawner'
+      - 'lore:<#B8B8C8>A rare find in this shop.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 1100
+    stock: 1
+    actions:
+      - '[command] rs give spawner %player_name% skeleton 1 1'
+  coin_collector_1:
+    item:
+      - material:ENCHANTED_BOOK
+      - amount:1
+      - 'name:<bold><gradient:#FFD23F:#FF8A3D>Coin Collector I'
+      - 'lore:<#B8B8C8>A weapon enchant: 20% more mob coins.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 200
+    stock: 2
+    actions:
+      - '[command] minecraft:give %player_name% enchanted_book[stored_enchantments={"avian:coin_collector":1}] 1'
+  coin_collector_3:
+    item:
+      - material:ENCHANTED_BOOK
+      - amount:1
+      - 'name:<bold><gradient:#FFD23F:#FF8A3D>Coin Collector III'
+      - 'lore:<#B8B8C8>A weapon enchant: 60% more mob coins.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 700
+    stock: 1
+    actions:
+      - '[command] minecraft:give %player_name% enchanted_book[stored_enchantments={"avian:coin_collector":3}] 1'
+  coin_collector_5:
+    item:
+      - material:ENCHANTED_BOOK
+      - amount:1
+      - 'name:<bold><gradient:#FFD23F:#FF8A3D>Coin Collector V'
+      - 'lore:<#B8B8C8>A weapon enchant: double mob coins.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Price  <#FFD23F><price> mob coins'
+      - 'lore:<#6E6E80>◆ <#B8B8C8In stock  <#7CFF4F><stock>'
+      - 'lore:'
+      - 'lore:<#7CFF4F>▶ Click <#6E6E80>· <#B8B8C8buy'
+    price: 2000
+    stock: 1
+    actions:
+      - '[command] minecraft:give %player_name% enchanted_book[stored_enchantments={"avian:coin_collector":5}] 1'
+
+  # Not for sale: the frame, balance, refresh timer and close (positions count from 1).
+  frame_1:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 1
+  frame_2:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 2
+  frame_3:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 3
+  frame_4:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 4
+  frame_6:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 6
+  frame_7:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 7
+  frame_8:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 8
+  frame_9:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 9
+  frame_28:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 28
+  frame_29:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 29
+  frame_31:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 31
+  frame_33:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 33
+  frame_34:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 34
+  frame_35:
+    item:
+      - material:ORANGE_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 35
+  frame_36:
+    item:
+      - material:YELLOW_STAINED_GLASS_PANE
+      - 'name:<reset>'
+    position: 36
+  balance:
+    item:
+      - material:SUNFLOWER
+      - 'name:<bold><gradient:#FFD23F:#FF8A3D>⛃ %ultimatemobcoins_balance_formatted% mob coins</gradient></bold>'
+      - 'lore:<#B8B8C8>Your mob coins. Kill mobs to earn them:'
+      - 'lore:<#B8B8C8>5% of kills drop 1-2, bosses far more.'
+      - 'lore:'
+      - 'lore:<#6E6E80>◆ <#B8B8C8Coin Collector  <#FFD23F>+20% a level'
+    position: 5
+  refresh:
+    item:
+      - material:CLOCK
+      - 'name:<#5FF3E0><bold>⌛ New stock in <shop_refresh_time:rotating_shop>'
+      - 'lore:<#B8B8C8>The shop changes every 12 hours.'
+    position: 30
+  close:
+    item:
+      - material:BARRIER
+      - 'name:<#FF5C5C><bold>✖ Close'
+    position: 32
+    actions:
+      - '[close]'

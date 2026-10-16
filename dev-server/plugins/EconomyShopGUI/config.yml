@@ -1280,6 +1280,9 @@ sell-multipliers:
     # from the plugin while it's held (owner, 2026-10-16: +30%). /sell, the sell wand and the Harvester
     # Hoe all price through the shop, so it applies to all three.
     aerie: 30
+    # The mob coin shop's 2x sell boost: bought there, held for 15 minutes (lp settemp). The highest one applies,
+    # so it doesn't stack with the Aerie's.
+    mobcoinboost: 100
 # If a player has for example access to 2 sell multipliers inside the same shop section, the multiplier with the highest value will be active
 
 

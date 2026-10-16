@@ -464,6 +464,12 @@ val pluginStack = listOf(
     // EvenMoreFish 2.5.0 (MIT): custom fish, rarities, a fish shop and contests whose rewards run our
     // commands (owner, 2026-09-30; docs/research/custom-fishing.md). Boot-tested on scratch 26.1.2 and
     // against MariaDB. Config: dev-server/plugins/EvenMoreFish.
+    // UltimateMobCoins 2.1.1 (MIT): mob coins from kills, RoseStacker stack kills paid per mob, and the rotating
+    // /mobcoins shop (owner, 2026-10-16; #28). 2.2.0 is a 1.19-only build: 2.1.1 is the 26.x one. Its table is
+    // called "users" (no prefix option). Config: dev-server/plugins/UltimateMobCoins.
+    PinnedPlugin("UltimateMobCoins-2.1.1.jar",
+        "https://cdn.modrinth.com/data/7UlXjdpd/versions/A3gaLr1u/UltimateMobCoins-Paper-v2.1.1.jar",
+        "SHA-512", "b0af02d45c508abc0894ebdbf9a7b729ac7554225d651a58616883afa5a138c25c197129daaaa716ee5a3973e94e2b302a490a56453296dd8cbd08e3dc3c3d3f"),
     // 2.5.1: 2.5.0 couldn't sell fish with a database (NoClassDefFoundError FriendlyId; upstream #1047,
     // hit by the owner 2026-10-16).
     PinnedPlugin("EvenMoreFish-2.5.1.jar",
