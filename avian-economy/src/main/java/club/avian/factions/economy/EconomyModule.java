@@ -104,6 +104,8 @@ public final class EconomyModule implements AvianModule {
             ctx.registerListener(new BaseBuildingShop(gens));
         }
         ctx.commands().register(new GenBlockCommand(gens, genConfig).build(), "Give gen blocks and infinite buckets (admins)");
+        // Coin Collector: our enchantment that raises mob coin drops (UltimateMobCoins).
+        CoinCollector.register(ctx.plugin(), config, ctx.logger());
         // Key merging (owner, 2026-10-16): /mergekeys trades spare crate keys up a tier.
         if (Bukkit.getPluginManager().getPlugin("CrazyCrates") != null && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             var keyMerge = new KeyMerge(ctx.config(KeyMergeConfig.SPEC), KeyMerge.crazyCrates(), ctx.logger());

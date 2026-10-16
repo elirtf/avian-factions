@@ -55,6 +55,9 @@ public final class EconomyConfig {
     @Comment("Tokens earned each time that chance hits.")
     private long sugarCaneTokens = 1;
 
+    @Comment("Coin Collector (our enchantment): extra mob coins per kill, percent a level. 20 = level V doubles them.")
+    private int coinCollectorPercentPerLevel = 20;
+
     @Comment("""
             How many baits each EvenMoreFish bait recipe makes, by bait id (plugins/EvenMoreFish/baits).
             One bait covers one catch; recipes not listed make one.""")
@@ -215,6 +218,10 @@ public final class EconomyConfig {
 
     public Map<String, Long> sellValues() {
         return sellValues;
+    }
+
+    public int coinCollectorPercentPerLevel() {
+        return coinCollectorPercentPerLevel;
     }
 
     public Map<String, Integer> baitCraftYield() {
