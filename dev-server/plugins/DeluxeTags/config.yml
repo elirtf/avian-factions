@@ -111,6 +111,126 @@ categories:
 
 deluxetags:
   # Earned
+  season1champion:
+    order: 11
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S1 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 1 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 1. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season1champion
+  season2champion:
+    order: 12
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S2 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 2 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 2. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season2champion
+  season3champion:
+    order: 13
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S3 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 3 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 3. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season3champion
+  season4champion:
+    order: 14
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S4 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 4 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 4. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season4champion
+  season5champion:
+    order: 15
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S5 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 5 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 5. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season5champion
+  season6champion:
+    order: 16
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S6 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 6 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 6. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season6champion
+  season7champion:
+    order: 17
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S7 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 7 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 7. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season7champion
+  season8champion:
+    order: 18
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S8 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 8 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 8. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season8champion
+  season9champion:
+    order: 19
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S9 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 9 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 9. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season9champion
+  season10champion:
+    order: 20
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D:#FFD23F>♛ S10 Champion</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>♛ Season 10 Champion'
+    description:
+    - '<#B8B8C8>Your faction finished #1 on the'
+    - '<#B8B8C8>F-Top in Season 10. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.season10champion
   icefisher:
     order: 1
     category: earned

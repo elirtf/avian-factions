@@ -146,6 +146,31 @@ Harvester Hoe, wands) are never sold.
 Tiers live in `sellwand.conf`. Admins, crates and shops hand them out with
 `/sellwand give <player> <tier> [amount]` (`avian.sellwand.admin`).
 
+## F-Top payouts and seasons
+
+Owner, 2026-10-16. **Off until a season is started**: the dev server never pays. At production, `/season start`
+begins Season 1, which runs 4 weeks (`seasons.conf` `length-weeks`). Resetting between seasons isn't built yet
+(the owner asked to leave it until production).
+
+- **Weekly:** every Sunday 21:00 Central, a fresh F-Top is taken and the top 3 factions are paid:
+
+  | Place | Money | Tokens | Keys (each member) |
+  |---|---|---|---|
+  | #1 | $1,000,000 | 2,500 | Mythic |
+  | #2 | $500,000 | 1,500 | Epic |
+  | #3 | $250,000 | 750 | Rare |
+
+- **Season end:** about 5× that: #1 gets $5M, 12,500 tokens, 3 Mythic keys each, and the permanent
+  **♛ S<N> Champion** tag. #2 gets $2.5M, 7,500 tokens, a Mythic and 2 Epic keys each. #3 gets $1.25M,
+  3,750 tokens and 2 Epic keys each. The final ranking is frozen in `season_rankings`.
+- **Split equally** between every member, online or not; keys go to each member. Factions with no F-Top value
+  are skipped, and the next one takes the place.
+- **Never paid twice:** each payout is claimed in the database (`ftop_payout_runs`) before anything is paid,
+  and every payout is recorded (`ftop_payouts`). If the server is down at payout time, the payout runs when
+  it's back. Money and tokens land in the audit trail as `ftop:weekly:<date>` / `ftop:season:final`.
+- **Commands:** `/season` shows the time left. Admins: `/season preview` shows who'd get what today
+  without paying; `/season start`; `/season end confirm` ends it now with the final payout.
+
 ## Merging keys
 
 Owner, 2026-10-16: `/mergekeys` (or `/keymerge`) trades spare crate keys for one of the next tier up.

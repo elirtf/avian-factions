@@ -34,7 +34,7 @@ public final class FTopModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(FTopConfig.SPEC);
+        return List.of(FTopConfig.SPEC, SeasonConfig.SPEC);
     }
 
     @Override
@@ -102,5 +102,17 @@ public final class FTopModule implements AvianModule {
         ctx.registerListener(menu);
         ctx.commands().register(new FTopCommand(service, config, money, clock, menu).build(),
                 "Faction value ranking", List.of("factiontop"));
+
+        // Seasons and F-Top payouts (owner, 2026-10-16): off until /season start (never on the dev server).
+        if (economy != null) {
+            var seasons = new SeasonService(ctx.plugin(), ctx.config(SeasonConfig.SPEC), new SeasonRepository(ctx.database()),
+                    service::recalculate, id -> {
+                        var f = dev.kitteh.factions.Factions.factions().get(id);
+                        return f == null ? List.of() : f.members().stream()
+                                .map(m -> new Payouts.Member(m.uniqueId(), m.name())).toList();
+                    }, economy, clock, ctx.logger());
+            seasons.load();
+            ctx.commands().register(new SeasonCommand(seasons, economy, clock).build(), "Seasons and F-Top payouts");
+        }
     }
 }
