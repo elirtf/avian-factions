@@ -146,6 +146,24 @@ Harvester Hoe, wands) are never sold.
 Tiers live in `sellwand.conf`. Admins, crates and shops hand them out with
 `/sellwand give <player> <tier> [amount]` (`avian.sellwand.admin`).
 
+## Merging keys
+
+Owner, 2026-10-16: `/mergekeys` (or `/keymerge`) trades spare crate keys for one of the next tier up.
+
+| Main line | Enchant line | Cost vs token value |
+|---|---|---|
+| 5 Common → 1 Rare | 5 Enchant Common → 1 Enchant Rare | 1,000 for 600: 1.7× |
+| 4 Rare → 1 Epic | 4 Enchant Rare → 1 Enchant Legendary | 2,400 for 1,500: 1.6× |
+| 10 Epic → 1 Mythic | 10 Enchant Legendary → 1 Enchant Mythic | 15,000 for 10,000: 1.5× |
+
+- **A sink, not a shortcut:** a merge always costs more than buying the key in the token shop, so it's for the
+  spare keys from the Aerie, KOTH, fishing and votes. Vote and Cosmetic keys don't merge.
+- **Using it:** click a step to merge once, shift-click to merge as many as you can. Only virtual keys merge,
+  and every key the server gives is virtual.
+- **Safe:** the keys are taken (and checked) before the new one is given, so nothing can be duplicated.
+  Every merge is logged.
+- **Settings:** the ratios are in `plugins/AvianFactions/keymerge.conf`.
+
 ## Token shop
 
 `/tokenshop` (or `/tshop`) is where tokens are spent. It's a DeluxeMenus menu

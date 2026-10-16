@@ -35,7 +35,7 @@ public final class EconomyModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC, SellWandConfig.SPEC, GenBlocksConfig.SPEC);
+        return List.of(EconomyConfig.SPEC, HoeConfig.SPEC, SellWandConfig.SPEC, GenBlocksConfig.SPEC, KeyMergeConfig.SPEC);
     }
 
     @Override
@@ -104,6 +104,12 @@ public final class EconomyModule implements AvianModule {
             ctx.registerListener(new BaseBuildingShop(gens));
         }
         ctx.commands().register(new GenBlockCommand(gens, genConfig).build(), "Give gen blocks and infinite buckets (admins)");
+        // Key merging (owner, 2026-10-16): /mergekeys trades spare crate keys up a tier.
+        if (Bukkit.getPluginManager().getPlugin("CrazyCrates") != null && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            var keyMerge = new KeyMerge(ctx.config(KeyMergeConfig.SPEC), KeyMerge.crazyCrates(), ctx.logger());
+            ctx.registerListener(keyMerge);
+            ctx.commands().register(keyMerge.command("mergekeys"), "Merge crate keys up a tier", List.of("keymerge"));
+        }
         // Infinite water and lava buckets (owner, 2026-10-16), sold beside the gens.
         ctx.registerListener(new InfiniteBuckets());
         var sellWand = ctx.config(SellWandConfig.SPEC);
