@@ -18,6 +18,7 @@ import java.text.DecimalFormat;
  *   <li>{@code tokens}, {@code gems} — the bare number: {@code 1,200}</li>
  *   <li>{@code rank} — the player's rank tag, their LuckPerms suffix (MiniMessage, see ranks.lp)</li>
  *   <li>{@code name} — the account name, for click-to-message</li>
+ *   <li>{@code ice_fish} — catches in icy waters (the Ice Fisher quest)</li>
  * </ul>
  *
  * <p>Every value comes from memory (the balance cache, LuckPerms' loaded user), never the
@@ -63,6 +64,7 @@ public final class AvianPlaceholders extends PlaceholderExpansion {
             case "rank" -> rank(player);
             case "name" -> player.getName() == null ? "" : player.getName();
             case "level" -> player.getPlayer() == null ? "" : String.valueOf(player.getPlayer().getLevel());   // XP level (the Enchanter)
+            case "ice_fish" -> player.getPlayer() == null ? "0" : String.valueOf(IceFishing.count(player.getPlayer()));   // Ice Fisher quest
             default -> null;   // unknown: PlaceholderAPI leaves the text as typed
         };
     }

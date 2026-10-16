@@ -464,9 +464,11 @@ val pluginStack = listOf(
     // EvenMoreFish 2.5.0 (MIT): custom fish, rarities, a fish shop and contests whose rewards run our
     // commands (owner, 2026-09-30; docs/research/custom-fishing.md). Boot-tested on scratch 26.1.2 and
     // against MariaDB. Config: dev-server/plugins/EvenMoreFish.
-    PinnedPlugin("EvenMoreFish-2.5.0.jar",
-        "https://cdn.modrinth.com/data/vlh7rLCf/versions/Wognhsxd/EvenMoreFish-2.5.0.jar",
-        "SHA-256", "1ffe00bd2d32ec3811d6d6f4562141182f747fcbd84c871912875e3256ef9bd1"),
+    // 2.5.1: 2.5.0 couldn't sell fish with a database (NoClassDefFoundError FriendlyId; upstream #1047,
+    // hit by the owner 2026-10-16).
+    PinnedPlugin("EvenMoreFish-2.5.1.jar",
+        "https://cdn.modrinth.com/data/vlh7rLCf/versions/JFZa5xSn/EvenMoreFish-2.5.1.jar",
+        "SHA-512", "74330cf5a3b5a71dfdfd7a395189a75f79af6e8a3ec14b8ee4f0d63158dca7d0166f8599333dee7b11ffdfd2f852916c1bf38aa1cac7b14e07be565f25eed6db"),
 )
 // spark is bundled with Paper since 1.21; nothing to download.
 

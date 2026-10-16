@@ -5,7 +5,8 @@
 #
 # Buttons run FactionsUUID's own commands in their exact form (flags included). Players in a faction
 # and players without one see different buttons: %factionsuuid_player_factionless% is empty for
-# someone in a faction, hence the "[]" checks. Rows: 1 land, 2 faction, 3 people; close at the bottom.
+# someone in a faction, hence the "[]" checks. Claiming, unclaiming, /f fly, /f near and inviting are left
+# to /f help (owner, 2026-10-16: simple enough as commands). Close at the bottom.
 menu_title: '&#FFD23F&l⚑ &#FFC23F&lF&#FFB240&la&#FFA241&lc&#FF9242&lt&#FF8243&li&#FF7A45&lo&#FF6A48&ln'
 register_command: true
 open_command:
@@ -102,68 +103,9 @@ items:
       - '[close]'
       - '[message] &#FFD23FType &f/f join <faction> &#FFD23Fto join. Open factions and invites only.'
 
-  # --- row 1: land ---
-  'claim':
-    material: GRASS_BLOCK
-    slot: 10
-    priority: 1
-    display_name: '&#7CFF4F&l⬛ Claim this chunk'
-    lore:
-      - '&#B8B8C8Claims the chunk you stand in.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Claim'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f claim'
-  'claim_area':
-    material: MOSS_BLOCK
-    slot: 11
-    priority: 1
-    display_name: '&#7CFF4F&l⬛ Claim around you'
-    lore:
-      - '&#B8B8C8Claims a square centred on you.'
-      - ''
-      - '&#7CFF4F▶ Left-click &#6E6E80· &#B8B8C83x3 chunks'
-      - '&#7CFF4F▶ Right-click &#6E6E80· &#B8B8C85x5 chunks'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f claim --radius 2'
-    right_click_commands:
-      - '[close]'
-      - '[player] f claim --radius 3'
-  'autoclaim':
-    material: COMPASS
-    slot: 12
-    priority: 1
-    display_name: '&#7CFF4F&l⟳ Auto-claim'
-    lore:
-      - '&#B8B8C8Claims each chunk you walk into.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Turn on &#6E6E80(again to stop)'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f claim --auto'
   'map':
     material: FILLED_MAP
-    slot: 13
+    slot: 30
     priority: 1
     display_name: '&#5FF3E0&l⌖ Map'
     lore:
@@ -181,47 +123,11 @@ items:
     shift_left_click_commands:
       - '[close]'
       - '[player] f map --auto-off'
-  'unclaim':
-    material: DIRT
-    slot: 15
-    priority: 1
-    display_name: '&#FF7A45&l⬚ Unclaim this chunk'
-    lore:
-      - '&#B8B8C8Gives up the chunk you stand in.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Unclaim'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f unclaim'
-  'unclaim_all':
-    material: TNT
-    slot: 16
-    priority: 1
-    display_name: '&#FF5C5C&l⚠ Unclaim all land'
-    lore:
-      - '&#B8B8C8Gives up every chunk your faction owns.'
-      - ''
-      - '&#FF5C5C▶ Shift-click &#6E6E80· &#B8B8C8Confirm'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    shift_left_click_commands:
-      - '[close]'
-      - '[player] f unclaim --all-territory'
 
-  # --- row 2: faction ---
+  # --- in a faction: row 1 your faction, row 2 others and leaving, row 3 map, F-Top, help ---
   'home':
     material: RED_BED
-    slot: 19
+    slot: 11
     priority: 1
     display_name: '&#FFD23F&l⌂ Faction home'
     lore:
@@ -243,7 +149,7 @@ items:
       - '[player] f set home'
   'members':
     material: PLAYER_HEAD
-    slot: 20
+    slot: 12
     priority: 1
     display_name: '&#FFD23F&l☺ Members'
     lore:
@@ -262,7 +168,7 @@ items:
       - '[player] f show'
   'power':
     material: NETHER_STAR
-    slot: 21
+    slot: 13
     priority: 1
     display_name: '&#C58CFF&l✦ Power'
     lore:
@@ -284,7 +190,7 @@ items:
       - '[player] f power'
   'chat':
     material: WRITABLE_BOOK
-    slot: 22
+    slot: 14
     priority: 1
     display_name: '&#5FF3E0&l✎ Chat mode'
     lore:
@@ -310,7 +216,7 @@ items:
       - '[player] f chat public'
   'upgrades':
     material: ENCHANTING_TABLE
-    slot: 23
+    slot: 15
     priority: 1
     display_name: '&#C58CFF&l⬆ Upgrades'
     lore:
@@ -326,65 +232,10 @@ items:
     left_click_commands:
       - '[close]'
       - '[player] f upgrades'
-  'fly':
-    material: FEATHER
-    slot: 24
-    priority: 1
-    display_name: '&#5FF3E0&l☁ Faction fly'
-    lore:
-      - '&#B8B8C8Fly inside your own land.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Toggle'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f fly'
-  'near':
-    material: SPYGLASS
-    slot: 25
-    priority: 1
-    display_name: '&#5FF3E0&l⌖ Nearby members'
-    lore:
-      - '&#B8B8C8Who from your faction is close by.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Show'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f near'
 
-  # --- row 3: people and rankings ---
-  'invite':
-    material: PAPER
-    slot: 28
-    priority: 1
-    display_name: '&#FFD23F&l✉ Invite a player'
-    lore:
-      - '&#B8B8C8Bring someone into your faction.'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8See how'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[message] &#FFD23FType &f/f invite <player>&#FFD23F. To take it back: &f/f deinvite <player>'
   'relations':
     material: SHIELD
-    slot: 29
+    slot: 20
     priority: 1
     display_name: '&#FFD23F&l⚔ Allies & enemies'
     lore:
@@ -415,7 +266,7 @@ items:
       - '[player] ftop'
   'list':
     material: BOOK
-    slot: 32
+    slot: 22
     priority: 1
     display_name: '&#FFD23F&l☰ All factions'
     lore:
@@ -433,7 +284,7 @@ items:
       - '[player] f list'
   'help':
     material: OAK_SIGN
-    slot: 33
+    slot: 32
     priority: 1
     display_name: '&#5FF3E0&lⓘ Every command'
     lore:
@@ -445,7 +296,7 @@ items:
       - '[player] f help'
   'leave':
     material: IRON_DOOR
-    slot: 34
+    slot: 24
     priority: 1
     display_name: '&#FF5C5C&l⚠ Leave faction'
     lore:

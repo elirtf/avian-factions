@@ -28,6 +28,7 @@ players can't see them), and only offers what we'd switch off anyway.
 (`github.com/EvenMoreFish/EvenMoreFish/releases/tag/v2.5.0`). The jar ships a `versions/26-1.jar`
 module, and the source has `versions/26-1`, `26-2` and `26-3` build folders.
 
+- Now 2.5.1 (2026-10-16): 2.5.0 could not sell fish with a database (upstream #1047). Originally tested:
 - Download: `https://cdn.modrinth.com/data/vlh7rLCf/versions/Wognhsxd/EvenMoreFish-2.5.0.jar`
 - SHA-256: `1ffe00bd2d32ec3811d6d6f4562141182f747fcbd84c871912875e3256ef9bd1` (the SHA-512 matches
   the one Modrinth publishes, prefix `fbe4355dae6d44fd`)
