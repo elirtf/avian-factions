@@ -1,0 +1,7 @@
+{
+  "pack": {
+    "description": "Avian: the Aerie's build (tools/aerie/build.js)",
+    "min_format": 101,
+    "max_format": 101
+  }
+}

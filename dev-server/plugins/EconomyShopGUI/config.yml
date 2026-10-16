@@ -1270,21 +1270,16 @@ discounts:
 #--------------------------------------------SellMultipliers--------------------------------------------
 
 # Enable or disable sell multipliers
-enable-sell-multipliers: false
+enable-sell-multipliers: true   # the Aerie's holder bonus (aerie.conf)
 
 # Configure this option to use sell multipliers
 # Every entry is a shop section that holds the permission nodes with its multipliers
 sell-multipliers:
   all:
-    # Players with the permission 'EconomyShopGUI.sell-multipliers.vip' will get an 20% multiplier on any item
-    vip: 20
-    # Players with the permission 'EconomyShopGUI.sell-multipliers.gold' will get an 2.5% multiplier on any item
-    gold: 2.5
-    # Players with the permission 'EconomyShopGUI.sell-multipliers.coal' will get an 1% multiplier on any item
-    coal: 1
-  Spawners:
-    # Players with the permission 'EconomyShopGUI.sell-multipliers.gold' will get an extra 10% multiplier in this section
-    gold: 12.5
+    # Avian: online members of the faction holding the Aerie get EconomyShopGUI.sell-multipliers.aerie
+    # from the plugin while it's held (owner, 2026-10-16: +30%). /sell, the sell wand and the Harvester
+    # Hoe all price through the shop, so it applies to all three.
+    aerie: 30
 # If a player has for example access to 2 sell multipliers inside the same shop section, the multiplier with the highest value will be active
 
 

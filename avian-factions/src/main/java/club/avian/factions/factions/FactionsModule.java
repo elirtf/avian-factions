@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 public final class FactionsModule implements AvianModule {
 
     private ClaimLoader claimLoader;
+    private AerieRunner aerie;
 
     static final String FACTIONS_PLUGIN = "FactionsUUID";
 
@@ -32,7 +33,7 @@ public final class FactionsModule implements AvianModule {
 
     @Override
     public List<ConfigSpec<?>> configs() {
-        return List.of(FactionsConfig.SPEC);
+        return List.of(FactionsConfig.SPEC, AerieConfig.SPEC);
     }
 
     @Override
@@ -94,6 +95,14 @@ public final class FactionsModule implements AvianModule {
         RtpClaimGuard.register(ctx.plugin(), location -> !dev.kitteh.factions.Board.board()
                 .factionAt(new dev.kitteh.factions.FLocation(location)).isWilderness(), ctx.logger());
         ctx.commands().register(new ChunkBusterCommand(busters).build(), "Chunk busters: confirm one, or give them (admins)");
+        // The Aerie (#21): a warzone outpost any faction can capture at any hour, paying its holder.
+        var aerieConfig = ctx.config(AerieConfig.SPEC);
+        aerie = new AerieRunner(ctx.plugin(), aerieConfig, new AerieRepository.Jdbc(ctx.database()),
+                System::currentTimeMillis, ctx.logger());
+        aerie.start();
+        ctx.registerListener(aerie);
+        ctx.commands().register(new AerieCommand(aerie, aerieConfig, System::currentTimeMillis).build(),
+                "The Aerie: who holds it and what it pays");
         UpgradeSwitch.apply(config.get().enabledUpgrades(), ctx.logger());
         config.onReload(c -> UpgradeSwitch.apply(c.enabledUpgrades(), ctx.logger()));
         ctx.logger().info("Hooked " + FACTIONS_PLUGIN + ": new factions start with "
@@ -104,6 +113,9 @@ public final class FactionsModule implements AvianModule {
     public void disable() {
         if (claimLoader != null) {
             claimLoader.releaseAll();
+        }
+        if (aerie != null) {
+            aerie.stop();
         }
     }
 }
