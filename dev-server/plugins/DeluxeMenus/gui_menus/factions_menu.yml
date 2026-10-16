@@ -6,7 +6,7 @@
 # Buttons run FactionsUUID's own commands in their exact form (flags included). Players in a faction
 # and players without one see different buttons: %factionsuuid_player_factionless% is empty for
 # someone in a faction, hence the "[]" checks. Claiming, unclaiming, /f fly, /f near and inviting are left
-# to /f help (owner, 2026-10-16: simple enough as commands). Close at the bottom.
+# to /f help (owner, 2026-10-16: simple enough as commands), and so are power and leaving. Close at the bottom.
 menu_title: '&#FFD23F&l⚑ &#FFC23F&lF&#FFB240&la&#FFA241&lc&#FF9242&lt&#FF8243&li&#FF7A45&lo&#FF6A48&ln'
 register_command: true
 open_command:
@@ -105,7 +105,7 @@ items:
 
   'map':
     material: FILLED_MAP
-    slot: 30
+    slot: 21
     priority: 1
     display_name: '&#5FF3E0&l⌖ Map'
     lore:
@@ -124,7 +124,8 @@ items:
       - '[close]'
       - '[player] f map --auto-off'
 
-  # --- in a faction: row 1 your faction, row 2 others and leaving, row 3 map, F-Top, help ---
+  # --- row 1 (in a faction): home, members, chat, upgrades, allies; row 2: map, factions, F-Top, with
+  # create/browse/join for the factionless on 20/22/24; row 3: help. Power and leave are /f power, /f leave. ---
   'home':
     material: RED_BED
     slot: 11
@@ -166,31 +167,9 @@ items:
     left_click_commands:
       - '[close]'
       - '[player] f show'
-  'power':
-    material: NETHER_STAR
-    slot: 13
-    priority: 1
-    display_name: '&#C58CFF&l✦ Power'
-    lore:
-      - '&#B8B8C8Power decides how much land you hold.'
-      - ''
-      - '&#6E6E80◆ &#B8B8C8Yours  &#C58CFF%factionsuuid_player_power%&#6E6E80 / &#B8B8C8%factionsuuid_player_maxpower%'
-      - '&#6E6E80◆ &#B8B8C8Faction  &#C58CFF%factionsuuid_faction_power%&#6E6E80 / &#B8B8C8%factionsuuid_faction_powermax%'
-      - '&#6E6E80◆ &#B8B8C8Raidable  &f%factionsuuid_faction_raidable%'
-      - ''
-      - '&#7CFF4F▶ Click &#6E6E80· &#B8B8C8Details'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    left_click_commands:
-      - '[close]'
-      - '[player] f power'
   'chat':
     material: WRITABLE_BOOK
-    slot: 14
+    slot: 13
     priority: 1
     display_name: '&#5FF3E0&l✎ Chat mode'
     lore:
@@ -216,7 +195,7 @@ items:
       - '[player] f chat public'
   'upgrades':
     material: ENCHANTING_TABLE
-    slot: 15
+    slot: 14
     priority: 1
     display_name: '&#C58CFF&l⬆ Upgrades'
     lore:
@@ -235,7 +214,7 @@ items:
 
   'relations':
     material: SHIELD
-    slot: 20
+    slot: 15
     priority: 1
     display_name: '&#FFD23F&l⚔ Allies & enemies'
     lore:
@@ -254,7 +233,7 @@ items:
       - '[message] &#FFD23FType &f/f ally <faction>&#FFD23F, &f/f enemy <faction> &#FFD23For &f/f neutral <faction>&#FFD23F.'
   'ftop':
     material: GOLD_BLOCK
-    slot: 31
+    slot: 23
     priority: 1
     display_name: '&#FFD23F&l♛ F-Top'
     lore:
@@ -284,7 +263,7 @@ items:
       - '[player] f list'
   'help':
     material: OAK_SIGN
-    slot: 32
+    slot: 31
     priority: 1
     display_name: '&#5FF3E0&lⓘ Every command'
     lore:
@@ -294,21 +273,3 @@ items:
     left_click_commands:
       - '[close]'
       - '[player] f help'
-  'leave':
-    material: IRON_DOOR
-    slot: 24
-    priority: 1
-    display_name: '&#FF5C5C&l⚠ Leave faction'
-    lore:
-      - '&#B8B8C8Leave your faction.'
-      - ''
-      - '&#FF5C5C▶ Shift-click &#6E6E80· &#B8B8C8Confirm'
-    view_requirement:
-      requirements:
-        in_faction:
-          type: string equals
-          input: '[%factionsuuid_player_factionless%]'
-          output: '[]'
-    shift_left_click_commands:
-      - '[close]'
-      - '[player] f leave'
