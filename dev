@@ -555,13 +555,16 @@ cmd_k8s() {
             kc rollout status statefulset/avian-factions --timeout=10m || fail "The server did not become ready: ./dev k8s logs"
             ok "Deployed to $K8S_CONTEXT." ;;
         seal)      k8s_seal ;;
+        backup)    kc exec avian-factions-0 -c backup -- avian-backup once ;;
+        backups)   kc exec avian-factions-0 -c backup -- avian-backup list ;;
+        fetch-backup) k8s_fetch_backup "$@" ;;
         status) kc get pods,svc,pvc ;;
-        logs)   kc logs -f avian-factions-0 ;;
+        logs)   kc logs -f avian-factions-0 -c "${1:-server}" ;;
         cmd)    [[ $# -gt 0 ]] || fail "Usage: ./dev k8s cmd \"<console command>\""
                 kc exec avian-factions-0 -- avian-console "$*" ;;
         restore) k8s_restore "$@" ;;
         push)    k8s_push "$@" ;;
-        *) fail "Usage: ./dev k8s seal|deploy|push <version>|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: the infra repo's ./infra)" ;;
+        *) fail "Usage: ./dev k8s seal|deploy|push <version>|status|logs [backup]|cmd <command>|backup|backups|fetch-backup [<snapshot>]|restore <backup> [--yes] (the cluster: the infra repo's ./infra)" ;;
     esac
 }
 
@@ -624,23 +627,49 @@ K8S_KEYS="${AVIAN_K8S_KEYS:-$HOME/.config/avian/sealed-secrets}"
 
 # Encrypts the overlay's secret.env (git-ignored) into a SealedSecret that only this cluster can open,
 # writes it to the overlay as sealed-secret.yaml for committing, and backs up the cluster's key.
+# One env file into one SealedSecret in the overlay, listed in its kustomization.
+seal_env() {
+    local name=$1 env=$2 out=$3 kust="$ROOT/$K8S_OVERLAY/kustomization.yaml"
+    kubectl --context "$K8S_CONTEXT" -n "$K8S_NS" create secret generic "$name" --from-env-file="$env" --dry-run=client -o yaml \
+        | kubeseal --context "$K8S_CONTEXT" --controller-namespace kube-system --format yaml > "$ROOT/$K8S_OVERLAY/$out" \
+        || fail "Sealing $name failed."
+    grep -q "$out" "$kust" || sed -i 's|^  - \.\./\.\./base$|  - ../../base\n  - '"$out"'   # the '"$name"' Secret, encrypted for this cluster (./dev k8s seal)|' "$kust"
+    ok "Sealed $name into $K8S_OVERLAY/$out."
+}
+
 k8s_seal() {
     command -v kubeseal >/dev/null || fail "kubeseal is not installed (docs/DEPLOYMENT.md → Kubernetes)."
-    local env="$ROOT/$K8S_OVERLAY/secret.env" out="$ROOT/$K8S_OVERLAY/sealed-secret.yaml" kust="$ROOT/$K8S_OVERLAY/kustomization.yaml"
+    local env="$ROOT/$K8S_OVERLAY/secret.env" backup_env="$ROOT/$K8S_OVERLAY/backup.env"
     [[ -f "$env" ]] || fail "Create $K8S_OVERLAY/secret.env first (copy secret.env.example)."
     kubectl --context "$K8S_CONTEXT" -n kube-system rollout status deployment/sealed-secrets-controller --timeout=3m >/dev/null \
         || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (the infra repo's ./infra bootstrap installs it)."
-    kubectl --context "$K8S_CONTEXT" -n "$K8S_NS" create secret generic avian-db --from-env-file="$env" --dry-run=client -o yaml \
-        | kubeseal --context "$K8S_CONTEXT" --controller-namespace kube-system --format yaml > "$out" \
-        || fail "Sealing failed."
-    grep -q "sealed-secret.yaml" "$kust" || sed -i 's|^  - \.\./\.\./base$|  - ../../base\n  - sealed-secret.yaml   # the avian-db Secret, encrypted for this cluster (./dev k8s seal)|' "$kust"
+    seal_env avian-db "$env" sealed-secret.yaml
+    # The backup repository and its password (docs/DEPLOYMENT.md → Backups), when there is one.
+    if [[ -f "$backup_env" ]]; then
+        seal_env avian-backup "$backup_env" sealed-backup-secret.yaml
+    else
+        say "No $K8S_OVERLAY/backup.env: backups stay off (copy backup.env.example)."
+    fi
     mkdir -p "$K8S_KEYS" && chmod 700 "$K8S_KEYS"
     # Without the server-set fields (uid, resourceVersion…), so bootstrap can create it in a new cluster.
     kubectl --context "$K8S_CONTEXT" -n kube-system get secret -l sealedsecrets.bitnami.com/sealed-secrets-key -o yaml \
         | grep -vE '^ +(uid|resourceVersion|creationTimestamp): ' > "$K8S_KEYS/$K8S_CONTEXT.yaml" \
         && chmod 600 "$K8S_KEYS/$K8S_CONTEXT.yaml"
-    ok "Sealed into $K8S_OVERLAY/sealed-secret.yaml. Commit it; ArgoCD applies it from main."
+    echo "  Commit the sealed files; ArgoCD applies them from main."
     echo "  The cluster's key is backed up to $K8S_KEYS/$K8S_CONTEXT.yaml (keep it safe, never in git)."
+}
+
+# Fetches a backup from the cluster's restic repository as a ./dev backup file (default: the latest).
+k8s_fetch_backup() {
+    local snap="${1:-latest}" out
+    mkdir -p "$BACKUP_DIR"
+    out="$BACKUP_DIR/avian-backup-k8s-$(date +%Y%m%d-%H%M%S).tar.gz"
+    say "Fetching snapshot $snap…"
+    if ! kc exec avian-factions-0 -c backup -- avian-backup dump "$snap" > "$out" \
+        || ! tar -tzf "$out" database.sql >/dev/null 2>&1; then
+        rm -f "$out"; fail "Could not fetch $snap (./dev k8s backups lists them)."
+    fi
+    ok "Backup written: $out ($(du -h "$out" | cut -f1)). Load it with ./dev k8s restore or ./dev restore."
 }
 
 # Loads a ./dev backup into the cluster: the database into MariaDB, the world and plugin data into the
@@ -719,7 +748,7 @@ ${BOLD}./dev${RESET} — run the Avian Factions dev server. Full guide: docs/DEV
   ${BOLD}restore-container${RESET} <file>  Load a backup into the server container instead (docs/DEPLOYMENT.md)
   ${BOLD}db${RESET}               Open a MariaDB shell on the dev database
   ${BOLD}test${RESET}             Run every test and build the jar (what CI runs first)
-  ${BOLD}k8s${RESET} <sub>        Kubernetes: seal|deploy|push|status|logs|cmd|restore (the cluster itself: the infra repo)
+  ${BOLD}k8s${RESET} <sub>        Kubernetes: seal|deploy|push|status|logs|cmd|backup(s)|fetch-backup|restore (the cluster itself: the infra repo)
 EOF
 }
 

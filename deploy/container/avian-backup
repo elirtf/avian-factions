@@ -1,0 +1,130 @@
+#!/usr/bin/env bash
+# avian-backup: the cluster's backups. Runs as the `backup` sidecar next to the server (same pod, same
+# /data volume, same console pipe), so it needs no rights to anything outside its own pod.
+#
+#   avian-backup loop    every AVIAN_BACKUP_INTERVAL seconds (default 3600): one backup
+#   avian-backup once    one backup now
+#   avian-backup list    the snapshots in the repository
+#   avian-backup dump [<snapshot>]   writes that snapshot (default: latest) to stdout as a .tar.gz
+#
+# A backup is the same archive as `./dev backup` (run/world, run/world_*, run/plugins, the player lists,
+# database.sql), so `./dev k8s restore` and `./dev restore` load it unchanged. It goes to restic
+# (RESTIC_REPOSITORY, RESTIC_PASSWORD from the avian-backup Secret): encrypted, deduplicated, on the
+# owner's big server, whose REST server is append-only, so nothing here can delete a backup. Keeping
+# 48 hourly / 14 daily / 8 weekly is done on the big server (infra repo hosts/backup-server).
+set -euo pipefail
+
+data=/data
+log=$data/logs/latest.log
+work=${AVIAN_BACKUP_WORK:-/work}
+export RESTIC_CACHE_DIR=${RESTIC_CACHE_DIR:-$work/cache}
+# The REST server's certificate is signed by our own CA (infra repo); its PEM comes in the Secret.
+if [[ -n "${RESTIC_CACERT_PEM:-}" ]]; then
+    mkdir -p "$work" && printf '%b\n' "$RESTIC_CACERT_PEM" > "$work/backup-ca.crt"
+    export RESTIC_CACERT="$work/backup-ca.crt"
+fi
+
+say() { echo "[backup $(date -u +%FT%TZ)] $*"; }
+
+send() { avian-console "$1" >/dev/null 2>&1 || return 1; }
+
+configured() {
+    [[ -n "${RESTIC_REPOSITORY:-}" && -n "${RESTIC_PASSWORD:-}" ]]
+}
+
+# The repository is created on first use; an append-only server allows that.
+ensure_repo() {
+    restic cat config >/dev/null 2>&1 || restic init
+}
+
+# Every file under the worlds unchanged for one 3-second look, after the save.
+world_quiet() {
+    local before after
+    before="$(find "$data"/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+    for _ in 1 2 3 4 5 6 7 8 9 10; do
+        sleep 3
+        after="$(find "$data"/world* -type f -printf '%p %T@ %s\n' 2>/dev/null | sort)"
+        [[ "$before" == "$after" ]] && return 0
+        before="$after"
+    done
+    return 1
+}
+
+# The archive, streamed straight into restic: nothing as big as the world is ever written to disk here.
+# restic stores a snapshot only if tar exits 0; a file that changed mid-read (tar exit 1) means no
+# snapshot, and a retry.
+archive_to_restic() {
+    local extras=() f
+    for f in "$data"/world_* "$data"/ops.json "$data"/whitelist.json "$data"/banned-players.json "$data"/banned-ips.json; do
+        [[ -e "$f" ]] && extras+=("${f#/}")
+    done
+    restic backup --host avian-factions --tag avian --stdin-filename avian-backup.tar --stdin-from-command -- \
+        tar -cf - --transform 's,^data/,run/,' \
+            --exclude='*.jar' --exclude='data/plugins/*/libs' --exclude='data/plugins/*/logs' \
+            --exclude='data/plugins/spark' --exclude='data/plugins/bStats' --exclude='session.lock' \
+            -C / data/world data/plugins "${extras[@]}" \
+            -C "$work" database.sql
+}
+
+backup_once() {
+    configured || { say "Not configured (no RESTIC_REPOSITORY/RESTIC_PASSWORD in the avian-backup Secret): skipped."; return 1; }
+    [[ -p "$data/.console" && -d "$data/world" ]] || { say "The server isn't running yet: skipped."; return 1; }
+    mkdir -p "$work"
+    ensure_repo
+
+    local since status=0
+    since=$(wc -l < "$log")
+    send "save-off" || { say "The server isn't reading its console: skipped."; return 1; }
+    # Saves go back on however the backup ends.
+    backup_paused "$since" || status=$?
+    send "save-on" || say "Could not send save-on; check the server: ./dev k8s cmd \"save-on\""
+    return "$status"
+}
+
+# With world saves paused: flush, dump the database, archive.
+backup_paused() {
+    local since=$1 waited=0
+    send "save-all flush"
+    until tail -n +"$((since + 1))" "$log" | grep -q "Saved the game"; do
+        (( waited++ >= 180 )) && { say "The save did not finish within 3 minutes: no backup."; return 1; }
+        sleep 1
+    done
+    world_quiet || { say "World files kept changing after the save: no backup."; return 1; }
+
+    MYSQL_PWD="$AVIAN_DB_PASSWORD" mariadb-dump -h "$AVIAN_DB_HOST" -P "${AVIAN_DB_PORT:-3306}" -u "$AVIAN_DB_USER" \
+        --skip-ssl-verify-server-cert --single-transaction --routines --triggers "$AVIAN_DB_NAME" > "$work/database.sql" \
+        || { say "Database dump failed: no backup."; rm -f "$work/database.sql"; return 1; }
+
+    local attempt
+    for attempt in 1 2 3; do
+        if archive_to_restic; then
+            rm -f "$work/database.sql"
+            say "Backup done."
+            return 0
+        fi
+        say "A file changed while archiving (attempt $attempt of 3); retrying."
+        sleep 5
+    done
+    rm -f "$work/database.sql"
+    say "Archiving failed 3 times: no backup."
+    return 1
+}
+
+case "${1:-}" in
+    once) backup_once ;;
+    loop)
+        interval=${AVIAN_BACKUP_INTERVAL:-3600}
+        # As the container's PID 1, bash would ignore SIGTERM and hold the pod's shutdown for its whole grace period.
+        trap 'say "Stopping."; exit 0' TERM INT
+        configured || say "Not configured yet: the avian-backup Secret is missing. The game runs; nothing is backed up."
+        # The first one after a full interval: a server that just started has nothing new, and a
+        # crash-looping pod must not hammer the repository.
+        while :; do
+            sleep "$interval" &
+            wait $!
+            backup_once || say "Backup FAILED; the next try is in $interval s."
+        done ;;
+    list) restic snapshots --host avian-factions ;;
+    dump) restic dump "${2:-latest}" avian-backup.tar | gzip ;;
+    *) echo "usage: avian-backup loop|once|list|dump [<snapshot>]" >&2; exit 2 ;;
+esac

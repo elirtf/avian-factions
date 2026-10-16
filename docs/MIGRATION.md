@@ -33,8 +33,9 @@ The details live in two runbooks; this is the order to follow them in.
    - point the router's 25565 at the game's VIP, behind TCPShield;
    - point `mc.avian.club` at it;
    - keep the dev box's server stopped, so only one copy of the world is ever live.
-7. **Backups on the cluster.** ⚠ **Not built yet**: there is no `./dev k8s backup` and no hourly job
-   (planned in the infra repo's `docs/architecture.md` → Backups). Build it before opening to players.
+7. **Backups on the cluster:** set up the big server's backup server (infra repo
+   `hosts/backup-server/README.md`) and seal `backup.env` with the game's secrets in step 3. Before players
+   join, check that `./dev k8s backup` works and that `./dev k8s backups` lists it.
 
 ---
 
