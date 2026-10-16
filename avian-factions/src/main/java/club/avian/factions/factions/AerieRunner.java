@@ -51,7 +51,7 @@ final class AerieRunner implements Listener {
     private final Set<UUID> barShown = new HashSet<>();
     private final Map<UUID, PermissionAttachment> bonus = new HashMap<>();
     private final Map<Integer, Long> lastStartAnnounced = new HashMap<>();
-    private TextDisplay sign;
+    private final Map<Integer, TextDisplay> signs = new HashMap<>();
 
     AerieRunner(Plugin plugin, ConfigHandle<AerieConfig> config, AerieRepository repository, LongSupplier clock, Logger log) {
         this.plugin = plugin;
@@ -79,9 +79,8 @@ final class AerieRunner implements Listener {
             }
         }
         barShown.clear();
-        if (sign != null) {
-            sign.remove();
-        }
+        signs.values().forEach(TextDisplay::remove);
+        signs.clear();
     }
 
     Aerie aerie() {
@@ -106,7 +105,7 @@ final class AerieRunner implements Listener {
             for (var player : world.getPlayers()) {
                 var at = player.getLocation();
                 if (player.isDead() || player.getGameMode() == GameMode.SPECTATOR || player.getGameMode() == GameMode.CREATIVE
-                        || !cfg.contains(at.getBlockX(), at.getBlockY(), at.getBlockZ())) {
+                        || !cfg.contains(at.getX(), at.getY(), at.getZ())) {
                     continue;
                 }
                 inside.add(player);
@@ -115,7 +114,7 @@ final class AerieRunner implements Listener {
             handle(aerie.tick(teams, now), now);
         }
         updateBar(inside, now);
-        updateSign(cfg, world, now);
+        updateSigns(cfg, world, now);
         reconcileBonus(cfg);
     }
 
@@ -254,32 +253,39 @@ final class AerieRunner implements Listener {
         });
     }
 
-    private void updateSign(AerieConfig cfg, org.bukkit.World world, long now) {
-        if (world == null || !world.isChunkLoaded((int) Math.floor(cfg.displayX()) >> 4, (int) Math.floor(cfg.displayZ()) >> 4)) {
-            sign = null;   // not persistent: it went with its chunk
-            return;
-        }
-        if (sign == null || !sign.isValid()) {
-            sign = world.spawn(new Location(world, cfg.displayX(), cfg.displayY(), cfg.displayZ()), TextDisplay.class, d -> {
-                d.setPersistent(false);   // never saved: respawned with its chunk, so no stale copies pile up
-                d.setBillboard(Display.Billboard.CENTER);
-                d.setShadowed(true);
-                d.setViewRange(4f);
-                d.setBackgroundColor(org.bukkit.Color.fromARGB(110, 20, 12, 30));
-            });
-        }
+    private void updateSigns(AerieConfig cfg, org.bukkit.World world, long now) {
         String status;
         if (aerie.capturer() != null) {
             status = aerie.contested()
-                    ? "<bad><bold>⚔ CONTESTED ⚔</bold></bad>"
+                    ? "<bad><bold>⚔ CONTESTED ⚔</bold></bad>\n" + name(aerie.capturer()) + " <soft>paused</soft>"
                     : name(aerie.capturer()) + "\n<soft>capturing ·</soft> <sun>" + clock(aerie.captureSeconds() - aerie.progress()) + "</sun>";
         } else if (aerie.holder() != null) {
             status = "<soft>Held by</soft>\n" + name(aerie.holder()) + "\n<soft>for</soft> <sun>" + held(now - aerie.hold().since()) + "</sun>";
         } else {
-            status = "<cane>Unclaimed</cane>\n<soft>Stand here alone to take it</soft>";
+            status = "<cane>Unclaimed</cane>\n<soft>Stand in the nest alone to take it</soft>";
         }
-        sign.text(Brand.mm("<bold><gradient:#FFD23F:#FF8A3D>🦅 THE AERIE 🦅</gradient></bold>\n" + status
-                + "\n<money>+" + cfg.sellBonusPercent() + "% sell</money> <soft>· keys · tokens</soft>"));
+        var text = Brand.mm("<bold><gradient:#FFD23F:#FF8A3D>🦅 THE AERIE 🦅</gradient></bold>\n" + status
+                + "\n<money>+" + cfg.sellBonusPercent() + "% sell</money> <soft>· keys · tokens</soft>");
+        var points = cfg.signs();
+        for (int i = 0; i < points.size(); i++) {
+            var p = points.get(i);
+            var sign = signs.get(i);
+            if (world == null || !world.isChunkLoaded((int) Math.floor(p.x()) >> 4, (int) Math.floor(p.z()) >> 4)) {
+                signs.remove(i);   // not persistent: it went with its chunk
+                continue;
+            }
+            if (sign == null || !sign.isValid()) {
+                sign = world.spawn(new Location(world, p.x(), p.y(), p.z()), TextDisplay.class, d -> {
+                    d.setPersistent(false);   // never saved: respawned with its chunk, so no stale copies pile up
+                    d.setBillboard(Display.Billboard.CENTER);
+                    d.setShadowed(true);
+                    d.setViewRange(4f);
+                    d.setBackgroundColor(org.bukkit.Color.fromARGB(150, 20, 12, 30));
+                });
+                signs.put(i, sign);
+            }
+            sign.text(text);
+        }
     }
 
     /** Online members of the holder get the sell-bonus permission; everyone else loses it. */
