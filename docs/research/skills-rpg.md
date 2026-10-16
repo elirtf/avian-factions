@@ -81,7 +81,7 @@ Stats (all skills at 100):
 | Trait | Default | Avian | Modifier |
 |---|---|---|---|
 | Attack damage | +100% | **+20%** | 0.4 → 0.08 |
-| Max HP | +100 HP (50 hearts) | **+6 HP (3 hearts)** | 1 → 0.06 |
+| Max HP | +100 HP (50 hearts) | **+20 HP (10 hearts)** | 1 → 0.2 (was 0.06, raised 2026-10-16: level-ups should be felt) |
 | Damage reduction | 53% | **12%** | 0.3 → 0.05 |
 | Crit chance | 100% | **15%** | 1 → 0.15 |
 | Crit damage | +100% | **+40%** | 1 → 0.4 |
