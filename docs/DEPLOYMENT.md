@@ -94,7 +94,7 @@ cluster holds, so the file is useless to anyone else. Each overlay keeps the pla
 git-ignored `secret.env` (copy `secret.env.example`; make passwords with `openssl rand -hex 24`).
 `./dev k8s seal` encrypts it into `sealed-secret.yaml`, which you commit, and backs up that cluster's
 key to `~/.config/avian/sealed-secrets/<context>.yaml` (never in git; keep a copy somewhere safe).
-`../infra/infra bootstrap` puts that key back into a recreated cluster, so committed SealedSecrets still
+The infra repo's `./infra bootstrap` puts that key back into a recreated cluster, so committed SealedSecrets still
 open. Lose the key and you re-seal from `secret.env` and commit.
 
 **Tools** (into `~/.local/bin`, checksums verified): k3d v5.9.0, kubectl v1.36.4 (matching the cluster;
@@ -103,7 +103,7 @@ kubectl supports one minor version either side), kubeseal v0.40.0 and crane v0.2
 ### The game on the local test cluster
 
 The cluster listens on **127.0.0.1:25700** (Java) and **127.0.0.1:19700** (Bedrock), never the live dev
-server's 25565 and 19132. Create and bootstrap it from the infra repo (`../infra/infra up`, `bootstrap`),
+server's 25565 and 19132. Create and bootstrap it from the infra repo (`./infra up`, then `./infra bootstrap`),
 then:
 
 | Command | What it does |

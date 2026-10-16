@@ -535,7 +535,7 @@ cmd_k8s() {
     local sub="${1:-status}"; shift || true
     case "$sub" in
         up|down|bootstrap|ui)
-            fail "The cluster itself (k3d, ArgoCD, Sealed Secrets) is run from the infra repo: ../infra/infra $sub" ;;
+            fail "The cluster itself (k3d, ArgoCD, Sealed Secrets) is run from the infra repo: ./infra $sub" ;;
         deploy)
             if [[ "$K8S_CONTEXT" == k3d-* ]]; then
                 cmd_image
@@ -543,7 +543,7 @@ cmd_k8s() {
                 k3d image import avian-factions:dev -c "${K8S_CONTEXT#k3d-}" >/dev/null || fail "Image import failed."
             fi
             kubectl --context "$K8S_CONTEXT" -n argocd get application avian >/dev/null 2>&1 \
-                || fail "ArgoCD isn't managing $K8S_CONTEXT yet: ../infra/infra bootstrap"
+                || fail "ArgoCD isn't managing $K8S_CONTEXT yet: the infra repo's ./infra bootstrap"
             # Manifests come from main through ArgoCD; this only asks it to re-read now, not in 3 minutes.
             say "ArgoCD applies the manifests from main; asking it to refresh…"
             kubectl --context "$K8S_CONTEXT" -n argocd annotate application avian argocd.argoproj.io/refresh=hard --overwrite >/dev/null
@@ -561,7 +561,7 @@ cmd_k8s() {
                 kc exec avian-factions-0 -- avian-console "$*" ;;
         restore) k8s_restore "$@" ;;
         push)    k8s_push "$@" ;;
-        *) fail "Usage: ./dev k8s seal|deploy|push <version>|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: ../infra/infra)" ;;
+        *) fail "Usage: ./dev k8s seal|deploy|push <version>|status|logs|cmd <command>|restore <backup> [--yes] (the cluster: the infra repo's ./infra)" ;;
     esac
 }
 
@@ -629,7 +629,7 @@ k8s_seal() {
     local env="$ROOT/$K8S_OVERLAY/secret.env" out="$ROOT/$K8S_OVERLAY/sealed-secret.yaml" kust="$ROOT/$K8S_OVERLAY/kustomization.yaml"
     [[ -f "$env" ]] || fail "Create $K8S_OVERLAY/secret.env first (copy secret.env.example)."
     kubectl --context "$K8S_CONTEXT" -n kube-system rollout status deployment/sealed-secrets-controller --timeout=3m >/dev/null \
-        || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (../infra/infra bootstrap installs it)."
+        || fail "Sealed Secrets isn't running in $K8S_CONTEXT yet (the infra repo's ./infra bootstrap installs it)."
     kubectl --context "$K8S_CONTEXT" -n "$K8S_NS" create secret generic avian-db --from-env-file="$env" --dry-run=client -o yaml \
         | kubeseal --context "$K8S_CONTEXT" --controller-namespace kube-system --format yaml > "$out" \
         || fail "Sealing failed."
