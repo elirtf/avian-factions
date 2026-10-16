@@ -31,7 +31,7 @@ jobs:
         run: echo "VERSION_FLAG=-Pversion=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
       # The dev script is part of the workflow (CI below runs it), so lint it like code.
       - name: Lint the shell scripts (./dev, config sync, container entrypoint)
-        run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console
+        run: shellcheck dev tools/sync-config deploy/container/entrypoint deploy/container/avian-console deploy/container/avian-backup
       # Both game overlays must render and pass strict schema validation (docs/DEPLOYMENT.md →
       # Kubernetes; the cluster roots are validated in the infra repo). SealedSecret schemas come from
       # the CRDs catalog, pinned to one commit.

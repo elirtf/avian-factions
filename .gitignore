@@ -29,3 +29,4 @@ backups/
 
 # Kubernetes overlay secrets (copy secret.env.example in that overlay).
 deploy/kubernetes/overlays/*/secret.env
+deploy/kubernetes/overlays/*/backup.env

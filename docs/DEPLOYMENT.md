@@ -112,7 +112,8 @@ then:
 | `./dev k8s seal` | Encrypt `secret.env` into the overlay's `sealed-secret.yaml` (commit it) and back up the key |
 | `./dev k8s push <version>` | Build the image and publish it for production: to GHCR (private, checked) and, with `AVIAN_REGISTRY` set, our own registry. Never replaces a published version |
 | `./dev k8s restore <backup> [--yes]` | Load a `./dev backup`: database into MariaDB, world and plugin data into the volume |
-| `./dev k8s status` / `logs` / `cmd "list"` | Pods and volumes / the server's log / one console command |
+| `./dev k8s backup` / `backups` / `fetch-backup [<id>]` | Take a backup now / list them / download one as a `./dev backup` file ([Backups](#backups)) |
+| `./dev k8s status` / `logs [backup]` / `cmd "list"` | Pods and volumes / the server's (or the backup sidecar's) log / one console command |
 
 A manifest change reaches a cluster only through `main`. To try a branch on k3d first, point the
 `avian` Application's `targetRevision` at it in the infra repo (on an infra branch), bootstrap, and put
@@ -135,13 +136,49 @@ Checked 2026-09-30:
    registry first and from GHCR when it can't serve it (the infra repo's `docs/architecture.md` → Images).
    Tokens, never in git: `~/.config/avian/ghcr-push-token` (classic, `write:packages`) here, and the
    read-only one (`read:packages`) in each machine's `/etc/rancher/k3s/registries.yaml`.
-3. **Database secret:** fill `overlays/production/secret.env` here, run
+3. **Secrets:** fill `overlays/production/secret.env` here, and `backup.env` from `./infra backup-server`
+   (the infra repo's `hosts/backup-server/README.md`; set the big server up first), run
    `AVIAN_K8S_CONTEXT=<context> AVIAN_K8S_OVERLAY=deploy/kubernetes/overlays/production ./dev k8s seal`,
-   then commit and merge the new `sealed-secret.yaml`. ArgoCD creates the Secret and the game starts.
+   then commit and merge the new `sealed-secret.yaml` and `sealed-backup-secret.yaml`. ArgoCD creates the
+   Secrets and the game starts, backing up hourly.
 4. **Bring the game over:** stop the old server, `./dev backup`, then `./dev k8s restore <file>` with the
    same two variables.
 5. **Players:** the game answers on its VIP (kube-vip, set in the infra repo), 25565 TCP (no Bedrock at launch).
    Forward the router's 25565 to it, behind TCPShield, and follow CLAUDE.md's "Before production" list.
+
+### Backups
+
+Every hour the **`backup` sidecar** in the server's pod (`deploy/container/avian-backup`, the same image) does
+what `./dev backup` does:
+1. `save-off`, `save-all flush`, and waits until the world files stop changing;
+2. dumps the database;
+3. streams the worlds, plugin data, player lists and the dump as one archive into **restic** on the owner's
+   big server;
+4. `save-on`, whatever happened.
+
+- **The archive is the `./dev backup` layout**, so `./dev k8s fetch-backup` gives a file that
+  `./dev k8s restore` or `./dev restore` loads as is.
+- **Nothing in the cluster can delete a backup:** the big server's REST server is append-only. Old backups
+  are thinned there (48 hourly, 14 daily, 8 weekly), with a daily check that alarms when the newest backup
+  is over 2 hours old. Setup: the infra repo's `hosts/backup-server/README.md` and `./infra backup-server`.
+- **Encrypted before it leaves the pod**, with `RESTIC_PASSWORD`. Lose that password and no backup can be
+  read, so keep a copy off the machines.
+- **A sidecar, not a CronJob:** it shares the server's volume and console pipe. A CronJob would need the
+  Longhorn volume on the same node and rights to exec into the server.
+- **Its Secret is optional.** Without `backup.env` sealed, the sidecar only logs that nothing is backed
+  up, and the game runs regardless. To turn it on:
+  1. copy `./infra backup-server`'s `avian-backup.env` to the overlay's `backup.env`;
+  2. run `./dev k8s seal`;
+  3. commit `sealed-backup-secret.yaml` and merge.
+
+Tested 2026-10-16 in Docker with the real image, against the REST server in append-only mode with TLS from
+our CA:
+- a backup took about 12 s;
+- the second one stored 1.5 MiB of 20 MiB changed;
+- saves were back on after each backup;
+- a fetched backup held the world, plugin data, player lists and all 60 tables;
+- a delete through the server was refused (403);
+- the hourly loop ran on its own and stopped at once on SIGTERM.
 
 ### New worlds with the custom terrain
 
@@ -195,8 +232,7 @@ already explored.
   only on its paid plan, and an open port would expose the home IP. Geyser still runs in the pod.
 - **Node loss:** the server and MariaDB move after 30 s on a dead node instead of 5 min. That matters
   once there are three nodes and Longhorn volumes to move with them.
-- **Backups:** `./dev backup` on the dev box today. On the cluster, a scheduled job that dumps the
-  database and copies the server's volume is the next step.
+- **Backups:** a sidecar in the server's pod, below.
 
 ## A hub (later)
 
