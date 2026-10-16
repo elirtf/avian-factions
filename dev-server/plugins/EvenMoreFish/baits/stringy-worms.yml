@@ -1,0 +1,15 @@
+# AVIAN: EvenMoreFish's example bait, switched off: our crafted set replaces it (owner, 2026-10-16).
+id: stringyWorms
+disabled: true
+silent: false
+
+item:
+  material: STRING
+  displayname: <yellow>Stringy Worms
+  glowing: true
+rarity-modifiers:
+  Common: "*2"
+  Legendary: "*2"
+catch-weight: 20
+application-weight: 40
+max-baits: 16

@@ -1,0 +1,33 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: kelpChum
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: DRIED_KELP
+  displayname: "<#4CE08A><bold>Kelp Chum"
+  glowing: false
+  lore:
+    - "<#B8B8C8>Salty snacks for you and the fish."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Each catch  <#FF5C5C>+1 ❤ <#B8B8C8and a bite to eat"
+    - "<#6E6E80>◆ <#B8B8C8Rare fish  <#4DA3FF>×1.25"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+rarity-modifiers:
+  Rare: "*1.25"
+catch-event:
+  - "HEALTH:2"
+  - "EFFECT:saturation,0,1"
+recipe:
+  type: shapeless
+  ingredients:
+    - dried_kelp
+    - dried_kelp
+    - dried_kelp
+    - sweet_berries
+    - bone_meal

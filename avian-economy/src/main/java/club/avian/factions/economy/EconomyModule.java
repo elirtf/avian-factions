@@ -90,6 +90,8 @@ public final class EconomyModule implements AvianModule {
         }
         // Ice Fisher quest: catches in icy waters, counted for %avian_ice_fish%.
         ctx.registerListener(new IceFishing(config));
+        // Crafted baits come out several at a time (economy.conf bait-craft-yield).
+        ctx.registerListener(new BaitCraftYield(config));
         var hoeMenu = new HoeMenu(ctx.plugin(), economy, hoe);
         ctx.registerListener(hoeMenu);
         ctx.commands().register(new HoeCommand(hoeMenu, hoe).build(), "Buy and upgrade the Harvester Hoe");

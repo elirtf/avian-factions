@@ -1,0 +1,35 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: gildedLure
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: GOLDEN_CARROT
+  displayname: "<bold><gradient:#FFD23F:#FF8A3D>Gilded Lure"
+  glowing: true
+  lore:
+    - "<#B8B8C8>Only the greatest fish bite at gold."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Legendary fish  <#FFD23F>×3"
+    - "<#6E6E80>◆ <#B8B8C8Epic fish  <#B07FE0>×1.5"
+    - "<#6E6E80>◆ <#B8B8C8Common fish  <#B8B8C8half as often"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+rarity-modifiers:
+  Legendary: "*3"
+  Epic: "*1.5"
+  Common: "/2"
+recipe:
+  type: shaped
+  shape:
+    - "NGN"
+    - "GPG"
+    - "NGN"
+  ingredients:
+    N: nautilus_shell
+    G: gold_ingot
+    P: ender_pearl

@@ -1,0 +1,36 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: glowLure
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: GLOW_INK_SAC
+  displayname: "<#5FF3E0><bold>Glow Lure"
+  glowing: true
+  lore:
+    - "<#B8B8C8>It shines in the dark water."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Rare fish  <#4DA3FF>×2"
+    - "<#6E6E80>◆ <#B8B8C8Epic fish  <#B07FE0>×1.5"
+    - "<#6E6E80>◆ <#B8B8C8Each catch  <#5FF3E0>Night Vision 60s"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+rarity-modifiers:
+  Rare: "*2"
+  Epic: "*1.5"
+catch-event:
+  - "EFFECT:night_vision,0,60"
+recipe:
+  type: shaped
+  shape:
+    - "GSG"
+    - "SIS"
+    - "GSG"
+  ingredients:
+    G: glow_berries
+    S: string
+    I: glow_ink_sac
