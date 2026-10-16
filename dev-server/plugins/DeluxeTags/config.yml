@@ -101,8 +101,28 @@ categories:
     lore:
     - '<#B8B8C8>The ones people ask about.'
     gui_name: '<#FF4FD8><bold>Epic tags</bold> <#6E6E80>%deluxetags_category_amount% yours'
+  earned:
+    order: 4
+    item: GOLDEN_HELMET
+    name: '<bold><gradient:#FFD23F:#FF8A3D>Earned</gradient></bold>'
+    lore:
+    - '<#B8B8C8>Never sold, never in a crate: won in fights.'
+    gui_name: '<bold><gradient:#FFD23F:#FF8A3D>Earned tags</gradient></bold> <#6E6E80>%deluxetags_category_amount% yours'
 
 deluxetags:
+  # Earned
+  aerie:
+    order: 0
+    category: earned
+    tag: ' <bold><gradient:#FFD23F:#FF8A3D>⛰ AERIE</gradient></bold>'
+    displayname: '<bold><gradient:#FFD23F:#FF8A3D>⛰ Aerie'
+    description:
+    - '<#B8B8C8>Your faction held the Aerie for 8 hours'
+    - '<#B8B8C8>without losing it. Earned, never sold.'
+    - '%deluxetags_available%'
+    item: GOLDEN_HELMET
+    data: 0
+    permission: deluxetags.tag.aerie
   # Epic
   slay:
     order: 1
