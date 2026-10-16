@@ -184,7 +184,14 @@ final class AerieRunner implements Listener {
         var members = online(e.faction());
         for (var p : members) {
             run(reward.commands(), p.getName(), e.faction());
-            p.sendMessage(Brand.mm("<sun>🦅</sun> " + AERIE + " <soft>pays its holders:</soft> <cane>" + reward.description() + "</cane>"));
+            // Keys are virtual (no item lands in the inventory), so say where they went, loudly enough to notice
+            // (owner, 2026-10-16: held an hour, "received nothing", though the key and tokens had arrived).
+            p.sendMessage(Brand.mm("<sun>🦅</sun> " + AERIE + " <soft>pays its holders:</soft> <cane>" + reward.description()
+                    + "</cane> <soft>· keys are in</soft> <white>/keys</white>"));
+            p.showTitle(Title.title(Brand.mm("<bold><gradient:#FFD23F:#FF8A3D>🦅 Aerie payout</gradient></bold>"),
+                    Brand.mm("<cane>" + reward.description() + "</cane> <soft>· /keys</soft>"),
+                    Title.Times.times(Duration.ofMillis(200), Duration.ofSeconds(2), Duration.ofMillis(600))));
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7f, 1.2f);
         }
     }
 
