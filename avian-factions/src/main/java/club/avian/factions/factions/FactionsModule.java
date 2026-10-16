@@ -55,7 +55,13 @@ public final class FactionsModule implements AvianModule {
             return;
         }
         var config = ctx.config(FactionsConfig.SPEC);
-        ctx.registerListener(new BasePowerListener(config));
+        var basePower = new BasePowerListener(config);
+        ctx.registerListener(basePower);
+        // Factions made under a lower base get raised to it (FactionsUUID has loaded its factions by now).
+        int raised = basePower.raiseExisting();
+        if (raised > 0) {
+            ctx.logger().info("Raised " + raised + " faction(s) to the base power of " + config.get().factionBasePower());
+        }
         ctx.registerListener(new SimpleCommands());
 
         // Chunk busters: clear a chunk of your own land (spec §17 raiding tools; VanityMC's Builder kit).

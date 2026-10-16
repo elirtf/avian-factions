@@ -23,11 +23,11 @@ public final class FactionsConfig {
             .freeForm("tnt-durability.blocks")
             .build();
 
-    @Comment("Flat power every new faction gets on top of its members' power, so a solo player can\n"
-            + "hold a real base. With FactionsUUID one power is one chunk: base 5 + a full player's 20\n"
-            + "is 25, a 5x5 square. Applied once, when the faction is created; changing it does not\n"
-            + "touch existing factions (use /f admin power boost for those). Not lost on death.")
-    private double factionBasePower = 5.0;
+    @Comment("Flat power every faction gets on top of its members' power, so a solo player can hold a\n"
+            + "real base. With FactionsUUID one power is one chunk: base 30 + a full player's 20 is 50, a 7x7\n"
+            + "square, 3 chunks out each way (owner, 2026-10-16; it was 5). Given on creation, and on start-up\n"
+            + "any faction below it is raised to it (one with more, from an admin, keeps it). Not lost on death.")
+    private double factionBasePower = 30.0;
 
     @Comment("FactionsUUID upgrades factions can buy, by name. Every other upgrade is switched off.\n"
             + "Costs and levels are FactionsUUID's own, in its data/universe.json.\n"
