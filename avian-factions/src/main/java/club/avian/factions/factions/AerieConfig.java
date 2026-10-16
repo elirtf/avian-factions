@@ -24,21 +24,20 @@ public final class AerieConfig {
     private boolean enabled = true;
 
     @Comment("""
-            The capture zone: a box in this world, corners inclusive. It matches the build placed by
+            The capture zone: a circle around the centre, in this world, covering the whole nest
+            (pad, rim logs and fences), between two heights. It matches the build placed by
             /function avian:aerie/build (dev-server/world/datapacks/avian-aerie); move both together.""")
     private String world = "world";
 
-    private int minX = -6;
-    private int minY = 164;
-    private int minZ = 184;
-    private int maxX = 6;
-    private int maxY = 170;
-    private int maxZ = 196;
+    private int centerX = 0;
+    private int centerZ = 190;
+    @Comment("Blocks from the centre that count, measured flat. The nest's outer rim is 10 out.")
+    private double radius = 10.5;
+    private int minY = 163;
+    private int maxY = 172;
 
-    @Comment("Where the floating sign showing the holder hangs (above the zone's centre).")
-    private double displayX = 0.5;
-    private double displayY = 168.5;
-    private double displayZ = 190.5;
+    @Comment("Where the floating signs showing the holder hang: over the nest's entrance and at the foot of the stair.")
+    private List<Point> signs = List.of(new Point(0.5, 168.0, 199.5), new Point(-12.5, 145.5, 190.5));
 
     @Comment("Seconds a faction must stand in the zone alone to capture it.")
     private int captureSeconds = 300;
@@ -80,12 +79,14 @@ public final class AerieConfig {
         return world;
     }
 
-    public boolean contains(int x, int y, int z) {
-        return x >= minX && x <= maxX && y >= minY && y <= maxY && z >= minZ && z <= maxZ;
+    /** Whether a player standing at this spot (their feet) is in the zone. */
+    public boolean contains(double x, double y, double z) {
+        double dx = x - (centerX + 0.5), dz = z - (centerZ + 0.5);
+        return y >= minY && y < maxY + 1 && dx * dx + dz * dz <= radius * radius;
     }
 
     public int centerX() {
-        return (minX + maxX) / 2;
+        return centerX;
     }
 
     public int centerY() {
@@ -93,19 +94,11 @@ public final class AerieConfig {
     }
 
     public int centerZ() {
-        return (minZ + maxZ) / 2;
+        return centerZ;
     }
 
-    public double displayX() {
-        return displayX;
-    }
-
-    public double displayY() {
-        return displayY;
-    }
-
-    public double displayZ() {
-        return displayZ;
+    public List<Point> signs() {
+        return signs;
     }
 
     public int captureSeconds() {
@@ -141,14 +134,44 @@ public final class AerieConfig {
     }
 
     static void validate(AerieConfig cfg, ConfigErrors e) {
-        e.check(cfg.minX <= cfg.maxX && cfg.minY <= cfg.maxY && cfg.minZ <= cfg.maxZ, "min-x..max-z",
-                "each min must be at most its max");
+        e.check(cfg.minY <= cfg.maxY, "min-y", "must be at most max-y");
+        e.check(cfg.radius > 0 && cfg.radius <= 64, "radius", "must be above 0 and at most 64");
         e.check(cfg.captureSeconds >= 10 && cfg.captureSeconds <= 3600, "capture-seconds", "must be 10-3600");
         e.check(cfg.sellBonusPercent >= 0, "sell-bonus-percent", "must be >= 0");
         e.check(cfg.milestoneHours >= 0, "milestone-hours", "must be >= 0");
         e.check(cfg.announceCooldownSeconds >= 0, "announce-cooldown-seconds", "must be >= 0");
         for (int i = 0; i < cfg.rewards.size(); i++) {
             e.check(cfg.rewards.get(i).everyMinutes >= 1, "rewards[" + i + "].every-minutes", "must be at least 1");
+        }
+    }
+
+    /** A spot in the Aerie's world. */
+    @ConfigSerializable
+    public static final class Point {
+
+        private double x;
+        private double y;
+        private double z;
+
+        public Point() {
+        }
+
+        Point(double x, double y, double z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        public double x() {
+            return x;
+        }
+
+        public double y() {
+            return y;
+        }
+
+        public double z() {
+            return z;
         }
     }
 
