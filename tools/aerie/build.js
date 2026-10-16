@@ -150,7 +150,7 @@ for (let i = 0; i < 6; i++) {
   const a = i * Math.PI / 3 + 0.4, d = 8.5;
   const x = Math.round(Math.cos(a) * d), z = Math.round(Math.sin(a) * d);
   if ([...cells.values()].some(c => Math.abs(c.x - x) <= 1 && Math.abs(c.z - z) <= 1 && c.y >= 11 && c.y <= 18)) continue;   // not over the stair
-  fill(x, 15, z, x, 17, z, 'chain');
+  fill(x, 15, z, x, 17, z, 'iron_chain');   // 'chain' before 1.21.9's copper chains
   set(x, 14, z, 'soul_lantern[hanging=true]');
 }
 for (const [x, z] of [[-8, -4], [8, -4]]) {   // hay under a campfire: tall smoke, seen from spawn

@@ -5109,13 +5109,13 @@ fill ~-14 ~0 ~-3 ~-14 ~2 ~-3 deepslate_brick_wall
 setblock ~-14 ~3 ~-3 lantern
 fill ~-14 ~0 ~3 ~-14 ~2 ~3 deepslate_brick_wall
 setblock ~-14 ~3 ~3 lantern
-fill ~1 ~15 ~8 ~1 ~17 ~8 chain
+fill ~1 ~15 ~8 ~1 ~17 ~8 iron_chain
 setblock ~1 ~14 ~8 soul_lantern[hanging=true]
-fill ~-7 ~15 ~5 ~-7 ~17 ~5 chain
+fill ~-7 ~15 ~5 ~-7 ~17 ~5 iron_chain
 setblock ~-7 ~14 ~5 soul_lantern[hanging=true]
-fill ~-8 ~15 ~-3 ~-8 ~17 ~-3 chain
+fill ~-8 ~15 ~-3 ~-8 ~17 ~-3 iron_chain
 setblock ~-8 ~14 ~-3 soul_lantern[hanging=true]
-fill ~-1 ~15 ~-8 ~-1 ~17 ~-8 chain
+fill ~-1 ~15 ~-8 ~-1 ~17 ~-8 iron_chain
 setblock ~-1 ~14 ~-8 soul_lantern[hanging=true]
 fill ~-8 ~22 ~-4 ~-8 ~23 ~-4 dark_oak_log
 setblock ~-8 ~24 ~-4 hay_block
