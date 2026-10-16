@@ -398,6 +398,11 @@ extra hearts, which PvP can't have. Players get none of its commands except boss
   - an elite: **$25 × its level**. Elite levels follow nearby players' gear (about 1–20 in vanilla gear),
     so about $25–500 an elite;
   - a boss: **25 tokens and a Rare key** up to level 19, **75 tokens and an Epic key** from level 20.
+- **Difficulty follows the player** (owner, 2026-10-16: mobs "only need to get stronger according to how
+  strong the player is", nothing crazy hard). Ordinary mobs stay vanilla; about 5% become elites, whose
+  level follows nearby players' gear, and EliteMobs' scaled combat fights them at the player's own level.
+  We make them a little gentler than EliteMobs' default: players deal **1.25×** damage to them and take
+  **0.8×** (`MobCombatSettings.yml`, `scaledDamageTo…Multiplier`). Custom bosses may come later.
 - **Bosses** come from EliteMobs content packs (its world bosses and events), installed with `/em setup`;
   the plugin alone ships only test bosses. Pick packs with the owner: gear from bosses is fine as long as
   it's balanced against the enchant cap and the gear ladder (owner, 2026-10-02).
