@@ -56,6 +56,12 @@ public final class EconomyConfig {
     private long sugarCaneTokens = 1;
 
     @Comment("""
+            How many baits each EvenMoreFish bait recipe makes, by bait id (plugins/EvenMoreFish/baits).
+            One bait covers one catch; recipes not listed make one.""")
+    private Map<String, Integer> baitCraftYield = new LinkedHashMap<>(Map.of(
+            "wriggler", 8, "kelpChum", 8, "glowLure", 6, "anglersCharm", 4, "abyssChum", 4, "gildedLure", 2));
+
+    @Comment("""
             Biomes that count as icy waters for the Ice Fisher quest (owner, 2026-10-16: 1,000 catches
             there earns the tag). A catch counts when the hook lands in one of these; the running total
             is %avian_ice_fish%, kept on the player.""")
@@ -209,6 +215,10 @@ public final class EconomyConfig {
 
     public Map<String, Long> sellValues() {
         return sellValues;
+    }
+
+    public Map<String, Integer> baitCraftYield() {
+        return baitCraftYield;
     }
 
     public List<String> iceFishingBiomes() {

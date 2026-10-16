@@ -1,0 +1,34 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: anglersCharm
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: AMETHYST_SHARD
+  displayname: "<bold><gradient:#FFD23F:#B07FE0>Angler's Charm"
+  glowing: true
+  lore:
+    - "<#B8B8C8>For anglers who want to learn."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Each catch  <#7CFF4F>+10 XP <#B8B8C8and <#7CFF4F>+15 Fishing XP"
+    - "<#6E6E80>◆ <#B8B8C8Each catch  <#FFD23F>Luck 60s <#B8B8C8(better treasure)"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+catch-event:
+  - "EXP:10"
+  - "AURASKILLS_XP:fishing,15"
+  - "EFFECT:luck,0,60"
+recipe:
+  type: shaped
+  shape:
+    - "ALA"
+    - "LHL"
+    - "ALA"
+  ingredients:
+    A: amethyst_shard
+    L: lapis_lazuli
+    H: honey_bottle

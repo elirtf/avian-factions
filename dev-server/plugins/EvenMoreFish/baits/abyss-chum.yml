@@ -1,0 +1,35 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: abyssChum
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: PRISMARINE_CRYSTALS
+  displayname: "<#4DA3FF><bold>Abyss Chum"
+  glowing: true
+  lore:
+    - "<#B8B8C8>Ground from the deep monuments."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Epic fish  <#B07FE0>×2.5"
+    - "<#6E6E80>◆ <#B8B8C8Legendary fish  <#FFD23F>×1.5"
+    - "<#6E6E80>◆ <#B8B8C8Junk  <#FF5C5C>half as often"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+rarity-modifiers:
+  Epic: "*2.5"
+  Legendary: "*1.5"
+  Junk: "/2"
+recipe:
+  type: shaped
+  shape:
+    - " P "
+    - "CKC"
+    - " P "
+  ingredients:
+    P: prismarine_shard
+    C: prismarine_crystals
+    K: sea_pickle

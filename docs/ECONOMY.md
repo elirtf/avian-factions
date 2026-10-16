@@ -336,6 +336,22 @@ Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
   checked against every fish's size). It can't be automated (anti-AFK). Each fish scales with its size,
   so a Common runs about $2–54. Raw fish stay unsellable in `/shop`
   (`sell: -1`), so sell wands can't sell them either. Keep it that way.
+- **Baits are crafted** (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+  effects"). Each one is in every player's recipe book. One bait covers one catch; drag it onto the rod.
+  A craft makes several (`economy.conf` `bait-craft-yield`). They can't be fished up, and EvenMoreFish's
+  own example baits are off. Files: `plugins/EvenMoreFish/baits/`.
+
+  | Bait | Effect | Recipe | Per craft |
+  |---|---|---|---|
+  | Wriggler | ¼ as much junk, Rare ×1.5 | 2 rotten flesh, seeds, bone meal | 8 |
+  | Kelp Chum | +1 ❤ and a bite to eat each catch, Rare ×1.25 | 3 dried kelp, sweet berries, bone meal | 8 |
+  | Glow Lure | Rare ×2, Epic ×1.5, Night Vision 60 s | glow berries, string, glow ink sac | 6 |
+  | Angler's Charm | +10 XP and +15 Fishing XP each catch, Luck 60 s | amethyst, lapis, honey bottle | 4 |
+  | Abyss Chum | Epic ×2.5, Legendary ×1.5, half the junk | prismarine shards and crystals, sea pickle | 4 |
+  | Gilded Lure | Legendary ×3, Epic ×1.5, half the Commons | nautilus shells, gold ingots, ender pearl | 2 |
+
+  The rare-fish baits raise income a little, since a Legendary is worth ~$7.5k at 3×. That's the point of
+  crafting them, and the ingredients (monuments, nautilus shells) are the brake.
 - **Tokens and keys come only from contests**, never from ordinary catches, and a contest only runs
   with **3+ players online**, so nobody can farm them alone:
 

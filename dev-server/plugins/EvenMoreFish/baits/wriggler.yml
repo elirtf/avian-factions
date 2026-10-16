@@ -1,0 +1,30 @@
+# AVIAN: a crafted bait (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
+# effects"). One bait = one catch; a craft makes several (economy.conf bait-craft-yield). Craft-only.
+id: wriggler
+disabled: false
+silent: false
+can-be-caught: false
+catch-weight: 0
+application-weight: 1
+max-baits: 64
+item:
+  material: WHEAT_SEEDS
+  displayname: "<#7CFF4F><bold>Wriggler"
+  glowing: false
+  lore:
+    - "<#B8B8C8>A fat, lively worm."
+    - ""
+    - "<#6E6E80>◆ <#B8B8C8Junk  <#FF5C5C>¼ as often"
+    - "<#6E6E80>◆ <#B8B8C8Rare fish  <#4DA3FF>×1.5"
+    - ""
+    - "<#7CFF4F>▶ Drag onto your rod <#6E6E80>· <#B8B8C8one bait, one catch"
+rarity-modifiers:
+  Junk: "/4"
+  Rare: "*1.5"
+recipe:
+  type: shapeless
+  ingredients:
+    - rotten_flesh
+    - rotten_flesh
+    - wheat_seeds
+    - bone_meal

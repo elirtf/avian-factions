@@ -1,0 +1,13 @@
+# AVIAN: EvenMoreFish's example bait, switched off: our crafted set replaces it (owner, 2026-10-16).
+id: epicElixir
+disabled: true
+silent: false
+
+item:
+  material: HONEY_BOTTLE
+  displayname: <light_purple>Epic Elixir
+  glowing: true
+application-weight: 7
+rarity-modifiers:
+  Epic: "*2"
+max-baits: 64
