@@ -440,6 +440,10 @@ No golden apples (#40). An envoy hour pays out roughly $40–60k across the serv
   aim for 20–30). Random spots are off: CrazyEnvoys finds them by loading chunks on the main thread,
   which froze a test server for 7–25 seconds. Fixed spots measured no lag.
 - Envoys skip empty servers.
+- **Easy to spot** (owner, 2026-10-16: they were hard to find): each crate has a floating name in its
+  tier colour ("✦ Epic Envoy ✦", "▶ Click to claim"), shown by DecentHolograms, plus a beacon falling
+  from the sky when it drops and a firework flare every 15 seconds while it waits. The hologram lines use
+  `#RRGGBB` and `&` codes, not MiniMessage: CrazyEnvoys converts only those for holograms.
 
 ## Changing prices
 
