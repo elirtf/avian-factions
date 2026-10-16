@@ -145,8 +145,8 @@ Checked 2026-09-30:
 
 ### New worlds with the custom terrain
 
-The owner's picks (2026-10-02; `docs/research/custom-terrain-and-bosses.md`): Tectonic, Trek and Hopo's
-structure packs for the resource world, a patched Stellarity for the End (its enchantments removed, its
+The owner's picks (2026-10-02; `docs/research/custom-terrain-and-bosses.md`): Tectonic (terrain and
+caves), Subsurface (cave biomes, 2026-10-16), Trek and Hopo's structure packs for the resource world, a patched Stellarity for the End (its enchantments removed, its
 item textures merged into our resource pack), and Incendium for the Nether. They only shape chunks
 generated after they're added, so they go in with the fresh worlds, never into a world players have
 already explored.
