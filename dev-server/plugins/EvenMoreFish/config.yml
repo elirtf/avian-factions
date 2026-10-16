@@ -108,7 +108,9 @@ economy:
   # Allows fish to pay out with your Vault economy plugin
   vault:
     enabled: true
-    multiplier: 1.0
+    # Avian: 3x every fish's worth (owner, 2026-10-16: "it takes a while to even make 1k"). Common ~$85,
+    # Rare ~$500, Epic ~$1.9k, Legendary ~$7.5k; about $45-85k an hour by rod (docs/ECONOMY.md → Fishing).
+    multiplier: 3.0
     # {amount} uses the format provided by the economy plugin.
     # {raw-amount} rounds the provided value based on the economy plugin's settings.
     display: '{amount}'

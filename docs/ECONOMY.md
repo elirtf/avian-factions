@@ -330,11 +330,13 @@ Fledgling and `/ec` is everyone's (owner, 2026-09-29).
 Custom fish from EvenMoreFish (owner, 2026-09-30; the reasoning is in
 `docs/research/custom-fishing.md`), on top of AuraSkills' own fishing XP and treasure.
 
-- **Money:** custom fish sell only through `/fish shop`, about $75 a catch on average (Common ~$28, Rare
-  ~$170, Epic ~$630, Legendary ~$2,500), so roughly $15k an hour with a plain rod, $18k with the
-  starter kit's Lure I and $28k with Lure III (owner, 2026-09-30: $15–30k an hour for now, to revisit;
-  checked against every fish's size). It can't be automated (anti-AFK). Each fish scales with its size,
-  so a Common runs about $2–54. Raw fish stay unsellable in `/shop`
+- **Money:** custom fish sell only through `/fish shop`, at **3× their base worth** (EvenMoreFish
+  `economy.vault.multiplier: 3.0`; owner, 2026-10-16: "it takes a while to even make 1k").
+  - Per catch, about $225 on average: Common ~$85, Rare ~$510, Epic ~$1,900, Legendary ~$7,500.
+  - Per hour, roughly $45k with a plain rod, $54k with the starter kit's Lure I and $85k with Lure III.
+  - That makes fishing the best *active* earner; cane farms earn less but run while you're away. It can't
+    be automated (anti-AFK).
+  - Each fish scales with its size, so a Common runs about $6–160. It was 1× ($15–28k an hour) before. Raw fish stay unsellable in `/shop`
   (`sell: -1`), so sell wands can't sell them either. Keep it that way.
 - **Baits are crafted** (owner, 2026-10-16: "craftable, not crazy difficult, but a challenge; different
   effects"). Each one is in every player's recipe book. One bait covers one catch; drag it onto the rod.
