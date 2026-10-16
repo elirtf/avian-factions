@@ -425,6 +425,25 @@ extra hearts, which PvP can't have. Players get none of its commands except boss
   the plugin alone ships only test bosses. Pick packs with the owner: gear from bosses is fine as long as
   it's balanced against the enchant cap and the gear ladder (owner, 2026-10-02).
 
+## Base building: gen blocks
+
+Owner, 2026-10-16: the factions "gen bucket", in `/shop` → **Base Building** at **$10,000** each, for sand,
+cobblestone and obsidian, horizontal and vertical.
+
+- **Placing one** lays its block in a line, one a tick: horizontal ones run the way you face (up to 128),
+  vertical ones straight down to the ground. The item is **never used up**.
+- **Fills air only.** It passes over blocks of its own kind already there (so lines join up) and stops at
+  anything else, the world border or full length.
+- **Each block costs its /shop price:** cobblestone $1, sand $6, obsidian $32. It's charged as it goes, and the
+  gen stops the moment you can't afford the next block. A 128-block obsidian wall is $4,096.
+- **Same rules as building by hand:** every block goes through a normal place event as the player, so it can't
+  run into another faction's land or protected regions (spawn), and CoreProtect logs it.
+- At most 8 gens running per player. A summary when each one stops says how many blocks it laid, the cost
+  and why it stopped.
+- Settings are in `plugins/AvianFactions/gens.conf`. The shop items are `EconomyShopGUI/shops/basebuilding.yml`
+  (ids `gen_<type>`), and AvianFactions swaps the bought block for the real gen. Admins:
+  `/genblock give <player> <type> [amount]`.
+
 ## The Aerie (capturable outpost)
 
 Owner, 2026-10-16 (#21): an outpost in the warzone that any faction can capture at any hour, so map control

@@ -1,0 +1,71 @@
+# AVIAN: gen blocks (owner, 2026-10-16: $10,000 each). The item given here is swapped for the real gen block
+# by AvianFactions (ids gen_<gens.conf type>); the per-block cost is gens.conf's, the block's own /shop price.
+pages:
+  page1:
+    items:
+      gen_horizontal_sand:
+        material: SAND
+        displayname: '<#FFD23F><bold>Horizontal Sand Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays sand the way you face,'
+          - '<#B8B8C8>through air, past sand already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$6'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
+      gen_horizontal_cobblestone:
+        material: COBBLESTONE
+        displayname: '<#B8B8C8><bold>Horizontal Cobblestone Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays cobblestone the way you face,'
+          - '<#B8B8C8>through air, past cobblestone already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$1'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
+      gen_horizontal_obsidian:
+        material: OBSIDIAN
+        displayname: '<#B07FE0><bold>Horizontal Obsidian Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays obsidian the way you face,'
+          - '<#B8B8C8>through air, past obsidian already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$32'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
+      gen_vertical_sand:
+        material: SAND
+        displayname: '<#FFD23F><bold>Vertical Sand Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays sand straight down,'
+          - '<#B8B8C8>through air, past sand already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$6'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
+      gen_vertical_cobblestone:
+        material: COBBLESTONE
+        displayname: '<#B8B8C8><bold>Vertical Cobblestone Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays cobblestone straight down,'
+          - '<#B8B8C8>through air, past cobblestone already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$1'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
+      gen_vertical_obsidian:
+        material: OBSIDIAN
+        displayname: '<#B07FE0><bold>Vertical Obsidian Gen'
+        lore:
+          - '<#B8B8C8>Place it: lays obsidian straight down,'
+          - '<#B8B8C8>through air, past obsidian already there.'
+          - ''
+          - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$32'
+          - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
+        buy: 10000
+        sell: -1
