@@ -43,6 +43,10 @@ so crops, paper and meat can't be turned into money through them. Emerald ore ca
 emeralds and emerald blocks cost 4× their sell price, so nothing buys back cheaper than it sells.
 Copper is not sellable: scraping would otherwise be free money.
 
+**Mining pays** (owner, 2026-10-16): overworld ores generate at **1.5× vanilla** in new chunks
+(`dev-server/world/datapacks/avian-ores`), emerald ore included. So a trip to the resource world earns
+money through the prices above and levels AuraSkills' Mining faster. Ancient debris is 3× (`avian-netherite`).
+
 **Sugar cane in numbers.** Farm crops grow at 120 % of vanilla speed (`spigot.yml` growth
 modifiers; saplings, vines and mushrooms are unchanged), so a cane column yields about 4 cane an
 hour. At $16 each ($1,024 a stack), an early 200-column farm makes about $12,500 an hour and a
