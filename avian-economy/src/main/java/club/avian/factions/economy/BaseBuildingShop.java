@@ -9,17 +9,18 @@ import org.bukkit.event.Listener;
 import java.util.EnumSet;
 
 /**
- * Gen blocks bought in /shop's Base Building section (shop item ids {@code gen_<type>}): EconomyShopGUI hands
- * over plain blocks, and this swaps them for the real gen blocks straight away.
+ * What /shop's Base Building section sells: gen blocks (shop item ids {@code gen_<type>}) and infinite buckets
+ * ({@code infinite_water}, {@code infinite_lava}). EconomyShopGUI hands over the plain item, and this swaps it for
+ * the real one straight away.
  */
-final class GenBlockShop implements Listener {
+final class BaseBuildingShop implements Listener {
 
     private static final EnumSet<Transaction.Type> BUYS = EnumSet.of(
             Transaction.Type.BUY_SCREEN, Transaction.Type.BUY_STACKS_SCREEN, Transaction.Type.QUICK_BUY);
 
     private final GenBlocks gens;
 
-    GenBlockShop(GenBlocks gens) {
+    BaseBuildingShop(GenBlocks gens) {
         this.gens = gens;
     }
 
@@ -33,10 +34,8 @@ final class GenBlockShop implements Listener {
         }
         var path = item.getItemPath();
         var id = path == null ? "" : path.substring(path.lastIndexOf('.') + 1);
-        if (!id.startsWith("gen_")) {
-            return;
-        }
-        var gen = gens.create(id.substring(4), event.getAmount());
+        var gen = id.startsWith("gen_") ? gens.create(id.substring(4), event.getAmount())
+                : id.startsWith("infinite_") ? InfiniteBuckets.create(id.substring(9), event.getAmount()) : null;
         if (gen == null) {
             return;
         }

@@ -3,26 +3,27 @@ package club.avian.factions.factions;
 import club.avian.factions.api.config.ConfigHandle;
 import club.avian.factions.api.text.Brand;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Sound;
-import org.bukkit.World;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Waterlogged;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Container;
+import org.bukkit.block.data.Waterlogged;
+import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.Sound;
+import org.bukkit.World;
+import java.util.ArrayList;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -95,7 +96,7 @@ final class ChunkBusters implements Listener {
                     Brand.mm("<soft>Only works in <sun>your faction's land</sun>,"),
                     Brand.mm("<soft>far from spawn."),
                     net.kyori.adventure.text.Component.empty(),
-                    Brand.mm("<cane>➜ Place it, then click [BUST CHUNK]</cane>")));
+                    Brand.mm("<cane>➜ Place it to start</cane>")));
         });
         return item;
     }
@@ -139,6 +140,10 @@ final class ChunkBusters implements Listener {
             return;
         }
         pending.put(player.getUniqueId(), new Pending(at, clock.getAsLong() + cfg.confirmSeconds() * 1000L));
+        if (!cfg.confirm()) {
+            confirm(player);   // no click needed (owner, 2026-10-16)
+            return;
+        }
         player.sendMessage(Brand.mm("<hot><bold>CHUNK BUSTER</bold></hot> <soft>Clear this chunk from Y " + at.getBlockY()
                 + " down? </soft>").append(Brand.mm("<cane><bold>[BUST CHUNK]</bold></cane>")
                 .clickEvent(ClickEvent.runCommand("/chunkbuster confirm"))
@@ -215,18 +220,34 @@ final class ChunkBusters implements Listener {
         int top = Math.min(topY, ceiling(world));
         Material seal = world.getEnvironment() == World.Environment.NETHER ? Material.NETHERRACK : Material.STONE;
         keepLoaded.accept(chunk, true);
+        // The four neighbours stay loaded while it runs: an unloaded one would count as "might be liquid" and
+        // seal the whole border with stone (found 2026-10-16: walls left between chunks busted one after another).
+        var neighbours = new ArrayList<Chunk>();
+        for (int[] d : new int[][] {{1, 0}, {-1, 0}, {0, 1}, {0, -1}}) {
+            var n = world.getChunkAt(chunk.getX() + d[0], chunk.getZ() + d[1]);
+            keepLoaded.accept(n, true);
+            neighbours.add(n);
+        }
+        var seals = new ArrayList<Block>();
         var task = new BukkitTask[1];
         int[] y = {top};
         task[0] = plugin.getServer().getScheduler().runTaskTimer(plugin, () -> {
             for (int layer = 0; layer < perTick && y[0] > bottom; layer++, y[0]--) {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
-                        clear(chunk.getBlock(x, y[0], z), keep, seal, y[0] == top);
+                        if (clear(chunk.getBlock(x, y[0], z), keep, seal, y[0] == top)) {
+                            seals.add(chunk.getBlock(x, y[0], z));
+                        }
                     }
                 }
             }
             if (y[0] <= bottom) {
                 task[0].cancel();
+                rememberSeals(chunk, seals, bottom);
+                for (var n : neighbours) {
+                    openSeals(n, chunk, seal, bottom);
+                    keepLoaded.accept(n, false);
+                }
                 keepLoaded.accept(chunk, false);
                 running.remove(chunk.getChunkKey());
                 done.run();
@@ -239,12 +260,69 @@ final class ChunkBusters implements Listener {
      * or sitting on top of the cleared area) it becomes {@code seal} instead of air, so busting never
      * floods a chunk or starts a lava flow. Liquid inside the chunk is simply removed.
      */
-    static void clear(Block block, Set<Material> keep, Material seal, boolean topLayer) {
+    static boolean clear(Block block, Set<Material> keep, Material seal, boolean topLayer) {
         var type = block.getType();
         if (type.isAir() || keep.contains(type) || block.getState(false) instanceof Container) {
+            return false;
+        }
+        boolean sealed = leaks(block, topLayer);
+        block.setType(sealed ? seal : Material.AIR, false);
+        return sealed;
+    }
+
+    /** Where in a chunk the seals are, kept in the chunk's own data: height (from the floor), then X and Z. */
+    static final NamespacedKey SEALS = new NamespacedKey("avian", "buster_seals");
+
+    private static long sealKey(Block b, int bottom) {
+        return ((long) (b.getY() - bottom) << 8) | ((b.getX() & 15) << 4) | (b.getZ() & 15);
+    }
+
+    private static void rememberSeals(Chunk chunk, List<Block> seals, int bottom) {
+        if (seals.isEmpty()) {
             return;
         }
-        block.setType(leaks(block, topLayer) ? seal : Material.AIR, false);
+        var data = chunk.getPersistentDataContainer();
+        var keys = new java.util.LinkedHashSet<Long>();
+        for (long k : data.getOrDefault(SEALS, PersistentDataType.LONG_ARRAY, new long[0])) {
+            keys.add(k);
+        }
+        seals.forEach(b -> keys.add(sealKey(b, bottom)));
+        data.set(SEALS, PersistentDataType.LONG_ARRAY, keys.stream().mapToLong(Long::longValue).toArray());
+    }
+
+    /**
+     * After {@code busted} is cleared, the seals {@code neighbour} put up against it may have nothing left to hold
+     * back. Each one on the shared border that no longer touches liquid comes down.
+     */
+    static void openSeals(Chunk neighbour, Chunk busted, Material seal, int bottom) {
+        var data = neighbour.getPersistentDataContainer();
+        long[] keys = data.get(SEALS, PersistentDataType.LONG_ARRAY);
+        if (keys == null) {
+            return;
+        }
+        int dx = busted.getX() - neighbour.getX();
+        int dz = busted.getZ() - neighbour.getZ();
+        var kept = new ArrayList<Long>();
+        for (long k : keys) {
+            int y = (int) (k >> 8) + bottom;
+            int lx = (int) (k >> 4) & 15;
+            int lz = (int) k & 15;
+            boolean onBorder = (dx == 1 && lx == 15) || (dx == -1 && lx == 0) || (dz == 1 && lz == 15) || (dz == -1 && lz == 0);
+            var block = neighbour.getBlock(lx, y, lz);
+            if (block.getType() != seal) {
+                continue;   // someone changed it: no longer ours to remove
+            }
+            if (onBorder && !leaks(block, false) && !liquid(block.getRelative(BlockFace.UP))) {
+                block.setType(Material.AIR, false);
+            } else {
+                kept.add(k);
+            }
+        }
+        if (kept.isEmpty()) {
+            data.remove(SEALS);
+        } else {
+            data.set(SEALS, PersistentDataType.LONG_ARRAY, kept.stream().mapToLong(Long::longValue).toArray());
+        }
     }
 
     /** Whether liquid outside the cleared area touches this block. Unknown (unloaded) counts as yes. */

@@ -440,9 +440,13 @@ cobblestone and obsidian, horizontal and vertical.
   run into another faction's land or protected regions (spawn), and CoreProtect logs it.
 - At most 8 gens running per player. A summary when each one stops says how many blocks it laid, the cost
   and why it stopped.
+- **Infinite buckets**, in the same section: **water $25,000, lava $50,000** (prices chosen 2026-10-16; the
+  owner can change them). Pour as often as you like and the bucket stays full. Placing still goes through
+  faction land and WorldGuard; only the emptying is undone. They don't stack, and dispensers won't take them
+  (that would turn one into a plain bucket).
 - Settings are in `plugins/AvianFactions/gens.conf`. The shop items are `EconomyShopGUI/shops/basebuilding.yml`
   (ids `gen_<type>`), and AvianFactions swaps the bought block for the real gen. Admins:
-  `/genblock give <player> <type> [amount]`.
+  `/genblock give <player> <type> [amount]`, with `infinite_water` / `infinite_lava` for buckets.
 
 ## The Aerie (capturable outpost)
 
