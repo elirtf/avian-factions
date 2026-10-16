@@ -47,6 +47,16 @@ Paralyze, Rebound, Regrowth, Temper, Thunder, Tunnel, Vampire.
 **Tuning:** Dragon Heart max level 2 (from 5: permanent extra health), Speed 1 (from 2: permanent
 Speed II out-runs everything), Stopping Force triggers 25 % + 10 % a level (it was every hit).
 
+## Our own enchantments
+
+ExcellentEnchants can't add new enchants, so ours are Minecraft data-driven enchantments in the
+`avian-enchants` datapack (`dev-server/world/datapacks/avian-enchants`). Their effect is AvianFactions'.
+
+- **Coin Collector I–V** (`avian:coin_collector`; owner, 2026-10-16), for melee weapons: every mob coin drop
+  pays **20% more a level** (`economy.conf` `coin-collector-percent-per-level`; V doubles it). It comes from
+  enchanting tables, villager trades and loot, and the `/mobcoins` shop sells I, III and V books. It counts
+  toward the 6-enchant cap like any other.
+
 ## Disabled, and why
 
 | Enchant | Why it's off |

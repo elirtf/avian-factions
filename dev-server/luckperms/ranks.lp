@@ -161,6 +161,15 @@ lp group hatchling permission set emf.help true
 lp group hatchling permission set emf.next true
 lp group hatchling permission set emf.journal true
 lp group hatchling permission set emf.applybaits true
+# Mob coins (UltimateMobCoins, /mobcoins; owner, 2026-10-16): coins drop for everyone; the shop, balance, paying
+# and withdrawing coins as items. Not the spinner (its prizes aren't ours) nor any admin command.
+lp group hatchling permission set ultimatemobcoins.dropcoin true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins.balance true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins.pay true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins.withdraw true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins.top true
+lp group hatchling permission set ultimatemobcoins.command.mobcoins.help true
 lp group hatchling permission set emf.use_rod true
 # No /fish toggle at all: every catch must be a custom fish, since fishing XP comes from its rarity
 # (EvenMoreFish/rarities). A bare /fish toggle turns custom fishing off for anyone holding ANY toggle
