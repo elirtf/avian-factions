@@ -8,7 +8,7 @@ stats:
     enabled: true
     traits:
       auraskills/hp:
-        modifier: 0.06
+        modifier: 0.2   # 1 Health point = 0.2 HP: all skills at 100 = +20 HP (owner, 2026-10-16; was 0.06)
   auraskills/regeneration:
     enabled: true
     traits:
