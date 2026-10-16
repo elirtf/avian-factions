@@ -105,3 +105,31 @@ downloaded from Modrinth with their SHA-512 checked.
    its own items keep their mechanics. Applied on the test server with a datapack reload; at launch the
    build fetches the pinned Stellarity and runs it, rather than storing a copy in git (its licence
    forbids redistribution).
+
+## Custom caves (2026-10-16)
+
+Owner: the resource world should have custom generation **and custom caves**, to make exploring the
+overworld worth it.
+
+- **Cave shapes: Tectonic already does it.** Besides the surface, it replaces the vanilla cave noise with
+  its own cheese and noodle caves, and adds **underground rivers** (with lanterns, frozen in cold biomes)
+  and **lava tunnels**. On by default in the datapack.
+- **Cave contents: Subsurface 1.0.5** (Apache-2.0, 26.1–26.2), added. It brings 11 cave biomes, each
+  under its matching surface biome:
+  - underground forests and taigas with real trees;
+  - icicle, sand, swamp, coral, mesa, foliage (jungle) and fungal caves;
+  - soul and quartz canyons in the Nether.
+  It builds them as its own structures and overrides **no vanilla file**, so it can't clash with Tectonic,
+  Trek or Incendium.
+- **Boot test** (scratch Paper 26.1.2, Tectonic + Subsurface):
+  - both packs load with no errors;
+  - `locate structure` found underground forest 181 blocks from spawn, and sand, coral, foliage and taiga
+    caves around 1,000–1,400 blocks out (the others need snowy, swamp, badlands or mushroom surface
+    biomes that weren't near spawn);
+  - **441 chunks in 89 s**, against 103 s for Tectonic alone on 2026-10-01: no measurable cost.
+- Checked and passed over:
+  - open packs that only reshape caves (vanilla-caves, terrain-rebalanced): Tectonic already does that;
+  - all-rights-reserved or non-commercial ones (Jean Caves, Warfre's Better Caves and Cliffs, Cavernous
+    Lite): their licences rule them out;
+  - **Terralith**'s cave biomes: a Stardust Labs pack, so the owner adds it by hand if wanted (see above).
+

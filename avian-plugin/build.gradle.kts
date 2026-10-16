@@ -591,6 +591,13 @@ val worldgenPacks = listOf(
     PinnedPlugin("hopobetterunderwaterruins-26-1-1-2-7.zip",
         "https://cdn.modrinth.com/data/BuWCQzqf/versions/fAhWn0su/hopobetterunderwaterruins-26-1-1-2-7.zip",
         "SHA-512", "2eed3f8c13da416d8716214952a3f6938b5fbe0ae74390b44ac5c2dc8086370d695732afdd184359904ccb1116bfac7d1243881db5b1d5e89437d3813d6d06d9"),
+    // Subsurface 1.0.5 (Apache-2.0): 11 cave biomes (underground forests, icicle caves, coral caves, ...) under
+    // matching surface biomes, so the resource world's caves are worth exploring (owner, 2026-10-16). Tectonic
+    // already shapes the caves themselves (its own caves, underground rivers, lava tunnels). Subsurface only adds
+    // its own structures, overriding no vanilla file; boot-tested with Tectonic, no measurable generation cost.
+    PinnedPlugin("Subsurface_v1-0-5_26-2.zip",
+        "https://cdn.modrinth.com/data/mGEL09gE/versions/6FgENqol/Subsurface_v1-0-5_26-2.zip",
+        "SHA-512", "f78577823455290b1dbc4d979628e06e92b771f4b25a33557c31ccde65ea549c534029dd735021adf09c6571ce1ee7a709223f5888f80b070bc278116c13226d"),
 )
 // Stellarity: patched to drop its 8 enchantments (owner: "keep our stuff"), never stored in git (its licence
 // forbids redistribution); its resource pack is merged into ours by CraftEngine.
