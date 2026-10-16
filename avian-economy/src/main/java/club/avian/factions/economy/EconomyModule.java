@@ -101,9 +101,11 @@ public final class EconomyModule implements AvianModule {
         var gens = new GenBlocks(ctx.plugin(), genConfig, economy, ctx.logger());
         ctx.registerListener(gens);
         if (Bukkit.getPluginManager().getPlugin("EconomyShopGUI") != null) {
-            ctx.registerListener(new GenBlockShop(gens));
+            ctx.registerListener(new BaseBuildingShop(gens));
         }
-        ctx.commands().register(new GenBlockCommand(gens, genConfig).build(), "Give gen blocks (admins)");
+        ctx.commands().register(new GenBlockCommand(gens, genConfig).build(), "Give gen blocks and infinite buckets (admins)");
+        // Infinite water and lava buckets (owner, 2026-10-16), sold beside the gens.
+        ctx.registerListener(new InfiniteBuckets());
         var sellWand = ctx.config(SellWandConfig.SPEC);
         ctx.registerListener(new SellWandListener(economy, sellValues, sellWand, System::currentTimeMillis, ctx.logger()));
         ctx.commands().register(new SellWandCommand(sellWand).build(), "Give sell wands (admins)");

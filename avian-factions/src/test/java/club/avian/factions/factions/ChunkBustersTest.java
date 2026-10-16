@@ -16,13 +16,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/** Chunk busters: only in your own land, only after confirming, and they keep what matters. */
+/** Chunk busters: only in your own land, start on placing (or after a click, when confirm is on), keep what matters. */
 class ChunkBustersTest {
 
     ServerMock server;
     World world;
     PlayerMock player;
     ChunkBusters busters;
+    Object handle;
     boolean owns = true;
     long now = 1_000;
 
@@ -32,7 +33,8 @@ class ChunkBustersTest {
         world = server.addSimpleWorld("world");
         world.setSpawnLocation(-5000, 64, -5000);   // far away: busters don't work near spawn
         player = server.addPlayer("Wigby");
-        busters = new ChunkBusters(MockBukkit.createMockPlugin(), new BasePowerListenerTest.Handle(),
+        handle = new BasePowerListenerTest.Handle();
+        busters = new ChunkBusters(MockBukkit.createMockPlugin(), (BasePowerListenerTest.Handle) handle,
                 (p, chunk) -> owns, () -> now, (chunk, hold) -> { });
         player.getInventory().setItemInMainHand(ChunkBusters.create(2));
     }
@@ -65,7 +67,6 @@ class ChunkBustersTest {
         world.getBlockAt(7, 70, 7).setType(Material.STONE);   // above the buster: untouched
 
         assertTrue(place(8, 64, 8).isCancelled(), "the buster is never placed as a block");
-        busters.confirm(player);
         runUntilDone();
 
         assertEquals(Material.AIR, world.getBlockAt(3, 10, 3).getType());
@@ -77,7 +78,8 @@ class ChunkBustersTest {
     }
 
     @Test
-    void nothingHappensWithoutTheConfirm() {
+    void withConfirmOnNothingHappensWithoutTheClick() {
+        ((BasePowerListenerTest.Handle) handle).config.chunkBuster().confirm(true);
         world.getBlockAt(3, 10, 3).setType(Material.STONE);
         place(8, 64, 8);
         runUntilDone();
@@ -90,7 +92,6 @@ class ChunkBustersTest {
         owns = false;
         world.getBlockAt(3, 10, 3).setType(Material.STONE);
         place(8, 64, 8);
-        busters.confirm(player);
         runUntilDone();
         assertEquals(Material.STONE, world.getBlockAt(3, 10, 3).getType());
         assertEquals(2, player.getInventory().getItemInMainHand().getAmount(), "nothing taken");
@@ -98,6 +99,7 @@ class ChunkBustersTest {
 
     @Test
     void theConfirmExpires() {
+        ((BasePowerListenerTest.Handle) handle).config.chunkBuster().confirm(true);
         world.getBlockAt(3, 10, 3).setType(Material.STONE);
         place(8, 64, 8);
         now += 16_000;   // past the 15 s window
@@ -128,7 +130,6 @@ class ChunkBustersTest {
         var nether = nether();
         int roof = nether.getLogicalHeight() - 1;
         placeIn(nether, 8, roof, 8);
-        busters.confirm(player);
         runUntilDone();
         assertEquals(2, player.getInventory().getItemInMainHand().getAmount(), "refused before anything is taken");
     }
@@ -161,7 +162,6 @@ class ChunkBustersTest {
         end.setEnvironment(World.Environment.THE_END);
         server.addWorld(end);
         placeIn(end, 8, 64, 8);
-        busters.confirm(player);
         assertEquals(2, player.getInventory().getItemInMainHand().getAmount());
     }
 
@@ -176,7 +176,6 @@ class ChunkBustersTest {
         world.setSpawnLocation(0, 64, 0);
         world.getBlockAt(3, 10, 3).setType(Material.STONE);
         place(8, 64, 8);
-        busters.confirm(player);
         runUntilDone();
         assertEquals(Material.STONE, world.getBlockAt(3, 10, 3).getType());
         assertEquals(2, player.getInventory().getItemInMainHand().getAmount(), "refused before anything is taken");
@@ -190,5 +189,20 @@ class ChunkBustersTest {
         assertTrue(ChunkBusters.nearSpawn(new org.bukkit.Location(world, 700, -60, 700), spawn, 1000), "height doesn't count");
         assertFalse(ChunkBusters.nearSpawn(new org.bukkit.Location(world, 800, 64, 800), spawn, 1000));
         assertFalse(ChunkBusters.nearSpawn(new org.bukkit.Location(world, 1, 64, 1), spawn, 0), "0 turns it off");
+    }
+
+    @Test
+    void aSealComesDownWhenTheChunkNextToItIsBusted() {
+        world.getChunkAt(1, 0).load();
+        world.getBlockAt(16, 20, 7).setType(Material.WATER);      // the next chunk's water
+        world.getBlockAt(15, 20, 7).setType(Material.STONE);      // our edge block beside it
+        busters.bust(world.getChunkAt(0, 0), 30, () -> { });
+        runUntilDone();
+        assertEquals(Material.STONE, world.getBlockAt(15, 20, 7).getType(), "sealed against the water");
+
+        busters.bust(world.getChunkAt(1, 0), 30, () -> { });     // the water's chunk is busted next
+        runUntilDone();
+        assertEquals(Material.AIR, world.getBlockAt(16, 20, 7).getType(), "its water is gone");
+        assertEquals(Material.AIR, world.getBlockAt(15, 20, 7).getType(), "so the seal comes down: no wall left");
     }
 }

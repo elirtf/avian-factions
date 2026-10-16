@@ -110,13 +110,19 @@ public final class FactionsConfig {
                 furnaces…) are always kept too, so nothing is lost, as are bedrock and spawners.""")
         private List<String> keep = List.of("BEDROCK", "SPAWNER", "END_PORTAL_FRAME", "END_PORTAL", "BEACON");
 
-        @Comment("Seconds a player has to click [BUST CHUNK] after placing one.")
+        @Comment("""
+                Whether placing one asks for a click on [BUST CHUNK] first. Off (owner, 2026-10-16: "no need
+                for confirmation"): placing one starts it.""")
+        private boolean confirm = false;
+
+        @Comment("Seconds a player has to click [BUST CHUNK] after placing one, when confirm is on.")
         private int confirmSeconds = 15;
 
         @Comment("""
                 Worlds busters work in, by type: NORMAL (overworld), NETHER, THE_END. In the Nether they
                 never reach the roof, bedrock is never removed, and edges touching lava or water are
-                sealed with netherrack (stone in the overworld) so nothing floods in.""")
+                sealed with netherrack (stone in the overworld) so nothing floods in. A seal comes down
+                when the chunk next to it is busted and the liquid behind it is gone.""")
         private List<String> environments = List.of("NORMAL", "NETHER");
 
         @Comment("""
@@ -140,6 +146,15 @@ public final class FactionsConfig {
 
         public List<String> keep() {
             return keep;
+        }
+
+        public boolean confirm() {
+            return confirm;
+        }
+
+        /** Tests only. */
+        void confirm(boolean on) {
+            this.confirm = on;
         }
 
         public int confirmSeconds() {

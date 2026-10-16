@@ -1,4 +1,4 @@
-# AVIAN: gen blocks (owner, 2026-10-16: $10,000 each). The item given here is swapped for the real gen block
+# AVIAN: gen blocks (owner, 2026-10-16: $10,000 each) and infinite buckets (water $25,000, lava $50,000). The item given here is swapped for the real gen block
 # by AvianFactions (ids gen_<gens.conf type>); the per-block cost is gens.conf's, the block's own /shop price.
 pages:
   page1:
@@ -68,4 +68,20 @@ pages:
           - '<#6E6E80>◆ <#B8B8C8Each block  <#4CE08A>$32'
           - '<#6E6E80>◆ <#B8B8C8Used up  <#7CFF4F>never'
         buy: 10000
+        sell: -1
+      infinite_water:
+        material: WATER_BUCKET
+        displayname: '<#5FF3E0><bold>Infinite Water Bucket'
+        lore:
+          - '<#B8B8C8>Pour it as often as you like:'
+          - '<#B8B8C8>it is always full.'
+        buy: 25000
+        sell: -1
+      infinite_lava:
+        material: LAVA_BUCKET
+        displayname: '<#FF8A3D><bold>Infinite Lava Bucket'
+        lore:
+          - '<#B8B8C8>Pour it as often as you like:'
+          - '<#B8B8C8>it is always full.'
+        buy: 50000
         sell: -1

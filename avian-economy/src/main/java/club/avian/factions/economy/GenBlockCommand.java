@@ -11,7 +11,10 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.selector.PlayerSelectorArgumentResolver;
 
-/** {@code /genblock give <player> <type> [amount]}: gen blocks for crates, events and tests (admins). */
+/**
+ * {@code /genblock give <player> <type> [amount]}: gen blocks, or {@code infinite_water} / {@code infinite_lava}
+ * buckets, for crates, events and tests (admins).
+ */
 final class GenBlockCommand {
 
     static final String PERMISSION = "avian.admin.genblock";
@@ -32,6 +35,8 @@ final class GenBlockCommand {
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .suggests((ctx, b) -> {
                                             config.get().types().keySet().forEach(b::suggest);
+                                            b.suggest("infinite_water");
+                                            b.suggest("infinite_lava");
                                             return b.buildFuture();
                                         })
                                         .executes(ctx -> give(ctx, 1))
@@ -43,7 +48,7 @@ final class GenBlockCommand {
     private int give(CommandContext<CommandSourceStack> ctx, int amount) throws CommandSyntaxException {
         var target = ctx.getArgument("player", PlayerSelectorArgumentResolver.class).resolve(ctx.getSource()).getFirst();
         var type = StringArgumentType.getString(ctx, "type");
-        var item = gens.create(type, amount);
+        var item = type.startsWith("infinite_") ? InfiniteBuckets.create(type.substring(9), 1) : gens.create(type, amount);
         if (item == null) {
             ctx.getSource().getSender().sendMessage(Brand.mm("<bad>No gen block called " + type + " (gens.conf).</bad>"));
             return 0;
