@@ -20,7 +20,7 @@ class BasePowerListenerTest {
         new BasePowerListener(new Handle())
                 .onCreate(new FactionCreateEvent(null, recordingFaction(boosts), FactionCreateEvent.Reason.COMMAND));
 
-        assertEquals(List.of(5.0), boosts);
+        assertEquals(List.of(30.0), boosts);   // base 30 (owner, 2026-10-16): solo = 50 power, a 7x7 claim
     }
 
     /** A Faction whose only working method is powerBoost(double), which it records. */
